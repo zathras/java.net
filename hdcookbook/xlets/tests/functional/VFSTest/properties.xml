@@ -1,0 +1,21 @@
+<root>    
+
+   <!-- Location of the various class files and tools -->
+   <bdj.classes      location="${HDC_BDJ_PLATFORM_CLASSES}"/>
+   <bin.dir          location="${basedir}/../../../../bin"/>
+   <bdjo.jar         location="${bin.dir}/bdjo.jar"/>
+   <security.jar     location="${bin.dir}/security.jar"/>
+   <logger.jar       location="${bin.dir}/logger.jar"/>
+   <bouncycastle.jar location="${bin.dir}/bcprov-jdk15-137.jar"/>
+   <id.jar           location="${bin.dir}/id.jar"/>
+   <index.jar        location="${bin.dir}/index.jar"/>
+   <movieobject.jar  location="${bin.dir}/movieobject.jar"/>
+
+   <!-- Server information in which the VFSTest connects to and tries to download a
+        bundle from.  The build process tries to access this server and place the
+        bundle to this directory.  Make sure to update this and the HOSTDIR variable
+        of the VFSUpdateXlet together.  -->
+   <hostdir value="csaito@spiro.sfbay.sun.com:/home/csaito/public_html/bd-j/BindingUnitTest"/>
+   <password value="changeme"/>
+
+</root>

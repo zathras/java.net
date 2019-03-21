@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Sample build file.  See vars.properties for documentation about how to
+set up a new project using this build file.
+-->
+
+<project name="Game xlet" default="deploy" basedir=".">
+
+    <property file="user.vars.properties"/>
+    <property file="vars.properties"/>
+    <import file="${grin.xlet}/generic_build.xml"/>
+    
+    <target name="generate-binary-script" depends="init">
+	<delete dir="${build.dir}/gensrc"/>
+	<mkdir dir="${build.dir}/gensrc"/>
+	<mkdir dir="${build.dir}/gensrc/grinview"/>
+	<mkdir dir="${build.dir}/gensrc/xlet"/>
+	<property name="generate.binary.script.optimize.argument"
+	          value="-optimize"/>
+
+	<!--	Compile the game so we'll pick up any extension parser -->
+	<jdktools.javac destdir="${build.dir}/gensrc/grinview" debug="on">
+	    <src path="src:se_src${se.lib.src.int}"/>
+	    <classpath>
+		<pathelement path="${converter.jar}"/>
+		<pathelement path="${grinview.jar}"/>
+		<pathelement path="${se.lib.zip}"/>
+	    </classpath>
+	</jdktools.javac>
+
+	<antcall target="generate-binary-script-scaled">
+	    <param name="res.name" value="FullHD"/>
+	    <param name="scaleX" value="1.0"/>
+	    <param name="scaleY" value="1.0"/>
+	    <param name="offsetX" value="0"/>
+	    <param name="offsetY" value="0"/>
+	</antcall>
+	<antcall target="generate-binary-script-scaled">
+	    <param name="res.name" value="HD_720"/>
+	    <param name="scaleX" value="0.666666666666666666666667"/>
+	    <param name="scaleY" value="0.666666666666666666666667"/>
+	    <param name="offsetX" value="0"/>
+	    <param name="offsetY" value="0"/>
+	</antcall>
+	<antcall target="generate-binary-script-scaled">
+	    <param name="res.name" value="QHD"/>
+	    <param name="scaleX" value="0.5"/>
+	    <param name="scaleY" value="0.5"/>
+	    <param name="offsetX" value="0"/>
+	    <param name="offsetY" value="0"/>
+	</antcall>
+	<antcall target="generate-binary-script-scaled">
+	    <param name="res.name" value="NTSC_SD"/>
+	    <param name="scaleX" value="0.36666666666666666666666667"/>
+	    <param name="scaleY" value="0.444444444444444444444444444"/>
+	    <param name="offsetX" value="8"/>  <!--  704x480 vs. 720x488 -->
+	    <param name="offsetY" value="0"/>
+	</antcall>
+
+	<jdktools.javac destdir="${build.dir}/gensrc/grinview" debug="on"
+		excludes="GrinXlet.java XletDirector.java">
+	    <src path="${build.dir}/gensrc/grinview" />
+	    <src path="src${se.lib.src.int}"/>
+	    <classpath>
+		<pathelement path="${grinview.jar}"/>
+		<pathelement path="${se.lib.zip}"/>
+	    </classpath>
+	</jdktools.javac>
+
+	<!-- Copy the fontstrip stuff to assets, so grinview will work -->
+	<copy file="${build.dir}/FullHD/images/fontstrip.png"
+	      tofile="${asset.dir}/images/fontstrip.png"/>
+	<copy file="${build.dir}/FullHD/fontstrp.inf"
+	      tofile="${asset.dir}/fontstrp.inf"/>
+
+	<antcall target="post-generate-binary-script"/>
+    </target>
+
+    <target name="generate-binary-script-scaled">
+	<mkdir dir="${build.dir}/${res.name}/images"/>
+        <!-- Generate fontstrip image file -->
+        <jdktools.java jar="${fontimagemaker.jar}">                    
+            <arg value="-out"/>
+            <arg value="${build.dir}/${res.name}"/>
+            <arg value="-config"/>
+            <arg value="${asset.dir}/fontstrip-config.xml"/>  
+	    <arg value="-scaleX"/>
+	    <arg value="${scaleX}"/>
+	    <arg value="-scaleY"/>
+	    <arg value="${scaleY}"/>
+        </jdktools.java>
+	<delete file="${build.dir}/${res.name}/fontstrip-edit.png"/>
+
+	<antcall target="generate-binary-script-debug-subtarget-scaled"/>
+	<!--	Now run converter with extension parser in path -->
+        <jdktools.java classname="com.hdcookbook.grin.binaryconverter.Main">
+	    <classpath>
+		<pathelement path="${converter.jar}"/>
+		<pathelement path="${build.dir}/gensrc/grinview"/>
+		<pathelement path="${se.lib.zip}"/>
+	    </classpath>
+	    <arg value="-scaleX"/>
+	    <arg value="${scaleX}"/>
+	    <arg value="-scaleY"/>
+	    <arg value="${scaleY}"/>
+	    <arg value="-offsetX"/>
+	    <arg value="${offsetX}"/>
+	    <arg value="-offsetY"/>
+	    <arg value="${offsetY}"/>
+            <arg value="-asset_dir"/>
+            <arg value="${asset.dir}"/>
+            <arg value="-asset_dir"/>
+            <arg value="${asset.dir.2}"/>
+            <arg value="-asset_dir"/>
+            <arg value="${build.dir}/${res.name}"/>  <!-- for fontstrp.inf -->
+	    <arg value="-extension_parser"/>
+	    <arg value="${extension.parser}"/>
+	    <arg value="${generate.binary.script.optimize.argument}"/>
+            <arg value="-out"/>
+            <arg value="${build.dir}/${res.name}"/>
+            <arg value="${show.file}.txt"/>
+            <arg value="${mosaics.file.txt}"/>
+        </jdktools.java>
+	<move file="${build.dir}/${res.name}/${show.file}.grinview.java"
+	      tofile="${build.dir}/gensrc/grinview/${show.commands.file}.java"/>
+	<move file="${build.dir}//${res.name}/${show.file}.xlet.java"
+	      tofile="${build.dir}/gensrc/xlet/${show.commands.file}.java"/>
+
+    </target>
+
+    <target name="generate-binary-script-debug-subtarget-scaled"
+    		if="debug.is.set" depends="init">
+        <jdktools.java jar="${converter.jar}">
+	    <arg value="-scaleX"/>
+	    <arg value="${scaleX}"/>
+	    <arg value="-scaleY"/>
+	    <arg value="${scaleY}"/>
+            <arg value="-asset_dir"/>
+            <arg value="${grin.xlet}/src/${debug.or.deploy}/com/hdcookbook/grinxlet"/>
+            <arg value="-out"/>
+            <arg value="${build.dir}/${res.name}"/>
+	    <arg value="-avoid_optimization"/>
+            <arg value="xlet_show.txt"/>
+        </jdktools.java>
+	<delete file="${build.dir}/${res.name}/xlet_show.grinview.java"/>
+	<move file="${build.dir}/${res.name}/xlet_show.xlet.java"
+	      tofile="${build.dir}/gensrc/xlet/com/hdcookbook/grinxlet/XletShowCommands.java"/>
+    </target>
+    
+    <target name="post-grinview-jar">     
+	<zip destfile="${project.name}-grinview.jar" update="true">
+            <fileset dir="${build.dir}/FullHD">
+                <include name="**"/>
+            </fileset>
+       </zip>    
+    </target> 
+ 
+    <target name="post-copy-to-bdmv">
+	<copy todir="${dist.dir}/BDMV/JAR/${xlet.jar.basename}/FullHD">
+            <fileset dir="${build.dir}/FullHD"/>
+	</copy>
+	<copy todir="${dist.dir}/BDMV/JAR/${xlet.jar.basename}/HD_720">
+            <fileset dir="${build.dir}/HD_720"/>
+	</copy>
+	<copy todir="${dist.dir}/BDMV/JAR/${xlet.jar.basename}/QHD">
+            <fileset dir="${build.dir}/QHD"/>
+	</copy>
+	<copy todir="${dist.dir}/BDMV/JAR/${xlet.jar.basename}/NTSC_SD">
+            <fileset dir="${build.dir}/NTSC_SD"/>
+        </copy>      
+    </target>
+
+    <target name="post-clean">
+	<delete file="${asset.dir}/images/fontstrip.png"/>
+	<delete file="${asset.dir}/fontstrp.inf"/>
+    </target>
+
+</project>
+

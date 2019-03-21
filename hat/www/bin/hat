@@ -1,0 +1,9 @@
+#!/bin/sh
+#
+# This launch program might help some on Unix.  It assumes that the HAT
+# classes are put in hat.jar in the same directory as this script.
+#
+
+HOME=`dirname $0`
+JAR=$HOME/hat.jar
+java -jar $HOME/hat.jar $*

@@ -1,0 +1,18 @@
+<body bgcolor="#EEEEEE"><title>Cdiff FontStripText.java</title><pre>
+<FONT COLOR="red" SIZE=+1><b>*** /Users/billf/java.net/hdcookbook/webrev/AuthoringTools/grin/extensions/fontstrip/library/src/com/hdcookbook/grin/fontstrip/FontStripText.java-      2011-11-28 13:53:54.000000000 -0800</b></FONT>
+<FONT COLOR="green" SIZE=+1><b>--- FontStripText.java  2011-11-28 13:53:46.000000000 -0800</b></FONT>
+<hr>
+<FONT COLOR="red" SIZE=+1><b>*** 167,176 ****</b></FONT>
+<FONT COLOR="green" SIZE=+1><b>--- 167,177 ----</b></FONT>
+<FONT COLOR="black">      protected Feature createClone(HashMap clones) {</FONT>
+<FONT COLOR="black">          if (!setupMode || !imageSetup || isActivated) {</FONT>
+<FONT COLOR="black">              throw new IllegalStateException();</FONT>
+<FONT COLOR="black">          }</FONT>
+<FONT COLOR="black">          FontStripText result = new FontStripText(show);</FONT>
+<FONT COLOR="green"><b>+         result.alignment = alignment;</b></FONT>
+<FONT COLOR="black">          result.xArg = xArg;</FONT>
+<FONT COLOR="black">          result.yArg = yArg;</FONT>
+<FONT COLOR="black">          result.strings = strings;</FONT>
+<FONT COLOR="black">          result.bakedStrings = bakedStrings;</FONT>
+<FONT COLOR="black">          result.fontImageFileName = fontImageFileName;</FONT>
+</pre></FONT></body>

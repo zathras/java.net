@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<document>
+  <properties>
+    <title>Maven LinkCheck Plug-in</title>
+    <author email="ben@walding.com">Ben Walding</author>
+  </properties>
+
+  <body>
+    <section name="Maven LinkCheck Temporary File">
+      <p>
+      	This file is used as a placeholder until the final link check can occur.
+      </p>
+      
+      <p>
+      	At present, you MUST set maven.linkcheck.enable=true in your project properties
+      	to have the linkchecker run. Once it has stabilised, it will be turned on by default
+      	(except in offline mode).
+      </p>
+    </section>
+ </body>
+</document>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Sample build file.  See vars.properties for documentation about how to
+set up a new project using this build file.
+
+The file ${grin.xlet}/generic_build.xml defines a number
+of "post" targets, like post-init, post-clean and post-bundle.
+The intent is that after you copy vars.properties and build.xml
+to your project, you leave generic_build.xml unmodified.  If you
+need to add build steps (e.g. to package your xlet with assets,
+or to install your xlet into an integrated disc image), you do
+this by overriding the definition of one of more post targets.
+The post targets in generic_build.xml don't do anything, so you
+can just put a <target> tag in build.xml to add actions to be performed
+after any target is built.
+-->
+
+<project name="Grin xlet" default="deploy" basedir=".">
+
+    <fail>
+	.
+
+	This directory is not meant to be built.  See 
+	../grin_samples/SimpleGame  or ../grin_samples/GrinBunny 
+	for a sample usage of GrinXlet.
+    </fail>
+
+    <!--  When you copy this build file for our project, be sure to
+          delete the fail tag above!  -->
+
+    <property file="user.vars.properties"/>
+    <property file="vars.properties"/>
+    <import file="${grin.xlet}/generic_build.xml"/>
+    
+</project>
+

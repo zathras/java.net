@@ -1,0 +1,86 @@
+# 
+# This is the show file for the buffer_flip xlet.
+
+
+show 
+
+exports 
+    segments {
+        S:Initialize
+    } features {
+        F:PassOrFail
+        F:Results
+    } handlers {
+    }
+;
+
+java_generated_class WildcardCommands [[ 
+
+        import com.hdcookbook.grin.Show;
+        
+        public class WildcardCommands extends com.hdcookbook.grin.GrinXHelper {
+        
+            public WildcardCommands(Show show) { 
+                super(show); 
+            }
+
+            public WildcardDirector getDirector() {
+                return (WildcardDirector) show.getDirector();
+            }
+        
+            JAVA_COMMAND_BODY
+        
+        }
+
+]]
+
+feature text F:Starting left 200 top 200 {
+            "Running test..."
+        }
+        SansSerif plain 48 { { 0 255 180 255 } } 
+;
+
+
+feature text F:PassOrFail left 400 top 200 
+        { "" }
+        SansSerif plain 48 { { 0 255 180 255 } } 
+;
+
+feature text F:Results left 200 top 300 
+        { "" }
+        SansSerif plain 24 { { 0 255 180 255 } } 
+;
+
+
+segment S:Initialize 
+    setup { 
+        F:Starting
+        F:Results
+        F:PassOrFail
+    } setup_done {
+        activate_segment S:Running ;
+        java_command [[ getDirector().startTest(); ]]
+    }
+;
+
+segment S:Running
+    active {
+        F:Starting
+    } setup { 
+        F:PassOrFail
+        F:Results
+    } next {
+        activate_segment S:Results ;
+    }
+;
+
+segment S:Results
+    active {
+        F:PassOrFail
+        F:Results
+    } setup { 
+        F:Starting
+    }
+;
+
+end_show

@@ -1,0 +1,258 @@
+# An example of a scroll list.
+
+show 
+
+exports 
+    segments {
+        S:Initialize 
+    } features { 
+   F:FilmDetailsBaseCoords
+   F:FilmDetailsScrollCoords
+   F:FilmDetailsGroup   
+   F:ScrollList.Bullet
+   F:ScrollList.FilmName 
+   F:FilmDescription  
+   F:FilmDescription.Pos
+   F:FilmNamesScrollerAssembly
+   F:ScrollList.UpArrow
+   F:ScrollList.DownArrow
+    } handlers { 
+    }
+;
+
+java_generated_class ScrollListCommands [[ 
+
+        import com.hdcookbook.grin.Show;
+        
+        public class ScrollListCommands extends com.hdcookbook.grin.GrinXHelper {
+        
+            public ScrollListCommands(Show show) { 
+                super(show); 
+            }
+
+            public MainDirector getDirector() {
+                return (MainDirector) show.getDirector();
+            }
+        
+            JAVA_COMMAND_BODY
+        
+        }
+
+]]
+
+
+feature group F:Everything {
+   F:ScrollList    
+} ;
+
+
+feature group F:ScrollList {
+   F:FilmDetailsClipped
+   F:ScrollList.UpArrow
+   F:ScrollList.DownArrow
+} ; 
+
+#
+# The up arrow key on the right side of the scroll list.
+#
+feature assembly F:ScrollList.UpArrow {
+   disabled  sub_feature group {
+                 } ;
+   default   sub_feature group {
+                 sub_feature fixed_image 530 170 "images/arrow-up.png" ;
+             } ;
+   selected  sub_feature group {
+                 sub_feature fixed_image 530 170 "images/arrow-up-s.png" ;
+                 sub_feature timer 8 {
+                     activate_part F:ScrollList.UpArrow default ;
+                 } ;
+             } ;
+} ;
+
+#
+# The down arrow key on the right side of the scroll list.
+#
+feature assembly F:ScrollList.DownArrow {
+   default   sub_feature fixed_image 530 350 "images/arrow-down.png" ;
+   disabled  sub_feature group { } ;   
+   selected  sub_feature group {
+                 sub_feature fixed_image 530 350 "images/arrow-down-s.png" ;
+                 sub_feature timer 8 {
+                     activate_part F:ScrollList.DownArrow default ;
+                 } ;
+             } ;
+} ;
+
+
+# The elements are cloned by the ScrollListDirector
+# to adapt to the number of bullet points needed
+# for listing all the Contributor's films.
+feature group F:FilmDetailsGroup {  
+  F:FilmDescription
+} ;
+
+
+feature translator_model F:FilmDescription.Pos {
+        0       0 0     linear-relative         # Controlled by director
+} ;
+
+feature translator F:FilmDescription F:FilmDescription.Pos {
+        F:FilmDescription.Pos
+        sub_feature group {
+          F:ScrollList.Bullet
+          F:ScrollList.FilmName       
+        } ;
+} ;
+
+feature fixed_image F:ScrollList.Bullet 
+   0 0 images/bullet.png
+;
+
+feature text F:ScrollList.FilmName left 20 baseline 16 
+   "Film 0 (year 2009)             " 
+   "Vera Sans" plain 24 {
+      { 243 243 243 255 }
+   }
+; 
+
+#
+# Now, here is a collection of Translators that allows the list to be
+# "scrollable".
+#
+# The base translator, F:FilmDetailsBaseTranslator, moves the list of
+# Film names to the coordiate where we want the list to be displayed.
+# When there is an up/down key stroke from the user, then 
+# F:FilmNamesScrollingDown or F:FilmNamesScrollingDown kicks in
+# to show the "sliding effect" of the elements in the scrolling list.
+# Once the sliding finishes, the final translator, F:FilmDetailsScroller,
+# is updated by the ScrollListDirector so that the items appear shifted.
+# 
+# Finally, a clipped feature, F:FilmDetailsClipped, is used to confine the
+# area of display regardless of what gets translated underneath.
+#
+
+feature translator F:FilmDetailsBaseTranslator F:FilmDetailsBaseCoords {   
+   F:FilmDetailsGroup 
+   F:FilmDetailsBaseCoords 
+   } ; 
+   
+feature translator_model F:FilmDetailsBaseCoords 
+    { 0 60 200 linear-relative }
+;
+
+feature translator F:FilmDetailsScroller F:FilmDetailsScrollCoords {
+        F:FilmDetailsBaseTranslator  
+        F:FilmDetailsScrollCoords 
+   } ;
+   
+   
+feature translator_model F:FilmDetailsScrollCoords 
+    { 0 0 0 linear-relative } # Controller by the ScrollListDirector
+;   
+
+
+feature translator F:FilmNamesScrollingDown F:ScrollingDownMovement {
+   F:FilmDetailsScroller 
+   F:ScrollingDownMovement 
+   } ;
+   
+feature translator_model F:ScrollingDownMovement {
+                 0 0 0 start 
+                 8 0 -175 ease-out-circ 
+             } end_commands {                
+                 java_command [[
+                    getDirector().scrollList.finishScrollDown();
+                  ]]
+                 activate_part F:FilmNamesScrollerAssembly default ;
+             } ;
+             
+feature translator F:FilmNamesScrollingUp F:ScrollingUpMovement {
+   F:FilmDetailsScroller 
+   F:ScrollingUpMovement 
+   } ;
+   
+feature translator_model F:ScrollingUpMovement {
+                 0 0 0 start 
+                 8 0 175 ease-out-circ 
+             } end_commands {     
+                 java_command [[
+                    getDirector().scrollList.finishScrollUp();
+                 ]]
+                 activate_part F:FilmNamesScrollerAssembly default ;
+             } ;
+
+feature assembly F:FilmNamesScrollerAssembly {
+   default   F:FilmDetailsScroller 
+   up        F:FilmNamesScrollingUp
+   down      F:FilmNamesScrollingDown                
+} ;
+
+feature clipped F:FilmDetailsClipped F:FilmNamesScrollerAssembly 
+   ( 30 190 610 360 )
+ ;
+
+##
+## Segments
+##
+
+segment S:Initialize 
+    setup { 
+        F:Everything
+    } next {  
+        java_command [[ 
+                getDirector().initialize(); 
+        ]]
+        activate_segment S:ShowScrollList ;
+    }
+;
+
+segment S:ShowScrollList
+    active {
+       F:ScrollList
+    } setup {
+       F:Everything
+    } rc_handlers {
+      H:ScrollFilmUp 
+      H:ScrollFilmDown 
+      H:Enter 
+      H:Left 
+      H:Right      
+    } 
+;
+
+rc_handler key_pressed H:Left {
+  left
+    } execute {
+       segment_done ;
+    }
+;
+
+rc_handler key_pressed H:Right {
+        right
+    } execute {
+       segment_done ;
+    }
+;
+
+rc_handler key_pressed H:ScrollFilmUp {
+        up
+    } execute {
+        java_command [[ getDirector().scrollList.startScrollUp(); ]]
+    }
+;
+
+rc_handler key_pressed H:ScrollFilmDown {
+        down
+    } execute {
+        java_command [[ getDirector().scrollList.startScrollDown(); ]]
+    }
+;
+
+rc_handler key_pressed H:Enter {
+        enter
+    } execute {
+            segment_done ;
+    }
+;
+
+end_show

@@ -1,0 +1,12 @@
+
+#
+#  This file is included from within main_show.txt.
+#
+
+segment S:Initialize
+    setup {
+        F:Everything
+    } setup_done {
+        activate_segment S:Main ;
+    }
+;

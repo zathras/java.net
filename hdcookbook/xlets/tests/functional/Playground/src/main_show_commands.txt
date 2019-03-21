@@ -1,0 +1,30 @@
+
+#
+#  This file is included from within main_show.txt.
+#
+
+java_generated_class MainShowCommands [[
+
+    import com.hdcookbook.grin.Show;
+    import com.hdcookbook.grin.GrinXHelper;
+    import com.hdcookbook.grin.util.Debug;
+    import java.util.Random;
+
+    public class MainShowCommands extends GrinXHelper {
+
+        private static Random random = new Random();
+
+        public MainShowCommands(Show show) {
+            super(show);
+        }
+
+        public MainDirector getMainDirector() {
+            return (MainDirector) show.getDirector();
+        }
+
+        JAVA_COMMAND_BODY 
+
+    }
+
+]]
+

@@ -1,0 +1,231 @@
+<?xml version="1.0"?>
+<!--
+Copyright  1990-2006 Sun Microsystems, Inc. All Rights Reserved.
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version
+2 only, as published by the Free Software Foundation.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+General Public License version 2 for more details (a copy is
+included at /legal/license.txt).
+
+You should have received a copy of the GNU General Public License
+version 2 along with this work; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+02110-1301 USA
+
+Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa
+Clara, CA 95054 or visit www.sun.com if you need additional
+information or have any questions.
+-->
+<project basedir=".">
+
+    <presetdef name="java.tools">
+        <java fork="true" failOnError="true"/>
+    </presetdef>
+    
+<target
+name = "sign-jars"
+depends="security.check">
+    <path id="sec.tools.path"> 
+       <pathelement location="${security.jar}"/>
+       <pathelement location="${bouncycastle.jar}"/>
+       <pathelement location="${java.home}/../lib/tools.jar"/>
+    </path>
+    <copy file="${logger.jar}" tofile="${dist.dir}/99999.jar"/>
+    <java.tools classname="net.java.bd.tools.security.BDCertGenerator">
+	<arg value="-root"/> 
+        <arg value="-dn"/> 
+        <arg value="CN=ReaderRoot, OU=Studio, O=BDJCompany"/>
+        <arg value="7fff1234"/>
+        <classpath refid="sec.tools.path"/> 
+    </java.tools>
+    <java.tools classname="net.java.bd.tools.security.BDCertGenerator">
+	<arg value="-app"/> 
+        <arg value="-dn"/> 
+        <arg value="CN=ReaderApp, OU=Production, O=BDJCompany"/> 
+        <arg value="7fff1234"/>
+        <classpath refid="sec.tools.path"/> 
+    </java.tools>
+    <java.tools classname="net.java.bd.tools.security.BDSigner">
+	    <arg value="-debug"/>
+            <arg value="${dist.dir}/99999.jar"/>
+       <classpath refid="sec.tools.path"/> 
+    </java.tools>
+    <delete file="${basedir}/grantor.store"/>
+    <copy file="../Writer/keystore.store" tofile="${basedir}/grantor.store"/>
+    <java.tools classname="net.java.bd.tools.security.BDCredentialSigner">
+       <arg value="-debug"/> 
+       <arg value="storage/bluray.ReadFromStorageXlet.perm"/> 
+       <arg value="${dist.dir}/${bdjo-name}.jar"/>
+       <classpath refid="sec.tools.path"/>    
+    </java.tools>	
+</target>
+	
+<target name="security.check">
+   <available file="${security.jar}" type="file" property="security.ok"/>
+   
+   <fail unless="security.ok"
+       message="security.jar property(${security.jar}) seems to be invalid.  Please provide the location with the -D option to ant"/>       
+</target>
+
+<target name="gen-bdjo-desc"
+    depends="gen-bdjo-desc-file"/>
+
+<target name="generate-bdmv-files">
+    <java.tools jar="${id.jar}">
+        <arg value="bdmv/id.xml"/>
+        <arg value="${dist.dir}/id.bdmv"/>
+    </java.tools>
+    <java.tools jar="${movieobject.jar}">
+        <arg value="bdmv/MovieObject.xml"/>
+        <arg value="${dist.dir}/MovieObject.bdmv"/>
+    </java.tools>
+    <java.tools jar="${index.jar}">
+        <arg value="bdmv/index.xml"/>
+        <arg value="${dist.dir}/index.bdmv"/>
+    </java.tools>
+</target>
+
+<target name="copy-to-bdmv"
+        depends="generate-bdmv-files, gen-bdjo-desc">
+    <mkdir dir="${HDC_DISK_BDMV}/AUXDATA"/>
+    <mkdir dir="${HDC_DISK_BDMV}/BDJO"/>
+    <mkdir dir="${HDC_DISK_BDMV}/CLIPINF"/>
+    <mkdir dir="${HDC_DISK_BDMV}/JAR"/>
+    <mkdir dir="${HDC_DISK_BDMV}/META"/>
+    <mkdir dir="${HDC_DISK_BDMV}/PLAYLIST"/>
+    <mkdir dir="${HDC_DISK_BDMV}/STREAM"/>
+    <mkdir dir="${HDC_DISK_BDMV}/../CERTIFICATE"/>
+
+    <copy todir = "${HDC_DISK_BDMV}/JAR">
+        <fileset dir="${dist.dir}">
+            <include name="*.jar"/>
+        </fileset>
+    </copy>
+    <copy todir = "${HDC_DISK_BDMV}/BDJO"
+          file="${dist.dir}/${bdjo-name}.bdjo"/>
+    <copy todir = "${HDC_DISK_BDMV}/../CERTIFICATE"
+          file="app.discroot.crt"/>
+    <copy todir="${HDC_DISK_BDMV}"
+          file="${dist.dir}/index.bdmv"/>
+    <copy todir="${HDC_DISK_BDMV}"
+          file="${dist.dir}/MovieObject.bdmv"/>
+    <copy todir="${HDC_DISK_BDMV}/../CERTIFICATE"
+          file="${dist.dir}/id.bdmv"/>
+
+    <copy todir="${HDC_DISK_BDMV}/../CERTIFICATE/BACKUP">
+        <fileset dir="${HDC_DISK_BDMV}/../CERTIFICATE"/>
+    </copy>
+    <copy todir="${HDC_DISK_BDMV}/BACKUP">
+        <fileset dir="${HDC_DISK_BDMV}">
+            <include name="index.bdmv"/>
+            <include name="MovieObject.bdmv"/>
+            <include name="BDJO/**"/>
+            <include name="CLIPINF/**"/>
+            <include name="JAR/**"/>
+            <include name="PLAYLIST/**"/>
+        </fileset>
+    </copy>
+</target>
+    
+<target
+    name="gen-bdjo-desc-file"
+    depends="gen-bdjo-desc.tmp"
+
+    if="update-bdjo-desc.file">
+
+    <move file="${bdjo-desc-file}.tmp" tofile="${bdjo-desc-file}"/>
+    
+    <java.tools
+        jar="${bdjo.jar}">
+        <arg value="${bdjo-desc-file}"/> 
+        <arg value="${dist.dir}/${bdjo-name}.bdjo"/>
+    </java.tools>
+    
+</target>
+
+<target name="bdjoconverter.check">
+   <available file="${bdjo.jar}" type="file" property="bdjoconverter.ok"/>
+   
+   <fail unless="bdjoconverter.ok"
+       message="bdjo.jar property(${bdjo.jar}) seems to be invalid.  Please provide the location with the -D option to ant"/>
+       
+   <property name="bdjo-desc-file"
+             value="${dist.dir}/${bdjo-name}.xml"/>
+</target>
+
+<target name="gen-bdjo-desc.tmp" depends="bdjoconverter.check">
+
+    <concat destfile="${bdjo-desc-file}.tmp"><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!-- This file contains information determined at a build time -->
+<!-- AUTO-GENERATED - DO NOT EDIT -->
+
+<bdjo>
+    <appCacheInfo>
+        <entries>
+            <language>*.*</language>
+            <name>00000</name>
+            <type>1</type>
+        </entries>
+        <entries>
+            <language>*.*</language>
+            <name>99999</name>
+            <type>1</type>
+        </entries>
+    </appCacheInfo>
+    <applicationManagementTable>
+        <applications>
+            <applicationDescriptor>
+                <baseDirectory>00000</baseDirectory>
+                <binding>TITLE_BOUND_DISC_BOUND</binding>
+                <classpathExtension>/99999</classpathExtension>
+                <iconFlags>0x0</iconFlags>
+                <iconLocator></iconLocator>
+                <initialClassName>${xlet-name}</initialClassName>
+                <priority>3</priority>
+                <profiles>
+                    <majorVersion>1</majorVersion>
+                    <microVersion>0</microVersion>
+                    <minorVersion>0</minorVersion>
+                    <profile>1</profile>
+                </profiles>
+                <visibility>V_01</visibility>
+            </applicationDescriptor>
+            <applicationId>0x4002</applicationId>
+            <controlCode>0x1</controlCode>
+            <organizationId>0x7fff1234</organizationId>
+            <type>0x1</type>
+        </applications>
+    </applicationManagementTable>
+    <fileAccessInfo>.</fileAccessInfo>
+    <keyInterestTable>0x0</keyInterestTable>
+    <tableOfAccessiblePlayLists>
+        <accessToAllFlag>false</accessToAllFlag>
+        <autostartFirstPlayListFlag>false</autostartFirstPlayListFlag>
+    </tableOfAccessiblePlayLists>
+    <terminalInfo>
+        <defaultFontFile>00000</defaultFontFile>
+        <initialHaviConfig>HD_1920_1080</initialHaviConfig>
+        <menuCallMask>false</menuCallMask>
+        <titleSearchMask>false</titleSearchMask>
+    </terminalInfo>
+    <version>V_0200</version>
+</bdjo>
+
+]]></concat>
+
+    <condition property="update-bdjo-desc.file">
+        <not>
+            <filesmatch
+                file1="${bdjo-desc-file}.tmp"
+                file2="${bdjo-desc-file}"/>
+        </not>
+    </condition>
+</target>
+
+</project>

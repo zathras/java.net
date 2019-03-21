@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mplsObject>
+    <version>0200</version>
+    <appInfoPlayList>
+        <audioMixAppFlag>false</audioMixAppFlag>
+        <losslessFlag>false</losslessFlag>
+        <playListRandomAccessFlag>false</playListRandomAccessFlag>
+        <playbackCount>0</playbackCount>
+        <playbackType>SEQUENTIAL</playbackType>
+        <UOMaskTable/>
+    </appInfoPlayList>
+    <playList>
+        <PlayItem id="0">
+            <Angle id="0">
+                <clipName>00000</clipName>
+                <stcId>0</stcId>
+            </Angle>
+            <connectionCondition>1</connectionCondition>
+            <inTime>27000000</inTime>
+            <isDifferentAudios>false</isDifferentAudios>
+            <isMultiAngle>false</isMultiAngle>
+            <isSeamlessAngleChange>false</isSeamlessAngleChange>
+            <outTime>29864111</outTime>
+            <playItemRandomAccessFlag>false</playItemRandomAccessFlag>
+            <stillMode>0</stillMode>
+            <stillTime>0</stillTime>
+            <stnTable>
+                <PrimaryVideoStream id="0">
+                    <streamAttribute streamCodingType="0x1b">
+                        <frameRate>Hz_24000_1001</frameRate>
+                        <videoFormat>VIDEO_1080p</videoFormat>
+                    </streamAttribute>
+                    <streamEntry>
+                        <refToStreamPIDOfMainClip>4113</refToStreamPIDOfMainClip>
+                        <refToStreamPIDOfSubClip>0</refToStreamPIDOfSubClip>
+                        <refToSubClipEntryId>0</refToSubClipEntryId>
+                        <refToSubPathId>0</refToSubPathId>
+                        <streamType>STREAM_FOR_PLAYITEM</streamType>
+                    </streamEntry>
+                </PrimaryVideoStream>
+            </stnTable>
+            <uoMaskTable/>
+        </PlayItem>
+    </playList>
+    <playListMark>
+        <Mark id="0">
+            <duration>0</duration>
+            <entryEsPid>0xffff</entryEsPid>
+            <markTimeStamp>27000000</markTimeStamp>
+            <playItemIdRef>0</playItemIdRef>
+            <type>0x1</type>
+        </Mark>
+    </playListMark>
+    <paddingN1>0</paddingN1>
+    <paddingN2>0</paddingN2>
+    <paddingN3>0</paddingN3>
+    <paddingN4>0</paddingN4>
+</mplsObject>

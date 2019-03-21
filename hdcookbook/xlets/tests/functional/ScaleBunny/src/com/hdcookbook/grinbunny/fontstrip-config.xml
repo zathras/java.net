@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<inputData>
+    
+    <fontDescription name="Arial">
+        <physicalName>Arial</physicalName>
+        <fontSize>60</fontSize>
+        <margin>20</margin>
+        <backgroundColorValue>0xffffff</backgroundColorValue>
+        <charactorColorValue>0x0000FF</charactorColorValue>
+        <boundingRectColorValue>0x004455</boundingRectColorValue>
+        <pixelRectColorValue>0xff0000</pixelRectColorValue>
+    </fontDescription>
+    
+    <fontImageFile>
+        <fontName>Arial</fontName> <!-- Points to fontDescription -->
+        <designImage>fontstrip-edit.png</designImage>
+        <finalImage>images/fontstrip.png</finalImage>
+        <charList>0123456789MTime:Scor </charList>
+    </fontImageFile>
+    
+</inputData>

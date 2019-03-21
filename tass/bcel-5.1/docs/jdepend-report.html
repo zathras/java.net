@@ -1,0 +1,7245 @@
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+  
+  
+      
+  
+
+      
+      
+      
+      
+      
+      
+        
+         
+      
+      
+
+      
+      
+      
+      
+
+      
+      
+      
+
+      
+
+
+  
+  
+
+   
+   
+
+
+
+    <!DOCTYPE html PUBLIC "-//CollabNet//DTD XHTML 1.0 Transitional//EN" "http://www.collabnet.com/dtds/collabnet_transitional_10.dtd">
+
+    <html>
+      <head>
+        
+        
+          <title>
+            BCEL - 
+          JDepend Source Code Analysis
+        
+          </title>
+        
+        
+        
+        
+        <style type="text/css">
+          @import url("./style/tigris.css");
+          @import url("./style/maven.css");
+        </style>
+        
+        <link rel="stylesheet" href="./style/print.css" type="text/css" media="print"></link>
+        
+      </head>
+
+      <body marginwidth="0" class="composite" marginheight="0">
+        <div id="banner">
+          <table border="0" width="100%" cellpadding="8" cellspacing="0">
+            <tr>
+              
+              <td>
+                
+                
+              </td>
+
+              
+              <td>
+                <div id="login" align="right">
+                  
+                  
+                    
+                    
+                    
+                      
+                    
+
+                    <a href="http://jakarta.apache.org/bcel/">
+                      <img border="0" alt="jakarta-bcel" src="./images/bcel-logo.gif" align="right"></img>
+                    </a>
+                  
+                </div>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div id="breadcrumbs">
+          <table border="0" width="100%" cellpadding="4" cellspacing="0">
+            <tr>
+              
+              
+              
+              <td>
+                <div align="right">
+                  
+                  
+                  
+                  
+                    
+                  
+                </div>
+              </td>
+            </tr>
+          </table>
+        </div>
+        
+        <table border="0" width="100%" cellpadding="8" cellspacing="0"> 
+          <tr valign="top">
+            <td width="20%" id="leftcol">
+              <div id="navcolumn">
+                
+
+                
+                  
+    <div>
+      <strong>BCEL</strong>
+      
+    <div>
+      
+      
+      <small><a href="./index.html">Front Page</a></small>
+      
+    </div>
+  
+    <div>
+      
+      
+      <small><a href="./news.html">News and Status</a></small>
+      
+    </div>
+  
+    <div>
+      
+      
+      <small><a href="http://jakarta.apache.org/builds/jakarta-bcel/release/">Distributions</a></small>
+      
+    </div>
+  
+    </div>
+  
+    <div>
+      <strong>Documentation</strong>
+      
+    <div>
+      
+      
+      <small><a href="./manual.html">Manual</a></small>
+      
+    </div>
+  
+    <div>
+      
+      
+      <small><a href="./faq.html">FAQ</a></small>
+      
+    </div>
+  
+    </div>
+  
+    <div>
+      <strong>Get Involved</strong>
+      
+    <div>
+      
+      
+      <small><a href="./projects.html">Projects</a></small>
+      
+    </div>
+  
+    </div>
+  
+                
+
+                
+                
+
+                
+                
+                <div>
+                  <strong>Project Documentation</strong>
+                  <div>
+                    <small>
+                      <a href="./index.html">Front Page</a>
+                    </small>
+                  </div>
+                  <div>
+                    <small>
+                      <a href="./project-info.html">Project Info</a>
+                    </small>
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                  </div>
+                  <div>
+                    <small>
+                      <a href="./maven-reports.html">Project Reports</a>
+                    </small>
+                    
+                      
+                      
+                        
+                        
+                        
+                          
+                        
+                          
+                        
+                          
+                        
+                          
+                        
+                          
+                        
+                          
+                            
+                            
+                              <div>
+                                <small>
+                                  <a href="./task-list.html">Task List</a>
+                                </small>
+                              </div>
+                            
+                            
+                            
+                              <div>
+                                <small>
+                                  <a href="./changelog-report.html">Change Log</a>
+                                </small>
+                              </div>
+                              <div>
+                                <small>
+                                  <a href="./developer-activity-report.html">Developer Activity</a>
+                                </small>
+                              </div>
+                              <div>
+                                <small>
+                                  <a href="./file-activity-report.html">File Activity</a>
+                                </small>
+                              </div>
+                            
+                            
+                            
+                              <div>
+                                <small>
+                                  <a href="./jdepend-report.html">Metric Results</a>
+                                </small>
+                              </div>
+                              <div>
+                                <small>
+                                  <a href="./checkstyle-report.html">Checkstyle Report</a>
+                                </small>
+                              </div>
+                              <div>
+                                <small>
+                                  <a href="./javadoc.html">Javadoc Report</a>
+                                </small>
+                              </div>
+                            
+                            
+                            
+                          
+                        
+                          
+                        
+                          
+                        
+                          
+                        
+                          
+                        
+                          
+                        
+                          
+                        
+                      
+                    
+                  </div>
+                  
+                    
+                      <div>
+                        <small>
+                          <a href="./apidocs/index.html">JavaDocs</a>
+                        </small>
+                      </div>
+                      <div>
+                        <small>
+                          <a href="./xref/index.html">Source XReference</a>
+                        </small>
+                      </div>
+                      
+                    
+                  
+                  
+                  
+                  
+                  
+                    <div>
+                      <small>
+                        
+                        <a href="http://jakarta.apache.org/turbine/maven/development-process.html">Development Process</a>
+                      </small>
+                    </div>
+                  
+                </div>
+              
+                
+              </div>
+            </td>
+            <td>
+              <div id="bodycol">
+                
+                <div class="app">
+                  
+                  
+    <div class="h3">
+      
+      
+        <h3>
+          <a name="Metric Results">Metric Results</a>
+        </h3>
+      
+      
+    <p>
+      [
+        
+    <a href="#Summary">
+      summary
+    </a>
+   ] [
+        
+    <a href="#Packages">
+      packages
+    </a>
+   ] [
+        
+    <a href="#Cycles">
+      cycles
+    </a>
+   ] [
+        
+    <a href="#Explanations">
+      explanations
+    </a>
+   ]
+    </p>
+   
+    <p>
+      The following document contains the results of a
+        
+    <a href="http://www.clarkware.com/software/JDepend.html">
+      JDepend
+    </a>
+   metric analysis. The various metrics are defined at the bottom of this document.
+    </p>
+   
+    </div>
+  
+    <div class="h3">
+      
+      
+        <h3>
+          <a name="Summary">Summary</a>
+        </h3>
+      
+      
+    <p>
+      [
+        
+    <a href="#Summary">
+      summary
+    </a>
+   ] [
+        
+    <a href="#Packages">
+      packages
+    </a>
+   ] [
+        
+    <a href="#Cycles">
+      cycles
+    </a>
+   ] [
+        
+    <a href="#Explanations">
+      explanations
+    </a>
+   ]
+    </p>
+   
+    
+    <table border="1" width="100%" cellspacing="2" cellpadding="3">
+      
+    
+      
+      
+        
+      
+    
+
+    
+    <tr class="a">
+    <th>
+      Package
+    </th>
+   
+    <th>
+      
+            
+    <font size="-1">
+      Total
+              
+    <br>
+      
+              
+    </br>
+   Classes
+    </font>
+   
+          
+    </th>
+   
+    <th>
+      
+            
+    <font size="-1">
+      Abstract
+              
+    <br>
+      
+              
+    </br>
+   Classes
+    </font>
+   
+          
+    </th>
+   
+    <th>
+      
+            
+    <font size="-1">
+      Concrete
+              
+    <br>
+      
+              
+    </br>
+   Classes
+    </font>
+   
+          
+    </th>
+   
+    <th>
+      
+            
+    <font size="-1">
+      Afferent
+              
+    <br>
+      
+              
+    </br>
+   Couplings
+    </font>
+   
+          
+    </th>
+   
+    <th>
+      
+            
+    <font size="-1">
+      Efferent
+              
+    <br>
+      
+              
+    </br>
+   Couplings
+    </font>
+   
+          
+    </th>
+   
+    <th>
+      
+            
+    <font size="-1">
+      Abstractness
+    </font>
+   
+          
+    </th>
+   
+    <th>
+      
+            
+    <font size="-1">
+      Instability
+    </font>
+   
+          
+    </th>
+   
+    <th>
+      
+            
+    <font size="-1">
+      Distance
+    </font>
+   
+          
+    </th>
+   </tr>
+  
+    
+      
+        
+      
+      
+    
+
+    
+    <tr class="b">
+    <td>
+      
+            
+    <a href="#org.apache.bcel">
+      org.apache.bcel
+    </a>
+   
+          
+    </td>
+   
+    <td align="right">
+      3
+    </td>
+   
+    <td>
+      3
+    </td>
+   
+    <td>
+      0
+    </td>
+   
+    <td>
+      6
+    </td>
+   
+    <td>
+      4
+    </td>
+   
+    <td>
+      1
+    </td>
+   
+    <td>
+      40%
+    </td>
+   
+    <td>
+      40%
+    </td>
+   </tr>
+  
+    
+      
+      
+        
+      
+    
+
+    
+    <tr class="a">
+    <td>
+      
+            
+    <a href="#org.apache.bcel.classfile">
+      org.apache.bcel.classfile
+    </a>
+   
+          
+    </td>
+   
+    <td align="right">
+      48
+    </td>
+   
+    <td>
+      10
+    </td>
+   
+    <td>
+      38
+    </td>
+   
+    <td>
+      6
+    </td>
+   
+    <td>
+      8
+    </td>
+   
+    <td>
+      0,21
+    </td>
+   
+    <td>
+      57%
+    </td>
+   
+    <td>
+      22%
+    </td>
+   </tr>
+  
+    
+      
+        
+      
+      
+    
+
+    
+    <tr class="b">
+    <td>
+      
+            
+    <a href="#org.apache.bcel.generic">
+      org.apache.bcel.generic
+    </a>
+   
+          
+    </td>
+   
+    <td align="right">
+      216
+    </td>
+   
+    <td>
+      44
+    </td>
+   
+    <td>
+      172
+    </td>
+   
+    <td>
+      5
+    </td>
+   
+    <td>
+      7
+    </td>
+   
+    <td>
+      0,2
+    </td>
+   
+    <td>
+      58%
+    </td>
+   
+    <td>
+      21%
+    </td>
+   </tr>
+  
+    
+      
+      
+        
+      
+    
+
+    
+    <tr class="a">
+    <td>
+      
+            
+    <a href="#org.apache.bcel.util">
+      org.apache.bcel.util
+    </a>
+   
+          
+    </td>
+   
+    <td align="right">
+      19
+    </td>
+   
+    <td>
+      1
+    </td>
+   
+    <td>
+      18
+    </td>
+   
+    <td>
+      3
+    </td>
+   
+    <td>
+      9
+    </td>
+   
+    <td>
+      0,05
+    </td>
+   
+    <td>
+      75%
+    </td>
+   
+    <td>
+      20%
+    </td>
+   </tr>
+  
+    
+      
+        
+      
+      
+    
+
+    
+    <tr class="b">
+    <td>
+      
+            
+    <a href="#org.apache.bcel.verifier">
+      org.apache.bcel.verifier
+    </a>
+   
+          
+    </td>
+   
+    <td align="right">
+      11
+    </td>
+   
+    <td>
+      3
+    </td>
+   
+    <td>
+      8
+    </td>
+   
+    <td>
+      2
+    </td>
+   
+    <td>
+      12
+    </td>
+   
+    <td>
+      0,27
+    </td>
+   
+    <td>
+      86%
+    </td>
+   
+    <td>
+      13%
+    </td>
+   </tr>
+  
+    
+      
+      
+        
+      
+    
+
+    
+    <tr class="a">
+    <td>
+      
+            
+    <a href="#org.apache.bcel.verifier.exc">
+      org.apache.bcel.verifier.exc
+    </a>
+   
+          
+    </td>
+   
+    <td align="right">
+      14
+    </td>
+   
+    <td>
+      4
+    </td>
+   
+    <td>
+      10
+    </td>
+   
+    <td>
+      2
+    </td>
+   
+    <td>
+      2
+    </td>
+   
+    <td>
+      0,29
+    </td>
+   
+    <td>
+      50%
+    </td>
+   
+    <td>
+      21%
+    </td>
+   </tr>
+  
+    
+      
+        
+      
+      
+    
+
+    
+    <tr class="b">
+    <td>
+      
+            
+    <a href="#org.apache.bcel.verifier.statics">
+      org.apache.bcel.verifier.statics
+    </a>
+   
+          
+    </td>
+   
+    <td align="right">
+      9
+    </td>
+   
+    <td>
+      0
+    </td>
+   
+    <td>
+      9
+    </td>
+   
+    <td>
+      1
+    </td>
+   
+    <td>
+      7
+    </td>
+   
+    <td>
+      0
+    </td>
+   
+    <td>
+      88%
+    </td>
+   
+    <td>
+      12%
+    </td>
+   </tr>
+  
+    
+      
+      
+        
+      
+    
+
+    
+    <tr class="a">
+    <td>
+      
+            
+    <a href="#org.apache.bcel.verifier.structurals">
+      org.apache.bcel.verifier.structurals
+    </a>
+   
+          
+    </td>
+   
+    <td align="right">
+      14
+    </td>
+   
+    <td>
+      2
+    </td>
+   
+    <td>
+      12
+    </td>
+   
+    <td>
+      1
+    </td>
+   
+    <td>
+      9
+    </td>
+   
+    <td>
+      0,14
+    </td>
+   
+    <td>
+      90%
+    </td>
+   
+    <td>
+      4%
+    </td>
+   </tr>
+  
+    </table>
+  
+    </div>
+  
+    <div class="h3">
+      
+      
+        <h3>
+          <a name="Packages">Packages</a>
+        </h3>
+      
+      
+    <p>
+      [
+        
+    <a href="#Summary">
+      summary
+    </a>
+   ] [
+        
+    <a href="#Packages">
+      packages
+    </a>
+   ] [
+        
+    <a href="#Cycles">
+      cycles
+    </a>
+   ] [
+        
+    <a href="#Explanations">
+      explanations
+    </a>
+   ]
+    </p>
+   
+    <div class="h4">
+      
+      
+        <h4>
+          <a name="org.apache.bcel">org.apache.bcel</a>
+        </h4>
+      
+      
+    
+    <table border="1" width="100%" cellspacing="2" cellpadding="3">
+      
+    
+      
+        
+      
+      
+    
+
+    
+    <tr class="b">
+    <th>
+      Afferent Couplings
+    </th>
+   
+    <th>
+      Efferent Couplings
+    </th>
+   
+    <th>
+      Abstractness
+    </th>
+   
+    <th>
+      Instability
+    </th>
+   
+    <th>
+      Distance
+    </th>
+   </tr>
+  
+    
+      
+      
+        
+      
+    
+
+    
+    <tr class="a">
+    <td>
+      6
+    </td>
+   
+    <td>
+      4
+    </td>
+   
+    <td>
+      100%
+    </td>
+   
+    <td>
+      40%
+    </td>
+   
+    <td>
+      40%
+    </td>
+   </tr>
+  
+    </table>
+  
+    
+    <table border="1" width="100%" cellspacing="2" cellpadding="3">
+      
+    
+      
+        
+      
+      
+    
+
+    
+    <tr class="b">
+    <th>
+      Abstract Classes
+    </th>
+   
+    <th>
+      Concrete Classes
+    </th>
+   
+    <th>
+      Used by Packages
+    </th>
+   
+    <th>
+      Uses Packages
+    </th>
+   </tr>
+  
+    
+      
+      
+        
+      
+    
+
+    
+    <tr class="a">
+    <td>
+      
+              
+    <a href="xref/org/apache/bcel/Constants.html">
+      Constants
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/ExceptionConstants.html">
+      ExceptionConstants
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/Repository.html">
+      Repository
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+            
+    </td>
+   
+    <td>
+      
+            
+    </td>
+   
+    <td>
+      
+              
+    <a href="#org.apache.bcel.classfile">
+      org.apache.bcel.classfile
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel.generic">
+      org.apache.bcel.generic
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel.util">
+      org.apache.bcel.util
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel.verifier">
+      org.apache.bcel.verifier
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel.verifier.statics">
+      org.apache.bcel.verifier.statics
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel.verifier.structurals">
+      org.apache.bcel.verifier.structurals
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+            
+    </td>
+   
+    <td>
+      
+              
+    <a href="#java.io">
+      java.io
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#java.lang">
+      java.lang
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel.classfile">
+      org.apache.bcel.classfile
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel.util">
+      org.apache.bcel.util
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+            
+    </td>
+   </tr>
+  
+    </table>
+  
+    </div>
+  
+    <div class="h4">
+      
+      
+        <h4>
+          <a name="org.apache.bcel.classfile">org.apache.bcel.classfile</a>
+        </h4>
+      
+      
+    
+    <table border="1" width="100%" cellspacing="2" cellpadding="3">
+      
+    
+      
+        
+      
+      
+    
+
+    
+    <tr class="b">
+    <th>
+      Afferent Couplings
+    </th>
+   
+    <th>
+      Efferent Couplings
+    </th>
+   
+    <th>
+      Abstractness
+    </th>
+   
+    <th>
+      Instability
+    </th>
+   
+    <th>
+      Distance
+    </th>
+   </tr>
+  
+    
+      
+      
+        
+      
+    
+
+    
+    <tr class="a">
+    <td>
+      6
+    </td>
+   
+    <td>
+      8
+    </td>
+   
+    <td>
+      21%
+    </td>
+   
+    <td>
+      57%
+    </td>
+   
+    <td>
+      22%
+    </td>
+   </tr>
+  
+    </table>
+  
+    
+    <table border="1" width="100%" cellspacing="2" cellpadding="3">
+      
+    
+      
+        
+      
+      
+    
+
+    
+    <tr class="b">
+    <th>
+      Abstract Classes
+    </th>
+   
+    <th>
+      Concrete Classes
+    </th>
+   
+    <th>
+      Used by Packages
+    </th>
+   
+    <th>
+      Uses Packages
+    </th>
+   </tr>
+  
+    
+      
+      
+        
+      
+    
+
+    
+    <tr class="a">
+    <td>
+      
+              
+    <a href="xref/org/apache/bcel/classfile/AccessFlags.html">
+      AccessFlags
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/Attribute.html">
+      Attribute
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/AttributeReader.html">
+      AttributeReader
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/Constant.html">
+      Constant
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/ConstantCP.html">
+      ConstantCP
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/ConstantObject.html">
+      ConstantObject
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/FieldOrMethod.html">
+      FieldOrMethod
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/Node.html">
+      Node
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/Utility.html">
+      Utility
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/Visitor.html">
+      Visitor
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+            
+    </td>
+   
+    <td>
+      
+              
+    <a href="xref/org/apache/bcel/classfile/ClassFormatException.html">
+      ClassFormatException
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/ClassParser.html">
+      ClassParser
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/Code.html">
+      Code
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/CodeException.html">
+      CodeException
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/ConstantClass.html">
+      ConstantClass
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/ConstantDouble.html">
+      ConstantDouble
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/ConstantFieldref.html">
+      ConstantFieldref
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/ConstantFloat.html">
+      ConstantFloat
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/ConstantInteger.html">
+      ConstantInteger
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/ConstantInterfaceMethodref.html">
+      ConstantInterfaceMethodref
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/ConstantLong.html">
+      ConstantLong
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/ConstantMethodref.html">
+      ConstantMethodref
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/ConstantNameAndType.html">
+      ConstantNameAndType
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/ConstantPool.html">
+      ConstantPool
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/ConstantString.html">
+      ConstantString
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/ConstantUtf8.html">
+      ConstantUtf8
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/ConstantValue.html">
+      ConstantValue
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/Deprecated.html">
+      Deprecated
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/DescendingVisitor.html">
+      DescendingVisitor
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/EmptyVisitor.html">
+      EmptyVisitor
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/ExceptionTable.html">
+      ExceptionTable
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/Field.html">
+      Field
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/InnerClass.html">
+      InnerClass
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/InnerClasses.html">
+      InnerClasses
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/JavaClass.html">
+      JavaClass
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/LineNumber.html">
+      LineNumber
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/LineNumberTable.html">
+      LineNumberTable
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/LocalVariable.html">
+      LocalVariable
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/LocalVariableTable.html">
+      LocalVariableTable
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/Method.html">
+      Method
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/PMGClass.html">
+      PMGClass
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/Signature.html">
+      Signature
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/SourceFile.html">
+      SourceFile
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/StackMap.html">
+      StackMap
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/StackMapEntry.html">
+      StackMapEntry
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/StackMapType.html">
+      StackMapType
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/Synthetic.html">
+      Synthetic
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/classfile/Unknown.html">
+      Unknown
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+            
+    </td>
+   
+    <td>
+      
+              
+    <a href="#org.apache.bcel">
+      org.apache.bcel
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel.generic">
+      org.apache.bcel.generic
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel.util">
+      org.apache.bcel.util
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel.verifier">
+      org.apache.bcel.verifier
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel.verifier.statics">
+      org.apache.bcel.verifier.statics
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel.verifier.structurals">
+      org.apache.bcel.verifier.structurals
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+            
+    </td>
+   
+    <td>
+      
+              
+    <a href="#java.io">
+      java.io
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#java.lang">
+      java.lang
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#java.lang.reflect">
+      java.lang.reflect
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#java.util">
+      java.util
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#java.util.zip">
+      java.util.zip
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel">
+      org.apache.bcel
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel.generic">
+      org.apache.bcel.generic
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel.util">
+      org.apache.bcel.util
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+            
+    </td>
+   </tr>
+  
+    </table>
+  
+    </div>
+  
+    <div class="h4">
+      
+      
+        <h4>
+          <a name="org.apache.bcel.generic">org.apache.bcel.generic</a>
+        </h4>
+      
+      
+    
+    <table border="1" width="100%" cellspacing="2" cellpadding="3">
+      
+    
+      
+        
+      
+      
+    
+
+    
+    <tr class="b">
+    <th>
+      Afferent Couplings
+    </th>
+   
+    <th>
+      Efferent Couplings
+    </th>
+   
+    <th>
+      Abstractness
+    </th>
+   
+    <th>
+      Instability
+    </th>
+   
+    <th>
+      Distance
+    </th>
+   </tr>
+  
+    
+      
+      
+        
+      
+    
+
+    
+    <tr class="a">
+    <td>
+      5
+    </td>
+   
+    <td>
+      7
+    </td>
+   
+    <td>
+      20%
+    </td>
+   
+    <td>
+      58%
+    </td>
+   
+    <td>
+      21%
+    </td>
+   </tr>
+  
+    </table>
+  
+    
+    <table border="1" width="100%" cellspacing="2" cellpadding="3">
+      
+    
+      
+        
+      
+      
+    
+
+    
+    <tr class="b">
+    <th>
+      Abstract Classes
+    </th>
+   
+    <th>
+      Concrete Classes
+    </th>
+   
+    <th>
+      Used by Packages
+    </th>
+   
+    <th>
+      Uses Packages
+    </th>
+   </tr>
+  
+    
+      
+      
+        
+      
+    
+
+    
+    <tr class="a">
+    <td>
+      
+              
+    <a href="xref/org/apache/bcel/generic/AllocationInstruction.html">
+      AllocationInstruction
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/ArithmeticInstruction.html">
+      ArithmeticInstruction
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/ArrayInstruction.html">
+      ArrayInstruction
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/BranchInstruction.html">
+      BranchInstruction
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/CPInstruction.html">
+      CPInstruction
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/ClassObserver.html">
+      ClassObserver
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/CompoundInstruction.html">
+      CompoundInstruction
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/ConstantPushInstruction.html">
+      ConstantPushInstruction
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/ConversionInstruction.html">
+      ConversionInstruction
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/EmptyVisitor.html">
+      EmptyVisitor
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/ExceptionThrower.html">
+      ExceptionThrower
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/FieldGenOrMethodGen.html">
+      FieldGenOrMethodGen
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/FieldInstruction.html">
+      FieldInstruction
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/FieldObserver.html">
+      FieldObserver
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/FieldOrMethod.html">
+      FieldOrMethod
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/GotoInstruction.html">
+      GotoInstruction
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/IfInstruction.html">
+      IfInstruction
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/IndexedInstruction.html">
+      IndexedInstruction
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/Instruction.html">
+      Instruction
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/InstructionComparator.html">
+      InstructionComparator
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/InstructionConstants.html">
+      InstructionConstants
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/InstructionListObserver.html">
+      InstructionListObserver
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/InstructionTargeter.html">
+      InstructionTargeter
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/InvokeInstruction.html">
+      InvokeInstruction
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/JsrInstruction.html">
+      JsrInstruction
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/LoadClass.html">
+      LoadClass
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/LoadInstruction.html">
+      LoadInstruction
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/LocalVariableInstruction.html">
+      LocalVariableInstruction
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/MethodObserver.html">
+      MethodObserver
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/NamedAndTyped.html">
+      NamedAndTyped
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/PopInstruction.html">
+      PopInstruction
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/PushInstruction.html">
+      PushInstruction
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/ReferenceType.html">
+      ReferenceType
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/ReturnInstruction.html">
+      ReturnInstruction
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/Select.html">
+      Select
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/StackConsumer.html">
+      StackConsumer
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/StackInstruction.html">
+      StackInstruction
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/StackProducer.html">
+      StackProducer
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/StoreInstruction.html">
+      StoreInstruction
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/Type.html">
+      Type
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/TypedInstruction.html">
+      TypedInstruction
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/UnconditionalBranch.html">
+      UnconditionalBranch
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/VariableLengthInstruction.html">
+      VariableLengthInstruction
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/Visitor.html">
+      Visitor
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+            
+    </td>
+   
+    <td>
+      
+              
+    <a href="xref/org/apache/bcel/generic/AALOAD.html">
+      AALOAD
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/AASTORE.html">
+      AASTORE
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/ACONST_NULL.html">
+      ACONST_NULL
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/ALOAD.html">
+      ALOAD
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/ANEWARRAY.html">
+      ANEWARRAY
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/ARETURN.html">
+      ARETURN
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/ARRAYLENGTH.html">
+      ARRAYLENGTH
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/ASTORE.html">
+      ASTORE
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/ATHROW.html">
+      ATHROW
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/ArrayType.html">
+      ArrayType
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/BALOAD.html">
+      BALOAD
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/BASTORE.html">
+      BASTORE
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/BIPUSH.html">
+      BIPUSH
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/BREAKPOINT.html">
+      BREAKPOINT
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/BasicType.html">
+      BasicType
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/BranchHandle.html">
+      BranchHandle
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/CALOAD.html">
+      CALOAD
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/CASTORE.html">
+      CASTORE
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/CHECKCAST.html">
+      CHECKCAST
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/ClassGen.html">
+      ClassGen
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/ClassGenException.html">
+      ClassGenException
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/CodeExceptionGen.html">
+      CodeExceptionGen
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/ConstantPoolGen.html">
+      ConstantPoolGen
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/D2F.html">
+      D2F
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/D2I.html">
+      D2I
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/D2L.html">
+      D2L
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/DADD.html">
+      DADD
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/DALOAD.html">
+      DALOAD
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/DASTORE.html">
+      DASTORE
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/DCMPG.html">
+      DCMPG
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/DCMPL.html">
+      DCMPL
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/DCONST.html">
+      DCONST
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/DDIV.html">
+      DDIV
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/DLOAD.html">
+      DLOAD
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/DMUL.html">
+      DMUL
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/DNEG.html">
+      DNEG
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/DREM.html">
+      DREM
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/DRETURN.html">
+      DRETURN
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/DSTORE.html">
+      DSTORE
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/DSUB.html">
+      DSUB
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/DUP.html">
+      DUP
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/DUP2.html">
+      DUP2
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/DUP2_X1.html">
+      DUP2_X1
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/DUP2_X2.html">
+      DUP2_X2
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/DUP_X1.html">
+      DUP_X1
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/DUP_X2.html">
+      DUP_X2
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/F2D.html">
+      F2D
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/F2I.html">
+      F2I
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/F2L.html">
+      F2L
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/FADD.html">
+      FADD
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/FALOAD.html">
+      FALOAD
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/FASTORE.html">
+      FASTORE
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/FCMPG.html">
+      FCMPG
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/FCMPL.html">
+      FCMPL
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/FCONST.html">
+      FCONST
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/FDIV.html">
+      FDIV
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/FLOAD.html">
+      FLOAD
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/FMUL.html">
+      FMUL
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/FNEG.html">
+      FNEG
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/FREM.html">
+      FREM
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/FRETURN.html">
+      FRETURN
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/FSTORE.html">
+      FSTORE
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/FSUB.html">
+      FSUB
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/FieldGen.html">
+      FieldGen
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/GETFIELD.html">
+      GETFIELD
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/GETSTATIC.html">
+      GETSTATIC
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/GOTO.html">
+      GOTO
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/GOTO_W.html">
+      GOTO_W
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/I2B.html">
+      I2B
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/I2C.html">
+      I2C
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/I2D.html">
+      I2D
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/I2F.html">
+      I2F
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/I2L.html">
+      I2L
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/I2S.html">
+      I2S
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/IADD.html">
+      IADD
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/IALOAD.html">
+      IALOAD
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/IAND.html">
+      IAND
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/IASTORE.html">
+      IASTORE
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/ICONST.html">
+      ICONST
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/IDIV.html">
+      IDIV
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/IFEQ.html">
+      IFEQ
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/IFGE.html">
+      IFGE
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/IFGT.html">
+      IFGT
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/IFLE.html">
+      IFLE
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/IFLT.html">
+      IFLT
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/IFNE.html">
+      IFNE
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/IFNONNULL.html">
+      IFNONNULL
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/IFNULL.html">
+      IFNULL
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/IF_ACMPEQ.html">
+      IF_ACMPEQ
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/IF_ACMPNE.html">
+      IF_ACMPNE
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/IF_ICMPEQ.html">
+      IF_ICMPEQ
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/IF_ICMPGE.html">
+      IF_ICMPGE
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/IF_ICMPGT.html">
+      IF_ICMPGT
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/IF_ICMPLE.html">
+      IF_ICMPLE
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/IF_ICMPLT.html">
+      IF_ICMPLT
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/IF_ICMPNE.html">
+      IF_ICMPNE
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/IINC.html">
+      IINC
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/ILOAD.html">
+      ILOAD
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/IMPDEP1.html">
+      IMPDEP1
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/IMPDEP2.html">
+      IMPDEP2
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/IMUL.html">
+      IMUL
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/INEG.html">
+      INEG
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/INSTANCEOF.html">
+      INSTANCEOF
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/INVOKEINTERFACE.html">
+      INVOKEINTERFACE
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/INVOKESPECIAL.html">
+      INVOKESPECIAL
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/INVOKESTATIC.html">
+      INVOKESTATIC
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/INVOKEVIRTUAL.html">
+      INVOKEVIRTUAL
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/IOR.html">
+      IOR
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/IREM.html">
+      IREM
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/IRETURN.html">
+      IRETURN
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/ISHL.html">
+      ISHL
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/ISHR.html">
+      ISHR
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/ISTORE.html">
+      ISTORE
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/ISUB.html">
+      ISUB
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/IUSHR.html">
+      IUSHR
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/IXOR.html">
+      IXOR
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/InstructionFactory.html">
+      InstructionFactory
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/InstructionHandle.html">
+      InstructionHandle
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/InstructionList.html">
+      InstructionList
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/JSR.html">
+      JSR
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/JSR_W.html">
+      JSR_W
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/L2D.html">
+      L2D
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/L2F.html">
+      L2F
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/L2I.html">
+      L2I
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/LADD.html">
+      LADD
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/LALOAD.html">
+      LALOAD
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/LAND.html">
+      LAND
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/LASTORE.html">
+      LASTORE
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/LCMP.html">
+      LCMP
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/LCONST.html">
+      LCONST
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/LDC.html">
+      LDC
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/LDC2_W.html">
+      LDC2_W
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/LDC_W.html">
+      LDC_W
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/LDIV.html">
+      LDIV
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/LLOAD.html">
+      LLOAD
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/LMUL.html">
+      LMUL
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/LNEG.html">
+      LNEG
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/LOOKUPSWITCH.html">
+      LOOKUPSWITCH
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/LOR.html">
+      LOR
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/LREM.html">
+      LREM
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/LRETURN.html">
+      LRETURN
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/LSHL.html">
+      LSHL
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/LSHR.html">
+      LSHR
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/LSTORE.html">
+      LSTORE
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/LSUB.html">
+      LSUB
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/LUSHR.html">
+      LUSHR
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/LXOR.html">
+      LXOR
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/LineNumberGen.html">
+      LineNumberGen
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/LocalVariableGen.html">
+      LocalVariableGen
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/MONITORENTER.html">
+      MONITORENTER
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/MONITOREXIT.html">
+      MONITOREXIT
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/MULTIANEWARRAY.html">
+      MULTIANEWARRAY
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/MethodGen.html">
+      MethodGen
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/NEW.html">
+      NEW
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/NEWARRAY.html">
+      NEWARRAY
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/NOP.html">
+      NOP
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/ObjectType.html">
+      ObjectType
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/POP.html">
+      POP
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/POP2.html">
+      POP2
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/PUSH.html">
+      PUSH
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/PUTFIELD.html">
+      PUTFIELD
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/PUTSTATIC.html">
+      PUTSTATIC
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/RET.html">
+      RET
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/RETURN.html">
+      RETURN
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/ReturnaddressType.html">
+      ReturnaddressType
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/SALOAD.html">
+      SALOAD
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/SASTORE.html">
+      SASTORE
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/SIPUSH.html">
+      SIPUSH
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/SWAP.html">
+      SWAP
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/SWITCH.html">
+      SWITCH
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/TABLESWITCH.html">
+      TABLESWITCH
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/generic/TargetLostException.html">
+      TargetLostException
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+            
+    </td>
+   
+    <td>
+      
+              
+    <a href="#org.apache.bcel.classfile">
+      org.apache.bcel.classfile
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel.util">
+      org.apache.bcel.util
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel.verifier">
+      org.apache.bcel.verifier
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel.verifier.statics">
+      org.apache.bcel.verifier.statics
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel.verifier.structurals">
+      org.apache.bcel.verifier.structurals
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+            
+    </td>
+   
+    <td>
+      
+              
+    <a href="#java.io">
+      java.io
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#java.lang">
+      java.lang
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#java.lang.reflect">
+      java.lang.reflect
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#java.util">
+      java.util
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel">
+      org.apache.bcel
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel.classfile">
+      org.apache.bcel.classfile
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel.util">
+      org.apache.bcel.util
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+            
+    </td>
+   </tr>
+  
+    </table>
+  
+    </div>
+  
+    <div class="h4">
+      
+      
+        <h4>
+          <a name="org.apache.bcel.util">org.apache.bcel.util</a>
+        </h4>
+      
+      
+    
+    <table border="1" width="100%" cellspacing="2" cellpadding="3">
+      
+    
+      
+        
+      
+      
+    
+
+    
+    <tr class="b">
+    <th>
+      Afferent Couplings
+    </th>
+   
+    <th>
+      Efferent Couplings
+    </th>
+   
+    <th>
+      Abstractness
+    </th>
+   
+    <th>
+      Instability
+    </th>
+   
+    <th>
+      Distance
+    </th>
+   </tr>
+  
+    
+      
+      
+        
+      
+    
+
+    
+    <tr class="a">
+    <td>
+      3
+    </td>
+   
+    <td>
+      9
+    </td>
+   
+    <td>
+      5%
+    </td>
+   
+    <td>
+      75%
+    </td>
+   
+    <td>
+      20%
+    </td>
+   </tr>
+  
+    </table>
+  
+    
+    <table border="1" width="100%" cellspacing="2" cellpadding="3">
+      
+    
+      
+        
+      
+      
+    
+
+    
+    <tr class="b">
+    <th>
+      Abstract Classes
+    </th>
+   
+    <th>
+      Concrete Classes
+    </th>
+   
+    <th>
+      Used by Packages
+    </th>
+   
+    <th>
+      Uses Packages
+    </th>
+   </tr>
+  
+    
+      
+      
+        
+      
+    
+
+    
+    <tr class="a">
+    <td>
+      
+              
+    <a href="xref/org/apache/bcel/util/Repository.html">
+      Repository
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+            
+    </td>
+   
+    <td>
+      
+              
+    <a href="xref/org/apache/bcel/util/AttributeHTML.html">
+      AttributeHTML
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/util/BCELFactory.html">
+      BCELFactory
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/util/BCELifier.html">
+      BCELifier
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/util/ByteSequence.html">
+      ByteSequence
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/util/Class2HTML.html">
+      Class2HTML
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/util/ClassLoader.html">
+      ClassLoader
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/util/ClassLoaderRepository.html">
+      ClassLoaderRepository
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/util/ClassPath.html">
+      ClassPath
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/util/ClassQueue.html">
+      ClassQueue
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/util/ClassSet.html">
+      ClassSet
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/util/ClassStack.html">
+      ClassStack
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/util/ClassVector.html">
+      ClassVector
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/util/CodeHTML.html">
+      CodeHTML
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/util/ConstantHTML.html">
+      ConstantHTML
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/util/InstructionFinder.html">
+      InstructionFinder
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/util/JavaWrapper.html">
+      JavaWrapper
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/util/MethodHTML.html">
+      MethodHTML
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/util/SyntheticRepository.html">
+      SyntheticRepository
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+            
+    </td>
+   
+    <td>
+      
+              
+    <a href="#org.apache.bcel">
+      org.apache.bcel
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel.classfile">
+      org.apache.bcel.classfile
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel.generic">
+      org.apache.bcel.generic
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+            
+    </td>
+   
+    <td>
+      
+              
+    <a href="#java.io">
+      java.io
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#java.lang">
+      java.lang
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#java.lang.reflect">
+      java.lang.reflect
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#java.util">
+      java.util
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#java.util.zip">
+      java.util.zip
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel">
+      org.apache.bcel
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel.classfile">
+      org.apache.bcel.classfile
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel.generic">
+      org.apache.bcel.generic
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.regexp">
+      org.apache.regexp
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+            
+    </td>
+   </tr>
+  
+    </table>
+  
+    </div>
+  
+    <div class="h4">
+      
+      
+        <h4>
+          <a name="org.apache.bcel.verifier">org.apache.bcel.verifier</a>
+        </h4>
+      
+      
+    
+    <table border="1" width="100%" cellspacing="2" cellpadding="3">
+      
+    
+      
+        
+      
+      
+    
+
+    
+    <tr class="b">
+    <th>
+      Afferent Couplings
+    </th>
+   
+    <th>
+      Efferent Couplings
+    </th>
+   
+    <th>
+      Abstractness
+    </th>
+   
+    <th>
+      Instability
+    </th>
+   
+    <th>
+      Distance
+    </th>
+   </tr>
+  
+    
+      
+      
+        
+      
+    
+
+    
+    <tr class="a">
+    <td>
+      2
+    </td>
+   
+    <td>
+      12
+    </td>
+   
+    <td>
+      27%
+    </td>
+   
+    <td>
+      86%
+    </td>
+   
+    <td>
+      13%
+    </td>
+   </tr>
+  
+    </table>
+  
+    
+    <table border="1" width="100%" cellspacing="2" cellpadding="3">
+      
+    
+      
+        
+      
+      
+    
+
+    
+    <tr class="b">
+    <th>
+      Abstract Classes
+    </th>
+   
+    <th>
+      Concrete Classes
+    </th>
+   
+    <th>
+      Used by Packages
+    </th>
+   
+    <th>
+      Uses Packages
+    </th>
+   </tr>
+  
+    
+      
+      
+        
+      
+    
+
+    
+    <tr class="a">
+    <td>
+      
+              
+    <a href="xref/org/apache/bcel/verifier/NativeVerifier.html">
+      NativeVerifier
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/verifier/PassVerifier.html">
+      PassVerifier
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/verifier/VerifierFactoryObserver.html">
+      VerifierFactoryObserver
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+            
+    </td>
+   
+    <td>
+      
+              
+    <a href="xref/org/apache/bcel/verifier/GraphicalVerifier.html">
+      GraphicalVerifier
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/verifier/TransitiveHull.html">
+      TransitiveHull
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/verifier/VerificationResult.html">
+      VerificationResult
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/verifier/Verifier.html">
+      Verifier
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/verifier/VerifierAppFrame.html">
+      VerifierAppFrame
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/verifier/VerifierFactory.html">
+      VerifierFactory
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/verifier/VerifierFactoryListModel.html">
+      VerifierFactoryListModel
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/verifier/VerifyDialog.html">
+      VerifyDialog
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+            
+    </td>
+   
+    <td>
+      
+              
+    <a href="#org.apache.bcel.verifier.statics">
+      org.apache.bcel.verifier.statics
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel.verifier.structurals">
+      org.apache.bcel.verifier.structurals
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+            
+    </td>
+   
+    <td>
+      
+              
+    <a href="#java.awt">
+      java.awt
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#java.awt.event">
+      java.awt.event
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#java.io">
+      java.io
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#java.lang">
+      java.lang
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#java.util">
+      java.util
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#javax.swing">
+      javax.swing
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#javax.swing.event">
+      javax.swing.event
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel">
+      org.apache.bcel
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel.classfile">
+      org.apache.bcel.classfile
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel.generic">
+      org.apache.bcel.generic
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel.verifier.statics">
+      org.apache.bcel.verifier.statics
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel.verifier.structurals">
+      org.apache.bcel.verifier.structurals
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+            
+    </td>
+   </tr>
+  
+    </table>
+  
+    </div>
+  
+    <div class="h4">
+      
+      
+        <h4>
+          <a name="org.apache.bcel.verifier.exc">org.apache.bcel.verifier.exc</a>
+        </h4>
+      
+      
+    
+    <table border="1" width="100%" cellspacing="2" cellpadding="3">
+      
+    
+      
+        
+      
+      
+    
+
+    
+    <tr class="b">
+    <th>
+      Afferent Couplings
+    </th>
+   
+    <th>
+      Efferent Couplings
+    </th>
+   
+    <th>
+      Abstractness
+    </th>
+   
+    <th>
+      Instability
+    </th>
+   
+    <th>
+      Distance
+    </th>
+   </tr>
+  
+    
+      
+      
+        
+      
+    
+
+    
+    <tr class="a">
+    <td>
+      2
+    </td>
+   
+    <td>
+      2
+    </td>
+   
+    <td>
+      29%
+    </td>
+   
+    <td>
+      50%
+    </td>
+   
+    <td>
+      21%
+    </td>
+   </tr>
+  
+    </table>
+  
+    
+    <table border="1" width="100%" cellspacing="2" cellpadding="3">
+      
+    
+      
+        
+      
+      
+    
+
+    
+    <tr class="b">
+    <th>
+      Abstract Classes
+    </th>
+   
+    <th>
+      Concrete Classes
+    </th>
+   
+    <th>
+      Used by Packages
+    </th>
+   
+    <th>
+      Uses Packages
+    </th>
+   </tr>
+  
+    
+      
+      
+        
+      
+    
+
+    
+    <tr class="a">
+    <td>
+      
+              
+    <a href="xref/org/apache/bcel/verifier/exc/CodeConstraintException.html">
+      CodeConstraintException
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/verifier/exc/StaticCodeConstraintException.html">
+      StaticCodeConstraintException
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/verifier/exc/VerificationException.html">
+      VerificationException
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/verifier/exc/VerifierConstraintViolatedException.html">
+      VerifierConstraintViolatedException
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+            
+    </td>
+   
+    <td>
+      
+              
+    <a href="xref/org/apache/bcel/verifier/exc/AssertionViolatedException.html">
+      AssertionViolatedException
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/verifier/exc/ClassConstraintException.html">
+      ClassConstraintException
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/verifier/exc/InvalidMethodException.html">
+      InvalidMethodException
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/verifier/exc/LinkingConstraintException.html">
+      LinkingConstraintException
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/verifier/exc/LoadingException.html">
+      LoadingException
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/verifier/exc/LocalVariableInfoInconsistentException.html">
+      LocalVariableInfoInconsistentException
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/verifier/exc/StaticCodeInstructionConstraintException.html">
+      StaticCodeInstructionConstraintException
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/verifier/exc/StaticCodeInstructionOperandConstraintException.html">
+      StaticCodeInstructionOperandConstraintException
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/verifier/exc/StructuralCodeConstraintException.html">
+      StructuralCodeConstraintException
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/verifier/exc/Utility.html">
+      Utility
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+            
+    </td>
+   
+    <td>
+      
+              
+    <a href="#org.apache.bcel.verifier.statics">
+      org.apache.bcel.verifier.statics
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel.verifier.structurals">
+      org.apache.bcel.verifier.structurals
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+            
+    </td>
+   
+    <td>
+      
+              
+    <a href="#java.io">
+      java.io
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#java.lang">
+      java.lang
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+            
+    </td>
+   </tr>
+  
+    </table>
+  
+    </div>
+  
+    <div class="h4">
+      
+      
+        <h4>
+          <a name="org.apache.bcel.verifier.statics">org.apache.bcel.verifier.statics</a>
+        </h4>
+      
+      
+    
+    <table border="1" width="100%" cellspacing="2" cellpadding="3">
+      
+    
+      
+        
+      
+      
+    
+
+    
+    <tr class="b">
+    <th>
+      Afferent Couplings
+    </th>
+   
+    <th>
+      Efferent Couplings
+    </th>
+   
+    <th>
+      Abstractness
+    </th>
+   
+    <th>
+      Instability
+    </th>
+   
+    <th>
+      Distance
+    </th>
+   </tr>
+  
+    
+      
+      
+        
+      
+    
+
+    
+    <tr class="a">
+    <td>
+      1
+    </td>
+   
+    <td>
+      7
+    </td>
+   
+    <td>
+      0%
+    </td>
+   
+    <td>
+      88%
+    </td>
+   
+    <td>
+      12%
+    </td>
+   </tr>
+  
+    </table>
+  
+    
+    <table border="1" width="100%" cellspacing="2" cellpadding="3">
+      
+    
+      
+        
+      
+      
+    
+
+    
+    <tr class="b">
+    <th>
+      Abstract Classes
+    </th>
+   
+    <th>
+      Concrete Classes
+    </th>
+   
+    <th>
+      Used by Packages
+    </th>
+   
+    <th>
+      Uses Packages
+    </th>
+   </tr>
+  
+    
+      
+      
+        
+      
+    
+
+    
+    <tr class="a">
+    <td>
+      
+            
+    </td>
+   
+    <td>
+      
+              
+    <a href="xref/org/apache/bcel/verifier/statics/DOUBLE_Upper.html">
+      DOUBLE_Upper
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/verifier/statics/IntList.html">
+      IntList
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/verifier/statics/LONG_Upper.html">
+      LONG_Upper
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/verifier/statics/LocalVariableInfo.html">
+      LocalVariableInfo
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/verifier/statics/LocalVariablesInfo.html">
+      LocalVariablesInfo
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/verifier/statics/Pass1Verifier.html">
+      Pass1Verifier
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/verifier/statics/Pass2Verifier.html">
+      Pass2Verifier
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/verifier/statics/Pass3aVerifier.html">
+      Pass3aVerifier
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/verifier/statics/StringRepresentation.html">
+      StringRepresentation
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+            
+    </td>
+   
+    <td>
+      
+              
+    <a href="#org.apache.bcel.verifier">
+      org.apache.bcel.verifier
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+            
+    </td>
+   
+    <td>
+      
+              
+    <a href="#java.lang">
+      java.lang
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#java.util">
+      java.util
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel">
+      org.apache.bcel
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel.classfile">
+      org.apache.bcel.classfile
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel.generic">
+      org.apache.bcel.generic
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel.verifier">
+      org.apache.bcel.verifier
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel.verifier.exc">
+      org.apache.bcel.verifier.exc
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+            
+    </td>
+   </tr>
+  
+    </table>
+  
+    </div>
+  
+    <div class="h4">
+      
+      
+        <h4>
+          <a name="org.apache.bcel.verifier.structurals">org.apache.bcel.verifier.structurals</a>
+        </h4>
+      
+      
+    
+    <table border="1" width="100%" cellspacing="2" cellpadding="3">
+      
+    
+      
+        
+      
+      
+    
+
+    
+    <tr class="b">
+    <th>
+      Afferent Couplings
+    </th>
+   
+    <th>
+      Efferent Couplings
+    </th>
+   
+    <th>
+      Abstractness
+    </th>
+   
+    <th>
+      Instability
+    </th>
+   
+    <th>
+      Distance
+    </th>
+   </tr>
+  
+    
+      
+      
+        
+      
+    
+
+    
+    <tr class="a">
+    <td>
+      1
+    </td>
+   
+    <td>
+      9
+    </td>
+   
+    <td>
+      14%
+    </td>
+   
+    <td>
+      90%
+    </td>
+   
+    <td>
+      4%
+    </td>
+   </tr>
+  
+    </table>
+  
+    
+    <table border="1" width="100%" cellspacing="2" cellpadding="3">
+      
+    
+      
+        
+      
+      
+    
+
+    
+    <tr class="b">
+    <th>
+      Abstract Classes
+    </th>
+   
+    <th>
+      Concrete Classes
+    </th>
+   
+    <th>
+      Used by Packages
+    </th>
+   
+    <th>
+      Uses Packages
+    </th>
+   </tr>
+  
+    
+      
+      
+        
+      
+    
+
+    
+    <tr class="a">
+    <td>
+      
+              
+    <a href="xref/org/apache/bcel/verifier/structurals/InstructionContext.html">
+      InstructionContext
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/verifier/structurals/Subroutine.html">
+      Subroutine
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+            
+    </td>
+   
+    <td>
+      
+              
+    <a href="xref/org/apache/bcel/verifier/structurals/ControlFlowGraph.html">
+      ControlFlowGraph
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/verifier/structurals/ExceptionHandler.html">
+      ExceptionHandler
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/verifier/structurals/ExceptionHandlers.html">
+      ExceptionHandlers
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/verifier/structurals/ExecutionVisitor.html">
+      ExecutionVisitor
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/verifier/structurals/Frame.html">
+      Frame
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/verifier/structurals/GenericArray.html">
+      GenericArray
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/verifier/structurals/InstConstraintVisitor.html">
+      InstConstraintVisitor
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/verifier/structurals/LocalVariables.html">
+      LocalVariables
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/verifier/structurals/OperandStack.html">
+      OperandStack
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/verifier/structurals/Pass3bVerifier.html">
+      Pass3bVerifier
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/verifier/structurals/Subroutines.html">
+      Subroutines
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="xref/org/apache/bcel/verifier/structurals/UninitializedObjectType.html">
+      UninitializedObjectType
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+            
+    </td>
+   
+    <td>
+      
+              
+    <a href="#org.apache.bcel.verifier">
+      org.apache.bcel.verifier
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+            
+    </td>
+   
+    <td>
+      
+              
+    <a href="#java.awt">
+      java.awt
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#java.io">
+      java.io
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#java.lang">
+      java.lang
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#java.util">
+      java.util
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel">
+      org.apache.bcel
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel.classfile">
+      org.apache.bcel.classfile
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel.generic">
+      org.apache.bcel.generic
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel.verifier">
+      org.apache.bcel.verifier
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+              
+    <a href="#org.apache.bcel.verifier.exc">
+      org.apache.bcel.verifier.exc
+    </a>
+   
+              
+    <br>
+      
+              
+    </br>
+   
+            
+    </td>
+   </tr>
+  
+    </table>
+  
+    </div>
+  
+    </div>
+  
+    <div class="h3">
+      
+      
+        <h3>
+          <a name="Cycles">Cycles</a>
+        </h3>
+      
+      
+    <p>
+      [
+        
+    <a href="#Summary">
+      summary
+    </a>
+   ] [
+        
+    <a href="#Packages">
+      packages
+    </a>
+   ] [
+        
+    <a href="#Cycles">
+      cycles
+    </a>
+   ] [
+        
+    <a href="#Explanations">
+      explanations
+    </a>
+   ]
+    </p>
+   
+    
+    <table border="1" width="100%" cellspacing="2" cellpadding="3">
+      
+    
+      
+        
+      
+      
+    
+
+    
+    <tr class="b">
+    <th>
+      Package
+    </th>
+   
+    <th>
+      Cyclic Dependencies
+    </th>
+   </tr>
+  
+    
+      
+      
+        
+      
+    
+
+    
+    <tr class="a">
+    <td>
+      org.apache.bcel
+    </td>
+   
+    <td>
+      org.apache.bcel.classfile
+            
+    <br>
+      
+            
+    </br>
+   org.apache.bcel
+            
+    <br>
+      
+            
+    </br>
+   
+          
+    </td>
+   </tr>
+  
+    
+      
+        
+      
+      
+    
+
+    
+    <tr class="b">
+    <td>
+      org.apache.bcel.classfile
+    </td>
+   
+    <td>
+      org.apache.bcel
+            
+    <br>
+      
+            
+    </br>
+   org.apache.bcel.classfile
+            
+    <br>
+      
+            
+    </br>
+   
+          
+    </td>
+   </tr>
+  
+    
+      
+      
+        
+      
+    
+
+    
+    <tr class="a">
+    <td>
+      org.apache.bcel.generic
+    </td>
+   
+    <td>
+      org.apache.bcel
+            
+    <br>
+      
+            
+    </br>
+   org.apache.bcel.classfile
+            
+    <br>
+      
+            
+    </br>
+   org.apache.bcel
+            
+    <br>
+      
+            
+    </br>
+   
+          
+    </td>
+   </tr>
+  
+    
+      
+        
+      
+      
+    
+
+    
+    <tr class="b">
+    <td>
+      org.apache.bcel.util
+    </td>
+   
+    <td>
+      org.apache.bcel
+            
+    <br>
+      
+            
+    </br>
+   org.apache.bcel.classfile
+            
+    <br>
+      
+            
+    </br>
+   org.apache.bcel
+            
+    <br>
+      
+            
+    </br>
+   
+          
+    </td>
+   </tr>
+  
+    
+      
+      
+        
+      
+    
+
+    
+    <tr class="a">
+    <td>
+      org.apache.bcel.verifier
+    </td>
+   
+    <td>
+      org.apache.bcel.generic
+            
+    <br>
+      
+            
+    </br>
+   org.apache.bcel
+            
+    <br>
+      
+            
+    </br>
+   org.apache.bcel.classfile
+            
+    <br>
+      
+            
+    </br>
+   org.apache.bcel
+            
+    <br>
+      
+            
+    </br>
+   
+          
+    </td>
+   </tr>
+  
+    
+      
+        
+      
+      
+    
+
+    
+    <tr class="b">
+    <td>
+      org.apache.bcel.verifier.statics
+    </td>
+   
+    <td>
+      org.apache.bcel.generic
+            
+    <br>
+      
+            
+    </br>
+   org.apache.bcel
+            
+    <br>
+      
+            
+    </br>
+   org.apache.bcel.classfile
+            
+    <br>
+      
+            
+    </br>
+   org.apache.bcel
+            
+    <br>
+      
+            
+    </br>
+   
+          
+    </td>
+   </tr>
+  
+    
+      
+      
+        
+      
+    
+
+    
+    <tr class="a">
+    <td>
+      org.apache.bcel.verifier.structurals
+    </td>
+   
+    <td>
+      org.apache.bcel.generic
+            
+    <br>
+      
+            
+    </br>
+   org.apache.bcel
+            
+    <br>
+      
+            
+    </br>
+   org.apache.bcel.classfile
+            
+    <br>
+      
+            
+    </br>
+   org.apache.bcel
+            
+    <br>
+      
+            
+    </br>
+   
+          
+    </td>
+   </tr>
+  
+    </table>
+  
+    </div>
+  
+    <div class="h3">
+      
+      
+        <h3>
+          <a name="Explanations">Explanations</a>
+        </h3>
+      
+      
+    <p>
+      [
+        
+    <a href="#Summary">
+      summary
+    </a>
+   ] [
+        
+    <a href="#Packages">
+      packages
+    </a>
+   ] [
+        
+    <a href="#Cycles">
+      cycles
+    </a>
+   ] [
+        
+    <a href="#Explanations">
+      explanations
+    </a>
+   ]
+    </p>
+   
+    <p>
+      The following explanations are for quick reference and are lifted directly from the original
+        
+    <a href="http://www.clarkware.com/software/JDepend.html">
+      JDepend documentation
+    </a>
+   .
+    </p>
+   
+    
+    <table border="1" width="100%" cellspacing="2" cellpadding="3">
+      
+    
+      
+        
+      
+      
+    
+
+    
+    <tr class="b">
+    <th>
+      Term
+    </th>
+   
+    <th>
+      Description
+    </th>
+   </tr>
+  
+    
+      
+      
+        
+      
+    
+
+    
+    <tr class="a">
+    <td>
+      Number of Classes
+    </td>
+   
+    <td>
+      The number of concrete and abstract classes (and interfaces) in the package is an indicator of the extensibility of the package.
+    </td>
+   </tr>
+  
+    
+      
+        
+      
+      
+    
+
+    
+    <tr class="b">
+    <td>
+      Afferent Couplings
+    </td>
+   
+    <td>
+      The number of other packages that depend upon classes within the package is an indicator of the package's responsibility.
+    </td>
+   </tr>
+  
+    
+      
+      
+        
+      
+    
+
+    
+    <tr class="a">
+    <td>
+      Efferent Couplings
+    </td>
+   
+    <td>
+      The number of other packages that the classes in the package depend upon is an indicator of the package's independence.
+    </td>
+   </tr>
+  
+    
+      
+        
+      
+      
+    
+
+    
+    <tr class="b">
+    <td>
+      Abstractness
+    </td>
+   
+    <td>
+      The ratio of the number of abstract classes (and interfaces) in the analyzed package to the total number of classes in the analyzed package. The range for this metric is 0 to 1, with A=0 indicating a completely concrete package and A=1 indicating a completely abstract package.
+    </td>
+   </tr>
+  
+    
+      
+      
+        
+      
+    
+
+    
+    <tr class="a">
+    <td>
+      Instability
+    </td>
+   
+    <td>
+      The ratio of efferent coupling (Ce) to total coupling (Ce / (Ce + Ca)). This metric is an indicator of the package's resilience to change. The range for this metric is 0 to 1, with I=0 indicating a completely stable package and I=1 indicating a completely instable package.
+    </td>
+   </tr>
+  
+    
+      
+        
+      
+      
+    
+
+    
+    <tr class="b">
+    <td>
+      Distance
+    </td>
+   
+    <td>
+      The perpendicular distance of a package from the idealized line A + I = 1. This metric is an indicator of the package's balance between abstractness and stability. A package squarely on the main sequence is optimally balanced with respect to its abstractness and stability. Ideal packages are either completely abstract and stable (x=0, y=1) or completely concrete and instable (x=1, y=0). The range for this metric is 0 to 1, with D=0 indicating a package that is coincident with the main sequence and D=1 indicating a package that is as far from the main sequence as possible.
+    </td>
+   </tr>
+  
+    
+      
+      
+        
+      
+    
+
+    
+    <tr class="a">
+    <td>
+      Cycles
+    </td>
+   
+    <td>
+      Packages participating in a package dependency cycle are in a deadly embrace with respect to reusability and their release cycle. Package dependency cycles can be easily identified by reviewing the textual reports of dependency cycles. Once these dependency cycles have been identified with JDepend, they can be broken by employing various object-oriented techniques.
+    </td>
+   </tr>
+  
+    </table>
+  
+    </div>
+  
+                  
+                  
+                  
+                  
+                  
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+        <div id="footer">
+          <table border="0" cellpadding="4" cellspacing="0">
+            <tr>
+              <td>
+                
+                  
+                    
+                    
+                       2002-2003, Apache Software Foundation
+                    
+                  
+                  
+                
+
+                
+              </td>
+              
+            </tr>
+          </table>
+        </div>
+      </body>
+    </html>
+  

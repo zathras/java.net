@@ -1,0 +1,373 @@
+# 
+# 
+
+show 
+
+
+# The features controlled by WeatherDirector
+#
+exports 
+    segments {
+        S:Initialize 
+    } features { 
+       F:Window.Mover
+       F:WeatherImage
+       F:BlankWeatherImage
+       F:Location
+       F:Condition
+       F:Day
+       F:Temp
+       F:WindDirection
+       F:WindSelector
+       F:Speed
+       F:ZipCode
+    } handlers { 
+    }
+;
+
+java_generated_class WeatherCommands [[ 
+
+        import com.hdcookbook.grin.Show;
+        import com.hdcookbook.grin.GrinXHelper;
+        import com.hdcookbook.grin.util.Debug;
+        
+        public class WeatherCommands extends GrinXHelper {
+        
+            public WeatherCommands(Show show) { 
+                super(show); 
+            }
+
+            public WeatherDirector getDirector() {
+                return (WeatherDirector) show.getDirector();
+            }
+        
+            JAVA_COMMAND_BODY
+        
+        }
+
+]]
+
+show_top F:ShowTop ;
+
+#
+#  Use this to move the widget on the screen
+#
+feature translator_model F:Window.Mover
+    { 0   150 30 linear-relative } ;
+
+feature translator F:ShowTop F:Window.Mover {
+    sub_feature showtop_group ;
+    F:Window.Mover
+} ;
+
+feature group F:Everything {
+    F:WeatherImage
+    F:BlankWeatherImage
+    F:LocationBar
+    F:Location
+    F:WeatherUpdater
+    F:Day
+    F:StatusBar
+    F:Condition
+    F:Temp
+    F:TempBar
+    F:ZipChooser
+    F:ZipCode
+    F:WindSelector
+} ;
+
+#
+# weather  widget 
+#
+
+feature box F:ZipBar ( 0 0 60 30 )
+                outline 1 { 0 0 205 255 }
+                fill { 0 0 0 255 } ;
+
+feature box F:ZipEditBar ( 0 0 60 30 )
+                outline 2 { 255 255 255 255 }
+                fill { 0 0 0 255 } ;
+
+feature box F:LocationBar ( 0 35 215 65 )
+                outline 7 { 0 0 139 255 }
+                fill { 0 0 139 255 } ;
+
+feature box F:DayBar ( 220 35 300 65 )
+                outline 7 { 0 0 205 255 }
+                fill { 0 0 205 255 } ;
+
+feature box F:DayBarPressed ( 220 35 300 65 )
+                outline 2 { 0 0 0 255 }
+                fill { 0 0 205 255 } ;
+
+feature box F:StatusBar ( 0 195 300 225 )
+                outline 7 { 0 0 139 255 }
+                fill { 0 0 139 255 } ;
+
+feature box F:TempBar ( 220 195 300 225 )
+                outline 7 { 0 0 205 255 }
+                fill { 0 0 205 255 } ;
+
+feature text F:Location left 15 top 40 { "Location Name" }
+    Lisa plain 16 { { 255 255 255 255 } } ;
+
+feature text F:Condition left 15 top 200 { "Weather Report" }
+    Lisa plain 16 { { 255 255 255 255 } } ;
+
+feature text F:Day left 228 top 40 { "Now" }
+    SansSerif plain 16 { { 255 255 255 255 } } ;
+
+feature text F:Temp left 228 top 200 { "Temp" }
+    SansSerif plain 20 { { 255 255 255 255 } } ;
+
+feature text F:ZipCode left 5  top 5 { "94103" }
+    SansSerif plain 14 { { 115 115 115 255 } } ;
+
+# The radius of the circle is used by WeatherDirector
+feature extension Weather:arc F:Circle
+        { 92 92 92 255 }
+        x 220 y 95 width 80 height 80 startAngle 0 arcAngle 360 ;
+
+feature extension Weather:arc F:WindDirection
+        { 0 0 139 255 }
+        x 220 y 95 width 80 height 80 startAngle 0 arcAngle 30 ;
+
+feature text F:Speed left 235 top 120 { "mph" }
+    SansSerif plain 12 { { 255 255 255 255 } } ;
+
+# starting point for this depends on F:LocationBar
+feature fixed_image F:WeatherImage 0 65 
+        images/blank_weather.png ;
+
+feature fixed_image F:BlankWeatherImage 0 65 
+        images/blank_weather.png ;
+
+# The PollingTimer polls yahoo server for getting the latest weather info
+feature timer F:PollingTimer 1440 repeat { # Every minute 
+    java_command [[ getDirector().pollWeather(); ]]
+} ;
+
+
+feature assembly F:WindSelector  {
+    default             sub_feature group {
+                            F:WeatherImage
+                            F:Circle
+                            F:WindDirection
+                            F:Speed
+                        } ;
+
+    forecast            F:WeatherImage
+} ;
+
+# Changes the status of zip editor when a
+# digit key is pressed.
+#
+feature assembly F:ZipChooser {
+
+   default      F:ZipBar
+
+   editing      sub_feature group {
+                    F:ZipEditBar
+                } ;
+} ;
+
+# Shows that Day is changing 
+# This happens when forecast is requested.
+#
+feature assembly F:WeatherUpdater {
+
+   normal       sub_feature group {
+                    F:DayBar
+                } ;
+
+   changed       sub_feature group {
+                    F:DayBarPressed
+                    sub_feature timer 5 {
+                        activate_part F:WeatherUpdater normal ;
+                    } ;
+                } ; 
+} ;         
+
+
+# Pressing either down or right switched to forecast
+#
+rc_handler key_pressed H:DownRight {
+       down right 
+    } execute {
+        activate_part F:WeatherUpdater changed ;
+        java_command [[ getDirector().dayNext(); ]]
+    }
+;
+
+
+rc_handler key_pressed H:Enter {
+        enter
+     } execute {
+        activate_part F:ZipChooser default ;
+        java_command [[ getDirector().zipDone(); ]]
+     }
+;
+
+rc_handler key_pressed H:Left {
+        left
+     } execute {
+        activate_part F:ZipChooser editing ;
+        java_command [[ getDirector().zipErased(); ]]
+     }
+;
+
+rc_handler key_pressed H:Up {
+        up
+    } execute {
+        activate_part F:ZipChooser editing ;
+    }
+;
+
+# There must be a better way to handle key events
+# all at once, while still being able to determine which
+# key was pressed.
+#
+
+rc_handler key_pressed H:Zero {
+        0
+      } execute {
+        activate_part F:ZipChooser editing ;
+        java_command [[ getDirector().zipEntered('0'); ]]
+      }
+;
+
+rc_handler key_pressed H:One {
+        1
+      } execute {
+        activate_part F:ZipChooser editing ;
+        java_command [[ getDirector().zipEntered('1'); ]]
+      }
+;
+
+rc_handler key_pressed H:Two {
+        2
+      } execute {
+        activate_part F:ZipChooser editing ;
+        java_command [[ getDirector().zipEntered('2'); ]]
+      }
+;
+
+rc_handler key_pressed H:Three {
+        3
+      } execute {
+        activate_part F:ZipChooser editing ;
+        java_command [[ getDirector().zipEntered('3'); ]]
+      }
+;
+
+rc_handler key_pressed H:Four {
+        4
+      } execute {
+        activate_part F:ZipChooser editing ;
+        java_command [[ getDirector().zipEntered('4'); ]]
+      }
+;
+
+rc_handler key_pressed H:Five {
+        5
+      } execute {
+        activate_part F:ZipChooser editing ;
+        java_command [[ getDirector().zipEntered('5'); ]]
+      }
+;
+
+rc_handler key_pressed H:Six {
+        6
+      } execute {
+        activate_part F:ZipChooser editing ;
+        java_command [[ getDirector().zipEntered('6'); ]]
+      }
+;
+
+rc_handler key_pressed H:Seven {
+        7
+      } execute {
+        activate_part F:ZipChooser editing ;
+        java_command [[ getDirector().zipEntered('7'); ]]
+      }
+;
+
+rc_handler key_pressed H:Eight {
+        8
+      } execute {
+        activate_part F:ZipChooser editing ;
+        java_command [[ getDirector().zipEntered('8'); ]]
+      }
+;
+
+rc_handler key_pressed H:Nine {
+        9
+      } execute {
+        activate_part F:ZipChooser editing ;
+        java_command [[ getDirector().zipEntered('9'); ]]
+      }
+;
+
+#
+# Start of segments
+#
+
+segment S:Initialize 
+    setup { 
+        F:Everything
+    } on_entry {
+        java_command [[ 
+            Debug.println();
+            Debug.println("***  Initializing Weather Widget ***"); 
+            Debug.println();
+        ]]
+        java_command [[ 
+            getDirector().initialize();
+        ]]
+    } setup_done {
+        java_command [[
+            WeatherDirector dir = getDirector();
+            dir.pollWeather();
+        ]]      
+        activate_segment S:Showing ;
+    }
+;
+
+#
+# The show ordering is critical as the weather image overlaps
+# with the bottom graphic elements
+#
+segment S:Showing
+    active {
+        F:ZipChooser
+        F:ZipCode
+        F:LocationBar
+        F:Location
+        F:WindSelector
+        F:StatusBar
+        F:WeatherUpdater
+        F:TempBar
+        F:Condition
+        F:Day
+        F:Temp
+        F:PollingTimer
+    } setup {
+        F:Everything
+    } rc_handlers {
+        H:DownRight
+        H:Left
+        H:Up
+        H:Enter
+        H:Zero
+        H:One
+        H:Two
+        H:Three
+        H:Four
+        H:Five
+        H:Six
+        H:Seven
+        H:Eight
+        H:Nine
+    }
+;
+end_show

@@ -1,0 +1,83 @@
+
+
+show
+
+exports
+    segments {
+        S:Initialize
+        S:Run
+    } features {
+    } handlers {
+    }
+;
+
+java_generated_class MyCommands [[
+
+    import com.hdcookbook.grin.Show;
+    import com.hdcookbook.grin.GrinXHelper;
+    import com.hdcookbook.grin.util.Debug;
+
+    public class MyCommands extends GrinXHelper {
+
+        public MyCommands(Show show) {
+            super(show);
+        }
+
+        public MyDirector getDirector() {
+            return (MyDirector) show.getDirector();
+        }
+
+        JAVA_COMMAND_BODY
+
+    }
+
+]]
+
+
+#
+#  These images are 661x691.  30 of them, plus the
+#  full HD backbuffer fit into a profile 2 player's
+#  pixmap buffer with just a little room to spare.  We
+#  went with 20 images, to fill up the buffer about 2/3
+#  full, because we're really testing deadlock here, and not
+#  image memory fragmentation.  
+#
+
+feature group F:Images {
+    sub_feature fixed_image 100 100 images/book0.png ;
+    sub_feature fixed_image 110 110 images/book1.jpg ;
+    sub_feature fixed_image 120 120 images/book2.png ;
+    sub_feature fixed_image 130 130 images/book3.jpg ;
+    sub_feature fixed_image 140 140 images/book4.png ;
+    sub_feature fixed_image 150 150 images/book5.jpg ;
+    sub_feature fixed_image 160 160 images/book6.png ;
+    sub_feature fixed_image 170 170 images/book7.jpg ;
+    sub_feature fixed_image 180 180 images/book8.png ;
+    sub_feature fixed_image 190 190 images/book9.jpg ;
+    sub_feature fixed_image 200 200 images/book10.png ;
+    sub_feature fixed_image 210 210 images/book11.jpg ;
+    sub_feature fixed_image 220 220 images/book12.png ;
+    sub_feature fixed_image 230 230 images/book13.jpg ;
+    sub_feature fixed_image 240 240 images/book14.png ;
+    sub_feature fixed_image 250 250 images/book15.jpg ;
+    sub_feature fixed_image 260 260 images/book16.png ;
+    sub_feature fixed_image 270 270 images/book17.jpg ;
+    sub_feature fixed_image 280 280 images/book18.png ;
+    sub_feature fixed_image 290 290 images/book19.jpg ;
+} ;
+
+segment S:Initialize
+    setup {
+        F:Images
+    } next {
+        activate_segment S:Run ;
+    }
+;
+
+segment S:Run
+    active {
+        F:Images
+    }
+;
+
+end_show

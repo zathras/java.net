@@ -1,0 +1,23 @@
+<!-- Generic template xml file of a xlet's permission request file. --->
+<!-- Some variables in this file will be replaced during build time. --->
+
+<!-- variables to be replaced :                                -->
+<!--      XLET_APPID    =4 digit hex number, ex, 0x4000        --> 
+<!--      XLET_ORGID    =8 digit hex number, ex, 0x7fff0001    --> 
+
+<?xml version="1.0" encoding="UTF-8"?>
+<n:permissionrequestfile xmlns:n="urn:BDA:bdmv;PRF" 
+    orgid="@XLET_ORGID@" 
+    appid="@XLET_APPID@">
+
+    <file value="true"/>
+    <applifecyclecontrol value="true"/>
+    <servicesel value="true"/>
+    <userpreferences read="true" write="false"/>
+    <bd-bindingunitarea value="true"/>
+    <bd-vfs value="true"/>
+    <network>
+       <host action="connect,listen,resolve,accept">*</host>
+    </network> 
+
+</n:permissionrequestfile>

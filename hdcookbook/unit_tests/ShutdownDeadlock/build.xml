@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Shutdown Deadlock" default="deploy" basedir=".">
+
+    <property file="user.vars.properties"/>
+    <property file="vars.properties"/>
+    <import file="${grin.xlet}/generic_build.xml"/>
+
+    <!--
+    	Run the main program ShutdownDeadlock after running a cursory
+	check with GrinView.
+    -->
+    <target name="post-test">
+	<jdktools.java classname="ShutdownDeadlock">
+            <classpath>                
+		<pathelement path="${grinview.jar}"/>
+                <pathelement path="${build.dir}/gensrc/grinview"/>
+                <pathelement path="${se.lib.zip}"/>
+            </classpath>
+	</jdktools.java>
+    </target>
+
+    <!--
+    	Copy the image assets to the disc image.
+	Remember, the point of this test is to flush out
+	problems with image loading and unloading during shutdown, so
+	using a mosaic would defeat the purpose of the test!
+    -->
+    <target name="post-copy-to-bdmv">
+	<mkdir dir="${dist.dir}/BDMV/jar/${xlet.jar.basename}/images"/>
+	<copy todir="${dist.dir}/BDMV/jar/${xlet.jar.basename}/images">
+	    <fileset dir="${src.dir}/images"/>
+	</copy>
+    </target>
+    
+</project>
+

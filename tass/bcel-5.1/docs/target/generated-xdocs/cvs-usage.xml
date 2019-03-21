@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<document>
+  
+    
+  <properties>
+    <author email="turbine-maven-dev@jakarta.apache.org">Maven</author>
+    <title>CVS</title>
+  </properties>
+
+  <body>
+    <section name="Web Access">
+      <p>
+        <a href="$url">$url</a>
+      </p>
+    </section>
+    
+    <section name="Anonymous CVS Access">
+      <p>
+        This project's CVS repository can be checked out through anonymous (pserver)
+        CVS with the following instruction set.
+        When prompted for a password for anonymous, simply press the Enter key.
+      </p>
+      
+      <p>
+        cvs -d $conn login
+        <br/>
+        cvs -z3 -d $conn co $module
+      </p>
+
+      <p>
+        Updates from within the module's directory do not need the -d parameter.
+      </p>
+    </section>
+
+    <section name="Developer CVS Access via SSH">
+
+      <p>
+        Only project developers can access the CVS tree via this method.
+        SSH1 must be installed on your client machine. Substitute   
+        <b>name</b> with the proper value. Enter your site password when prompted.
+      </p>
+
+      <p>
+        export CVS_RSH=ssh
+        <br/>
+        cvs -z3 -d $conn co $module
+      </p>
+
+    </section>
+  </body>
+
+</document>
+

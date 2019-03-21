@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<movieObjectFile>
+    <version>0200</version>
+    <movieObjects>
+        <!-- First Playback in index.bdmv --> 
+        <movieObject mobjId="0">
+            <navigationCommands commandId="0">
+                <!-- First 8 digit is a "Jump Title" command, followed by 
+                     8 digit title number.  -->
+                <command>21810000 00000001 00000000</command>
+            </navigationCommands>
+            <terminalInfo>
+                <menuCallMask>false</menuCallMask>
+                <resumeIntentionFlag>false</resumeIntentionFlag>
+                <titleSearchMask>false</titleSearchMask>
+            </terminalInfo>
+        </movieObject>
+        <!-- TopMenu in index.bdmv --> 
+        <movieObject mobjId="1">
+            <navigationCommands commandId="0">
+                <command>21810000 00000001 00000000</command>
+            </navigationCommands>
+            <terminalInfo>
+                <menuCallMask>false</menuCallMask>
+                <resumeIntentionFlag>false</resumeIntentionFlag>
+                <titleSearchMask>false</titleSearchMask>
+            </terminalInfo>
+        </movieObject>
+    </movieObjects>
+    <extensionData/>
+    <paddingsN1>0</paddingsN1>
+    <paddingsN2>0</paddingsN2>
+</movieObjectFile>

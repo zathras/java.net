@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="SFAA xlet" default="deploy" basedir=".">
+
+    <property file="user.vars.properties"/>
+    <property file="vars.properties"/>
+    <import file="${grin.xlet}/generic_build.xml"/>
+
+    <target name="post-copy-to-bdmv">
+        <!-- We compile our playlist for the stars background -->
+        <!-- It's quick to compile, so we just write the output in place -->
+        <jdktools.java jar="${playlist.jar}">
+            <arg value="bdmv/playlist.xml"/>
+            <arg value="${dist.dir}/BDMV/PLAYLIST/00001.mpls"/>
+        </jdktools.java>
+
+        <copy file="bdmv/STREAM/00000.m2ts" 
+	      todir="${dist.dir}/BDMV/STREAM"/>
+        <copy file="bdmv/CLIPINF/00000.clpi" 
+	      todir="${dist.dir}/BDMV/CLIPINF"/>
+    </target>
+
+    <target name="post-generate-binary-script">
+	<jdktools.java classname="com.hdcookbook.grin.binaryconverter.Main">
+            <classpath>
+                <pathelement path="${converter.jar}"/>
+                <pathelement path="${build.dir}/gensrc/grinview"/>
+                <pathelement path="${se.lib.zip}"/>
+            </classpath>
+            <arg value="-asset_dir"/>
+            <arg value="${asset.dir}"/>
+            <arg value="-asset_dir"/>
+            <arg value="${asset.dir.2}"/>
+            <arg value="${generate.binary.script.optimize.argument}"/>
+            <arg value="-out"/>
+            <arg value="${build.dir}"/>
+            <arg value="sfaa_show.txt"/>
+        </jdktools.java>
+        <move file="${build.dir}/sfaa_show.grinview.java"
+              tofile="${build.dir}/gensrc/grinview/SFAACommands.java"/>
+        <move file="${build.dir}/sfaa_show.xlet.java"
+              tofile="${build.dir}/gensrc/xlet/SFAACommands.java"/>
+        <jdktools.javac destdir="${build.dir}/gensrc/grinview" debug="on"
+                includes="SFAACommands.java">
+            <src path="${build.dir}/gensrc/grinview" />
+            <src path="src${se.lib.src.int}"/>
+            <classpath>
+                <pathelement path="${grinview.jar}"/>
+                <pathelement path="${se.lib.zip}"/>
+            </classpath>
+        </jdktools.javac>
+    </target>
+
+
+</project>
+

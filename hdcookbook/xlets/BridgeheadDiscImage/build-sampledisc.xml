@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="BridgeheadXlet-Sample" default="make-sample" basedir=".">
+ 
+    <property name="sample.dir" location="SampleDiscImage"/>    
+    <target name="make-sample">
+       <ant dir="${sample.dir}" antfile="build.xml" inheritAll="false"/>
+    </target>
+
+    <target name="sample-clean">
+        <ant dir="${sample.dir}" antfile="build.xml" target="clean"/>
+    </target>
+
+</project>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><n:permissionrequestfile xmlns:n="urn:BDA:bdmv;PRF" appid="0x4002" orgid="0x7fff1234">
+    <file value="true"/>
+    <applifecyclecontrol value="true"/>
+    <servicesel value="true"/>
+    <userpreferences read="true" write="false"/>
+    <persistentfilecredential>
+    	<grantoridentifier id="0x7fff3456"/>
+    	<expirationdate date="10/12/2010"/>
+    	<filename read="true" write="true">7fff3456/4001/tmp.txt</filename>
+    </persistentfilecredential>
+</n:permissionrequestfile>
+

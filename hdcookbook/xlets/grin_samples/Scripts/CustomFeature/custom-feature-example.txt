@@ -1,0 +1,62 @@
+
+# For testing a custom feature.  hdcookbook.dev.java.net issue #37.
+
+show 
+
+# This java_generated_class section is a requirement for using custom extensions.
+# In this example, the JAVA_COMMAND_BODY string gets replaced with 
+# a switch statement that looks like this:
+# ------
+#    public com.hdcookbook.grin.Node getInstanceOf(Show show, int id) 
+#        throws java.io.IOException {
+#        switch (id) {
+#            case 0:  return new Oval(show); 
+#        }
+#        throw new java.io.IOException("Error instantiating extension");
+#    } 
+# ------
+# And this method is used at the binary file reader to to instantiate
+# the right extension class (in this case, Oval).  
+
+java_generated_class ExtensionExample [[
+
+import com.hdcookbook.grin.Show;
+public class ExtensionExample extends com.hdcookbook.grin.GrinXHelper {
+    public ExtensionExample(Show show) {
+        super(show);
+    }
+
+    JAVA_COMMAND_BODY
+}
+
+]]
+
+# End of the java_generated_class section.
+
+# Custom feature for this example.  Draws an oval.
+# Arguments are  "x-coord y-coord width height color-value"
+
+feature extension EXAMPLE:oval F:Oval 250 400 340 200 { 100 50 100 250 } ;
+
+segment S:Initialize  
+   setup  {
+        F:Everything
+   } setup_done {
+      # triggerred when F:Everything is done loading
+      activate_segment S:1 ;  
+   }  
+;
+
+segment S:1
+   active {
+        F:Oval
+   } setup  {
+        F:Everything
+   } 
+; 
+
+feature group F:Everything {
+        F:Oval
+} ;
+
+end_show

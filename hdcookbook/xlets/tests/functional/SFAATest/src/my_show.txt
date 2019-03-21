@@ -1,0 +1,289 @@
+#  
+# Copyright (c) 2009, Sun Microsystems, Inc.
+# 
+# All rights reserved.
+# 
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+# 
+#  * Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#  * Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in the
+#    documentation and/or other materials provided with the distribution.
+#  * Neither the name of Sun Microsystems nor the names of its contributors
+#    may be used to endorse or promote products derived from this software
+#    without specific prior written permission.
+# 
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+# PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+# LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+# NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+# 
+#  Note:  In order to comply with the binary form redistribution 
+#         requirement in the above license, the licensee may include 
+#         a URL reference to a copy of the required copyright notice, 
+#         the list of conditions and the disclaimer in a human readable 
+#         file with the binary form of the code that is subject to the
+#         above license.  For example, such file could be put on a 
+#         Blu-ray disc containing the binary form of the code or could 
+#         be put in a JAR file that is broadcast via a digital television 
+#         broadcast medium.  In any event, you must include in any end 
+#         user licenses governing any code that includes the code subject 
+#         to the above license (in source and/or binary form) a disclaimer 
+#         that is at least as protective of Sun as the disclaimers in the 
+#         above license.
+# 
+#         A copy of the required copyright notice, the list of conditions and
+#         the disclaimer will be maintained at 
+#         https://hdcookbook.dev.java.net/misc/license.html .
+#         Thus, licensees may comply with the binary form redistribution
+#         requirement with a text file that contains the following text:
+# 
+#             A copy of the license(s) governing this code is located
+#             at https://hdcookbook.dev.java.net/misc/license.html
+# 
+
+
+
+
+#
+#  This show presents some prompts and controls the SFAA and the
+# video presentation.
+#
+
+show
+
+exports 
+    segments {
+        S:Initialize
+        S:VideoDone
+    } features {
+        F:Results
+        F:Text.Trim
+    } handlers {
+    }
+;
+
+java_generated_class MyCommands [[
+
+        import com.hdcookbook.grin.Show;
+        import com.hdcookbook.grinxlet.GrinXlet;
+
+        public class MyCommands extends com.hdcookbook.grin.GrinXHelper {
+
+            public MyCommands(Show show) {
+                super(show);
+            }
+
+            public MyDirector getDirector() {
+                return (MyDirector) show.getDirector();
+            }
+
+            JAVA_COMMAND_BODY
+
+        }
+
+]]
+
+
+feature text F:Text.InputNumber left 50 top 50 {
+        "Press 1-4 set # of buffers and run"
+        ""
+        "Press <- or -> to adjust trim"
+    } SansSerif plain 32 { { 255 255 0 255 } } ;
+
+feature text F:Text.Trim left 50 top 250 {
+        "SFAA Trim value:  0 ms"
+    } SansSerif plain 32 { { 255 255 0 255 } } ;
+
+feature text F:Results left 50 top 50 {
+        "Results go here."
+    } SansSerif plain 32 { { 255 255 0 255 } } ;
+
+feature text F:PressEnter left 50 top 100 {
+        "Press enter to run test again."
+    } SansSerif plain 32 { { 255 255 0 255 } } ;
+
+feature text F:Explanation left 50 top 150 {
+        "If played at normal speed, there should have been about 290 frames."
+        "According to the minimum performance levels, no more than half should"
+        "have been dropped.  The bear should cover the red area in the video,"
+        "but a lag of a frame or two is OK."
+    } SansSerif plain 16 { { 255 255 255 255 } } ;
+
+
+feature extension media:playlist F:Playlist
+    "bd://0.PLAYLIST:00001"     # 00001 is name of .mpls file
+    autostart: true
+    autostop: true
+    on_media_start {
+        segment_done ;
+    } on_media_end {
+        reset_feature F:Playlist ;      
+                # This re-starts video, which calls segment_done
+                # once the video starts.
+                # Re-starting the video is needed so that there's some
+                # video playing, in order to allow the SFAA to shut down.
+                #
+                # Normally this isn't called, but it's there as a backstop
+                # in case trick play terminates the video.  Normally, the
+                # director activates S:VideoDone when it gets far enough
+                # into the video.
+    }
+;
+
+feature image_sequence F:ImageLoader 300 300 
+        "images/New_Bear_" { 01 02 03 } ".png" ;
+
+segment S:Initialize
+    setup {
+        F:Text.Trim
+        F:Text.InputNumber
+        F:ImageLoader
+    } next {
+        java_command [[ getDirector().initialize(); ]]
+        activate_segment S:Start ;
+    }
+;
+
+
+segment S:Start
+    active {
+        F:Text.Trim
+        F:Text.InputNumber
+    } setup {
+        F:ImageLoader
+    } rc_handlers { 
+        H:I.1 H:I.2 H:I.3 H:I.4 H:T.L H:T.R
+    } next {
+        activate_segment S:Init.1 ;
+    }
+;
+
+rc_handler key_pressed H:T.L { left } execute {
+        java_command [[ getDirector().adjustTrim(-10); ]]
+} ;
+rc_handler key_pressed H:T.R { right } execute {
+        java_command [[ getDirector().adjustTrim(10); ]]
+} ;
+rc_handler key_pressed H:I.1 { 1 } execute {
+        java_command [[ getDirector().setNumBuffers(1); ]]
+        segment_done ;
+} ;
+rc_handler key_pressed H:I.2 { 2 } execute {
+        java_command [[ getDirector().setNumBuffers(2); ]]
+        segment_done ;
+} ;
+rc_handler key_pressed H:I.3 { 3 } execute {
+        java_command [[ getDirector().setNumBuffers(3); ]]
+        segment_done ;
+} ;
+rc_handler key_pressed H:I.4 { 4 } execute {
+        java_command [[ getDirector().setNumBuffers(4); ]]
+        segment_done ;
+} ;
+
+segment S:Init.1
+    setup {
+        F:Playlist
+        F:ImageLoader
+    } setup_done {
+        java_command [[ SFAADirector.startSFAA(); ]]
+        activate_segment S:Init.2 ;
+    }
+;
+
+segment S:Init.2
+    active {
+        F:Playlist
+    } setup {
+        F:ImageLoader
+    } next {
+        activate_segment S:Running ;
+    }
+;
+
+segment S:Running
+    active {
+        F:Playlist
+    } setup {
+        F:ImageLoader
+        F:Results
+        F:PressEnter
+        F:Explanation
+    } rc_handlers {
+        H:Running.R
+        H:Running.L
+        H:Running.U
+        H:Running.D
+        H:Running.E
+    } next {
+        activate_segment S:VideoDone ;
+    }
+;
+rc_handler key_pressed H:Running.R { right } execute {
+        java_command [[ getDirector().adjustOffset(1, 0); ]]
+} ;
+rc_handler key_pressed H:Running.L { left } execute {
+        java_command [[ getDirector().adjustOffset(-1, 0); ]]
+} ;
+rc_handler key_pressed H:Running.U { up } execute {
+        java_command [[ getDirector().adjustOffset(0, -1); ]]
+} ;
+rc_handler key_pressed H:Running.D { down } execute {
+        java_command [[ getDirector().adjustOffset(0, 1); ]]
+} ;
+rc_handler key_pressed H:Running.E { enter } execute {
+        java_command [[ getDirector().toggleOffset(); ]]
+} ;
+
+segment S:VideoDone
+    active {
+        F:Playlist
+    } setup {
+        F:PressEnter
+        F:Explanation
+        F:Results
+        F:ImageLoader
+    } on_entry {
+        java_command [[ 
+            String msg = SFAADirector.stopSFAA();
+            getDirector().fResults.setText(new String[] { msg });
+            GrinXlet.getInstance().getAnimationEngine().paintNextFrameFully();
+        ]]
+        activate_segment S:VideoDone.2 ;
+            # When this executes, video playback halts, so it's important
+            # that this be after the SFAA is stopped.
+    }
+;
+
+segment S:VideoDone.2
+    active {
+        F:Results
+        F:PressEnter
+        F:Explanation
+    } setup {
+        F:ImageLoader
+        F:Text.Trim
+        F:Text.InputNumber
+    } rc_handlers { 
+        H:PressEnter
+    } next {
+        activate_segment S:Start ;
+    }
+;
+
+rc_handler key_pressed H:PressEnter { enter } execute {
+        segment_done ;
+} ;
+
+end_show

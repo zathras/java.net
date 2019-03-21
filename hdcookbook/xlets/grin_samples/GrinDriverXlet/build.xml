@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="GRIN samples">
+    
+    <!-- This ant file is not meant to be executed as is, but to be invoked
+    from other build files in grin/samples/Scripts directory.  -->
+	
+    <!-- Property Definitions -->
+    <property file="${top.dir}/user.vars.properties"/>	
+    <property file="${top.dir}/vars.properties"/>	
+    <property file="build.properties"/>
+    
+    <property name="xlet.name" value="GrinDriverXlet"/>
+    
+    <target name="all" depends="check-tools, jar, gen-bdjo-desc"/>
+    <target name="check-tools">
+        <available file="${bdj.classes}" type="file"
+                   property="bdjstubs.ok"/>
+        <fail unless="bdjstubs.ok"> 
+              .
+        Could not find bd-j platform classes at ${bdj.classes}.
+        Please change the value of the "HDC_BDJ_PLATFORM_CLASSES" property 
+        in the ${top.dir}/user.vars.properties file, or the value of the
+        "bdj.classes" in the ${basedir}/build.properties file.
+                 
+        Don't be alarmed, this is a configuration error.
+        The HDCookbook source repository does not include BD-J platform classes
+        needed for compiling applications against.  These classes need to be
+        provided by you.
+        </fail>
+        <available file="${converter.jar}" type="file" property="grincompiler.ok"/>
+        <fail unless="grincompiler.ok"> 
+              .
+        Could not find the grin compiler jar file at ${converter.jar}.
+        Please build all the tools under the "hdcookbook/DiscCreationTools" 
+        and "hdcookbook/AuthoringTools" dirs before building this xlet, 
+        by calling "ant tools" in the toplevel directory,
+        or modify ${basedir}/build.properties so that various jar properties 
+        points to a pre-built hdcookbook tool jars.
+        </fail>
+    </target>
+    
+    <presetdef name="xlets.javac">
+        <javac classpath="${bdj.classes}"
+               source="1.3" target="1.3"
+               debug="on" deprecation="on"
+               destdir="${build.dir}">
+            <src path="${grin.library.src.dir}" />
+            <src path="."/>
+            <src path="${build.dir}"/>
+            <exclude name="${extension.parser}*"/>
+        </javac>
+    </presetdef>
+    
+    <presetdef name="converter.java">        
+        <java fork="true" failonerror="true" 
+            classname="com.hdcookbook.grin.binaryconverter.Main">
+            <classpath>
+                <pathelement path="${build.dir}"/>
+                <pathelement path="${converter.jar}"/>
+            </classpath>    
+            <arg value="-asset_dir"/>
+            <arg value="."/>
+            <arg value="-out"/>
+            <arg value="${build.dir}"/>
+        </java>
+    </presetdef>
+    
+    <target name="copy-xlet">
+        <copy file="../../GrinDriverXlet/${xlet.name}.java"
+              toFile="${build.dir}/${xlet.name}.java"/>
+    </target>
+        
+    <target name="init">
+        <mkdir dir="${build.dir}"/>         
+    </target>
+    
+    <target name="compile-xlet" description="Compile an driver xlet">
+        <xlets.javac/> 
+    </target>
+    
+    <target name="jar" depends="init, compile-xlet,
+            generate-binary-script, compile-generated-file"
+            description="Creates a jar file">
+        <jar destfile="${xlet.jar}">	     
+            <fileset dir="${build.dir}" 
+                     excludes="*.jar, *.xml, *.bdjo, *.java, ${extension.parser}*"/>
+        </jar>
+    </target>
+    
+    <target name="generate-binary-script" depends="init, check-extension-parser">
+        <converter.java>
+            <arg line="${extensions.args} ${script.name}.txt"/>
+        </converter.java>
+    </target>  
+    
+    <!-- If property "generated.class" is set, then rename the generated file to this
+             classname and compile it into the build dir.  -->
+    <target name="compile-generated-file" if="generated.class">
+        <move file="${build.dir}/${script.name}.xlet.java" toFile="${generated.class}"/> 
+        <!-- delete other generated java files after renaming one -->
+        <delete>
+            <fileset dir="${build.dir}" includes="*.java"/>
+        </delete>
+        <xlets.javac>
+            <include name="${generated.class}"/>         
+            <src path="." />
+        </xlets.javac> 
+    </target>
+    
+    <!-- If property "extension.parser" is set, then pass it onto grin jdk tools -->
+    <target name="check-extension-parser" depends="parser-exists, no-parser"/>
+    <target name="parser-exists" if="extension.parser">
+        <property name="extensions.args" value="-extension_parser ${extension.parser}"/>
+        <javac destdir="${build.dir}" classpath="${grinviewer.jar}">
+            <include name="${extension.parser}*"/>                      
+            <src path="."/>
+        </javac>
+    </target>
+    <target name="no-parser" unless="extension.parser">
+        <property name="extensions.args" value=""/>
+    </target>    
+    
+    
+    <!-- targets for running grinview -->
+        
+    <presetdef name="grinview.java">
+        <java fork="true" classname="com.hdcookbook.grin.test.bigjdk.GrinView">
+            <classpath>
+                <pathelement path="${grinviewer.jar}"/>
+            </classpath>
+        </java>
+    </presetdef>
+    
+    <target name="run-grinview" depends="init, check-extension-parser, generate-binary-script">
+        <grinview.java>
+            <classpath>
+                <pathelement path="${build.dir}"/>
+            </classpath>               
+            <arg line="-asset_dir . ${extensions.args}"/>
+            <arg value="${script.name}.txt"/>                
+        </grinview.java>
+    </target>
+    
+    <target name="run-grinview-binary" depends="jar">
+        <grinview.java> 
+            <classpath>
+                <pathelement path="${xlet.jar}"/>
+            </classpath>               
+            <arg line="-assets / -binary ${script.name}.grin"/>                
+        </grinview.java>
+    </target>
+    
+    <target name="autotest-grinview" depends="jar">
+        <grinview.java> 
+            <classpath>
+                <pathelement path="${xlet.jar}"/>
+            </classpath>               
+            <arg line="-assets / -binary -automate ${script.name}.grin"/>                
+        </grinview.java>
+    </target>
+    
+    <target name="debug-grinview" depends="jar">
+        <nbjpdastart addressproperty="jpda.address" name="hdcookbook" transport="dt_socket">
+            <classpath path="${grinviewer.jar}"/>
+        </nbjpdastart>	
+        <java fork="true" jar="${grinviewer.jar}">
+            <arg line="-asset_dir ${build.dir} ${script.name}.grin"/>
+            <jvmarg value="-Xdebug"/>
+            <jvmarg value="-Xnoagent"/>
+            <jvmarg value="-Djava.compiler=none"/>
+            <jvmarg value="-Xrunjdwp:transport=dt_socket,address=${jpda.address}"/>
+        </java>	
+    </target>
+    
+    <target name="clean" depends="clean-bdjo-desc">
+        <delete dir="${build.dir}"/>
+        <delete file="${generated.class}"/>
+    </target>
+</project>

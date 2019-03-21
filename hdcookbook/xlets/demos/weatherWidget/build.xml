@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Weather xlet" default="deploy" basedir=".">
+
+    <property file="user.vars.properties"/>
+    <property file="vars.properties"/>
+    <import file="${grin.xlet}/generic_build.xml"/>
+    
+
+    <!-- re-define run-grinview target to run at NTSC SD resolution -->
+
+    <target name="run-grinview" depends="init"
+    		description="Run grinview on game">
+	<antcall target="generate-binary-script">
+	    <param name="generate.binary.script.optimize.argument"
+	           value="-avoid_optimization"/>
+	</antcall>
+        <jdktools.java classname="com.hdcookbook.grin.test.bigjdk.GrinView">
+	    <classpath>
+		<pathelement path="${grinview.jar}"/>
+		<pathelement path="${build.dir}/gensrc/grinview"/>
+		<pathelement path="${se.lib.zip}"/>
+	    </classpath>
+	    <arg value="-asset_dir"/>
+	    <arg value="${asset.dir}"/>
+            <arg value="-asset_dir"/>
+            <arg value="${asset.dir.2}"/>
+	    <arg value="-extension_parser"/>
+	    <arg value="${extension.parser}"/>
+	    <arg value="-director"/>
+	    <arg value="${show.director}"/>
+	    <arg value="-scale"/>
+	    <arg value="1"/>
+	    <arg value="-screensize"/>
+	    <!-- arg value="ntsc"/ -->
+	    <arg value="qhd"/>
+            <arg value="${show.file}.txt"/>
+        </jdktools.java>
+    </target>
+
+    <!-- re-define grinview args target to run at NTSC SD resolution -->
+    <target name="generate-grinview-args" depends="init">
+	<concat destfile="${build.dir}/gensrc/grinview/grinview_args.txt"><![CDATA[#
+# This file contains command-line arguments for use with
+# a launchable GrinView JAR file.  See the grinview-jar and
+# generate-grinview-args targets in build.xml.
+-assets
+/
+-extension_parser
+${extension.parser}
+-director
+${show.director}
+-segment
+${show.initial.segment}
+-scale
+1
+-screensize
+#ntsc
+qhd
+${show.file}.txt
+]]></concat>
+	<antcall target="post-generate-grinview-args"/>
+    </target>
+</project>
+

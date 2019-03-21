@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="BridgeheadXlet" default="deploy" basedir=".">
+    
+    <!-- Property Definitions -->
+    <property file="../../user.vars.properties"/>
+    <property file="../../vars.properties"/>
+    <property file="build.properties"/>	
+
+    <property name="keystore.dir"                     value="tools/keystore"/>
+    
+    <!-- WinDVD executable default location -->
+    <property name="WinDVD"         value="c:/Program Files/InterVideo/DVD8/WinDVD.exe"/>
+    
+    <presetdef name="jdktools.java">
+        <java fork="true" failOnError="true"/>
+    </presetdef>    
+    
+    <import   file="build-client.xml"/>   
+    <import   file="build-bridgehead.xml"/>
+    <import   file="build-sampledisc.xml"/>
+
+    <property name="zipfile" value="${discimage.name}.zip"/>
+    
+    <target name="clean" depends="client-clean, bridgehead-clean, sample-clean">
+        <delete file="${zipfile}"/>
+    </target>
+
+    <target name="spotless" depends="clean">
+	<delete file="SampleDiscImage/keystore.store"/>
+	<delete file="SampleDiscImage/app.discroot.crt"/>
+	<delete file="SampleDiscImage/appcert.csr"/>
+	<delete file="SampleDiscImage/appcert.cer"/>
+	<delete dir="META-INF"/>
+    </target>
+    
+    <target name="deploy" depends="bridgehead-deploy,  
+                                   make-client-jar, bundle, make-sample"
+            description="Make an blu-ray disc image">
+       <!-- Add sample's zip to the bundle -->
+       <zip destfile="${zipfile}" update="true">
+           <fileset file="${sample.dir}/SampleDiscImage.zip"/>
+       </zip>
+                
+    </target>
+                
+    
+    <target name="bundle">
+        <zip destfile="${zipfile}">
+            <fileset dir="${bridgehead.dist.dir}"/>
+            <fileset dir="${client.dist.dir}"/>      
+            <fileset dir="${keystore.dir}"/>
+        </zip>
+    </target>
+
+</project>

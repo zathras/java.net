@@ -1,0 +1,40 @@
+# For testing a custom feature.  hdcookbook.dev.java.net issue #37.
+
+show 
+
+feature extension fontstrip:text 
+   F:Text "Arial.png" left 100 top 100 
+       "HELLO ALL"  
+       background { 0 255 255 255 } 
+; 
+
+feature extension fontstrip:text 
+   F:Text2 "Edwardian.png" left 100 top 400 
+       { "abcdefg" "hijklmn" } 
+       background { 0 0 100 255 } 
+; 
+
+segment S:Initialize  
+   setup  {
+        F:Everything
+   } setup_done {
+      # triggerred when F:Everything is done loading
+      activate_segment S:1 ;  
+   }  
+;
+
+segment S:1
+   active {
+        F:Text
+        F:Text2
+   } setup  {
+        F:Everything
+   } 
+; 
+
+feature group F:Everything {
+        F:Text
+        F:Text2
+} ;
+
+end_show

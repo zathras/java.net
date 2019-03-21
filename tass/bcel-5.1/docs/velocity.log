@@ -1,0 +1,60 @@
+Fri Apr 25 08:54:58 GMT+01:00 2003  [debug] AvalonLogSystem initialized using logfile 'velocity.log'
+Fri Apr 25 08:54:58 GMT+01:00 2003   [info] ************************************************************** 
+Fri Apr 25 08:54:58 GMT+01:00 2003   [info] Starting Jakarta Velocity v1.3
+Fri Apr 25 08:54:58 GMT+01:00 2003   [info] RuntimeInstance initializing.
+Fri Apr 25 08:54:58 GMT+01:00 2003   [info] Default Properties File: org\apache\velocity\runtime\defaults\velocity.properties
+Fri Apr 25 08:54:58 GMT+01:00 2003   [info] Trying to use logger class org.apache.velocity.runtime.log.AvalonLogSystem
+Fri Apr 25 08:54:58 GMT+01:00 2003   [info] Using logger class org.apache.velocity.runtime.log.AvalonLogSystem
+Fri Apr 25 08:54:58 GMT+01:00 2003   [info] Default ResourceManager initializing. (class org.apache.velocity.runtime.resource.ResourceManagerImpl)
+Fri Apr 25 08:54:58 GMT+01:00 2003   [info] Resource Loader Instantiated: org.apache.velocity.runtime.resource.loader.FileResourceLoader
+Fri Apr 25 08:54:58 GMT+01:00 2003   [info] FileResourceLoader : initialization starting.
+Fri Apr 25 08:54:58 GMT+01:00 2003   [info] FileResourceLoader : adding path 'C:\cygwin\home\dahm\java\maven-1.0-beta-8\plugins\maven-xdoc-plugin-1.3\plugin-resources/templates'
+Fri Apr 25 08:54:58 GMT+01:00 2003   [info] FileResourceLoader : initialization complete.
+Fri Apr 25 08:54:58 GMT+01:00 2003   [info] ResourceCache : initialized. (class org.apache.velocity.runtime.resource.ResourceCacheImpl)
+Fri Apr 25 08:54:58 GMT+01:00 2003   [info] Default ResourceManager initialization complete.
+Fri Apr 25 08:54:58 GMT+01:00 2003   [info] Loaded System Directive: org.apache.velocity.runtime.directive.Literal
+Fri Apr 25 08:54:58 GMT+01:00 2003   [info] Loaded System Directive: org.apache.velocity.runtime.directive.Macro
+Fri Apr 25 08:54:58 GMT+01:00 2003   [info] Loaded System Directive: org.apache.velocity.runtime.directive.Parse
+Fri Apr 25 08:54:58 GMT+01:00 2003   [info] Loaded System Directive: org.apache.velocity.runtime.directive.Include
+Fri Apr 25 08:54:58 GMT+01:00 2003   [info] Loaded System Directive: org.apache.velocity.runtime.directive.Foreach
+Fri Apr 25 08:54:59 GMT+01:00 2003   [info] Created: 20 parsers.
+Fri Apr 25 08:54:59 GMT+01:00 2003   [info] Velocimacro : initialization starting.
+Fri Apr 25 08:54:59 GMT+01:00 2003   [info] Velocimacro : adding VMs from VM library template : VM_global_library.vm
+Fri Apr 25 08:54:59 GMT+01:00 2003  [error] ResourceManager : unable to find resource 'VM_global_library.vm' in any resource loader.
+Fri Apr 25 08:54:59 GMT+01:00 2003   [info] Velocimacro : error using  VM library template VM_global_library.vm : org.apache.velocity.exception.ResourceNotFoundException: Unable to find resource 'VM_global_library.vm'
+Fri Apr 25 08:54:59 GMT+01:00 2003   [info] Velocimacro :  VM library template macro registration complete.
+Fri Apr 25 08:54:59 GMT+01:00 2003   [info] Velocimacro : allowInline = true : VMs can be defined inline in templates
+Fri Apr 25 08:54:59 GMT+01:00 2003   [info] Velocimacro : allowInlineToOverride = false : VMs defined inline may NOT replace previous VM definitions
+Fri Apr 25 08:54:59 GMT+01:00 2003   [info] Velocimacro : allowInlineLocal = false : VMs defined inline will be  global in scope if allowed.
+Fri Apr 25 08:54:59 GMT+01:00 2003   [info] Velocimacro : messages on  : VM system will output logging messages
+Fri Apr 25 08:54:59 GMT+01:00 2003   [info] Velocimacro : autoload off  : VM system will not automatically reload global library macros
+Fri Apr 25 08:54:59 GMT+01:00 2003   [info] Velocimacro : initialization complete.
+Fri Apr 25 08:54:59 GMT+01:00 2003   [info] Velocity successfully started.
+Fri Apr 25 08:54:59 GMT+01:00 2003   [info] ResourceManager : found cvs-usage.xml with loader org.apache.velocity.runtime.resource.loader.FileResourceLoader
+Fri Apr 25 08:54:59 GMT+01:00 2003  [error] RHS of #set statement is null. Context will not be modified. cvs-usage.xml [line 4, column 3]
+Fri Apr 25 08:54:59 GMT+01:00 2003  [error] RHS of #set statement is null. Context will not be modified. cvs-usage.xml [line 5, column 1]
+Fri Apr 25 08:54:59 GMT+01:00 2003  [error] ASTMethod.execute() : exception from introspection : java.lang.NullPointerException
+Fri Apr 25 08:54:59 GMT+01:00 2003  [error] RHS of #set statement is null. Context will not be modified. cvs-usage.xml [line 6, column 1]
+Fri Apr 25 08:54:59 GMT+01:00 2003   [warn] org.apache.velocity.runtime.exception.ReferenceException: reference : template = cvs-usage.xml [line 16,column 18] : $url is not a valid reference.
+Fri Apr 25 08:54:59 GMT+01:00 2003   [warn] org.apache.velocity.runtime.exception.ReferenceException: reference : template = cvs-usage.xml [line 16,column 24] : $url is not a valid reference.
+Fri Apr 25 08:54:59 GMT+01:00 2003   [warn] org.apache.velocity.runtime.exception.ReferenceException: reference : template = cvs-usage.xml [line 28,column 16] : $conn is not a valid reference.
+Fri Apr 25 08:54:59 GMT+01:00 2003   [warn] org.apache.velocity.runtime.exception.ReferenceException: reference : template = cvs-usage.xml [line 30,column 20] : $conn is not a valid reference.
+Fri Apr 25 08:54:59 GMT+01:00 2003   [warn] org.apache.velocity.runtime.exception.ReferenceException: reference : template = cvs-usage.xml [line 30,column 29] : $module is not a valid reference.
+Fri Apr 25 08:54:59 GMT+01:00 2003   [warn] org.apache.velocity.runtime.exception.ReferenceException: reference : template = cvs-usage.xml [line 49,column 20] : $conn is not a valid reference.
+Fri Apr 25 08:54:59 GMT+01:00 2003   [warn] org.apache.velocity.runtime.exception.ReferenceException: reference : template = cvs-usage.xml [line 49,column 29] : $module is not a valid reference.
+Fri Apr 25 08:54:59 GMT+01:00 2003   [info] ResourceManager : found index.xml with loader org.apache.velocity.runtime.resource.loader.FileResourceLoader
+Fri Apr 25 08:54:59 GMT+01:00 2003   [info] ResourceManager : found maven-reports.xml with loader org.apache.velocity.runtime.resource.loader.FileResourceLoader
+Fri Apr 25 08:54:59 GMT+01:00 2003  [error] ASTMethod.execute() : exception from introspection : java.lang.NullPointerException
+Fri Apr 25 08:54:59 GMT+01:00 2003  [error] ASTMethod.execute() : exception from introspection : java.lang.NullPointerException
+Fri Apr 25 08:54:59 GMT+01:00 2003   [warn] org.apache.velocity.runtime.exception.ReferenceException: reference : template = maven-reports.xml [line 1,column 1] : $maven-docs-dest is not a valid reference.
+Fri Apr 25 08:54:59 GMT+01:00 2003   [warn] org.apache.velocity.runtime.exception.ReferenceException: reference : template = maven-reports.xml [line 1,column 1] : $gen-xdocs is not a valid reference.
+Fri Apr 25 08:54:59 GMT+01:00 2003   [info] ResourceManager : found dependencies.xml with loader org.apache.velocity.runtime.resource.loader.FileResourceLoader
+Fri Apr 25 08:54:59 GMT+01:00 2003   [info] ResourceManager : found issue-tracking.xml with loader org.apache.velocity.runtime.resource.loader.FileResourceLoader
+Fri Apr 25 08:54:59 GMT+01:00 2003  [error] ASTMethod.execute() : exception from introspection : java.lang.NullPointerException
+Fri Apr 25 08:54:59 GMT+01:00 2003  [error] RHS of #set statement is null. Context will not be modified. issue-tracking.xml [line 12, column 9]
+Fri Apr 25 08:54:59 GMT+01:00 2003   [warn] org.apache.velocity.runtime.exception.ReferenceException: reference : template = issue-tracking.xml [line 13,column 18] : $url is not a valid reference.
+Fri Apr 25 08:54:59 GMT+01:00 2003   [warn] org.apache.velocity.runtime.exception.ReferenceException: reference : template = issue-tracking.xml [line 13,column 24] : $url is not a valid reference.
+Fri Apr 25 08:54:59 GMT+01:00 2003   [info] Velocimacro : added new VM : #displayLink( label link ) : source = mail-lists.xml
+Fri Apr 25 08:54:59 GMT+01:00 2003   [info] ResourceManager : found mail-lists.xml with loader org.apache.velocity.runtime.resource.loader.FileResourceLoader
+Fri Apr 25 08:54:59 GMT+01:00 2003   [info] ResourceManager : found project-info.xml with loader org.apache.velocity.runtime.resource.loader.FileResourceLoader
+Fri Apr 25 08:54:59 GMT+01:00 2003   [info] ResourceManager : found team-list.xml with loader org.apache.velocity.runtime.resource.loader.FileResourceLoader

@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+This file is designed to be included in the build.xml file of a
+Game xlet project.  See the documentation in vars.properties for details.
+
+-->
+<project name="${project.name}" default="deploy" basedir=".">
+
+    <!--
+    	Some default values for properties.  These can be overridden
+	in vars.properties.
+    -->
+    <!--<property name="keystore.storepass" value="keystorepassword"/>
+    <property name="keystore.root.alias" value="rootcert"/>
+    <property name="keystore.root.keypass" value="rootcertpassword"/>
+    <property name="keystore.app.alias" value="appcert"/>
+    <property name="keystore.app.keypass" value="appcertpassword"/>-->
+    	<!-- The keystore defaults above match the defaults of 
+	     BDCertGenerator.  If you're doing a binding unit cert,
+	     then you might want to define keystore.bu.alias and
+	     keystore.bu.keypass.  keystore.bu.alias defaults to
+	     "bucert".  I'm not sure what keystore.bu.keypass defaults
+	     to, but if you're creating a new keystore, you can use
+	     whatever you want.
+	-->
+
+    <!--<property name="disc.id" value="00000000000000000000000000000001"/>-->
+    <condition property="mosaics.file.txt" value="${mosaics.file}.txt">
+		<isset property="mosaics.file"/>
+    </condition>
+    <property name="mosaics.file.txt" value=""/>
+    <property name="asset.dir.2" value="${asset.dir}"/>
+    <property name="extension.parser" value="com.hdcookbook.grin.io.text.NullExtensionParser"/>
+    <property name="xlet.class.name" value="com.hdcookbook.grinxlet.GrinXlet"/>
+    <property name="debug.screen.scale" value="1.0"/>
+    <condition property="debug.is.set">
+	  	<equals arg1="${debug.or.deploy}" arg2="debug"/>
+    </condition>
+    <condition property="debug.is.set">
+	  	<equals arg1="${debug.or.deploy}" arg2="debug"/>
+    </condition>
+    <condition property="xlet.debug.on.or.off" value="on" else="off">
+	  	<equals arg1="${debug.or.deploy}" arg2="debug"/>
+    </condition>
+    <condition property="xlet.lib.src.int" value=":${xlet.lib.src}" else="">
+		<isset property="xlet.lib.src"/>
+    </condition>
+    <condition property="se.lib.src.int" value=":${se.lib.src}" else="">
+		<isset property="se.lib.src"/>
+    </condition>
+
+    <!--
+    	Targets for java and javac...
+    -->
+    <presetdef name="jdktools.java">
+        <java fork="true" failOnError="true"/>
+    </presetdef>    
+    
+    <presetdef name="xlets.javac">
+        <javac srcdir="${src.dir}"
+               bootclasspath="${mhp.classes}"
+               source="1.3" target="1.3"
+               debug="${xlet.debug.on.or.off}" deprecation="on"/>
+    </presetdef>
+    <presetdef name="jdktools.javac">
+        <javac srcdir="${src.dir}"
+               source="1.5" target="1.5"
+               debug="on" deprecation="on"/>
+    </presetdef>
+    
+    <target name="init" depends="check-tools">
+        <tstamp/>
+        <mkdir dir="${build.dir}/classes"/> 
+	<!--
+		Convert com.mypackage.Foo to com/mypackage/Foo for a couple
+		of properties, and check if debug is set.
+	-->
+	<pathconvert property="kludge.root.dir">
+	    <path path="/"/>
+	</pathconvert>
+	<pathconvert property="show.director.file">
+	    <path path="/${show.director}"/>
+	    <unpackagemapper from="${kludge.root.dir}*" to="*"/>
+	</pathconvert>
+	<pathconvert property="show.commands.file">
+	    <path path="/${show.commands}"/>
+	    <unpackagemapper from="${kludge.root.dir}*" to="*"/>
+	</pathconvert>
+	<pathconvert property="xlet.jar.basename">
+	    <path path="/${xlet.jar}"/>
+	    <globmapper from="${kludge.root.dir}${build.dir}${file.separator}*.jar" to="*"/>
+	</pathconvert>
+	<available file="${src.dir}/fonts/dvb.fontindex"
+		   property="xlet.fonts.flag" value="-fonts"/>
+	<property name="xlet.fonts.flag" value="-nofonts"/>
+	<antcall target="post-init"/>
+    </target>
+    <target name="post-init">
+        <!-- Projects that include this build file can re-define this target -->
+    </target>
+
+    <target name="check-tools">
+	<fail>
+	    <condition>
+	      <or>
+		  <equals arg1="" arg2="${project.name}"/>
+		  <not> <isset property="project.name"/> </not>
+	      </or>
+	    </condition>
+.
+
+The project.name property is not set.  This usually has one of two causes:
+
+    *  You've typed "ant" in HD cookbook's GenericGame directory.  This
+       directory isn't meant to be built; it has files that are meant to
+       be included in other projects.  Please ../GrinMHPBunny for an example 
+       of this.
+
+    *  You've copied build.xml and vars.properties from GenericGame to set up
+       a new project, but you haven't yet edited vars.properties to customize
+       it for your project.  Please see the documentation in vars.properties
+       for details.
+
+	</fail>
+        <available file="${mhp.classes}" type="file"
+                   property="mhpstubs.ok"/>
+                   
+        <fail unless="mhpstubs.ok"> 
+              .
+        Could not find mhp platform classes at ${mhp.classes}.
+        Please change the value of the mhp.classes property 
+        defined in the vars.properties file.  A good way to do
+	this is to create a file called user.vars.properites
+	in your project's base directory that overrides this 
+	property value.
+                 
+        Don't be alarmed, this is a configuration error.
+        The HDCookbook source repository does not include MHP platform classes
+        needed for compiling applications against.  These classes need to be
+        provided by you.
+
+	http://wiki.java.net/bin/view/Mobileandembedded/BDJPlatformDefinition
+	describes one way to get them.
+        
+        </fail> 
+
+        <available file="${converter.jar}" type="file" property="grincompiler.ok"/>
+        <fail unless="grincompiler.ok">
+              .
+        Could not find the grin compiler jar file at ${converter.jar}.
+        Please build all the tools under the "hdcookbook/DiscCreationTools"
+        and "hdcookbook/AuthoringTools" dirs before building this xlet,
+        by calling "ant tools" in the toplevel directory,
+        or modify vars.properties so that various jar properties
+        points to a pre-built hdcookbook tool jars.
+        </fail>
+	
+	<fail unless="grin.xlet">
+		.
+
+	The grin.xlet property is not set.  Note that on January 15, 2009,
+	the old "generic.game" property was changed to "grin.xlet," and the
+	location in the cookbook repository was changed from
+	xlets/grin_samples/MHPGrinBunny to xlets/grin_samples/MHPMenuDemo.  Perhaps you just
+	need to change this in your vars.properties file?
+	</fail>
+
+	<antcall target="post-check-tools"/>
+    </target>
+    <target name="post-check-tools">
+        <!-- Projects that include this build file can re-define this target -->
+    </target>
+    
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+        <delete dir="${dist.dir}"/>
+        <delete file="${project.name}-discimage.zip"/>
+        <delete file="${project.name}-grinview.jar"/>
+	<antcall target="post-clean"/>
+    </target>
+    <target name="post-clean">
+        <!-- Projects that include this build file can re-define this target -->
+    </target>
+
+    <target name="spotless" depends="clean">
+	<delete file="keystore.store"/>
+	<delete file="app.discroot.crt"/>	<!-- Mac name -->
+	<delete file="appcert.cer"/>		<!-- Windows name -->
+	<delete file="appcert.csr"/>
+	<delete dir="META-INF"/>
+	<antcall target="post-spotless"/>
+    </target>
+    <target name="post-spotless">
+        <!-- Projects that include this build file can re-define this target -->
+    </target>
+
+    <target name="deploy" depends="bundle, grinview-jar"/>
+    
+    <target name="bundle" depends="jar" description="Make a blu-ray disc image bundle">
+        <zip destfile="${project.name}-discimage.zip" basedir="${dist.dir}"/> 
+		<antcall target="post-bundle"/>
+    </target>
+    <target name="post-bundle">
+        <!-- Projects that include this build file can re-define this target -->
+    </target>
+    
+    <target name="generate-binary-script" depends="init">
+		<delete dir="${build.dir}/gensrc"/>
+		<mkdir dir="${build.dir}/gensrc"/>
+		<mkdir dir="${build.dir}/gensrc/grinview"/>
+		<mkdir dir="${build.dir}/gensrc/xlet"/>
+		<antcall target="generate-binary-script-debug-subtarget"/>
+		<property name="generate.binary.script.optimize.argument" value="-optimize"/>
+		<!--	Compile the game so we'll pick up any extension parser -->
+		<jdktools.javac destdir="${build.dir}/gensrc/grinview" debug="on">
+		   	<src path="src:se_src${se.lib.src.int}"/>
+		    <classpath>
+				<pathelement path="${converter.jar}"/>
+				<pathelement path="${grinview.jar}"/>
+				<pathelement path="${se.lib.zip}"/>
+		    </classpath>
+		</jdktools.javac>
+		<!--	Now run converter with extension parser in path -->
+        <jdktools.java classname="com.hdcookbook.grin.binaryconverter.Main">
+		    <classpath>
+				<pathelement path="${converter.jar}"/>
+				<pathelement path="${build.dir}/gensrc/grinview"/>
+				<pathelement path="${se.lib.zip}"/>
+		    </classpath>
+            <arg value="-asset_dir"/>
+            <arg value="${asset.dir}"/>
+            <arg value="-asset_dir"/>
+            <arg value="${asset.dir.2}"/>
+		    <arg value="-extension_parser"/>
+		    <arg value="${extension.parser}"/>
+		    <arg value="${generate.binary.script.optimize.argument}"/>
+            <arg value="-out"/>
+            <arg value="${build.dir}"/>
+            <arg value="${show.file}.txt"/>
+            <arg value="${mosaics.file.txt}"/>
+        </jdktools.java>
+		<move file="${build.dir}/${show.file}.grinview.java"
+		      tofile="${build.dir}/gensrc/grinview/${show.commands.file}.java"/>
+		<move file="${build.dir}/${show.file}.xlet.java"
+		      tofile="${build.dir}/gensrc/xlet/${show.commands.file}.java"/>
+		<jdktools.javac destdir="${build.dir}/gensrc/grinview" debug="on"
+			excludes="GrinXlet.java XletDirector.java">
+		    <src path="${build.dir}/gensrc/grinview" />
+		    <src path="src${se.lib.src.int}"/>
+		    <classpath>
+				<pathelement path="${grinview.jar}"/>
+				<pathelement path="${se.lib.zip}"/>
+		    </classpath>
+		</jdktools.javac>
+		<antcall target="post-generate-binary-script"/>
+    </target>
+    <target name="post-generate-binary-script">
+        <!-- Projects that include this build file can re-define this target -->
+    </target>
+
+    <target name="generate-binary-script-debug-subtarget" 
+    		if="debug.is.set" depends="init">
+        <jdktools.java jar="${converter.jar}">
+            <arg value="-asset_dir"/>
+            <arg value="${grin.xlet}/src/${debug.or.deploy}/com/hdcookbook/grinxlet"/>
+            <arg value="-out"/>
+            <arg value="${build.dir}"/>
+	    <arg value="-avoid_optimization"/>
+	    <arg value="-scaleX"/>
+	    <arg value="${debug.screen.scale}"/>
+	    <arg value="-scaleY"/>
+	    <arg value="${debug.screen.scale}"/>
+            <arg value="xlet_show.txt"/>
+        </jdktools.java>
+	<delete file="${build.dir}/xlet_show.grinview.java"/>
+	<move file="${build.dir}/xlet_show.xlet.java"
+	      tofile="${build.dir}/gensrc/xlet/com/hdcookbook/grinxlet/XletShowCommands.java"/>
+	<antcall target="post-generate-binary-script-debug-subtarget"/>
+    </target>
+    <target name="post-generate-binary-script-debug-subtarget">
+        <!-- Projects that include this build file can re-define this target -->
+    </target>
+
+    <target name="grinview" depends="run-grinview"/>
+
+    <target name="run-grinview" depends="init"
+    		description="Run grinview on game">
+
+	<!--  We build the binary script so that we'll have our
+	      extension parser and java_command implementations  -->
+	<antcall target="generate-binary-script">
+	    <param name="generate.binary.script.optimize.argument"
+	           value="-avoid_optimization"/>
+	</antcall>
+	<antcall target="quick-grinview">
+	</antcall>
+    </target>
+
+    <target name="quick-grinview">
+        <!-- This intentionally has no depends.  It's meant to be called when
+	     you know nothing needs to be recompiled, e.g. when the only
+	     change is to the show .txt file.
+	-->
+        <jdktools.java classname="com.hdcookbook.grin.test.bigjdk.GrinView">
+	    <classpath>
+		<pathelement path="${grinview.jar}"/>
+		<pathelement path="${build.dir}/gensrc/grinview"/>
+		<pathelement path="${se.lib.zip}"/>
+	    </classpath>
+	    <arg value="-asset_dir"/>
+	    <arg value="${asset.dir}"/>
+            <arg value="-asset_dir"/>
+            <arg value="${asset.dir.2}"/>
+	    <arg value="-extension_parser"/>
+	    <arg value="${extension.parser}"/>
+	    <arg value="-director"/>
+	    <arg value="${show.director}"/>
+            <arg value="${show.file}.txt"/>
+        </jdktools.java>
+    </target>
+
+    <target name="run-grinview-binary" depends="init"
+            description="Run grinview on game using binary .grin file">
+	<antcall target="generate-binary-script">
+	    <param name="generate.binary.script.optimize.argument"
+	          value="-avoid_optimization"/>
+	</antcall>
+        <jdktools.java classname="com.hdcookbook.grin.test.bigjdk.GrinView">
+	    <classpath>
+		<pathelement path="${grinview.jar}"/>
+		<pathelement path="${build.dir}/gensrc/grinview"/>
+		<pathelement path="${se.lib.zip}"/>
+	    </classpath>
+	    <arg value="-asset_dir"/>
+	    <arg value="${asset.dir}"/>
+            <arg value="-asset_dir"/>
+            <arg value="${asset.dir.2}"/>
+            <arg value="-asset_dir"/>
+	    <arg value="${build.dir}"/>
+	    <arg value="-extension_parser"/>
+	    <arg value="${extension.parser}"/>
+	    <arg value="-director"/>
+	    <arg value="${show.director}"/>
+	    <arg value="-binary"/>
+	    <arg value="${show.file}.grin"/>
+        </jdktools.java>
+    </target> 
+
+    <target name="grinview-jar" depends="init, generate-binary-script, generate-grinview-args" description="Generate launchable grinview jar file">
+        <delete dir="${build.dir}/grinview-jar"/>
+        <mkdir dir="${build.dir}/grinview-jar"/>
+		<unzip src="${grinview.jar}" dest="${build.dir}/grinview-jar"/>
+		<antcall target="internal-unzip-se-lib-zip"/>
+		<copy todir="${build.dir}/grinview-jar">
+	        <fileset dir="${build.dir}/gensrc/grinview">
+				<include name="grinview_args.txt"/>
+	        	<include name="**/*.class"/>
+	        </fileset>
+	        <fileset dir="${asset.dir}">
+	            <include name="*.txt"/>
+	        </fileset>
+		    <fileset dir="${build.dir}">
+				<include name="*.png"/>
+				<include name="images.map"/>
+		    </fileset>
+        </copy>
+		<delete dir="${build.dir}/grinview-jar/META-INF"/>
+		<jar jarfile="${project.name}-grinview.jar">
+		    <fileset dir="${build.dir}/grinview-jar"/>
+		    <manifest>
+		        <attribute name="Main-Class" value="com.hdcookbook.grin.test.bigjdk.GrinViewJar"/>
+		    </manifest>
+		</jar>
+		<echo message=""/>
+		<echo message="Created launchable game using grinview in ${project.name}-grinview.jar"/>
+		<echo message=""/>
+		<antcall target="post-grinview-jar"/>
+    </target>
+    <target name="post-grinview-jar">
+        <!-- Projects that include this build file can re-define this target -->
+    </target>
+
+    <target name="internal-unzip-se-lib-zip" if="se.lib.zip">
+		<unzip src="${se.lib.zip}" dest="${build.dir}/grinview-jar"/>
+    </target>
+
+    <target name="test" depends="init, generate-binary-script" description="Run grinview on game in autotest mode">
+        <jdktools.java classname="com.hdcookbook.grin.test.bigjdk.GrinView">
+		    <classpath>
+				<pathelement path="${grinview.jar}"/>
+				<pathelement path="${build.dir}/gensrc/grinview"/>
+				<pathelement path="${se.lib.zip}"/>
+		    </classpath>
+		    <arg value="-asset_dir"/>
+		    <arg value="${asset.dir}"/>
+		    <arg value="-extension_parser"/>
+		    <arg value="${extension.parser}"/>
+		    <arg value="-automate"/>
+            <arg value="${show.file}.txt"/>
+        </jdktools.java>
+		<echo message="Don't worry about the ClassCastExceptions above; they're normal."/>
+		<antcall target="post-test"/>
+    </target>
+    <target name="post-test">
+        <!-- Projects that include this build file can re-define this target -->
+    </target>
+
+    <target name="compile" depends="init, generate-binary-script" description="Compiles the sources">
+        <mkdir dir="${build.dir}/classes"/>
+		<antcall target="internal-unzip-xlet-lib-zip"/>
+		<copy todir = "${build.dir}/gensrc/xlet">
+	            <fileset dir="${grin.library.src.dir}"
+			includes="**/*.java"
+			excludes="com/hdcookbook/grin/util/Debug.java"
+		    />
+		</copy>
+        <xlets.javac destdir="${build.dir}/classes" >
+	    <classpath>
+		<pathelement path="${xlet.lib.zip}"/>
+	    </classpath>
+            <src path="${grin.xlet}/src/${debug.or.deploy}"/>
+            <!--<src path="src:xlet_src${xlet.lib.src.int}"/>-->
+	    <src path="${build.dir}/gensrc/xlet"/>
+        </xlets.javac>
+		<antcall target="post-compile"/>
+    </target>
+    <target name="post-compile">
+        <!-- Projects that include this build file can re-define this target -->
+    </target>
+	
+    <target name="internal-unzip-xlet-lib-zip" if="xlet.lib.zip">
+		<unzip src="${xlet.lib.zip}" dest="${build.dir}/classes"/>
+    </target>
+
+    <target name="jar" depends="compile" description="Creates an xlet jar file">
+        <jar compress="false" destfile="${xlet.jar}">
+            <fileset dir="${build.dir}/classes"/>
+        </jar>
+	<antcall target="post-jar"/>
+    </target>
+    <target name="post-jar">
+        <!-- Projects that include this build file can re-define this target -->
+    </target>
+    
+    
+
+    <target name="generate-grinview-args" depends="init">
+        <property name="grinview.args.extra" value=""/>
+ 	<concat destfile="${build.dir}/gensrc/grinview/grinview_args.txt"><![CDATA[#
+# This file contains command-line arguments for use with
+# a launchable GrinView JAR file.  See the grinview-jar and
+# generate-grinview-args targets in build.xml.
+-assets
+/
+-extension_parser
+${extension.parser}
+-director
+${show.director}
+-segment
+${show.initial.segment}
+${grinview.args.extra}
+${show.file}.txt
+]]></concat>
+	<antcall target="post-generate-grinview-args"/>
+    </target>
+    <target name="post-generate-grinview-args">
+        <!-- Projects that include this build file can re-define this target -->
+    </target>
+
+</project>

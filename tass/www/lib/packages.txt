@@ -1,0 +1,21 @@
+#
+#  List of packages for TASS, BD-J 1.0 platform, based on
+#  http://blu-raydisc.com/assets/downloadablefile/bdj_gem_application_definition_050307-12959.pdf
+#
+#  Note that TASS automatically checks sub-packages, 
+#  so that e.g. java implies java.awt and java.awt.color.
+#
+#  The top-level package javax is not listed, because it's
+#  perfectly valid for applications to include libraries in
+#  a subpackage of javax.
+
+java.
+javax.media.
+javax.microedition.
+javax.net.
+javax.security.
+javax.tv.
+org.bluray.
+org.davic.
+org.dvb.
+org.havi.

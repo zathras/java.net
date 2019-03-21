@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+Each subdirectory has a real build file.  This top-level build
+file is here just for the "clean" and "spotless" targets.
+
+-->
+
+<project name="Game xlets" default="clean" basedir=".">
+
+
+<target name="clean">
+    <ant dir="01" target="clean"/>
+    <ant dir="02" target="clean"/>
+    <ant dir="03" target="clean"/>
+    <ant dir="04" target="clean"/>
+    <ant dir="05" target="clean"/>
+    <ant dir="06" target="clean"/>
+    <ant dir="07" target="clean"/>
+    <ant dir="08" target="clean"/>
+</target>
+
+<target name="spotless">
+    <ant dir="01" target="spotless"/>
+    <ant dir="02" target="spotless"/>
+    <ant dir="03" target="spotless"/>
+    <ant dir="04" target="spotless"/>
+    <ant dir="05" target="spotless"/>
+    <ant dir="06" target="spotless"/>
+    <ant dir="07" target="spotless"/>
+    <ant dir="08" target="spotless"/>
+</target>
+
+</project>

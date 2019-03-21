@@ -1,0 +1,97 @@
+<body bgcolor=#EEEEEE>
+<title> Sdiff FontStripText.java </title>
+<table><tr valign=top>
+<td><pre>
+
+<hr>
+152     private Object     setupMonitor = new Object();
+153     private boolean    setupMode    = false;    
+154     private boolean imageSetup = false;
+155 
+156     private ManagedImage fontImage = null;
+157 
+158     private static boolean loadingFailed = false;
+159     
+160     public FontStripText(Show show) {
+161         super(show);
+162     }
+163 
+164     /**
+165      * {@inheritDoc}
+166      **/
+167     protected Feature createClone(HashMap clones) {
+168         if (!setupMode || !imageSetup || isActivated) {
+169             throw new IllegalStateException();
+170         }
+171         FontStripText result = new FontStripText(show);
+
+172         result.xArg = xArg;
+173         result.yArg = yArg;
+174         result.strings = strings;
+175         result.bakedStrings = bakedStrings;
+176         result.fontImageFileName = fontImageFileName;
+177         result.fontInfo = fontInfo;
+178         result.hspace = hspace;
+179         result.vspace = vspace;
+180         result.background = background;
+181         result.isActivated = isActivated;
+182         result.alignedX = alignedX;
+183         result.alignedY = alignedY;
+184         result.drawX = drawX;
+185         result.drawY = drawY;
+186         result.drawWidth = drawWidth;
+187         result.drawHeight = drawHeight;
+188         result.changed = changed;
+189         result.setupMode = setupMode;
+190         result.imageSetup = imageSetup;
+191         result.fontImage = fontImage;
+
+<hr>
+</pre></td><td><pre>
+
+<hr>
+152     private Object     setupMonitor = new Object();
+153     private boolean    setupMode    = false;    
+154     private boolean imageSetup = false;
+155 
+156     private ManagedImage fontImage = null;
+157 
+158     private static boolean loadingFailed = false;
+159     
+160     public FontStripText(Show show) {
+161         super(show);
+162     }
+163 
+164     /**
+165      * {@inheritDoc}
+166      **/
+167     protected Feature createClone(HashMap clones) {
+168         if (!setupMode || !imageSetup || isActivated) {
+169             throw new IllegalStateException();
+170         }
+171         FontStripText result = new FontStripText(show);
+<FONT COLOR=green><b>172         result.alignment = alignment;</b></FONT>
+173         result.xArg = xArg;
+174         result.yArg = yArg;
+175         result.strings = strings;
+176         result.bakedStrings = bakedStrings;
+177         result.fontImageFileName = fontImageFileName;
+178         result.fontInfo = fontInfo;
+179         result.hspace = hspace;
+180         result.vspace = vspace;
+181         result.background = background;
+182         result.isActivated = isActivated;
+183         result.alignedX = alignedX;
+184         result.alignedY = alignedY;
+185         result.drawX = drawX;
+186         result.drawY = drawY;
+187         result.drawWidth = drawWidth;
+188         result.drawHeight = drawHeight;
+189         result.changed = changed;
+190         result.setupMode = setupMode;
+191         result.imageSetup = imageSetup;
+192         result.fontImage = fontImage;
+
+<hr>
+</pre></td>
+</tr></table>

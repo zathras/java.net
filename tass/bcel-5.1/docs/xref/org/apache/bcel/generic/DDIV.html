@@ -1,0 +1,96 @@
+<html>
+<body bgcolor="white">
+<pre>
+<table bgcolor="#FFFFCC" cellpadding="0" cellspacing="0" border="0" width="100%"><a href="../../../../../apidocs/org/apache/bcel/generic/DDIV.html">View Javadoc</a></table>
+<a name="1" href="#1">1</a>   <b>package</b> <a href="../../../../org/apache/bcel/<b>generic</b>/package-summary.html">org.apache.bcel.<b>generic</b></a>;
+<a name="2" href="#2">2</a>   
+<a name="3" href="#3">3</a>   <font color="#329900"><i>/*<font color="#329900"><i> ====================================================================</font></i></font></i>
+<a name="4" href="#4">4</a>   <font color="#329900"><i> * The Apache Software License, Version 1.1</font></i>
+<a name="5" href="#5">5</a>   <font color="#329900"><i> *</font></i>
+<a name="6" href="#6">6</a>   <font color="#329900"><i> * Copyright (c) 2001 The Apache Software Foundation.  All rights</font></i>
+<a name="7" href="#7">7</a>   <font color="#329900"><i> * reserved.</font></i>
+<a name="8" href="#8">8</a>   <font color="#329900"><i> *</font></i>
+<a name="9" href="#9">9</a>   <font color="#329900"><i> * Redistribution and use in source and binary forms, with or without</font></i>
+<a name="10" href="#10">10</a>  <font color="#329900"><i> * modification, are permitted provided that the following conditions</font></i>
+<a name="11" href="#11">11</a>  <font color="#329900"><i> * are met:</font></i>
+<a name="12" href="#12">12</a>  <font color="#329900"><i> *</font></i>
+<a name="13" href="#13">13</a>  <font color="#329900"><i> * 1. Redistributions of source code must retain the above copyright</font></i>
+<a name="14" href="#14">14</a>  <font color="#329900"><i> *    notice, this list of conditions and the following disclaimer.</font></i>
+<a name="15" href="#15">15</a>  <font color="#329900"><i> *</font></i>
+<a name="16" href="#16">16</a>  <font color="#329900"><i> * 2. Redistributions in binary form must reproduce the above copyright</font></i>
+<a name="17" href="#17">17</a>  <font color="#329900"><i> *    notice, this list of conditions and the following disclaimer in</font></i>
+<a name="18" href="#18">18</a>  <font color="#329900"><i> *    the documentation and/or other materials provided with the</font></i>
+<a name="19" href="#19">19</a>  <font color="#329900"><i> *    distribution.</font></i>
+<a name="20" href="#20">20</a>  <font color="#329900"><i> *</font></i>
+<a name="21" href="#21">21</a>  <font color="#329900"><i> * 3. The end-user documentation included with the redistribution,</font></i>
+<a name="22" href="#22">22</a>  <font color="#329900"><i> *    if any, must include the following acknowledgment:</font></i>
+<a name="23" href="#23">23</a>  <font color="#329900"><i> *       "This product includes software developed by the</font></i>
+<a name="24" href="#24">24</a>  <font color="#329900"><i> *        Apache Software Foundation (<a href="http://www.apache.org/" target="alexandria_uri">http://www.apache.org/</a>)."</font></i>
+<a name="25" href="#25">25</a>  <font color="#329900"><i> *    Alternately, this acknowledgment may appear in the software itself,</font></i>
+<a name="26" href="#26">26</a>  <font color="#329900"><i> *    if and wherever such third-party acknowledgments normally appear.</font></i>
+<a name="27" href="#27">27</a>  <font color="#329900"><i> *</font></i>
+<a name="28" href="#28">28</a>  <font color="#329900"><i> * 4. The names "Apache" and "Apache Software Foundation" and</font></i>
+<a name="29" href="#29">29</a>  <font color="#329900"><i> *    "Apache BCEL" must not be used to endorse or promote products</font></i>
+<a name="30" href="#30">30</a>  <font color="#329900"><i> *    derived from this software without prior written permission. For</font></i>
+<a name="31" href="#31">31</a>  <font color="#329900"><i> *    written permission, please contact apache@apache.org.</font></i>
+<a name="32" href="#32">32</a>  <font color="#329900"><i> *</font></i>
+<a name="33" href="#33">33</a>  <font color="#329900"><i> * 5. Products derived from this software may not be called "Apache",</font></i>
+<a name="34" href="#34">34</a>  <font color="#329900"><i> *    "Apache BCEL", nor may "Apache" appear in their name, without</font></i>
+<a name="35" href="#35">35</a>  <font color="#329900"><i> *    prior written permission of the Apache Software Foundation.</font></i>
+<a name="36" href="#36">36</a>  <font color="#329900"><i> *</font></i>
+<a name="37" href="#37">37</a>  <font color="#329900"><i> * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED</font></i>
+<a name="38" href="#38">38</a>  <font color="#329900"><i> * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES</font></i>
+<a name="39" href="#39">39</a>  <font color="#329900"><i> * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE</font></i>
+<a name="40" href="#40">40</a>  <font color="#329900"><i> * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR</font></i>
+<a name="41" href="#41">41</a>  <font color="#329900"><i> * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,</font></i>
+<a name="42" href="#42">42</a>  <font color="#329900"><i> * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT</font></i>
+<a name="43" href="#43">43</a>  <font color="#329900"><i> * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF</font></i>
+<a name="44" href="#44">44</a>  <font color="#329900"><i> * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND</font></i>
+<a name="45" href="#45">45</a>  <font color="#329900"><i> * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,</font></i>
+<a name="46" href="#46">46</a>  <font color="#329900"><i> * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT</font></i>
+<a name="47" href="#47">47</a>  <font color="#329900"><i> * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF</font></i>
+<a name="48" href="#48">48</a>  <font color="#329900"><i> * SUCH DAMAGE.</font></i>
+<a name="49" href="#49">49</a>  <font color="#329900"><i> * ====================================================================</font></i>
+<a name="50" href="#50">50</a>  <font color="#329900"><i> *</font></i>
+<a name="51" href="#51">51</a>  <font color="#329900"><i> * This software consists of voluntary contributions made by many</font></i>
+<a name="52" href="#52">52</a>  <font color="#329900"><i> * individuals on behalf of the Apache Software Foundation.  For more</font></i>
+<a name="53" href="#53">53</a>  <font color="#329900"><i> * information on the Apache Software Foundation, please see</font></i>
+<a name="54" href="#54">54</a>  <font color="#329900"><i> * &lt;<a href="http://www.apache.org/&gt" target="alexandria_uri">http://www.apache.org/&gt</a>;.</font></i>
+<a name="55" href="#55">55</a>  <font color="#329900"><i> */</font></i>
+<a name="56" href="#56">56</a>  
+<a name="57" href="#57">57</a>  <font color="#AA0000"><i>/**<font color="#AA0000"><i>* </font></i></font></i>
+<a name="58" href="#58">58</a>  <font color="#AA0000"><i> * DDIV -  Divide doubles</font></i>
+<a name="59" href="#59">59</a>  <font color="#AA0000"><i> * &lt;PRE&gt;Stack: ..., value1.word1, value1.word2, value2.word1, value2.word2 -&gt;&lt;/PRE&gt;</font></i>
+<a name="60" href="#60">60</a>  <font color="#AA0000"><i> *        ..., result.word1, result.word2</font></i>
+<a name="61" href="#61">61</a>  <font color="#AA0000"><i> *</font></i>
+<a name="62" href="#62">62</a>  <font color="#AA0000"><i> * @version $Id: DDIV.html,v 1.1.1.1 2006/05/19 19:22:51 billf Exp $</font></i>
+<a name="63" href="#63">63</a>  <font color="#AA0000"><i> * @author  &lt;A HREF="<a href="mailto:markus.dahm@berlin.de" target="alexandria_uri">mailto:markus.dahm@berlin.de</a>"&gt;M. Dahm&lt;/A&gt;</font></i>
+<a name="64" href="#64">64</a>  <font color="#AA0000"><i> */</font></i>
+<a name="65" href="#65">65</a>  <b>public</b> <b>class</b> <a href="../../../../org/apache/bcel/generic/DDIV.html">DDIV</a> <b>extends</b> <a href="../../../../org/apache/bcel/generic/ArithmeticInstruction.html">ArithmeticInstruction</a> {
+<a name="66" href="#66">66</a>    <font color="#AA0000"><i>/**<font color="#AA0000"><i>* Divide doubles</font></i></font></i>
+<a name="67" href="#67">67</a>  <font color="#AA0000"><i>   */</font></i>
+<a name="68" href="#68">68</a>    <b>public</b> <a href="../../../../org/apache/bcel/generic/DDIV.html">DDIV</a>() {
+<a name="69" href="#69">69</a>      <b>super</b>(org.apache.bcel.Constants.DDIV);
+<a name="70" href="#70">70</a>    }
+<a name="71" href="#71">71</a>  
+<a name="72" href="#72">72</a>  
+<a name="73" href="#73">73</a>    <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="74" href="#74">74</a>  <font color="#AA0000"><i>   * Call corresponding visitor method(s). The order is:</font></i>
+<a name="75" href="#75">75</a>  <font color="#AA0000"><i>   * Call visitor methods of implemented interfaces first, then</font></i>
+<a name="76" href="#76">76</a>  <font color="#AA0000"><i>   * call methods according to the class hierarchy in descending order,</font></i>
+<a name="77" href="#77">77</a>  <font color="#AA0000"><i>   * i.e., the most specific visitXXX() call comes last.</font></i>
+<a name="78" href="#78">78</a>  <font color="#AA0000"><i>   *</font></i>
+<a name="79" href="#79">79</a>  <font color="#AA0000"><i>   * @param v Visitor object</font></i>
+<a name="80" href="#80">80</a>  <font color="#AA0000"><i>   */</font></i>
+<a name="81" href="#81">81</a>    <b>public</b> <b>void</b> accept(<a href="../../../../org/apache/bcel/generic/Visitor.html">Visitor</a> v) {
+<a name="82" href="#82">82</a>      v.visitTypedInstruction(<b>this</b>);
+<a name="83" href="#83">83</a>      v.visitStackProducer(<b>this</b>);
+<a name="84" href="#84">84</a>      v.visitStackConsumer(<b>this</b>);
+<a name="85" href="#85">85</a>      v.visitArithmeticInstruction(<b>this</b>);
+<a name="86" href="#86">86</a>      v.visitDDIV(<b>this</b>);
+<a name="87" href="#87">87</a>    }
+<a name="88" href="#88">88</a>  }
+</pre>
+<hr><center>This page was automatically generated by <a href="http://jakarta.apache.org/turbine/maven">Maven</a></center></body>
+</html>
+

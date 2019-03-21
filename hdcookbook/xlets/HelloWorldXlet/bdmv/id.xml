@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<!-- Generic template xml file of BD's id.bdjo file.  -->
+<!-- Some variables in this file will be replaced during build time. -->
+
+<!-- variables to be replaced :                                -->
+<!--      XLET_ORGID    =8 digit hex number, ex, 0x7fff0001    --> 
+
+<id>
+    <discId>0x00000000000000000000000000000001</discId>
+    <orgId>@XLET_ORGID@</orgId>
+    <version>0200</version>
+</id>

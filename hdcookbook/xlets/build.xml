@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Disc image builds" default="all" basedir=".">
+
+        <target name="all">
+            <ant dir="hdcookbook_discimage"/>
+            <ant dir="BridgeheadDiscImage"/>
+            <ant dir="grin_samples"/>
+            <ant dir="tests/functional/DataAreaAccessTest"/>
+            <ant dir="tests/functional/Playground">       
+               <property name="bdj.classes" value="${HDC_BDJ_PLATFORM_CLASSES}"/>
+            </ant>
+            <ant dir="tests/functional/StorageAccessXlets"/>
+            <ant dir="tests/functional/VFSTest"/>
+            <ant dir="tests/performance/classload"/>
+            <ant dir="demos"/>
+        </target>           
+        
+	<target name="clean">         
+            <ant dir="hdcookbook_discimage" target="clean"/>
+            <ant dir="BridgeheadDiscImage" target="clean"/>
+            <ant dir="grin_samples" target="clean"/>
+            <ant dir="tests/functional/DataAreaAccessTest" target="clean"/>     
+            <ant dir="tests/functional/Playground" target="clean"/>
+            <ant dir="tests/functional/ProgressivePlaylist" target="clean"/>
+            <ant dir="tests/functional/SocketTimeout" target="clean"/>
+            <ant dir="tests/functional/StorageAccessXlets" target="clean"/> 
+            <ant dir="tests/functional/SFAATest" target="clean"/> 
+            <ant dir="tests/functional/VFSTest" target="clean"/>     
+            <ant dir="tests/performance/classload" target="clean"/>
+            <ant dir="demos" target="clean"/>
+	</target>
+
+	<target name="spotless">         
+            <ant dir="hdcookbook_discimage" target="spotless"/>
+            <ant dir="BridgeheadDiscImage" target="spotless"/>
+            <ant dir="grin_samples" target="spotless"/>
+            <ant dir="tests/functional/DataAreaAccessTest" target="spotless"/>
+            <ant dir="tests/functional/Playground" target="spotless"/>
+            <ant dir="tests/functional/ProgressivePlaylist" target="spotless"/>
+            <ant dir="tests/functional/SocketTimeout" target="spotless"/>
+            <ant dir="tests/functional/StorageAccessXlets" target="spotless"/>
+            <ant dir="tests/functional/SFAATest" target="spotless"/> 
+            <ant dir="tests/functional/VFSTest" target="spotless"/>     
+            <ant dir="tests/performance/classload" target="spotless"/>
+            <ant dir="demos" target="spotless"/>
+	</target>
+        
+</project>

@@ -1,0 +1,541 @@
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+  
+  
+      
+  
+
+      
+      
+      
+      
+      
+      
+        
+         
+      
+      
+
+      
+      
+      
+      
+
+      
+      
+      
+
+      
+
+
+  
+  
+
+   
+   
+
+
+
+    <!DOCTYPE html PUBLIC "-//CollabNet//DTD XHTML 1.0 Transitional//EN" "http://www.collabnet.com/dtds/collabnet_transitional_10.dtd">
+
+    <html>
+      <head>
+        
+        
+          <title>
+            BCEL - 
+          BCEL Contributors
+        
+          </title>
+        
+        
+        
+        
+        <style type="text/css">
+          @import url("./style/tigris.css");
+          @import url("./style/maven.css");
+        </style>
+        
+        <link rel="stylesheet" href="./style/print.css" type="text/css" media="print"></link>
+        
+          <meta name="author" value="Jason van Zyl"></meta>
+          <meta name="email" value="jvanzyl@zenplex.com"></meta>
+        
+      </head>
+
+      <body marginwidth="0" class="composite" marginheight="0">
+        <div id="banner">
+          <table border="0" width="100%" cellpadding="8" cellspacing="0">
+            <tr>
+              
+              <td>
+                
+                
+              </td>
+
+              
+              <td>
+                <div id="login" align="right">
+                  
+                  
+                    
+                    
+                    
+                      
+                    
+
+                    <a href="http://jakarta.apache.org/bcel/">
+                      <img border="0" alt="jakarta-bcel" src="./images/bcel-logo.gif" align="right"></img>
+                    </a>
+                  
+                </div>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div id="breadcrumbs">
+          <table border="0" width="100%" cellpadding="4" cellspacing="0">
+            <tr>
+              
+              
+              
+              <td>
+                <div align="right">
+                  
+                  
+                  
+                  
+                    
+                  
+                </div>
+              </td>
+            </tr>
+          </table>
+        </div>
+        
+        <table border="0" width="100%" cellpadding="8" cellspacing="0"> 
+          <tr valign="top">
+            <td width="20%" id="leftcol">
+              <div id="navcolumn">
+                
+
+                
+                  
+    <div>
+      <strong>BCEL</strong>
+      
+    <div>
+      
+      
+      <small><a href="./index.html">Front Page</a></small>
+      
+    </div>
+  
+    <div>
+      
+      
+      <small><a href="./news.html">News and Status</a></small>
+      
+    </div>
+  
+    <div>
+      
+      
+      <small><a href="http://jakarta.apache.org/builds/jakarta-bcel/release/">Distributions</a></small>
+      
+    </div>
+  
+    </div>
+  
+    <div>
+      <strong>Documentation</strong>
+      
+    <div>
+      
+      
+      <small><a href="./manual.html">Manual</a></small>
+      
+    </div>
+  
+    <div>
+      
+      
+      <small><a href="./faq.html">FAQ</a></small>
+      
+    </div>
+  
+    </div>
+  
+    <div>
+      <strong>Get Involved</strong>
+      
+    <div>
+      
+      
+      <small><a href="./projects.html">Projects</a></small>
+      
+    </div>
+  
+    </div>
+  
+                
+
+                
+                
+
+                
+                
+                <div>
+                  <strong>Project Documentation</strong>
+                  <div>
+                    <small>
+                      <a href="./index.html">Front Page</a>
+                    </small>
+                  </div>
+                  <div>
+                    <small>
+                      <a href="./project-info.html">Project Info</a>
+                    </small>
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                  </div>
+                  <div>
+                    <small>
+                      <a href="./maven-reports.html">Project Reports</a>
+                    </small>
+                    
+                      
+                      
+                        
+                        
+                        
+                          
+                        
+                          
+                        
+                          
+                        
+                          
+                        
+                          
+                        
+                          
+                        
+                          
+                        
+                          
+                        
+                          
+                        
+                          
+                        
+                          
+                        
+                          
+                        
+                      
+                    
+                  </div>
+                  
+                    
+                      <div>
+                        <small>
+                          <a href="./apidocs/index.html">JavaDocs</a>
+                        </small>
+                      </div>
+                      <div>
+                        <small>
+                          <a href="./xref/index.html">Source XReference</a>
+                        </small>
+                      </div>
+                      
+                    
+                  
+                  
+                  
+                  
+                  
+                    <div>
+                      <small>
+                        
+                        <a href="http://jakarta.apache.org/turbine/maven/development-process.html">Development Process</a>
+                      </small>
+                    </div>
+                  
+                </div>
+              
+                
+              </div>
+            </td>
+            <td>
+              <div id="bodycol">
+                
+                <div class="app">
+                  
+                  
+    <div class="h3">
+      
+      
+        <h3>
+          <a name="Developers">Developers</a>
+        </h3>
+      
+      
+    <p>
+      
+    
+    
+    <table border="1" width="100%" cellspacing="2" cellpadding="3">
+      
+    
+      
+      
+        
+      
+    
+
+    
+    <tr class="a">
+    <td>
+      Markus Dahm
+    </td>
+   
+    <td>
+      
+    <a href="mailto:m.dahm@gmx.de">
+      m.dahm@gmx.de
+    </a>
+   
+    </td>
+   </tr>
+  
+    
+      
+        
+      
+      
+    
+
+    
+    <tr class="b">
+    <td>
+      Conor MacNeill
+    </td>
+   
+    <td>
+      
+    <a href="mailto:conor@cortexbusiness.com.au">
+      conor@cortexbusiness.com.au
+    </a>
+   
+    </td>
+   </tr>
+  
+    
+      
+      
+        
+      
+    
+
+    
+    <tr class="a">
+    <td>
+      Costin Manolache
+    </td>
+   
+    <td>
+      
+    <a href="mailto:cmanolache@yahoo.com">
+      cmanolache@yahoo.com
+    </a>
+   
+    </td>
+   </tr>
+  
+    
+      
+        
+      
+      
+    
+
+    
+    <tr class="b">
+    <td>
+      Jason van Zyl
+    </td>
+   
+    <td>
+      
+    <a href="mailto:jvanzyl@zenplex.com">
+      jvanzyl@zenplex.com
+    </a>
+   
+    </td>
+   </tr>
+  
+    
+      
+      
+        
+      
+    
+
+    
+    <tr class="a">
+    <td>
+      David Dixon-Peugh
+    </td>
+   
+    <td>
+      
+    <a href="mailto:dixonpeugh@yahoo.com">
+      dixonpeugh@yahoo.com
+    </a>
+   
+    </td>
+   </tr>
+  
+    
+      
+        
+      
+      
+    
+
+    
+    <tr class="b">
+    <td>
+      Enver Haase
+    </td>
+   
+    <td>
+      
+    <a href="mailto:enver@convergence.de">
+      enver@convergence.de
+    </a>
+   
+    </td>
+   </tr>
+  
+    </table>
+  
+  
+    </p>
+   
+    </div>
+  
+    <div class="h3">
+      
+      
+        <h3>
+          <a name="Past Contributors">Past Contributors</a>
+        </h3>
+      
+      
+    <p>
+      
+    
+    
+    <table border="1" width="100%" cellspacing="2" cellpadding="3">
+      
+    
+      
+      
+        
+      
+    
+
+    
+    <tr class="a">
+    <td>
+      Patrick Beard
+    </td>
+   
+    <td>
+      
+    <a href="mailto:beard@netscape.com">
+      beard@netscape.com
+    </a>
+   
+    </td>
+   </tr>
+  
+    </table>
+  
+  
+    </p>
+   
+    </div>
+  
+                  
+                  
+                  
+                  
+                  
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+        <div id="footer">
+          <table border="0" cellpadding="4" cellspacing="0">
+            <tr>
+              <td>
+                
+                  
+                    
+                    
+                       2002-2003, Apache Software Foundation
+                    
+                  
+                  
+                
+
+                
+              </td>
+              
+            </tr>
+          </table>
+        </div>
+      </body>
+    </html>
+  

@@ -1,0 +1,103 @@
+mosaics
+
+mosaic loader.png
+    max_height 4096        # See 3-2 sec. G.6
+    max_width  4096        # See 3-2 sec. G.6
+    max_pixels 4963776    # See 3-2 sec. G.6
+    min_width  96
+    num_widths 200        # Number of different widths to try in search
+                    # for smallest mosaic
+    take_all_images false    # Makes this the default mosaic for images
+                        # in show file that aren't in another mosaic
+    add_image_files {    # Can be used to add images to mosaic that aren't part of a show
+
+images/duke1.png
+images/duke2.png
+images/duke3.png
+images/duke4.png
+images/duke5.png
+images/duke6.png
+images/duke7.png
+images/duke8.png
+images/duke9.png
+images/duke10.png
+images/duke11.png
+images/duke12.png
+images/duke13.png
+images/duke14.png
+images/duke15.png
+images/duke16.png
+images/duke17.png
+
+} ; 
+
+
+mosaic img1.png
+    max_height 4096        # See 3-2 sec. G.6
+    max_width  4096        # See 3-2 sec. G.6
+    max_pixels 4963776    # See 3-2 sec. G.6
+    min_width  96
+    num_widths 200        # Number of different widths to try in search
+                    # for smallest mosaic
+    take_all_images false    # Makes this the default mosaic for images
+                        # in show file that aren't in another mosaic
+    add_image_files {    # Can be used to add images to mosaic that aren't part of a show
+
+images/duke.png
+images/main_menu_text.png
+images/chapter_menu_btn_text.png
+images/check_box_menu_btn_text.png
+images/interpolation_demo_btn_text.png
+images/simple_counter_btn_text.png
+images/message_show_btn_text.png
+images/chapters_menu_text.png
+images/chapt_1.png
+images/chapt_2.png
+images/chapt_3.png
+images/chapt_4.png
+images/chapt_5.png
+images/chapt_6.png
+images/question_1_text.png
+images/apple_pie_btn_text.png
+images/gaufres_btn_text.png
+images/cannoli_btn_text.png
+images/gelato_btn_text.png
+images/simple_counter_text.png
+images/start_btn_text.png
+images/stop_btn_text.png
+images/clock_bg.png
+images/interpolation_demo_text.png
+images/ease-in-back_btn_text.png
+images/ease-out-back_btn_text.png
+images/ease-in-bounce_btn_text.png
+images/ease-out-elastic_btn_text.png
+images/dynamic-translation_btn_text.png
+
+images/arrow_l_s.png
+images/arrow_l_a.png
+images/arrow_r_s.png
+images/arrow_r_a.png
+images/logo_back.png
+images/chapter_g_bg.png
+images/chapter_y_bg.png
+images/box.png
+images/check.png
+images/back_btn_text.png
+images/0.png
+images/1.png
+images/2.png
+images/3.png
+images/4.png
+images/5.png
+images/6.png
+images/7.png
+images/8.png
+images/9.png
+
+images/x_s.png
+images/x_a.png
+images/message_show_text.png
+
+} ; 
+
+end_mosaics

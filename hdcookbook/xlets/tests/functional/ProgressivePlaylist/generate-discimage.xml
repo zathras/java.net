@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright  1990-2006 Sun Microsystems, Inc. All Rights Reserved.
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version
+2 only, as published by the Free Software Foundation.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+General Public License version 2 for more details (a copy is
+included at /legal/license.txt).
+
+You should have received a copy of the GNU General Public License
+version 2 along with this work; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+02110-1301 USA
+
+Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa
+Clara, CA 95054 or visit www.sun.com if you need additional
+information or have any questions.
+-->
+
+<!-- An example build script to create a disc image.
+     This ant script signs a jar file, generates various bdmv 
+     binary file needed for the BDMV structure, and assemble
+     BD format compatible directory structure from all the files.  -->
+
+<project basedir=".">
+    <presetdef name="jdktools.java">
+        <java fork="true" failOnError="true"/>
+    </presetdef>    
+    <path id="sec.tools.path">
+        <pathelement location="${security.jar}"/>
+        <pathelement location="${bouncycastle.jar}"/>
+        <pathelement location="${java.home}/../lib/tools.jar"/>
+    </path>
+    
+    <target name="sign-xlet"
+            description="generate certificates and sign a xlet jarfile.">
+        <jdktools.java classname="net.java.bd.tools.security.BDCertGenerator">
+            <arg value="-root"/>
+            <arg value="${xlet.orgid}"/>
+            <classpath refid="sec.tools.path"/>
+        </jdktools.java>
+        <jdktools.java classname="net.java.bd.tools.security.BDCertGenerator">
+            <arg value="-app"/>
+            <arg value="${xlet.orgid}"/>
+            <classpath refid="sec.tools.path"/>
+        </jdktools.java>
+        <jdktools.java classname="net.java.bd.tools.security.BDSigner">
+            <arg value="${build.dir}/${xlet.jarname}.jar"/>
+            <classpath refid="sec.tools.path"/>
+        </jdktools.java>
+    </target>
+    
+    <target name="assemble-bdmv-structure" depends="generate-bdmv-files"
+            description="assemble files in the build dir to create a complete
+                         blu-ray disc directory in the dist dir.">
+        <mkdir dir="${dist.dir}/BDMV/AUXDATA"/>
+        <mkdir dir="${dist.dir}/BDMV/BDJO"/>
+        <mkdir dir="${dist.dir}/BDMV/CLIPINF"/>
+        <mkdir dir="${dist.dir}/BDMV/JAR"/>
+        <mkdir dir="${dist.dir}/BDMV/META"/>
+        <mkdir dir="${dist.dir}/BDMV/PLAYLIST"/>
+        <mkdir dir="${dist.dir}/BDMV/STREAM"/>
+        <mkdir dir="${dist.dir}/CERTIFICATE"/>
+        <copy todir = "${dist.dir}/BDMV/JAR">
+            <fileset dir="${build.dir}">
+                <include name="*.jar"/>
+            </fileset>
+        </copy>
+        <copy todir = "${dist.dir}/BDMV/BDJO" 
+              file="${build.dir}/${bdjo.name}.bdjo"/>
+        <copy todir = "${dist.dir}/CERTIFICATE" 
+              file="app.discroot.crt"/>
+        <copy todir = "${dist.dir}/CERTIFICATE" 
+              file="bu.discroot.crt"/>
+        <copy todir="${dist.dir}/BDMV"
+              file="${build.dir}/index.bdmv"/>
+        <copy todir="${dist.dir}/BDMV"
+              file="${build.dir}/MovieObject.bdmv"/>
+        <copy todir="${dist.dir}/CERTIFICATE"
+              file="${build.dir}/id.bdmv"/>
+        <copy todir="${dist.dir}/CERTIFICATE/BACKUP">
+            <fileset dir="${dist.dir}/CERTIFICATE">
+                <include name="*.crt"/>
+                <include name="*.bdmv"/>
+            </fileset>
+        </copy>
+        <copy todir="${dist.dir}/BDMV/BACKUP">
+            <fileset dir="${dist.dir}/BDMV">
+                <include name="index.bdmv"/>
+                <include name="MovieObject.bdmv"/>
+                <include name="BDJO/**"/>
+                <include name="CLIPINF/**"/>
+                <include name="JAR/**"/>
+                <include name="PLAYLIST/**"/>
+            </fileset>
+        </copy>
+    </target>
+    
+    <target name="generate-bdmv-files"        
+            depends="generate-bdjo, generate-id, 
+                    generate-index, generate-movieobject, generate-playlist"
+            description="generates various blu-ray disc binary files 
+                         from xml template files."/>
+            
+    <target name="generate-bdjo">    
+        <antcall target="copy-xml">           
+            <param name="srcfile"  value="${bdmv.src.dir}/bdjo.xml"/>
+            <param name="destfile" value="${bdmv.build.dir}/bdjo.xml"/>
+        </antcall>   
+        <jdktools.java jar="${bdjo.jar}">
+            <arg value="${bdmv.build.dir}/bdjo.xml"/>
+            <arg value="${build.dir}/${bdjo.name}.bdjo"/>
+        </jdktools.java>        
+     </target>
+     <target name="generate-id">    
+        <antcall target="copy-xml">           
+            <param name="srcfile"  value="${bdmv.src.dir}/id.xml"/>
+            <param name="destfile" value="${bdmv.build.dir}/id.xml"/>
+        </antcall>   
+        <jdktools.java jar="${id.jar}">
+            <arg value="${bdmv.build.dir}/id.xml"/>
+            <arg value="${build.dir}/id.bdmv"/>
+        </jdktools.java>        
+     </target>
+     <target name="generate-index">    
+        <antcall target="copy-xml">           
+            <param name="srcfile"  value="${bdmv.src.dir}/index.xml"/>
+            <param name="destfile" value="${bdmv.build.dir}/index.xml"/>
+        </antcall>            
+        <jdktools.java jar="${index.jar}">
+            <arg value="${bdmv.build.dir}/index.xml"/>
+            <arg value="${build.dir}/index.bdmv"/>
+        </jdktools.java>        
+     </target> 
+     <target name="generate-movieobject">    
+        <antcall target="copy-xml">           
+            <param name="srcfile"  value="${bdmv.src.dir}/MovieObject.xml"/>
+            <param name="destfile" value="${bdmv.build.dir}/MovieObject.xml"/>
+        </antcall>   
+        <jdktools.java jar="${movieobject.jar}">
+            <arg value="${bdmv.build.dir}/MovieObject.xml"/>
+            <arg value="${build.dir}/MovieObject.bdmv"/>
+        </jdktools.java>        
+     </target>      
+     <target name="generate-playlist">    
+        <antcall target="copy-xml">           
+            <param name="srcfile"  value="${bdmv.src.dir}/playlist.xml"/>
+            <param name="destfile" value="${bdmv.build.dir}/playlist.xml"/>
+        </antcall>   
+        <jdktools.java jar="${playlist.jar}">
+            <arg value="${bdmv.build.dir}/playlist.xml"/>
+            <arg value="${build.dir}/00000.mpls"/>
+        </jdktools.java>        
+     </target>      
+     <target name="copy-xml">
+        <copy file="${srcfile}" 
+              tofile="${destfile}">
+            <filterchain>
+                <replacetokens>
+                    <token key="XLET_ORGID"      value="${xlet.orgid}"/>
+                    <token key="XLET_APPID"      value="${xlet.appid}"/>
+                    <token key="XLET_CLASS_NAME" value="${xlet.classname}"/>
+                    <token key="XLET_JAR_NAME"   value="${xlet.jarname}"/>
+                    <token key="BDJO_NAME"       value="${bdjo.name}"/>
+                </replacetokens>
+                <striplinecomments> <!-- strip xml-style comments -->
+                    <comment value="&lt;!--"/> 
+                </striplinecomments>
+                <ignoreblank/>                
+            </filterchain>
+        </copy> 
+     </target>
+</project>

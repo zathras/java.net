@@ -1,0 +1,33 @@
+
+#
+# This is a minimal example of using show_top.  
+#
+# This example just makes a show_top that flashes the underlying show
+# on and off.  A more realistic thing to do with a show_top would be to
+# add a translator and a clip, in order to constrain the show within a window
+# that can be positioned.
+#
+
+show
+
+show_top F:ShowTop ;
+
+feature showtop_group F:ShowTopGroup ;
+
+feature fade F:ShowTop F:ShowTopGroup {
+         0      255     start 
+         11       0     ease-in-out-quad
+         23     255     ease-in-out-quad
+    } repeat 0 ;
+
+
+feature text F:MyText left 100 top 250 "My show_top is making me flash!"
+        SansSerif bold 96 { { 255 255 255 255 } } ;
+
+segment S:TheSegment 
+    active {
+        F:MyText
+    }
+;
+
+end_show

@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+<!--
+Copyright  1990-2006 Sun Microsystems, Inc. All Rights Reserved.
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version
+2 only, as published by the Free Software Foundation.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+General Public License version 2 for more details (a copy is
+included at /legal/license.txt).
+
+You should have received a copy of the GNU General Public License
+version 2 along with this work; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+02110-1301 USA
+
+Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa
+Clara, CA 95054 or visit www.sun.com if you need additional
+information or have any questions.
+-->
+<project name="Generate a bdjo file, various .bdmv files, and sign xlets" default="generate-bdjo">
+
+    <target name="generate-bdjo" depends="check-bdjoconverter">
+        <mkdir dir="${HDC_DISC_BDMV}/BDJO"/>
+        <jdktools.java classpath="${bdjo.jar}"  
+              classname="net.java.bd.tools.bdjo.Converter">
+            <arg value="bdjo/main_bdjo.xml"/>
+            <arg value="${HDC_DISC_BDMV}/BDJO/00000.bdjo"/>
+        </jdktools.java>
+    </target>
+    <target name="check-bdjoconverter">
+        <available file="${bdjo.jar}" type="file" property="bdjoconverter.ok"/>
+        <fail unless="bdjoconverter.ok">
+            . 
+            Could not find the bdjo converter tool at ${bdjo.jar}.
+            Please adjust the value at ${basedir}/build.properties,
+            or invoke ant in the ${basedir}/../../DiscCreationTool directory to build needed tools.
+        </fail>
+    </target>
+    <target name="sign-xlets" depends="check-bdsigner">
+        <path id="sec.tools.path">
+            <pathelement location="${security.jar}"/>
+            <pathelement location="${bouncycastle.jar}"/>
+            <pathelement location="${java.home}/../lib/tools.jar"/>
+        </path>
+        <jdktools.java classname="net.java.bd.tools.security.BDCertGenerator">
+            <arg value="-debug"/>
+            <arg value="-root"/>
+            <arg value="56789abc"/>
+            <classpath refid="sec.tools.path"/>
+        </jdktools.java>
+        <jdktools.java classname="net.java.bd.tools.security.BDCertGenerator">
+            <arg value="-debug"/>
+            <arg value="-app"/>
+            <arg value="56789abc"/>
+            <classpath refid="sec.tools.path"/>
+        </jdktools.java>
+        <jdktools.java classname="net.java.bd.tools.security.BDSigner">
+            <arg value="-debug"/>
+            <arg value="${HDC_DISC_BDMV}/JAR/00001.jar"/>
+            <arg value="${HDC_DISC_BDMV}/JAR/00002.jar"/>
+            <classpath refid="sec.tools.path"/>
+        </jdktools.java>
+        <copy file="app.discroot.crt" todir="${HDC_DISC_BDMV}/../CERTIFICATE/BACKUP/"/>
+        <move file="app.discroot.crt" todir="${HDC_DISC_BDMV}/../CERTIFICATE/"/>
+    </target>
+    <target name="check-bdsigner">
+        <available file="${security.jar}" type="file" property="bdsigner.ok"/>
+        <fail unless="bdsigner.ok">   
+       .
+       Could not find the bdsigner tool at ${security.jar}.
+       Please adjust the value at ${basedir}/build.properties, or invoke "ant" in
+       ${basedir}/../../DiscCreationTool directory to build needed tools.
+        </fail>
+    </target>
+    <target name="generate-bdmv-files" 
+            depends="generate-id, generate-index, generate-movieobject, generate-playlists"/>
+    <target name="generate-id" depends="check-idconverter">
+        <jdktools.java jar="${id.jar}">
+            <arg value="bdmv/id.xml"/>
+            <arg value="${HDC_DISC_BDMV}/../CERTIFICATE/id.bdmv"/>
+        </jdktools.java>
+    </target>
+    <target name="check-idconverter">
+        <available file="${id.jar}" type="file" property="idconverter.ok"/>
+        <fail unless="idconverter.ok">     
+       Could not find the idconverter tool at ${id.jar}.
+       Please adjust the value at ${basedir}/build.properties, or invoke "ant" in
+       ${basedir}/../../DiscCreationTool directory to build needed tools.
+        </fail>
+    </target>
+    <target name="generate-index" depends="check-indexconverter">
+        <jdktools.java jar="${index.jar}">
+            <arg value="bdmv/index.xml"/>
+            <arg value="${HDC_DISC_BDMV}/index.bdmv"/>
+        </jdktools.java>
+    </target>
+    <target name="check-indexconverter">
+        <available file="${index.jar}" type="file" property="indexconverter.ok"/>
+        <fail unless="indexconverter.ok">     
+       Could not find the indexconverter tool at ${index.jar}.
+       Please adjust the value at ${basedir}/build.properties, or invoke "ant" in
+       ${basedir}/../../DiscCreationTool directory to build needed tools.
+        </fail>
+    </target>
+    <target name="generate-movieobject" depends="check-movieobjectconverter">
+        <jdktools.java jar="${movieobject.jar}">
+            <arg value="bdmv/MovieObject.xml"/>
+            <arg value="${HDC_DISC_BDMV}/MovieObject.bdmv"/>
+        </jdktools.java>
+    </target>
+    <target name="check-movieobjectconverter">
+        <available file="${movieobject.jar}" type="file" property="movieobjectconverter.ok"/>
+        <fail unless="movieobjectconverter.ok">     
+       Could not find the movie object tool at ${movieobject.jar}.
+       Please adjust the value at ${basedir}/build.properties, or invoke "ant" in
+       ${basedir}/../../DiscCreationTool directory to build needed tools.
+        </fail>
+    </target>
+    <target name="generate-playlists" depends="check-playlist">
+        <jdktools.java jar="${playlist.jar}">
+            <arg value="bdmv/playlists/00000.xml"/>
+            <arg value="${HDC_DISC_BDMV}/PLAYLIST/00000.mpls"/>
+        </jdktools.java>
+        <jdktools.java jar="${playlist.jar}">
+            <arg value="bdmv/playlists/00001.xml"/>
+            <arg value="${HDC_DISC_BDMV}/PLAYLIST/00001.mpls"/>
+        </jdktools.java>
+        <jdktools.java jar="${playlist.jar}">
+            <arg value="bdmv/playlists/00002.xml"/>
+            <arg value="${HDC_DISC_BDMV}/PLAYLIST/00002.mpls"/>
+        </jdktools.java>
+        <jdktools.java jar="${playlist.jar}">
+            <arg value="bdmv/playlists/00003.xml"/>
+            <arg value="${HDC_DISC_BDMV}/PLAYLIST/00003.mpls"/>
+        </jdktools.java>
+        <jdktools.java jar="${playlist.jar}">
+            <arg value="bdmv/playlists/00004.xml"/>
+            <arg value="${HDC_DISC_BDMV}/PLAYLIST/00004.mpls"/>
+        </jdktools.java>
+    </target>
+    <target name="check-playlist">
+        <available file="${playlist.jar}" type="file" property="playlistconverter.ok"/>
+        <fail unless="playlistconverter.ok">     
+       Could not find the playlist object tool at ${playlist.jar}.
+       Please adjust the value at ${basedir}/build.properties, or invoke "ant" in
+       ${basedir}/../../DiscCreationTool directory to build needed tools.
+        </fail>
+    </target>
+</project>
+           

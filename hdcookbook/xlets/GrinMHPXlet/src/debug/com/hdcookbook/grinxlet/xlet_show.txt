@@ -1,0 +1,639 @@
+#  
+# Copyright (c) 2011, Oracle
+# 
+# All rights reserved.
+# 
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+# 
+#  * Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#  * Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in the
+#    documentation and/or other materials provided with the distribution.
+#  * Neither the name of Sun Microsystems nor the names of its contributors
+#    may be used to endorse or promote products derived from this software
+#    without specific prior written permission.
+# 
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+# PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+# LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+# NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+# 
+#  Note:  In order to comply with the binary form redistribution 
+#         requirement in the above license, the licensee may include 
+#         a URL reference to a copy of the required copyright notice, 
+#         the list of conditions and the disclaimer in a human readable 
+#         file with the binary form of the code that is subject to the
+#         above license.  For example, such file could be put on a 
+#         Blu-ray disc containing the binary form of the code or could 
+#         be put in a JAR file that is broadcast via a digital television 
+#         broadcast medium.  In any event, you must include in any end 
+#         user licenses governing any code that includes the code subject 
+#         to the above license (in source and/or binary form) a disclaimer 
+#         that is at least as protective of Sun as the disclaimers in the 
+#         above license.
+# 
+#         A copy of the required copyright notice, the list of conditions and
+#         the disclaimer will be maintained at 
+#         https://hdcookbook.dev.java.net/misc/license.html .
+#         Thus, licensees may comply with the binary form redistribution
+#         requirement with a text file that contains the following text:
+# 
+#             A copy of the license(s) governing this code is located
+#             at https://hdcookbook.dev.java.net/misc/license.html
+# 
+
+
+#
+# This is the show file for an xlet based on a GRIN show.  This show provides
+# a pop-up menu that lets you set debug options.
+
+
+show
+
+
+exports
+    segments {
+        S:Initialize
+    } features {
+        F:KeyUpState
+        F:Framerate
+        F:DebugDraw
+        F:DebugLog.LineCount
+        F:DebugLog.LineNumbers
+        F:DebugLog.Lines
+        F:DebugLog.Scroller
+    } handlers {
+    }
+;
+
+java_generated_class com.hdcookbook.grinxlet.XletShowCommands [[
+
+    package com.hdcookbook.grinxlet;
+
+    import com.hdcookbook.grin.Show;
+    import com.hdcookbook.grin.GrinXHelper;
+    import com.hdcookbook.grin.util.Debug;
+
+    public class XletShowCommands extends GrinXHelper {
+
+        public XletShowCommands(Show show) {
+            super(show);
+        }
+
+        public XletDirector getDirector() {
+            return (XletDirector) show.getDirector();
+        }
+
+        JAVA_COMMAND_BODY
+    
+    }
+
+
+]]
+
+
+#
+#
+#  The visible features
+#
+#
+
+
+
+feature group F:LaunchScreen {
+
+    sub_feature src_over 
+        sub_feature box ( 0 0 1919 1079 ) fill { 0 0 0 128 } ;
+    ;
+
+    sub_feature text middle 960 baseline 100 { 
+                        "Press the 0 key" 
+                        "for debug menu"
+                } SansSerif plain 64 { 
+                        { 0 255 0 255 } 
+                        + + + + + + + + +
+                        + + + + + + + + + +
+                        + + + + + + + + + +
+                        + + + + + + + + + +
+                        + + + + + + + + + +
+                        + +
+                        { 0 255 0 230 } 
+                        { 0 255 0 205 } 
+                        { 0 255 0 180 } 
+                        { 0 255 0 155 } 
+                        { 0 255 0 130 } 
+                        { 0 255 0 105 } 
+                        { 0 255 0 80 } 
+                        { 0 255 0 55 } 
+                        { 0 255 0 30 } 
+                        { 0 255 0 5 } 
+                } ;
+
+    sub_feature timer 72 {
+        segment_done ;
+    } ;
+} ;
+
+
+feature text F:Title
+    middle 960 baseline 160 { "Debug Menu" }
+    SansSerif plain 96 { { 0 255 0 255 } } ;
+
+
+feature group F:Everything {
+    F:LaunchScreen
+    F:MainMenu
+    F:DebugLog
+} ;
+
+feature src_over F:DimBackgroundBox
+        sub_feature box ( 0 0 1919 1079 ) fill { 0 0 0 192 } ;
+    ;
+
+#
+#
+#  Segments
+#
+#
+
+
+segment S:Initialize
+    setup { 
+        F:Everything
+    } setup_done {
+        java_command [[    getDirector().initialize();  ]]
+        activate_segment S:Launch ;
+    }
+;
+
+segment S:Launch
+    active {
+        F:LaunchScreen
+    } setup {
+        F:Everything
+    } rc_handlers {
+        H:Waiting
+    } next {
+        activate_segment S:Waiting ;
+    }
+;
+
+segment S:Waiting
+    active {
+    } setup {
+        F:Everything
+    } rc_handlers {
+        H:Waiting
+    }
+;
+
+rc_handler key_pressed H:Waiting
+        { 0 }
+        execute {
+            activate_segment S:MainMenu ;
+        } 
+;
+
+segment S:Waiting.RedKey
+    active {
+    } setup {
+        F:Everything
+    } rc_handlers {
+        H:Waiting.RedKey
+    }
+;
+
+rc_handler key_pressed H:Waiting.RedKey
+        { red }
+        execute {
+            activate_segment S:MainMenu ;
+        } 
+;
+
+
+###########################################################
+#                       MAIN MENU
+###########################################################
+
+
+#
+#  A text entry in the menu that gives the state of xlet.sendKeyUp
+#
+
+feature assembly F:KeyUpState {
+    enabled     sub_feature text left 400 baseline 280
+                        { "Key up events:  ENABLED" }
+                        SansSerif plain 48 { { 0 255 0 255 } } ;
+    disabled    sub_feature text left 400 baseline 280
+                        { "Key up events:  DISABLED" }
+                        SansSerif plain 48 { { 0 255 0 255 } } ;
+} ;
+
+#
+# Set the framerate
+#
+feature text F:Framerate
+        left 400 baseline 340 { "Frames per second:  24" }
+        SansSerif plain 48 { { 0 255 0 255 } } ;
+
+
+#
+# Enable and disable debug draw.  Debug draw shows the to-be-erased
+# areas in red, and the to-be-drawn areas in green.
+#
+
+feature assembly F:DebugDraw {
+    enabled     sub_feature text left 400 baseline 400
+                    { "Debug draw:  ENABLED   (erase -> red, draw -> green)" }
+                        SansSerif plain 48 { { 0 255 0 255 } } ;
+    disabled    sub_feature text left 400 baseline 400
+                        { "Debug draw:  DISABLED" }
+                        SansSerif plain 48 { { 0 255 0 255 } } ;
+} ;
+
+feature text F:ShowLog
+        left 400 baseline 460 { "Show Debug Log" }
+        SansSerif plain 48 { { 0 255 0 255 } } ;
+
+feature text F:Done.Red
+        left 400 baseline 550 { "Return to Show - RED for debug menu" }
+        SansSerif plain 48 { { 0 255 0 255 } } ;
+
+feature text F:Done
+        left 400 baseline 610 { "Return to Show - 0 for debug menu" }
+        SansSerif plain 48 { { 0 255 0 255 } } ;
+
+feature assembly F:FocusHighlight {
+
+    keyUp       sub_feature text left 280 baseline 280 { "-->" }
+                        SansSerif plain 48 { { 255 255 0 255 } } ;
+
+    framerate   sub_feature text left 280 baseline 340 { "-->" }
+                        SansSerif plain 48 { { 255 255 0 255 } } ;
+
+    debug_draw  sub_feature text left 280 baseline 400 { "-->" }
+                        SansSerif plain 48 { { 255 255 0 255 } } ;
+
+    show_log    sub_feature text left 280 baseline 460 { "-->" }
+                        SansSerif plain 48 { { 255 255 0 255 } } ;
+
+    done_red    sub_feature text left 280 baseline 550 { "-->" }
+                        SansSerif plain 48 { { 255 255 0 255 } } ;
+
+    done        sub_feature text left 280 baseline 610 { "-->" }
+                        SansSerif plain 48 { { 255 255 0 255 } } ;
+ } ;
+
+
+feature group F:MainMenu {
+
+    F:DimBackgroundBox
+    F:Title
+    F:KeyUpState
+    F:Framerate
+    F:DebugDraw
+    F:ShowLog
+    F:Done.Red
+    F:Done
+    F:FocusHighlight
+} ;
+
+
+
+
+segment S:MainMenu
+    active {
+        F:MainMenu
+    } setup {
+        F:Everything
+    } rc_handlers {
+        H:MainMenu
+    } on_entry {
+        java_command [[  getDirector().setUIState(); ]]
+        set_visual_rc H:MainMenu state keyUp selected ;
+    }
+;
+
+
+
+#
+#
+#  Remote control handlers
+#
+#
+
+
+rc_handler visual H:MainMenu
+    grid {
+        {   keyUp_off     keyUp      keyUp_on }
+        {   frame_down  framerate    frame_up }
+        {   deDraw_off  debug_draw   deDraw_on }
+        {  [ show_log ]  show_log    show_log_on }
+        {  [ done_red ]  done_red    [ done_red ] }
+        {   [ done ]       done      [ done ] }
+    }
+    assembly F:FocusHighlight
+    select {
+        keyUp_off       {
+                            set_visual_rc H:MainMenu state keyUp selected ;
+                            java_command [[ 
+                                XletDirector d = getDirector();
+                                d.xlet.sendKeyUp = false;
+                            ]]
+                            activate_part F:KeyUpState disabled ;
+                        }
+        keyUp           keyUp
+        keyUp_on        {
+                            set_visual_rc H:MainMenu state keyUp selected ;
+                            java_command [[ 
+                                XletDirector d = getDirector();
+                                d.xlet.sendKeyUp = true;
+                            ]]
+                            activate_part F:KeyUpState enabled ;
+                        }
+        frame_down      {
+                            set_visual_rc H:MainMenu state framerate selected ;
+                            java_command [[
+                                getDirector().framerateDown();
+                            ]]
+                        }
+        framerate       framerate
+        frame_up        {
+                            set_visual_rc H:MainMenu state framerate selected ;
+                            java_command [[
+                                getDirector().framerateUp();
+                            ]]
+                        }
+        deDraw_off      {
+                            set_visual_rc H:MainMenu state debug_draw selected ;
+                            java_command [[
+                                getDirector().setDebugDraw(false);
+                            ]]
+                            activate_part F:DebugDraw disabled ;
+                        }
+        debug_draw      debug_draw
+        deDraw_on       {
+                            set_visual_rc H:MainMenu state debug_draw selected ;
+                            java_command [[
+                                getDirector().setDebugDraw(true);
+                            ]]
+                            activate_part F:DebugDraw enabled ;
+                        }
+        show_log        show_log
+        show_log_on     {
+                            activate_segment S:DebugLog ;
+                        }
+        done_red        done_red
+        done            done
+    } activate {
+        keyUp           { 
+                            java_command [[ 
+                                XletDirector d = getDirector();
+                                d.xlet.sendKeyUp = !d.xlet.sendKeyUp;
+                                d.setUIState();
+                            ]]
+                        }
+        debug_draw      { 
+                            java_command [[ 
+                                XletDirector d = getDirector();
+                                d.setDebugDraw(!d.getDebugDraw());
+                                d.setUIState();
+                            ]]
+                        }
+        show_log        { activate_segment S:DebugLog ; }
+        done_red        { activate_segment S:Waiting.RedKey ; }
+        done            { activate_segment S:Waiting ; }
+    }
+;
+
+###########################################################
+#                       DEBUG LOG SCREEN
+###########################################################
+
+
+feature text F:DebugLog.LineCount
+    left 60 top 84 { "0 lines" }
+    SansSerif plain 20 { { 255 0 0 255 } } ;
+
+feature text F:DebugLog.Title
+    left 500 top 80  {
+        "DEBUG LOG                                                Arrows move text, 1..9 to jump (9=end), enter to quit."
+    }
+    SansSerif plain 24 { { 255 180 0 255 } } ;
+
+feature text F:DebugLog.LineNumbers
+    left 60 top 160 { "1:" "2:" }
+    SansSerif plain 24 { { 255 180 0 255 } } ;
+
+feature text F:DebugLog.Lines
+    left 180 top 160 {
+        "a message"
+        "second line"
+    } 
+    SansSerif plain 24 { { 255 255 255 255 } } ;
+
+feature translator_model F:DebugLog.Scroller
+        { 0 0 0 linear-relative } ;
+
+feature group F:DebugLog {
+        F:DimBackgroundBox
+        F:DebugLog.LineCount
+        F:DebugLog.Title
+        F:DebugLog.LineNumbers
+        F:DebugLog.Scroller
+        sub_feature clipped 
+            sub_feature translator F:DebugLog.Scroller {
+                F:DebugLog.Lines
+            } ;
+            ( 175 160 1919 1079 ) ;
+        sub_feature timer 1 repeat {
+            java_command [[ getDirector().debugLogHeartbeat(); ]]
+        } ;
+} ;
+
+
+segment S:DebugLog
+    active {
+        F:DebugLog
+    } setup {
+        F:Everything
+    } rc_handlers {
+        H:DebugLog.1
+        H:DebugLog.2
+        H:DebugLog.3
+        H:DebugLog.4
+        H:DebugLog.5
+        H:DebugLog.6
+        H:DebugLog.7
+        H:DebugLog.8
+        H:DebugLog.9
+        H:DebugLog.Left
+        H:DebugLog.Right
+        H:DebugLog.Up
+        H:DebugLog.Down
+        H:DebugLog.Enter
+        H:DebugLog.red
+        H:DebugLog.yellow
+        H:DebugLog.blue
+        H:DebugLog.green
+    } on_entry {
+        java_command [[  getDirector().skipDebugLogTo(1); ]]
+    }
+;
+
+rc_handler key_pressed H:DebugLog.1
+        { 0 1 }
+        execute {
+            java_command [[ getDirector().skipDebugLogTo(1); ]]
+        } 
+;
+
+rc_handler key_pressed H:DebugLog.2
+        { 2 }
+        execute {
+            java_command [[ getDirector().skipDebugLogTo(2); ]]
+        } 
+;
+
+rc_handler key_pressed H:DebugLog.3
+        { 3 }
+        execute {
+            java_command [[ getDirector().skipDebugLogTo(3); ]]
+        } 
+;
+
+rc_handler key_pressed H:DebugLog.4
+        { 4 }
+        execute {
+            java_command [[ getDirector().skipDebugLogTo(4); ]]
+        } 
+;
+
+rc_handler key_pressed H:DebugLog.5
+        { 5 }
+        execute {
+            java_command [[ getDirector().skipDebugLogTo(5); ]]
+        } 
+;
+
+rc_handler key_pressed H:DebugLog.6
+        { 6 }
+        execute {
+            java_command [[ getDirector().skipDebugLogTo(6); ]]
+        } 
+;
+
+rc_handler key_pressed H:DebugLog.7
+        { 7 }
+        execute {
+            java_command [[ getDirector().skipDebugLogTo(7); ]]
+        } 
+;
+
+rc_handler key_pressed H:DebugLog.8
+        { 8 }
+        execute {
+            java_command [[ getDirector().skipDebugLogTo(8); ]]
+        } 
+;
+
+rc_handler key_pressed H:DebugLog.9
+        { 9 }
+        execute {
+            java_command [[ getDirector().skipDebugLogTo(9); ]]
+        } 
+;
+
+rc_handler key_pressed H:DebugLog.Left
+        { left }
+        execute {
+            java_command [[ getDirector().moveDebugLogLeft(); ]]
+        } 
+;
+
+rc_handler key_pressed H:DebugLog.Right
+        { right }
+        execute {
+            java_command [[ getDirector().moveDebugLogRight(); ]]
+        } 
+;
+
+rc_handler key_pressed H:DebugLog.Up
+        { up }
+        execute {
+            java_command [[ getDirector().moveDebugLogUp(); ]]
+        } 
+;
+
+rc_handler key_pressed H:DebugLog.Down
+        { down }
+        execute {
+            java_command [[ getDirector().moveDebugLogDown(); ]]
+        } 
+;
+
+rc_handler key_pressed H:DebugLog.Enter
+        { enter 0 }
+        execute {
+            activate_segment S:MainMenu ;
+        } 
+;
+
+#
+#  When the debug log is showing, we generate log entries for the color
+#  keys, so the xlet's color key algorithm can be verified.
+#
+
+rc_handler key_pressed H:DebugLog.red
+        { red }
+        execute {
+            java_command [[ 
+                Debug.println("red key rc_handler invoked from GRIN"); 
+            ]]
+        } 
+;
+
+rc_handler key_pressed H:DebugLog.green
+        { green }
+        execute {
+            java_command [[ 
+                Debug.println("green key rc_handler invoked from GRIN"); 
+            ]]
+        } 
+;
+
+rc_handler key_pressed H:DebugLog.blue
+        { blue }
+        execute {
+            java_command [[ 
+                Debug.println("blue key rc_handler invoked from GRIN"); 
+            ]]
+        } 
+;
+
+rc_handler key_pressed H:DebugLog.yellow
+        { yellow }
+        execute {
+            java_command [[ 
+                Debug.println("yellow key rc_handler invoked from GRIN"); 
+            ]]
+        } 
+;
+
+#
+# =====================
+#  End of Show
+# =====================
+#
+
+end_show

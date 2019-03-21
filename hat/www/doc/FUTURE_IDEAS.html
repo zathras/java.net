@@ -1,0 +1,33 @@
+<html>
+<!-- @(#)FUTURE_IDEAS.html	1.6 98/10/22 -->
+<title>Java Heap Analysis Tool</title>
+<body bgcolor=white>
+<h1><center>HAT -- Ideas for Future Enhancements</center></h1>
+<p>
+This document is a place to collect ideas for possible future 
+enhancements.  I have no plans to implement any of these at the present.
+</p>
+<ul>
+<li>Allowing users to write custom queries would be cool.  A command-line
+    argument could specify a .jar file, and a factory to generate the
+    queries.  We could record the timestamp of the .jar, allowing queries
+    to be debugged without re-reading the entire .hprof file.
+<li>A way of excluding entire packages would be good.
+<li>Christian Seiler had a good idea:  Encode the exclude list in a URL.
+    With that basic mechanism, it should be trivial to make an HTML form
+    where a user can add an excludes-list.  This would make the excludes
+    mechanism much less of a hack.
+<li>The .hprof files introduced in JDK 1.2 
+    contain several heap dumps, and contain other
+    interesting things besides (like thread dumps).  It would be nice
+    to have a tool that showed a "top-level" view, and allowed users
+    to drill down to interesting parts of that file.
+<li>It would be nice to have a real makefile, both for Unix and Win32.
+    Building is fast enough that I haven't bothered to date.
+<li>A real Win32 launching program would be nice.
+<li>Usage of the collection classes would be appropriate.  The program
+    would certainly be more elegant with them, and it would probably
+    be faster too.
+<li>I really should write javadocs :-)_
+</ul>
+</body></html>

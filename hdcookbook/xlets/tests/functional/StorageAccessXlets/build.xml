@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="DataAccessTest" default="deploy" basedir=".">
+    
+    <target name="clean">
+        <ant dir="Writer" target="clean"/>
+        <ant dir="Reader" target="clean"/>
+        <delete file="WriterXlet.zip"/>
+        <delete file="ReaderXlet.zip"/>
+    </target>
+
+    <target name="spotless" depends="clean">
+	<delete file="Reader/grantorchain.crt"/>
+    </target>
+    
+    <target name="deploy" depends="bundle"/>
+    
+    <target name="bundle">
+        <ant dir="Writer"/>
+        <ant dir="Reader"/>
+        <move file="Writer/WriterXlet.zip" toDir="."/>
+        <move file="Reader/ReaderXlet.zip" toDir="."/>
+    </target>
+    
+</project>

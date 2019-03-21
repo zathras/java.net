@@ -1,0 +1,42 @@
+
+
+This file contains some workarounds we've discovered for
+various players.  Some or all of these workarounds might have
+been discovered in non-product versions of player software, so
+this should not be interpreted as a list of problems out in
+the field.  It isn't.  However, it's useful to track various
+workarounds in case someone runs into similar problems in the
+future, perhaps with another player under development.
+
+These workarounds haven't been put back to the repository.
+If we were developing a commercial title to be as robust as
+possible, we might incorporate some of these into the image, but
+the HD cookbook disc image isn't a commercial title.  We intentionally
+don't work around player bugs in this image.
+
+
+8/30/07:  One player has a bug with IXC that manifests itself
+          as the game not launching.  A workaround is to include
+          the classes com.hdcookbook.bookmenu.monitor.* in
+          the menu xlet.  This can be done by removing the following
+          line from the build-menu-xlet target in build_xlets.xml:
+          
+                <exclude name="com/hdcookbook/bookmenu/monitor/**" />
+
+          The player is looking for the class that implements the
+          IXC interface on the server side.  It shouldn't be.
+
+8/30/07:  One player had a bug where a signed xlet can only mount
+          a signed asset file.  The workaround is to sign the
+          book menu's assets file (00004.jar), by adding it to
+          the arg line under the sign-xlets target in
+          build_xlets.xml.
+
+          A signed xlet is allowed to mount an unsigned jar.
+          Indeed, this practice is recomended.
+
+          Since the report of this bug, we've received a pre-release
+          version of the player in question that fixes this bug, so this
+          workaround will soon be obsolete.  Please remember that signing
+          an asset file is generally not recommended, because it increases
+          launch time.

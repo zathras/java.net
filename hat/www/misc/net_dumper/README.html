@@ -1,0 +1,25 @@
+<html><head><title>NetDumper utility</title></head>
+
+<body>
+<h2>
+Dump Generator Program
+</h2>
+
+<p>
+One feature of the JVM is that you can request a heap dump over 
+a socket. This can be useful for remote debugging of devices that 
+don't have file systems, for example. To use this feature, you 
+run a program that listens on a port on some machine (call it 
+port 7001 on "fido"), and then you invoke the JVM like this:
+</p>
+<pre>
+    java -Xrunhprof:net=fido:7001,format=b com.something.MyProgram
+</pre>
+<p>
+The JVM then connects to port 7001 on fido, and that program can send 
+it a command to generate a heap dump.
+<p>
+I wrote a quick hack to request these dumps. It's called NetDumper, 
+and you can download it <a href="NetDumper.java">here.</a>
+</body>
+</html>

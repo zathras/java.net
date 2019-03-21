@@ -1,0 +1,1295 @@
+<html>
+<body bgcolor="white">
+<pre>
+<table bgcolor="#FFFFCC" cellpadding="0" cellspacing="0" border="0" width="100%"><a href="../../../../../apidocs/org/apache/bcel/generic/InstructionList.html">View Javadoc</a></table>
+<a name="1" href="#1">1</a>   <b>package</b> <a href="../../../../org/apache/bcel/<b>generic</b>/package-summary.html">org.apache.bcel.<b>generic</b></a>;
+<a name="2" href="#2">2</a>   
+<a name="3" href="#3">3</a>   <font color="#329900"><i>/*<font color="#329900"><i> ====================================================================</font></i></font></i>
+<a name="4" href="#4">4</a>   <font color="#329900"><i> * The Apache Software License, Version 1.1</font></i>
+<a name="5" href="#5">5</a>   <font color="#329900"><i> *</font></i>
+<a name="6" href="#6">6</a>   <font color="#329900"><i> * Copyright (c) 2001 The Apache Software Foundation.  All rights</font></i>
+<a name="7" href="#7">7</a>   <font color="#329900"><i> * reserved.</font></i>
+<a name="8" href="#8">8</a>   <font color="#329900"><i> *</font></i>
+<a name="9" href="#9">9</a>   <font color="#329900"><i> * Redistribution and use in source and binary forms, with or without</font></i>
+<a name="10" href="#10">10</a>  <font color="#329900"><i> * modification, are permitted provided that the following conditions</font></i>
+<a name="11" href="#11">11</a>  <font color="#329900"><i> * are met:</font></i>
+<a name="12" href="#12">12</a>  <font color="#329900"><i> *</font></i>
+<a name="13" href="#13">13</a>  <font color="#329900"><i> * 1. Redistributions of source code must retain the above copyright</font></i>
+<a name="14" href="#14">14</a>  <font color="#329900"><i> *    notice, this list of conditions and the following disclaimer.</font></i>
+<a name="15" href="#15">15</a>  <font color="#329900"><i> *</font></i>
+<a name="16" href="#16">16</a>  <font color="#329900"><i> * 2. Redistributions in binary form must reproduce the above copyright</font></i>
+<a name="17" href="#17">17</a>  <font color="#329900"><i> *    notice, this list of conditions and the following disclaimer in</font></i>
+<a name="18" href="#18">18</a>  <font color="#329900"><i> *    the documentation and/or other materials provided with the</font></i>
+<a name="19" href="#19">19</a>  <font color="#329900"><i> *    distribution.</font></i>
+<a name="20" href="#20">20</a>  <font color="#329900"><i> *</font></i>
+<a name="21" href="#21">21</a>  <font color="#329900"><i> * 3. The end-user documentation included with the redistribution,</font></i>
+<a name="22" href="#22">22</a>  <font color="#329900"><i> *    if any, must include the following acknowledgment:</font></i>
+<a name="23" href="#23">23</a>  <font color="#329900"><i> *       "This product includes software developed by the</font></i>
+<a name="24" href="#24">24</a>  <font color="#329900"><i> *        Apache Software Foundation (<a href="http://www.apache.org/" target="alexandria_uri">http://www.apache.org/</a>)."</font></i>
+<a name="25" href="#25">25</a>  <font color="#329900"><i> *    Alternately, this acknowledgment may appear in the software itself,</font></i>
+<a name="26" href="#26">26</a>  <font color="#329900"><i> *    if and wherever such third-party acknowledgments normally appear.</font></i>
+<a name="27" href="#27">27</a>  <font color="#329900"><i> *</font></i>
+<a name="28" href="#28">28</a>  <font color="#329900"><i> * 4. The names "Apache" and "Apache Software Foundation" and</font></i>
+<a name="29" href="#29">29</a>  <font color="#329900"><i> *    "Apache BCEL" must not be used to endorse or promote products</font></i>
+<a name="30" href="#30">30</a>  <font color="#329900"><i> *    derived from this software without prior written permission. For</font></i>
+<a name="31" href="#31">31</a>  <font color="#329900"><i> *    written permission, please contact apache@apache.org.</font></i>
+<a name="32" href="#32">32</a>  <font color="#329900"><i> *</font></i>
+<a name="33" href="#33">33</a>  <font color="#329900"><i> * 5. Products derived from this software may not be called "Apache",</font></i>
+<a name="34" href="#34">34</a>  <font color="#329900"><i> *    "Apache BCEL", nor may "Apache" appear in their name, without</font></i>
+<a name="35" href="#35">35</a>  <font color="#329900"><i> *    prior written permission of the Apache Software Foundation.</font></i>
+<a name="36" href="#36">36</a>  <font color="#329900"><i> *</font></i>
+<a name="37" href="#37">37</a>  <font color="#329900"><i> * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED</font></i>
+<a name="38" href="#38">38</a>  <font color="#329900"><i> * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES</font></i>
+<a name="39" href="#39">39</a>  <font color="#329900"><i> * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE</font></i>
+<a name="40" href="#40">40</a>  <font color="#329900"><i> * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR</font></i>
+<a name="41" href="#41">41</a>  <font color="#329900"><i> * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,</font></i>
+<a name="42" href="#42">42</a>  <font color="#329900"><i> * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT</font></i>
+<a name="43" href="#43">43</a>  <font color="#329900"><i> * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF</font></i>
+<a name="44" href="#44">44</a>  <font color="#329900"><i> * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND</font></i>
+<a name="45" href="#45">45</a>  <font color="#329900"><i> * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,</font></i>
+<a name="46" href="#46">46</a>  <font color="#329900"><i> * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT</font></i>
+<a name="47" href="#47">47</a>  <font color="#329900"><i> * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF</font></i>
+<a name="48" href="#48">48</a>  <font color="#329900"><i> * SUCH DAMAGE.</font></i>
+<a name="49" href="#49">49</a>  <font color="#329900"><i> * ====================================================================</font></i>
+<a name="50" href="#50">50</a>  <font color="#329900"><i> *</font></i>
+<a name="51" href="#51">51</a>  <font color="#329900"><i> * This software consists of voluntary contributions made by many</font></i>
+<a name="52" href="#52">52</a>  <font color="#329900"><i> * individuals on behalf of the Apache Software Foundation.  For more</font></i>
+<a name="53" href="#53">53</a>  <font color="#329900"><i> * information on the Apache Software Foundation, please see</font></i>
+<a name="54" href="#54">54</a>  <font color="#329900"><i> * &lt;<a href="http://www.apache.org/&gt" target="alexandria_uri">http://www.apache.org/&gt</a>;.</font></i>
+<a name="55" href="#55">55</a>  <font color="#329900"><i> */</font></i>
+<a name="56" href="#56">56</a>  
+<a name="57" href="#57">57</a>  <b>import</b> org.apache.bcel.Constants;
+<a name="58" href="#58">58</a>  <b>import</b> org.apache.bcel.classfile.Constant;
+<a name="59" href="#59">59</a>  <b>import</b> org.apache.bcel.util.ByteSequence;
+<a name="60" href="#60">60</a>  <b>import</b> java.io.*;
+<a name="61" href="#61">61</a>  <b>import</b> java.util.Iterator;
+<a name="62" href="#62">62</a>  <b>import</b> java.util.HashMap;
+<a name="63" href="#63">63</a>  <b>import</b> java.util.ArrayList;
+<a name="64" href="#64">64</a>  
+<a name="65" href="#65">65</a>  <font color="#AA0000"><i>/**<font color="#AA0000"><i>* </font></i></font></i>
+<a name="66" href="#66">66</a>  <font color="#AA0000"><i> * This class is a container for a list of &lt;a</font></i>
+<a name="67" href="#67">67</a>  <font color="#AA0000"><i> * href="Instruction.html"&gt;Instruction&lt;/a&gt; objects. Instructions can</font></i>
+<a name="68" href="#68">68</a>  <font color="#AA0000"><i> * be appended, inserted, moved, deleted, etc.. Instructions are being</font></i>
+<a name="69" href="#69">69</a>  <font color="#AA0000"><i> * wrapped into &lt;a</font></i>
+<a name="70" href="#70">70</a>  <font color="#AA0000"><i> * href="InstructionHandle.html"&gt;InstructionHandles&lt;/a&gt; objects that</font></i>
+<a name="71" href="#71">71</a>  <font color="#AA0000"><i> * are returned upon append/insert operations. They give the user</font></i>
+<a name="72" href="#72">72</a>  <font color="#AA0000"><i> * (read only) access to the list structure, such that it can be traversed and</font></i>
+<a name="73" href="#73">73</a>  <font color="#AA0000"><i> * manipulated in a controlled way.</font></i>
+<a name="74" href="#74">74</a>  <font color="#AA0000"><i> *</font></i>
+<a name="75" href="#75">75</a>  <font color="#AA0000"><i> * A list is finally dumped to a byte code array with &lt;a</font></i>
+<a name="76" href="#76">76</a>  <font color="#AA0000"><i> * href="#getByteCode()"&gt;getByteCode&lt;/a&gt;.</font></i>
+<a name="77" href="#77">77</a>  <font color="#AA0000"><i> *</font></i>
+<a name="78" href="#78">78</a>  <font color="#AA0000"><i> * @version $Id: InstructionList.html,v 1.1.1.1 2006/05/19 19:23:45 billf Exp $</font></i>
+<a name="79" href="#79">79</a>  <font color="#AA0000"><i> * @author  &lt;A HREF="<a href="mailto:markus.dahm@berlin.de" target="alexandria_uri">mailto:markus.dahm@berlin.de</a>"&gt;M. Dahm&lt;/A&gt;</font></i>
+<a name="80" href="#80">80</a>  <font color="#AA0000"><i> * @see     Instruction</font></i>
+<a name="81" href="#81">81</a>  <font color="#AA0000"><i> * @see     InstructionHandle</font></i>
+<a name="82" href="#82">82</a>  <font color="#AA0000"><i> * @see BranchHandle</font></i>
+<a name="83" href="#83">83</a>  <font color="#AA0000"><i> */</font></i>
+<a name="84" href="#84">84</a>  <b>public</b> <b>class</b> <a href="../../../../org/apache/bcel/generic/InstructionList.html">InstructionList</a> implements Serializable {
+<a name="85" href="#85">85</a>    <b>private</b> <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> start  = <b>null</b>, end = <b>null</b>;
+<a name="86" href="#86">86</a>    <b>private</b> <b>int</b>               length = 0; <font color="#329900"><i>// number of elements in list</font></i>
+<a name="87" href="#87">87</a>    <b>private</b> <b>int</b>[]             byte_positions; <font color="#329900"><i>// byte code offsets corresponding to instructions</font></i>
+<a name="88" href="#88">88</a>  
+<a name="89" href="#89">89</a>    <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="90" href="#90">90</a>  <font color="#AA0000"><i>   * Create (empty) instruction list.</font></i>
+<a name="91" href="#91">91</a>  <font color="#AA0000"><i>   */</font></i>
+<a name="92" href="#92">92</a>    <b>public</b> <a href="../../../../org/apache/bcel/generic/InstructionList.html">InstructionList</a>() {}
+<a name="93" href="#93">93</a>  
+<a name="94" href="#94">94</a>    <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="95" href="#95">95</a>  <font color="#AA0000"><i>   * Create instruction list containing one instruction.</font></i>
+<a name="96" href="#96">96</a>  <font color="#AA0000"><i>   * @param i initial instruction</font></i>
+<a name="97" href="#97">97</a>  <font color="#AA0000"><i>   */</font></i>
+<a name="98" href="#98">98</a>    <b>public</b> <a href="../../../../org/apache/bcel/generic/InstructionList.html">InstructionList</a>(<a href="../../../../org/apache/bcel/generic/Instruction.html">Instruction</a> i) {
+<a name="99" href="#99">99</a>      append(i);
+<a name="100" href="#100">100</a>   }
+<a name="101" href="#101">101</a> 
+<a name="102" href="#102">102</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="103" href="#103">103</a> <font color="#AA0000"><i>   * Create instruction list containing one instruction.</font></i>
+<a name="104" href="#104">104</a> <font color="#AA0000"><i>   * @param i initial instruction</font></i>
+<a name="105" href="#105">105</a> <font color="#AA0000"><i>   */</font></i>
+<a name="106" href="#106">106</a>   <b>public</b> <a href="../../../../org/apache/bcel/generic/InstructionList.html">InstructionList</a>(<a href="../../../../org/apache/bcel/generic/BranchInstruction.html">BranchInstruction</a> i) {
+<a name="107" href="#107">107</a>     append(i);
+<a name="108" href="#108">108</a>   }
+<a name="109" href="#109">109</a> 
+<a name="110" href="#110">110</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="111" href="#111">111</a> <font color="#AA0000"><i>   * Initialize list with (nonnull) compound instruction. Consumes argument</font></i>
+<a name="112" href="#112">112</a> <font color="#AA0000"><i>   * list, i.e., it becomes empty.</font></i>
+<a name="113" href="#113">113</a> <font color="#AA0000"><i>   *</font></i>
+<a name="114" href="#114">114</a> <font color="#AA0000"><i>   * @param c compound instruction (list)</font></i>
+<a name="115" href="#115">115</a> <font color="#AA0000"><i>   */</font></i>
+<a name="116" href="#116">116</a>   <b>public</b> <a href="../../../../org/apache/bcel/generic/InstructionList.html">InstructionList</a>(<a href="../../../../org/apache/bcel/generic/CompoundInstruction.html">CompoundInstruction</a> c) {
+<a name="117" href="#117">117</a>     append(c.getInstructionList());
+<a name="118" href="#118">118</a>   }
+<a name="119" href="#119">119</a> 
+<a name="120" href="#120">120</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="121" href="#121">121</a> <font color="#AA0000"><i>   * Test for empty list.</font></i>
+<a name="122" href="#122">122</a> <font color="#AA0000"><i>   */</font></i>
+<a name="123" href="#123">123</a>   <b>public</b> <b>boolean</b> isEmpty() { <b>return</b> start == <b>null</b>; } <font color="#329900"><i>// && end == null</font></i>
+<a name="124" href="#124">124</a> 
+<a name="125" href="#125">125</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="126" href="#126">126</a> <font color="#AA0000"><i>   * Find the target instruction (handle) that corresponds to the given target</font></i>
+<a name="127" href="#127">127</a> <font color="#AA0000"><i>   * position (byte code offset).</font></i>
+<a name="128" href="#128">128</a> <font color="#AA0000"><i>   *</font></i>
+<a name="129" href="#129">129</a> <font color="#AA0000"><i>   * @param ihs array of instruction handles, i.e. il.getInstructionHandles()</font></i>
+<a name="130" href="#130">130</a> <font color="#AA0000"><i>   * @param pos array of positions corresponding to ihs, i.e. il.getInstructionPositions()</font></i>
+<a name="131" href="#131">131</a> <font color="#AA0000"><i>   * @param count length of arrays</font></i>
+<a name="132" href="#132">132</a> <font color="#AA0000"><i>   * @param target target position to search for</font></i>
+<a name="133" href="#133">133</a> <font color="#AA0000"><i>   * @return target position's instruction handle if available</font></i>
+<a name="134" href="#134">134</a> <font color="#AA0000"><i>   */</font></i>
+<a name="135" href="#135">135</a>   <b>public</b> <b>static</b> <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> findHandle(<a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a>[] ihs,
+<a name="136" href="#136">136</a> 					     <b>int</b>[] pos, <b>int</b> count,
+<a name="137" href="#137">137</a> 					     <b>int</b> target) {
+<a name="138" href="#138">138</a>     <b>int</b> l=0, r = count - 1;
+<a name="139" href="#139">139</a>     
+<a name="140" href="#140">140</a>     <font color="#329900"><i>/*<font color="#329900"><i> Do a binary search since the pos array is orderd.</font></i></font></i>
+<a name="141" href="#141">141</a> <font color="#329900"><i>     */</font></i>
+<a name="142" href="#142">142</a>     <b>do</b> {
+<a name="143" href="#143">143</a>       <b>int</b> i = (l + r) / 2;
+<a name="144" href="#144">144</a>       <b>int</b> j = pos[i];
+<a name="145" href="#145">145</a> 
+<a name="146" href="#146">146</a>       <b>if</b>(j == target) <font color="#329900"><i>// target found</font></i>
+<a name="147" href="#147">147</a>  	<b>return</b> ihs[i];
+<a name="148" href="#148">148</a>       <b>else</b> <b>if</b>(target &lt; j) <font color="#329900"><i>// else constrain search area</font></i>
+<a name="149" href="#149">149</a> 	r = i - 1;
+<a name="150" href="#150">150</a>       <b>else</b> <font color="#329900"><i>// target &gt; j</font></i>
+<a name="151" href="#151">151</a> 	l = i + 1;
+<a name="152" href="#152">152</a>     } <b>while</b>(l &lt;= r);
+<a name="153" href="#153">153</a> 
+<a name="154" href="#154">154</a>     <b>return</b> <b>null</b>;
+<a name="155" href="#155">155</a>   }
+<a name="156" href="#156">156</a> 
+<a name="157" href="#157">157</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="158" href="#158">158</a> <font color="#AA0000"><i>   * Get instruction handle for instruction at byte code position pos.</font></i>
+<a name="159" href="#159">159</a> <font color="#AA0000"><i>   * This only works properly, if the list is freshly initialized from a byte array or</font></i>
+<a name="160" href="#160">160</a> <font color="#AA0000"><i>   * setPositions() has been called before this method.</font></i>
+<a name="161" href="#161">161</a> <font color="#AA0000"><i>   *</font></i>
+<a name="162" href="#162">162</a> <font color="#AA0000"><i>   * @param pos byte code position to search for</font></i>
+<a name="163" href="#163">163</a> <font color="#AA0000"><i>   * @return target position's instruction handle if available</font></i>
+<a name="164" href="#164">164</a> <font color="#AA0000"><i>   */</font></i>
+<a name="165" href="#165">165</a>   <b>public</b> <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> findHandle(<b>int</b> pos) {
+<a name="166" href="#166">166</a>     <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a>[] ihs = getInstructionHandles();
+<a name="167" href="#167">167</a>     <b>return</b> findHandle(ihs, byte_positions, length, pos);
+<a name="168" href="#168">168</a>   }
+<a name="169" href="#169">169</a> 
+<a name="170" href="#170">170</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="171" href="#171">171</a> <font color="#AA0000"><i>   * Initialize instruction list from byte array.</font></i>
+<a name="172" href="#172">172</a> <font color="#AA0000"><i>   *</font></i>
+<a name="173" href="#173">173</a> <font color="#AA0000"><i>   * @param code byte array containing the instructions</font></i>
+<a name="174" href="#174">174</a> <font color="#AA0000"><i>   */</font></i>
+<a name="175" href="#175">175</a>   <b>public</b> <a href="../../../../org/apache/bcel/generic/InstructionList.html">InstructionList</a>(byte[] code) {
+<a name="176" href="#176">176</a>     <a href="../../../../org/apache/bcel/util/ByteSequence.html">ByteSequence</a>        bytes = <b>new</b> ByteSequence(code);
+<a name="177" href="#177">177</a>     <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a>[] ihs   = <b>new</b> InstructionHandle[code.length];
+<a name="178" href="#178">178</a>     <b>int</b>[]               pos   = <b>new</b> <b>int</b>[code.length]; <font color="#329900"><i>// Can't be more than that</font></i>
+<a name="179" href="#179">179</a>     <b>int</b>                 count = 0; <font color="#329900"><i>// Contains actual length</font></i>
+<a name="180" href="#180">180</a> 
+<a name="181" href="#181">181</a>     <font color="#329900"><i>/*<font color="#329900"><i> Pass 1: Create an object for each byte code and append them</font></i></font></i>
+<a name="182" href="#182">182</a> <font color="#329900"><i>     * to the list.</font></i>
+<a name="183" href="#183">183</a> <font color="#329900"><i>     */</font></i>
+<a name="184" href="#184">184</a>     <b>try</b> {
+<a name="185" href="#185">185</a>       <b>while</b>(bytes.available() &gt; 0) {
+<a name="186" href="#186">186</a> 	<font color="#329900"><i>// Remember byte offset and associate it with the instruction</font></i>
+<a name="187" href="#187">187</a> 	<b>int</b> off =  bytes.getIndex();
+<a name="188" href="#188">188</a> 	pos[count] = off;
+<a name="189" href="#189">189</a> 	
+<a name="190" href="#190">190</a> 	<font color="#329900"><i>/*<font color="#329900"><i> Read one instruction from the byte stream, the byte position is set</font></i></font></i>
+<a name="191" href="#191">191</a> <font color="#329900"><i>	 * accordingly.</font></i>
+<a name="192" href="#192">192</a> <font color="#329900"><i>	 */</font></i>
+<a name="193" href="#193">193</a> 	Instruction       i = Instruction.readInstruction(bytes);
+<a name="194" href="#194">194</a> 	InstructionHandle ih;
+<a name="195" href="#195">195</a> 	<b>if</b>(i instanceof <a href="../../../../org/apache/bcel/generic/BranchInstruction.html">BranchInstruction</a>) <font color="#329900"><i>// Use proper append() method</font></i>
+<a name="196" href="#196">196</a> 	  ih = append((BranchInstruction)i);
+<a name="197" href="#197">197</a> 	<b>else</b>
+<a name="198" href="#198">198</a> 	  ih = append(i);
+<a name="199" href="#199">199</a> 
+<a name="200" href="#200">200</a> 	ih.setPosition(off);
+<a name="201" href="#201">201</a> 	ihs[count] = ih;
+<a name="202" href="#202">202</a> 	
+<a name="203" href="#203">203</a> 	count++;
+<a name="204" href="#204">204</a>       }
+<a name="205" href="#205">205</a>     } <b>catch</b>(IOException e) { <b>throw</b> <b>new</b> ClassGenException(e.toString()); }
+<a name="206" href="#206">206</a> 
+<a name="207" href="#207">207</a>     byte_positions = <b>new</b> <b>int</b>[count]; <font color="#329900"><i>// Trim to proper size</font></i>
+<a name="208" href="#208">208</a>     System.arraycopy(pos, 0, byte_positions, 0, count);
+<a name="209" href="#209">209</a> 
+<a name="210" href="#210">210</a>     <font color="#329900"><i>/*<font color="#329900"><i> Pass 2: Look for BranchInstruction and update their targets, i.e.,</font></i></font></i>
+<a name="211" href="#211">211</a> <font color="#329900"><i>     * convert offsets to instruction handles.</font></i>
+<a name="212" href="#212">212</a> <font color="#329900"><i>     */</font></i>
+<a name="213" href="#213">213</a>     <b>for</b>(<b>int</b> i=0; i &lt; count; i++) {
+<a name="214" href="#214">214</a>       <b>if</b>(ihs[i] instanceof <a href="../../../../org/apache/bcel/generic/BranchHandle.html">BranchHandle</a>) {
+<a name="215" href="#215">215</a> 	BranchInstruction bi = (BranchInstruction)ihs[i].instruction;
+<a name="216" href="#216">216</a> 	<b>int</b> target = bi.position + bi.getIndex(); <font color="#329900"><i>/*<font color="#329900"><i> Byte code position:</font></i></font></i>
+<a name="217" href="#217">217</a> <font color="#329900"><i>						   * relative -&gt; absolute. */</font></i>
+<a name="218" href="#218">218</a> 	<font color="#329900"><i>// Search for target position</font></i>
+<a name="219" href="#219">219</a> 	InstructionHandle ih = findHandle(ihs, pos, count, target);
+<a name="220" href="#220">220</a> 
+<a name="221" href="#221">221</a> 	<b>if</b>(ih == <b>null</b>) <font color="#329900"><i>// Search failed</font></i>
+<a name="222" href="#222">222</a> 	  <b>throw</b> <b>new</b> ClassGenException(<font color="#000099">"Couldn't find target for branch: "</font> + bi);
+<a name="223" href="#223">223</a> 	
+<a name="224" href="#224">224</a> 	bi.setTarget(ih); <font color="#329900"><i>// Update target</font></i>
+<a name="225" href="#225">225</a> 	
+<a name="226" href="#226">226</a> 	<font color="#329900"><i>// If it is a Select instruction, update all branch targets</font></i>
+<a name="227" href="#227">227</a> 	<b>if</b>(bi instanceof <a href="../../../../org/apache/bcel/generic/Select.html">Select</a>) { <font color="#329900"><i>// Either LOOKUPSWITCH or TABLESWITCH</font></i>
+<a name="228" href="#228">228</a>           <a href="../../../../org/apache/bcel/generic/Select.html">Select</a> s       = (Select)bi;
+<a name="229" href="#229">229</a>           <b>int</b>[]  indices = s.getIndices();
+<a name="230" href="#230">230</a> 	  
+<a name="231" href="#231">231</a> 	  <b>for</b>(<b>int</b> j=0; j &lt; indices.length; j++) {
+<a name="232" href="#232">232</a> 	    target = bi.position + indices[j];
+<a name="233" href="#233">233</a> 	    ih     = findHandle(ihs, pos, count, target);
+<a name="234" href="#234">234</a> 	    
+<a name="235" href="#235">235</a> 	    <b>if</b>(ih == <b>null</b>) <font color="#329900"><i>// Search failed</font></i>
+<a name="236" href="#236">236</a> 	      <b>throw</b> <b>new</b> ClassGenException(<font color="#000099">"Couldn't find target for switch: "</font> + bi);
+<a name="237" href="#237">237</a> 
+<a name="238" href="#238">238</a> 	    s.setTarget(j, ih); <font color="#329900"><i>// Update target      </font></i>
+<a name="239" href="#239">239</a> 	  }
+<a name="240" href="#240">240</a> 	}
+<a name="241" href="#241">241</a>       }
+<a name="242" href="#242">242</a>     }
+<a name="243" href="#243">243</a>   }
+<a name="244" href="#244">244</a> 
+<a name="245" href="#245">245</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="246" href="#246">246</a> <font color="#AA0000"><i>   * Append another list after instruction (handle) ih contained in this list.</font></i>
+<a name="247" href="#247">247</a> <font color="#AA0000"><i>   * Consumes argument list, i.e., it becomes empty.</font></i>
+<a name="248" href="#248">248</a> <font color="#AA0000"><i>   *</font></i>
+<a name="249" href="#249">249</a> <font color="#AA0000"><i>   * @param ih where to append the instruction list </font></i>
+<a name="250" href="#250">250</a> <font color="#AA0000"><i>   * @param il Instruction list to append to this one</font></i>
+<a name="251" href="#251">251</a> <font color="#AA0000"><i>   * @return instruction handle pointing to the &lt;B&gt;first&lt;/B&gt; appended instruction</font></i>
+<a name="252" href="#252">252</a> <font color="#AA0000"><i>   */</font></i>
+<a name="253" href="#253">253</a>   <b>public</b> <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> append(<a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> ih, <a href="../../../../org/apache/bcel/generic/InstructionList.html">InstructionList</a> il) {
+<a name="254" href="#254">254</a>     <b>if</b>(il == <b>null</b>)
+<a name="255" href="#255">255</a>       <b>throw</b> <b>new</b> <a href="../../../../org/apache/bcel/generic/ClassGenException.html">ClassGenException</a>(<font color="#000099">"Appending null InstructionList"</font>);
+<a name="256" href="#256">256</a> 
+<a name="257" href="#257">257</a>     <b>if</b>(il.isEmpty()) <font color="#329900"><i>// Nothing to do</font></i>
+<a name="258" href="#258">258</a>       <b>return</b> ih;
+<a name="259" href="#259">259</a> 
+<a name="260" href="#260">260</a>     <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> next = ih.next, ret = il.start;
+<a name="261" href="#261">261</a> 
+<a name="262" href="#262">262</a>     ih.next = il.start;
+<a name="263" href="#263">263</a>     il.start.prev = ih;
+<a name="264" href="#264">264</a> 
+<a name="265" href="#265">265</a>     il.end.next = next;
+<a name="266" href="#266">266</a> 
+<a name="267" href="#267">267</a>     <b>if</b>(next != <b>null</b>) <font color="#329900"><i>// i == end ?</font></i>
+<a name="268" href="#268">268</a>       next.prev = il.end;
+<a name="269" href="#269">269</a>     <b>else</b>
+<a name="270" href="#270">270</a>       end = il.end; <font color="#329900"><i>// Update end ...</font></i>
+<a name="271" href="#271">271</a> 
+<a name="272" href="#272">272</a>     length += il.length; <font color="#329900"><i>// Update length</font></i>
+<a name="273" href="#273">273</a> 
+<a name="274" href="#274">274</a>     il.clear();
+<a name="275" href="#275">275</a> 
+<a name="276" href="#276">276</a>     <b>return</b> ret;
+<a name="277" href="#277">277</a>   }
+<a name="278" href="#278">278</a> 
+<a name="279" href="#279">279</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="280" href="#280">280</a> <font color="#AA0000"><i>   * Append another list after instruction i contained in this list.</font></i>
+<a name="281" href="#281">281</a> <font color="#AA0000"><i>   * Consumes argument list, i.e., it becomes empty.</font></i>
+<a name="282" href="#282">282</a> <font color="#AA0000"><i>   *</font></i>
+<a name="283" href="#283">283</a> <font color="#AA0000"><i>   * @param i  where to append the instruction list </font></i>
+<a name="284" href="#284">284</a> <font color="#AA0000"><i>   * @param il Instruction list to append to this one</font></i>
+<a name="285" href="#285">285</a> <font color="#AA0000"><i>   * @return instruction handle pointing to the &lt;B&gt;first&lt;/B&gt; appended instruction</font></i>
+<a name="286" href="#286">286</a> <font color="#AA0000"><i>   */</font></i>
+<a name="287" href="#287">287</a>   <b>public</b> <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> append(<a href="../../../../org/apache/bcel/generic/Instruction.html">Instruction</a> i, <a href="../../../../org/apache/bcel/generic/InstructionList.html">InstructionList</a> il) {
+<a name="288" href="#288">288</a>     <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> ih;
+<a name="289" href="#289">289</a> 
+<a name="290" href="#290">290</a>     <b>if</b>((ih = findInstruction2(i)) == <b>null</b>) <font color="#329900"><i>// Also applies for empty list</font></i>
+<a name="291" href="#291">291</a>       <b>throw</b> <b>new</b> <a href="../../../../org/apache/bcel/generic/ClassGenException.html">ClassGenException</a>(<font color="#000099">"Instruction "</font> + i +
+<a name="292" href="#292">292</a> 				  <font color="#000099">" is not contained in this list."</font>);
+<a name="293" href="#293">293</a> 
+<a name="294" href="#294">294</a>     <b>return</b> append(ih, il);
+<a name="295" href="#295">295</a>   }
+<a name="296" href="#296">296</a> 
+<a name="297" href="#297">297</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="298" href="#298">298</a> <font color="#AA0000"><i>   * Append another list to this one.</font></i>
+<a name="299" href="#299">299</a> <font color="#AA0000"><i>   * Consumes argument list, i.e., it becomes empty.</font></i>
+<a name="300" href="#300">300</a> <font color="#AA0000"><i>   *</font></i>
+<a name="301" href="#301">301</a> <font color="#AA0000"><i>   * @param il list to append to end of this list</font></i>
+<a name="302" href="#302">302</a> <font color="#AA0000"><i>   * @return instruction handle of the &lt;B&gt;first&lt;/B&gt; appended instruction</font></i>
+<a name="303" href="#303">303</a> <font color="#AA0000"><i>   */</font></i>
+<a name="304" href="#304">304</a>   <b>public</b> <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> append(<a href="../../../../org/apache/bcel/generic/InstructionList.html">InstructionList</a> il) {
+<a name="305" href="#305">305</a>     <b>if</b>(il == <b>null</b>)
+<a name="306" href="#306">306</a>       <b>throw</b> <b>new</b> <a href="../../../../org/apache/bcel/generic/ClassGenException.html">ClassGenException</a>(<font color="#000099">"Appending null InstructionList"</font>);
+<a name="307" href="#307">307</a> 
+<a name="308" href="#308">308</a>     <b>if</b>(il.isEmpty()) <font color="#329900"><i>// Nothing to do</font></i>
+<a name="309" href="#309">309</a>       <b>return</b> <b>null</b>;
+<a name="310" href="#310">310</a> 
+<a name="311" href="#311">311</a>     <b>if</b>(isEmpty()) {
+<a name="312" href="#312">312</a>       start  = il.start;
+<a name="313" href="#313">313</a>       end    = il.end;
+<a name="314" href="#314">314</a>       length = il.length;
+<a name="315" href="#315">315</a> 
+<a name="316" href="#316">316</a>       il.clear();
+<a name="317" href="#317">317</a> 
+<a name="318" href="#318">318</a>       <b>return</b> start;
+<a name="319" href="#319">319</a>     } <b>else</b>
+<a name="320" href="#320">320</a>       <b>return</b> append(end, il);  <font color="#329900"><i>// was end.instruction</font></i>
+<a name="321" href="#321">321</a>   }
+<a name="322" href="#322">322</a> 
+<a name="323" href="#323">323</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="324" href="#324">324</a> <font color="#AA0000"><i>   * Append an instruction to the end of this list.</font></i>
+<a name="325" href="#325">325</a> <font color="#AA0000"><i>   *</font></i>
+<a name="326" href="#326">326</a> <font color="#AA0000"><i>   * @param ih instruction to append</font></i>
+<a name="327" href="#327">327</a> <font color="#AA0000"><i>   */</font></i>
+<a name="328" href="#328">328</a>   <b>private</b> <b>void</b> append(<a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> ih) {
+<a name="329" href="#329">329</a>     <b>if</b>(isEmpty()) {
+<a name="330" href="#330">330</a>       start = end = ih;
+<a name="331" href="#331">331</a>       ih.next = ih.prev = <b>null</b>;
+<a name="332" href="#332">332</a>     }
+<a name="333" href="#333">333</a>     <b>else</b> {
+<a name="334" href="#334">334</a>       end.next = ih;
+<a name="335" href="#335">335</a>       ih.prev  = end;
+<a name="336" href="#336">336</a>       ih.next  = <b>null</b>;
+<a name="337" href="#337">337</a>       end      = ih;
+<a name="338" href="#338">338</a>     }
+<a name="339" href="#339">339</a>     
+<a name="340" href="#340">340</a>     length++; <font color="#329900"><i>// Update length</font></i>
+<a name="341" href="#341">341</a>   }
+<a name="342" href="#342">342</a> 
+<a name="343" href="#343">343</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="344" href="#344">344</a> <font color="#AA0000"><i>   * Append an instruction to the end of this list.</font></i>
+<a name="345" href="#345">345</a> <font color="#AA0000"><i>   *</font></i>
+<a name="346" href="#346">346</a> <font color="#AA0000"><i>   * @param i instruction to append</font></i>
+<a name="347" href="#347">347</a> <font color="#AA0000"><i>   * @return instruction handle of the appended instruction</font></i>
+<a name="348" href="#348">348</a> <font color="#AA0000"><i>   */</font></i>
+<a name="349" href="#349">349</a>   <b>public</b> <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> append(<a href="../../../../org/apache/bcel/generic/Instruction.html">Instruction</a> i) {
+<a name="350" href="#350">350</a>     <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> ih = InstructionHandle.getInstructionHandle(i);
+<a name="351" href="#351">351</a>     append(ih);
+<a name="352" href="#352">352</a> 
+<a name="353" href="#353">353</a>     <b>return</b> ih;
+<a name="354" href="#354">354</a>   }
+<a name="355" href="#355">355</a> 
+<a name="356" href="#356">356</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="357" href="#357">357</a> <font color="#AA0000"><i>   * Append a branch instruction to the end of this list.</font></i>
+<a name="358" href="#358">358</a> <font color="#AA0000"><i>   *</font></i>
+<a name="359" href="#359">359</a> <font color="#AA0000"><i>   * @param i branch instruction to append</font></i>
+<a name="360" href="#360">360</a> <font color="#AA0000"><i>   * @return branch instruction handle of the appended instruction</font></i>
+<a name="361" href="#361">361</a> <font color="#AA0000"><i>   */</font></i>
+<a name="362" href="#362">362</a>   <b>public</b> <a href="../../../../org/apache/bcel/generic/BranchHandle.html">BranchHandle</a> append(<a href="../../../../org/apache/bcel/generic/BranchInstruction.html">BranchInstruction</a> i) {
+<a name="363" href="#363">363</a>     <a href="../../../../org/apache/bcel/generic/BranchHandle.html">BranchHandle</a> ih = BranchHandle.getBranchHandle(i);
+<a name="364" href="#364">364</a>     append(ih);
+<a name="365" href="#365">365</a> 
+<a name="366" href="#366">366</a>     <b>return</b> ih;
+<a name="367" href="#367">367</a>   }
+<a name="368" href="#368">368</a> 
+<a name="369" href="#369">369</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="370" href="#370">370</a> <font color="#AA0000"><i>   * Append a single instruction j after another instruction i, which</font></i>
+<a name="371" href="#371">371</a> <font color="#AA0000"><i>   * must be in this list of course!</font></i>
+<a name="372" href="#372">372</a> <font color="#AA0000"><i>   *</font></i>
+<a name="373" href="#373">373</a> <font color="#AA0000"><i>   * @param i Instruction in list</font></i>
+<a name="374" href="#374">374</a> <font color="#AA0000"><i>   * @param j Instruction to append after i in list</font></i>
+<a name="375" href="#375">375</a> <font color="#AA0000"><i>   * @return instruction handle of the first appended instruction</font></i>
+<a name="376" href="#376">376</a> <font color="#AA0000"><i>   */</font></i>
+<a name="377" href="#377">377</a>   <b>public</b> <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> append(<a href="../../../../org/apache/bcel/generic/Instruction.html">Instruction</a> i, <a href="../../../../org/apache/bcel/generic/Instruction.html">Instruction</a> j) {
+<a name="378" href="#378">378</a>     <b>return</b> append(i, <b>new</b> <a href="../../../../org/apache/bcel/generic/InstructionList.html">InstructionList</a>(j)); 
+<a name="379" href="#379">379</a>   }
+<a name="380" href="#380">380</a> 
+<a name="381" href="#381">381</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="382" href="#382">382</a> <font color="#AA0000"><i>   * Append a compound instruction, after instruction i.</font></i>
+<a name="383" href="#383">383</a> <font color="#AA0000"><i>   *</font></i>
+<a name="384" href="#384">384</a> <font color="#AA0000"><i>   * @param i Instruction in list</font></i>
+<a name="385" href="#385">385</a> <font color="#AA0000"><i>   * @param c The composite instruction (containing an InstructionList)</font></i>
+<a name="386" href="#386">386</a> <font color="#AA0000"><i>   * @return instruction handle of the first appended instruction</font></i>
+<a name="387" href="#387">387</a> <font color="#AA0000"><i>   */</font></i>
+<a name="388" href="#388">388</a>   <b>public</b> <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> append(<a href="../../../../org/apache/bcel/generic/Instruction.html">Instruction</a> i, <a href="../../../../org/apache/bcel/generic/CompoundInstruction.html">CompoundInstruction</a> c) { 
+<a name="389" href="#389">389</a>     <b>return</b> append(i, c.getInstructionList()); 
+<a name="390" href="#390">390</a>   }
+<a name="391" href="#391">391</a> 
+<a name="392" href="#392">392</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="393" href="#393">393</a> <font color="#AA0000"><i>   * Append a compound instruction.</font></i>
+<a name="394" href="#394">394</a> <font color="#AA0000"><i>   *</font></i>
+<a name="395" href="#395">395</a> <font color="#AA0000"><i>   * @param c The composite instruction (containing an InstructionList)</font></i>
+<a name="396" href="#396">396</a> <font color="#AA0000"><i>   * @return instruction handle of the first appended instruction</font></i>
+<a name="397" href="#397">397</a> <font color="#AA0000"><i>   */</font></i>
+<a name="398" href="#398">398</a>   <b>public</b> <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> append(<a href="../../../../org/apache/bcel/generic/CompoundInstruction.html">CompoundInstruction</a> c) {
+<a name="399" href="#399">399</a>     <b>return</b> append(c.getInstructionList()); 
+<a name="400" href="#400">400</a>   }
+<a name="401" href="#401">401</a> 
+<a name="402" href="#402">402</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="403" href="#403">403</a> <font color="#AA0000"><i>   * Append a compound instruction.</font></i>
+<a name="404" href="#404">404</a> <font color="#AA0000"><i>   *</font></i>
+<a name="405" href="#405">405</a> <font color="#AA0000"><i>   * @param ih where to append the instruction list </font></i>
+<a name="406" href="#406">406</a> <font color="#AA0000"><i>   * @param c The composite instruction (containing an InstructionList)</font></i>
+<a name="407" href="#407">407</a> <font color="#AA0000"><i>   * @return instruction handle of the first appended instruction</font></i>
+<a name="408" href="#408">408</a> <font color="#AA0000"><i>   */</font></i>
+<a name="409" href="#409">409</a>   <b>public</b> <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> append(<a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> ih, <a href="../../../../org/apache/bcel/generic/CompoundInstruction.html">CompoundInstruction</a> c) {
+<a name="410" href="#410">410</a>     <b>return</b> append(ih, c.getInstructionList()); 
+<a name="411" href="#411">411</a>   }
+<a name="412" href="#412">412</a> 
+<a name="413" href="#413">413</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="414" href="#414">414</a> <font color="#AA0000"><i>   * Append an instruction after instruction (handle) ih contained in this list.</font></i>
+<a name="415" href="#415">415</a> <font color="#AA0000"><i>   *</font></i>
+<a name="416" href="#416">416</a> <font color="#AA0000"><i>   * @param ih where to append the instruction list </font></i>
+<a name="417" href="#417">417</a> <font color="#AA0000"><i>   * @param i Instruction to append</font></i>
+<a name="418" href="#418">418</a> <font color="#AA0000"><i>   * @return instruction handle pointing to the &lt;B&gt;first&lt;/B&gt; appended instruction</font></i>
+<a name="419" href="#419">419</a> <font color="#AA0000"><i>   */</font></i>
+<a name="420" href="#420">420</a>   <b>public</b> <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> append(<a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> ih, <a href="../../../../org/apache/bcel/generic/Instruction.html">Instruction</a> i) {
+<a name="421" href="#421">421</a>     <b>return</b> append(ih, <b>new</b> <a href="../../../../org/apache/bcel/generic/InstructionList.html">InstructionList</a>(i));
+<a name="422" href="#422">422</a>   }
+<a name="423" href="#423">423</a> 
+<a name="424" href="#424">424</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="425" href="#425">425</a> <font color="#AA0000"><i>   * Append an instruction after instruction (handle) ih contained in this list.</font></i>
+<a name="426" href="#426">426</a> <font color="#AA0000"><i>   *</font></i>
+<a name="427" href="#427">427</a> <font color="#AA0000"><i>   * @param ih where to append the instruction list </font></i>
+<a name="428" href="#428">428</a> <font color="#AA0000"><i>   * @param i Instruction to append</font></i>
+<a name="429" href="#429">429</a> <font color="#AA0000"><i>   * @return instruction handle pointing to the &lt;B&gt;first&lt;/B&gt; appended instruction</font></i>
+<a name="430" href="#430">430</a> <font color="#AA0000"><i>   */</font></i>
+<a name="431" href="#431">431</a>   <b>public</b> <a href="../../../../org/apache/bcel/generic/BranchHandle.html">BranchHandle</a> append(<a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> ih, <a href="../../../../org/apache/bcel/generic/BranchInstruction.html">BranchInstruction</a> i) {
+<a name="432" href="#432">432</a>     <a href="../../../../org/apache/bcel/generic/BranchHandle.html">BranchHandle</a>    bh = BranchHandle.getBranchHandle(i);
+<a name="433" href="#433">433</a>     <a href="../../../../org/apache/bcel/generic/InstructionList.html">InstructionList</a> il = <b>new</b> <a href="../../../../org/apache/bcel/generic/InstructionList.html">InstructionList</a>();
+<a name="434" href="#434">434</a>     il.append(bh);
+<a name="435" href="#435">435</a> 
+<a name="436" href="#436">436</a>     append(ih, il);
+<a name="437" href="#437">437</a> 
+<a name="438" href="#438">438</a>     <b>return</b> bh;
+<a name="439" href="#439">439</a>   }
+<a name="440" href="#440">440</a> 
+<a name="441" href="#441">441</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="442" href="#442">442</a> <font color="#AA0000"><i>   * Insert another list before Instruction handle ih contained in this list.</font></i>
+<a name="443" href="#443">443</a> <font color="#AA0000"><i>   * Consumes argument list, i.e., it becomes empty.</font></i>
+<a name="444" href="#444">444</a> <font color="#AA0000"><i>   *</font></i>
+<a name="445" href="#445">445</a> <font color="#AA0000"><i>   * @param i  where to append the instruction list </font></i>
+<a name="446" href="#446">446</a> <font color="#AA0000"><i>   * @param il Instruction list to insert</font></i>
+<a name="447" href="#447">447</a> <font color="#AA0000"><i>   * @return instruction handle of the first inserted instruction</font></i>
+<a name="448" href="#448">448</a> <font color="#AA0000"><i>   */</font></i>
+<a name="449" href="#449">449</a>   <b>public</b> <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> insert(<a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> ih, <a href="../../../../org/apache/bcel/generic/InstructionList.html">InstructionList</a> il) {
+<a name="450" href="#450">450</a>     <b>if</b>(il == <b>null</b>)
+<a name="451" href="#451">451</a>       <b>throw</b> <b>new</b> <a href="../../../../org/apache/bcel/generic/ClassGenException.html">ClassGenException</a>(<font color="#000099">"Inserting null InstructionList"</font>);
+<a name="452" href="#452">452</a> 
+<a name="453" href="#453">453</a>     <b>if</b>(il.isEmpty()) <font color="#329900"><i>// Nothing to do</font></i>
+<a name="454" href="#454">454</a>       <b>return</b> ih;
+<a name="455" href="#455">455</a> 
+<a name="456" href="#456">456</a>     <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> prev = ih.prev, ret = il.start;
+<a name="457" href="#457">457</a> 
+<a name="458" href="#458">458</a>     ih.prev = il.end;
+<a name="459" href="#459">459</a>     il.end.next = ih;
+<a name="460" href="#460">460</a> 
+<a name="461" href="#461">461</a>     il.start.prev = prev;
+<a name="462" href="#462">462</a> 
+<a name="463" href="#463">463</a>     <b>if</b>(prev != <b>null</b>) <font color="#329900"><i>// ih == start ?</font></i>
+<a name="464" href="#464">464</a>       prev.next = il.start;
+<a name="465" href="#465">465</a>     <b>else</b>
+<a name="466" href="#466">466</a>       start = il.start; <font color="#329900"><i>// Update start ...</font></i>
+<a name="467" href="#467">467</a> 
+<a name="468" href="#468">468</a>     length += il.length; <font color="#329900"><i>// Update length</font></i>
+<a name="469" href="#469">469</a> 
+<a name="470" href="#470">470</a>     il.clear();
+<a name="471" href="#471">471</a> 
+<a name="472" href="#472">472</a>     <b>return</b> ret;
+<a name="473" href="#473">473</a>   }
+<a name="474" href="#474">474</a> 
+<a name="475" href="#475">475</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="476" href="#476">476</a> <font color="#AA0000"><i>   * Insert another list.   </font></i>
+<a name="477" href="#477">477</a> <font color="#AA0000"><i>   *</font></i>
+<a name="478" href="#478">478</a> <font color="#AA0000"><i>   * @param il list to insert before start of this list</font></i>
+<a name="479" href="#479">479</a> <font color="#AA0000"><i>   * @return instruction handle of the first inserted instruction</font></i>
+<a name="480" href="#480">480</a> <font color="#AA0000"><i>   */</font></i>
+<a name="481" href="#481">481</a>   <b>public</b> <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> insert(<a href="../../../../org/apache/bcel/generic/InstructionList.html">InstructionList</a> il) {
+<a name="482" href="#482">482</a>     <b>if</b>(isEmpty()) {
+<a name="483" href="#483">483</a>       append(il); <font color="#329900"><i>// Code is identical for this case</font></i>
+<a name="484" href="#484">484</a>       <b>return</b> start;
+<a name="485" href="#485">485</a>     }
+<a name="486" href="#486">486</a>     <b>else</b>
+<a name="487" href="#487">487</a>       <b>return</b> insert(start, il); 
+<a name="488" href="#488">488</a>   }
+<a name="489" href="#489">489</a> 
+<a name="490" href="#490">490</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="491" href="#491">491</a> <font color="#AA0000"><i>   * Insert an instruction at start of this list.</font></i>
+<a name="492" href="#492">492</a> <font color="#AA0000"><i>   *</font></i>
+<a name="493" href="#493">493</a> <font color="#AA0000"><i>   * @param ih instruction to insert</font></i>
+<a name="494" href="#494">494</a> <font color="#AA0000"><i>   */</font></i>
+<a name="495" href="#495">495</a>   <b>private</b> <b>void</b> insert(<a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> ih) {
+<a name="496" href="#496">496</a>     <b>if</b>(isEmpty()) {
+<a name="497" href="#497">497</a>       start = end = ih;
+<a name="498" href="#498">498</a>       ih.next = ih.prev = <b>null</b>;
+<a name="499" href="#499">499</a>     } <b>else</b> {
+<a name="500" href="#500">500</a>       start.prev = ih;
+<a name="501" href="#501">501</a>       ih.next    = start;
+<a name="502" href="#502">502</a>       ih.prev    = <b>null</b>;
+<a name="503" href="#503">503</a>       start      = ih;
+<a name="504" href="#504">504</a>     }
+<a name="505" href="#505">505</a> 
+<a name="506" href="#506">506</a>     length++;
+<a name="507" href="#507">507</a>   }
+<a name="508" href="#508">508</a> 
+<a name="509" href="#509">509</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="510" href="#510">510</a> <font color="#AA0000"><i>   * Insert another list before Instruction i contained in this list.</font></i>
+<a name="511" href="#511">511</a> <font color="#AA0000"><i>   * Consumes argument list, i.e., it becomes empty.</font></i>
+<a name="512" href="#512">512</a> <font color="#AA0000"><i>   *</font></i>
+<a name="513" href="#513">513</a> <font color="#AA0000"><i>   * @param i  where to append the instruction list </font></i>
+<a name="514" href="#514">514</a> <font color="#AA0000"><i>   * @param il Instruction list to insert</font></i>
+<a name="515" href="#515">515</a> <font color="#AA0000"><i>   * @return instruction handle pointing to the first inserted instruction,</font></i>
+<a name="516" href="#516">516</a> <font color="#AA0000"><i>   * i.e., il.getStart()</font></i>
+<a name="517" href="#517">517</a> <font color="#AA0000"><i>   */</font></i>
+<a name="518" href="#518">518</a>   <b>public</b> <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> insert(<a href="../../../../org/apache/bcel/generic/Instruction.html">Instruction</a> i, <a href="../../../../org/apache/bcel/generic/InstructionList.html">InstructionList</a> il) {
+<a name="519" href="#519">519</a>     <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> ih;
+<a name="520" href="#520">520</a> 
+<a name="521" href="#521">521</a>     <b>if</b>((ih = findInstruction1(i)) == <b>null</b>)
+<a name="522" href="#522">522</a>       <b>throw</b> <b>new</b> <a href="../../../../org/apache/bcel/generic/ClassGenException.html">ClassGenException</a>(<font color="#000099">"Instruction "</font> + i +
+<a name="523" href="#523">523</a> 				  <font color="#000099">" is not contained in this list."</font>);
+<a name="524" href="#524">524</a>     
+<a name="525" href="#525">525</a>     <b>return</b> insert(ih, il);
+<a name="526" href="#526">526</a>   }
+<a name="527" href="#527">527</a> 
+<a name="528" href="#528">528</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="529" href="#529">529</a> <font color="#AA0000"><i>   * Insert an instruction at start of this list.</font></i>
+<a name="530" href="#530">530</a> <font color="#AA0000"><i>   *</font></i>
+<a name="531" href="#531">531</a> <font color="#AA0000"><i>   * @param i instruction to insert</font></i>
+<a name="532" href="#532">532</a> <font color="#AA0000"><i>   * @return instruction handle of the inserted instruction</font></i>
+<a name="533" href="#533">533</a> <font color="#AA0000"><i>   */</font></i>
+<a name="534" href="#534">534</a>   <b>public</b> <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> insert(<a href="../../../../org/apache/bcel/generic/Instruction.html">Instruction</a> i) {
+<a name="535" href="#535">535</a>     <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> ih = InstructionHandle.getInstructionHandle(i);
+<a name="536" href="#536">536</a>     insert(ih);
+<a name="537" href="#537">537</a> 
+<a name="538" href="#538">538</a>     <b>return</b> ih;
+<a name="539" href="#539">539</a>   }
+<a name="540" href="#540">540</a> 
+<a name="541" href="#541">541</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="542" href="#542">542</a> <font color="#AA0000"><i>   * Insert a branch instruction at start of this list.</font></i>
+<a name="543" href="#543">543</a> <font color="#AA0000"><i>   *</font></i>
+<a name="544" href="#544">544</a> <font color="#AA0000"><i>   * @param i branch instruction to insert</font></i>
+<a name="545" href="#545">545</a> <font color="#AA0000"><i>   * @return branch instruction handle of the appended instruction</font></i>
+<a name="546" href="#546">546</a> <font color="#AA0000"><i>   */</font></i>
+<a name="547" href="#547">547</a>   <b>public</b> <a href="../../../../org/apache/bcel/generic/BranchHandle.html">BranchHandle</a> insert(<a href="../../../../org/apache/bcel/generic/BranchInstruction.html">BranchInstruction</a> i) {
+<a name="548" href="#548">548</a>     <a href="../../../../org/apache/bcel/generic/BranchHandle.html">BranchHandle</a> ih = BranchHandle.getBranchHandle(i);
+<a name="549" href="#549">549</a>     insert(ih);
+<a name="550" href="#550">550</a>     <b>return</b> ih;
+<a name="551" href="#551">551</a>   }
+<a name="552" href="#552">552</a> 
+<a name="553" href="#553">553</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="554" href="#554">554</a> <font color="#AA0000"><i>   * Insert a single instruction j before another instruction i, which</font></i>
+<a name="555" href="#555">555</a> <font color="#AA0000"><i>   * must be in this list of course!</font></i>
+<a name="556" href="#556">556</a> <font color="#AA0000"><i>   *</font></i>
+<a name="557" href="#557">557</a> <font color="#AA0000"><i>   * @param i Instruction in list</font></i>
+<a name="558" href="#558">558</a> <font color="#AA0000"><i>   * @param j Instruction to insert before i in list</font></i>
+<a name="559" href="#559">559</a> <font color="#AA0000"><i>   * @return instruction handle of the first inserted instruction</font></i>
+<a name="560" href="#560">560</a> <font color="#AA0000"><i>   */</font></i>
+<a name="561" href="#561">561</a>   <b>public</b> <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> insert(<a href="../../../../org/apache/bcel/generic/Instruction.html">Instruction</a> i, <a href="../../../../org/apache/bcel/generic/Instruction.html">Instruction</a> j) {
+<a name="562" href="#562">562</a>     <b>return</b> insert(i, <b>new</b> <a href="../../../../org/apache/bcel/generic/InstructionList.html">InstructionList</a>(j));
+<a name="563" href="#563">563</a>   }
+<a name="564" href="#564">564</a> 
+<a name="565" href="#565">565</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="566" href="#566">566</a> <font color="#AA0000"><i>   * Insert a compound instruction before instruction i.</font></i>
+<a name="567" href="#567">567</a> <font color="#AA0000"><i>   *</font></i>
+<a name="568" href="#568">568</a> <font color="#AA0000"><i>   * @param i Instruction in list</font></i>
+<a name="569" href="#569">569</a> <font color="#AA0000"><i>   * @param c The composite instruction (containing an InstructionList)</font></i>
+<a name="570" href="#570">570</a> <font color="#AA0000"><i>   * @return instruction handle of the first inserted instruction</font></i>
+<a name="571" href="#571">571</a> <font color="#AA0000"><i>   */</font></i>
+<a name="572" href="#572">572</a>   <b>public</b> <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> insert(<a href="../../../../org/apache/bcel/generic/Instruction.html">Instruction</a> i, <a href="../../../../org/apache/bcel/generic/CompoundInstruction.html">CompoundInstruction</a> c) { 
+<a name="573" href="#573">573</a>     <b>return</b> insert(i, c.getInstructionList()); 
+<a name="574" href="#574">574</a>   }
+<a name="575" href="#575">575</a> 
+<a name="576" href="#576">576</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="577" href="#577">577</a> <font color="#AA0000"><i>   * Insert a compound instruction.</font></i>
+<a name="578" href="#578">578</a> <font color="#AA0000"><i>   *</font></i>
+<a name="579" href="#579">579</a> <font color="#AA0000"><i>   * @param c The composite instruction (containing an InstructionList)</font></i>
+<a name="580" href="#580">580</a> <font color="#AA0000"><i>   * @return instruction handle of the first inserted instruction</font></i>
+<a name="581" href="#581">581</a> <font color="#AA0000"><i>   */</font></i>
+<a name="582" href="#582">582</a>   <b>public</b> <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> insert(<a href="../../../../org/apache/bcel/generic/CompoundInstruction.html">CompoundInstruction</a> c) {
+<a name="583" href="#583">583</a>     <b>return</b> insert(c.getInstructionList()); 
+<a name="584" href="#584">584</a>   }
+<a name="585" href="#585">585</a> 
+<a name="586" href="#586">586</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="587" href="#587">587</a> <font color="#AA0000"><i>   * Insert an instruction before instruction (handle) ih contained in this list.</font></i>
+<a name="588" href="#588">588</a> <font color="#AA0000"><i>   *</font></i>
+<a name="589" href="#589">589</a> <font color="#AA0000"><i>   * @param ih where to insert to the instruction list </font></i>
+<a name="590" href="#590">590</a> <font color="#AA0000"><i>   * @param i Instruction to insert</font></i>
+<a name="591" href="#591">591</a> <font color="#AA0000"><i>   * @return instruction handle of the first inserted instruction</font></i>
+<a name="592" href="#592">592</a> <font color="#AA0000"><i>   */</font></i>
+<a name="593" href="#593">593</a>   <b>public</b> <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> insert(<a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> ih, <a href="../../../../org/apache/bcel/generic/Instruction.html">Instruction</a> i) {
+<a name="594" href="#594">594</a>     <b>return</b> insert(ih, <b>new</b> <a href="../../../../org/apache/bcel/generic/InstructionList.html">InstructionList</a>(i));
+<a name="595" href="#595">595</a>   }
+<a name="596" href="#596">596</a> 
+<a name="597" href="#597">597</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="598" href="#598">598</a> <font color="#AA0000"><i>   * Insert a compound instruction.</font></i>
+<a name="599" href="#599">599</a> <font color="#AA0000"><i>   *</font></i>
+<a name="600" href="#600">600</a> <font color="#AA0000"><i>   * @param ih where to insert the instruction list </font></i>
+<a name="601" href="#601">601</a> <font color="#AA0000"><i>   * @param c The composite instruction (containing an InstructionList)</font></i>
+<a name="602" href="#602">602</a> <font color="#AA0000"><i>   * @return instruction handle of the first inserted instruction</font></i>
+<a name="603" href="#603">603</a> <font color="#AA0000"><i>   */</font></i>
+<a name="604" href="#604">604</a>   <b>public</b> <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> insert(<a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> ih, <a href="../../../../org/apache/bcel/generic/CompoundInstruction.html">CompoundInstruction</a> c) {
+<a name="605" href="#605">605</a>     <b>return</b> insert(ih, c.getInstructionList()); 
+<a name="606" href="#606">606</a>   }
+<a name="607" href="#607">607</a> 
+<a name="608" href="#608">608</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="609" href="#609">609</a> <font color="#AA0000"><i>   * Insert an instruction before instruction (handle) ih contained in this list.</font></i>
+<a name="610" href="#610">610</a> <font color="#AA0000"><i>   *</font></i>
+<a name="611" href="#611">611</a> <font color="#AA0000"><i>   * @param ih where to insert to the instruction list </font></i>
+<a name="612" href="#612">612</a> <font color="#AA0000"><i>   * @param i Instruction to insert</font></i>
+<a name="613" href="#613">613</a> <font color="#AA0000"><i>   * @return instruction handle of the first inserted instruction</font></i>
+<a name="614" href="#614">614</a> <font color="#AA0000"><i>   */</font></i>
+<a name="615" href="#615">615</a>   <b>public</b> <a href="../../../../org/apache/bcel/generic/BranchHandle.html">BranchHandle</a> insert(<a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> ih, <a href="../../../../org/apache/bcel/generic/BranchInstruction.html">BranchInstruction</a> i) {
+<a name="616" href="#616">616</a>     <a href="../../../../org/apache/bcel/generic/BranchHandle.html">BranchHandle</a>    bh = BranchHandle.getBranchHandle(i);
+<a name="617" href="#617">617</a>     <a href="../../../../org/apache/bcel/generic/InstructionList.html">InstructionList</a> il = <b>new</b> <a href="../../../../org/apache/bcel/generic/InstructionList.html">InstructionList</a>();
+<a name="618" href="#618">618</a>     il.append(bh);
+<a name="619" href="#619">619</a> 
+<a name="620" href="#620">620</a>     insert(ih, il);
+<a name="621" href="#621">621</a> 
+<a name="622" href="#622">622</a>     <b>return</b> bh;
+<a name="623" href="#623">623</a>   }
+<a name="624" href="#624">624</a> 
+<a name="625" href="#625">625</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="626" href="#626">626</a> <font color="#AA0000"><i>   * Take all instructions (handles) from "start" to "end" and append them after the</font></i>
+<a name="627" href="#627">627</a> <font color="#AA0000"><i>   * new location "target". Of course, "end" must be after "start" and target must</font></i>
+<a name="628" href="#628">628</a> <font color="#AA0000"><i>   * not be located withing this range. If you want to move something to the start of</font></i>
+<a name="629" href="#629">629</a> <font color="#AA0000"><i>   * the list use null as value for target.&lt;br&gt;</font></i>
+<a name="630" href="#630">630</a> <font color="#AA0000"><i>   * Any instruction targeters pointing to handles within the block, keep their targets.</font></i>
+<a name="631" href="#631">631</a> <font color="#AA0000"><i>   *</font></i>
+<a name="632" href="#632">632</a> <font color="#AA0000"><i>   * @param start  of moved block</font></i>
+<a name="633" href="#633">633</a> <font color="#AA0000"><i>   * @param end    of moved block</font></i>
+<a name="634" href="#634">634</a> <font color="#AA0000"><i>   * @param target of moved block</font></i>
+<a name="635" href="#635">635</a> <font color="#AA0000"><i>   */</font></i>
+<a name="636" href="#636">636</a>   <b>public</b> <b>void</b> move(<a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> start, <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> end, <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> target) {
+<a name="637" href="#637">637</a>     <font color="#329900"><i>// Step 1: Check constraints</font></i>
+<a name="638" href="#638">638</a> 
+<a name="639" href="#639">639</a>     <b>if</b>((start == <b>null</b>) || (end == <b>null</b>))
+<a name="640" href="#640">640</a>       <b>throw</b> <b>new</b> <a href="../../../../org/apache/bcel/generic/ClassGenException.html">ClassGenException</a>(<font color="#000099">"Invalid null handle: From "</font> + start + <font color="#000099">" to "</font> + end);
+<a name="641" href="#641">641</a> 
+<a name="642" href="#642">642</a>     <b>if</b>((target == start) || (target == end))
+<a name="643" href="#643">643</a>       <b>throw</b> <b>new</b> <a href="../../../../org/apache/bcel/generic/ClassGenException.html">ClassGenException</a>(<font color="#000099">"Invalid range: From "</font> + start + <font color="#000099">" to "</font> + end +
+<a name="644" href="#644">644</a> 				  <font color="#000099">" contains target "</font> + target);
+<a name="645" href="#645">645</a> 
+<a name="646" href="#646">646</a>     <b>for</b>(<a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> ih = start; ih != end.next; ih = ih.next) {
+<a name="647" href="#647">647</a>       <b>if</b>(ih == <b>null</b>) <font color="#329900"><i>// At end of list, end not found yet</font></i>
+<a name="648" href="#648">648</a> 	<b>throw</b> <b>new</b> <a href="../../../../org/apache/bcel/generic/ClassGenException.html">ClassGenException</a>(<font color="#000099">"Invalid range: From "</font> + start + <font color="#000099">" to "</font> + end);
+<a name="649" href="#649">649</a>       <b>else</b> <b>if</b>(ih == target) <font color="#329900"><i>// target may be null</font></i>
+<a name="650" href="#650">650</a> 	<b>throw</b> <b>new</b> <a href="../../../../org/apache/bcel/generic/ClassGenException.html">ClassGenException</a>(<font color="#000099">"Invalid range: From "</font> + start + <font color="#000099">" to "</font> + end +
+<a name="651" href="#651">651</a> 				    <font color="#000099">" contains target "</font> + target);
+<a name="652" href="#652">652</a>     }
+<a name="653" href="#653">653</a> 
+<a name="654" href="#654">654</a>     <font color="#329900"><i>// Step 2: Temporarily remove the given instructions from the list</font></i>
+<a name="655" href="#655">655</a> 
+<a name="656" href="#656">656</a>     <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> prev = start.prev, next = end.next;
+<a name="657" href="#657">657</a> 
+<a name="658" href="#658">658</a>     <b>if</b>(prev != <b>null</b>)
+<a name="659" href="#659">659</a>       prev.next = next;
+<a name="660" href="#660">660</a>     <b>else</b> <font color="#329900"><i>// start == this.start!</font></i>
+<a name="661" href="#661">661</a>       <b>this</b>.start = next;
+<a name="662" href="#662">662</a> 
+<a name="663" href="#663">663</a>     <b>if</b>(next != <b>null</b>)
+<a name="664" href="#664">664</a>       next.prev = prev;
+<a name="665" href="#665">665</a>     <b>else</b> <font color="#329900"><i>// end == this.end!</font></i>
+<a name="666" href="#666">666</a>       <b>this</b>.end = prev;
+<a name="667" href="#667">667</a> 
+<a name="668" href="#668">668</a>     start.prev = end.next = <b>null</b>;
+<a name="669" href="#669">669</a> 
+<a name="670" href="#670">670</a>     <font color="#329900"><i>// Step 3: append after target</font></i>
+<a name="671" href="#671">671</a> 
+<a name="672" href="#672">672</a>     <b>if</b>(target == <b>null</b>) { <font color="#329900"><i>// append to start of list</font></i>
+<a name="673" href="#673">673</a>       end.next = <b>this</b>.start;
+<a name="674" href="#674">674</a>       <b>this</b>.start = start;
+<a name="675" href="#675">675</a>     } <b>else</b> {
+<a name="676" href="#676">676</a>       next = target.next;
+<a name="677" href="#677">677</a> 
+<a name="678" href="#678">678</a>       target.next = start;
+<a name="679" href="#679">679</a>       start.prev  = target;
+<a name="680" href="#680">680</a>       end.next    = next;
+<a name="681" href="#681">681</a> 
+<a name="682" href="#682">682</a>       <b>if</b>(next != <b>null</b>)
+<a name="683" href="#683">683</a> 	next.prev = end;
+<a name="684" href="#684">684</a>     }
+<a name="685" href="#685">685</a>   }
+<a name="686" href="#686">686</a> 
+<a name="687" href="#687">687</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="688" href="#688">688</a> <font color="#AA0000"><i>   * Move a single instruction (handle) to a new location.</font></i>
+<a name="689" href="#689">689</a> <font color="#AA0000"><i>   *</font></i>
+<a name="690" href="#690">690</a> <font color="#AA0000"><i>   * @param ih     moved instruction</font></i>
+<a name="691" href="#691">691</a> <font color="#AA0000"><i>   * @param target new location of moved instruction</font></i>
+<a name="692" href="#692">692</a> <font color="#AA0000"><i>   */</font></i>
+<a name="693" href="#693">693</a>   <b>public</b> <b>void</b> move(<a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> ih, <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> target) {
+<a name="694" href="#694">694</a>     move(ih, ih, target);
+<a name="695" href="#695">695</a>   }
+<a name="696" href="#696">696</a> 
+<a name="697" href="#697">697</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="698" href="#698">698</a> <font color="#AA0000"><i>   * Remove from instruction `prev' to instruction `next' both contained</font></i>
+<a name="699" href="#699">699</a> <font color="#AA0000"><i>   * in this list. Throws TargetLostException when one of the removed instruction handles</font></i>
+<a name="700" href="#700">700</a> <font color="#AA0000"><i>   * is still being targeted.</font></i>
+<a name="701" href="#701">701</a> <font color="#AA0000"><i>   *</font></i>
+<a name="702" href="#702">702</a> <font color="#AA0000"><i>   * @param prev where to start deleting (predecessor, exclusive)</font></i>
+<a name="703" href="#703">703</a> <font color="#AA0000"><i>   * @param next where to end deleting (successor, exclusive)</font></i>
+<a name="704" href="#704">704</a> <font color="#AA0000"><i>   */</font></i>
+<a name="705" href="#705">705</a>   <b>private</b> <b>void</b> remove(<a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> prev, <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> next)
+<a name="706" href="#706">706</a>     throws <a href="../../../../org/apache/bcel/generic/TargetLostException.html">TargetLostException</a>
+<a name="707" href="#707">707</a>   {
+<a name="708" href="#708">708</a>     <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> first, last; <font color="#329900"><i>// First and last deleted instruction</font></i>
+<a name="709" href="#709">709</a> 
+<a name="710" href="#710">710</a>     <b>if</b>((prev == <b>null</b>) && (next == <b>null</b>)) { <font color="#329900"><i>// singleton list</font></i>
+<a name="711" href="#711">711</a>       first = last = start;
+<a name="712" href="#712">712</a>       start = end = <b>null</b>;
+<a name="713" href="#713">713</a>     } <b>else</b> {
+<a name="714" href="#714">714</a>       <b>if</b>(prev == <b>null</b>) { <font color="#329900"><i>// At start of list</font></i>
+<a name="715" href="#715">715</a> 	first = start;
+<a name="716" href="#716">716</a> 	start = next;
+<a name="717" href="#717">717</a>       } <b>else</b> {
+<a name="718" href="#718">718</a> 	first     = prev.next;
+<a name="719" href="#719">719</a> 	prev.next = next;
+<a name="720" href="#720">720</a>       }
+<a name="721" href="#721">721</a>       
+<a name="722" href="#722">722</a>       <b>if</b>(next == <b>null</b>) { <font color="#329900"><i>// At end of list</font></i>
+<a name="723" href="#723">723</a> 	last = end;
+<a name="724" href="#724">724</a> 	end  = prev;
+<a name="725" href="#725">725</a>       } <b>else</b> {
+<a name="726" href="#726">726</a> 	last      = next.prev;
+<a name="727" href="#727">727</a> 	next.prev = prev;
+<a name="728" href="#728">728</a>       }
+<a name="729" href="#729">729</a>     }
+<a name="730" href="#730">730</a> 
+<a name="731" href="#731">731</a>     first.prev = <b>null</b>; <font color="#329900"><i>// Completely separated from rest of list</font></i>
+<a name="732" href="#732">732</a>     last.next  = <b>null</b>;
+<a name="733" href="#733">733</a> 
+<a name="734" href="#734">734</a>     ArrayList target_vec = <b>new</b> ArrayList();
+<a name="735" href="#735">735</a> 
+<a name="736" href="#736">736</a>     <b>for</b>(<a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> ih=first; ih != <b>null</b>; ih = ih.next)
+<a name="737" href="#737">737</a>       ih.getInstruction().dispose(); <font color="#329900"><i>// e.g. BranchInstructions release their targets</font></i>
+<a name="738" href="#738">738</a> 
+<a name="739" href="#739">739</a>     StringBuffer buf = <b>new</b> StringBuffer(<font color="#000099">"{ "</font>);
+<a name="740" href="#740">740</a>     <b>for</b>(<a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> ih=first; ih != <b>null</b>; ih = next) {
+<a name="741" href="#741">741</a>       next = ih.next;
+<a name="742" href="#742">742</a>       length--;
+<a name="743" href="#743">743</a> 	
+<a name="744" href="#744">744</a>       <b>if</b>(ih.hasTargeters()) { <font color="#329900"><i>// Still got targeters?</font></i>
+<a name="745" href="#745">745</a> 	target_vec.add(ih);
+<a name="746" href="#746">746</a> 	buf.append(ih.toString(<b>true</b>) + <font color="#000099">" "</font>);
+<a name="747" href="#747">747</a> 	ih.next = ih.prev = <b>null</b>;
+<a name="748" href="#748">748</a>       } <b>else</b>
+<a name="749" href="#749">749</a> 	ih.dispose();
+<a name="750" href="#750">750</a>     }
+<a name="751" href="#751">751</a> 
+<a name="752" href="#752">752</a>     buf.append(<font color="#000099">"}"</font>);
+<a name="753" href="#753">753</a> 
+<a name="754" href="#754">754</a>     <b>if</b>(!target_vec.isEmpty()) {
+<a name="755" href="#755">755</a>       <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a>[] targeted = <b>new</b> <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a>[target_vec.size()];
+<a name="756" href="#756">756</a>       target_vec.toArray(targeted);
+<a name="757" href="#757">757</a>       <b>throw</b> <b>new</b> <a href="../../../../org/apache/bcel/generic/TargetLostException.html">TargetLostException</a>(targeted, buf.toString());
+<a name="758" href="#758">758</a>     }
+<a name="759" href="#759">759</a>   }
+<a name="760" href="#760">760</a>     
+<a name="761" href="#761">761</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="762" href="#762">762</a> <font color="#AA0000"><i>   * Remove instruction from this list. The corresponding Instruction</font></i>
+<a name="763" href="#763">763</a> <font color="#AA0000"><i>   * handles must not be reused!</font></i>
+<a name="764" href="#764">764</a> <font color="#AA0000"><i>   *</font></i>
+<a name="765" href="#765">765</a> <font color="#AA0000"><i>   * @param ih instruction (handle) to remove </font></i>
+<a name="766" href="#766">766</a> <font color="#AA0000"><i>   */</font></i>
+<a name="767" href="#767">767</a>   <b>public</b> <b>void</b> delete(<a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> ih) throws TargetLostException {
+<a name="768" href="#768">768</a>     remove(ih.prev, ih.next);
+<a name="769" href="#769">769</a>   }
+<a name="770" href="#770">770</a> 
+<a name="771" href="#771">771</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="772" href="#772">772</a> <font color="#AA0000"><i>   * Remove instruction from this list. The corresponding Instruction</font></i>
+<a name="773" href="#773">773</a> <font color="#AA0000"><i>   * handles must not be reused!</font></i>
+<a name="774" href="#774">774</a> <font color="#AA0000"><i>   *</font></i>
+<a name="775" href="#775">775</a> <font color="#AA0000"><i>   * @param i instruction to remove</font></i>
+<a name="776" href="#776">776</a> <font color="#AA0000"><i>   */</font></i>
+<a name="777" href="#777">777</a>   <b>public</b> <b>void</b> delete(<a href="../../../../org/apache/bcel/generic/Instruction.html">Instruction</a> i) throws TargetLostException {
+<a name="778" href="#778">778</a>     <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> ih;
+<a name="779" href="#779">779</a> 
+<a name="780" href="#780">780</a>     <b>if</b>((ih = findInstruction1(i)) == <b>null</b>)
+<a name="781" href="#781">781</a>       <b>throw</b> <b>new</b> <a href="../../../../org/apache/bcel/generic/ClassGenException.html">ClassGenException</a>(<font color="#000099">"Instruction "</font> + i +
+<a name="782" href="#782">782</a> 				  <font color="#000099">" is not contained in this list."</font>);
+<a name="783" href="#783">783</a>     delete(ih);
+<a name="784" href="#784">784</a>   }
+<a name="785" href="#785">785</a> 
+<a name="786" href="#786">786</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="787" href="#787">787</a> <font color="#AA0000"><i>   * Remove instructions from instruction `from' to instruction `to' contained</font></i>
+<a name="788" href="#788">788</a> <font color="#AA0000"><i>   * in this list. The user must ensure that `from' is an instruction before</font></i>
+<a name="789" href="#789">789</a> <font color="#AA0000"><i>   * `to', or risk havoc. The corresponding Instruction handles must not be reused!</font></i>
+<a name="790" href="#790">790</a> <font color="#AA0000"><i>   *</font></i>
+<a name="791" href="#791">791</a> <font color="#AA0000"><i>   * @param from where to start deleting (inclusive)</font></i>
+<a name="792" href="#792">792</a> <font color="#AA0000"><i>   * @param to   where to end deleting (inclusive)</font></i>
+<a name="793" href="#793">793</a> <font color="#AA0000"><i>   */</font></i>
+<a name="794" href="#794">794</a>   <b>public</b> <b>void</b> delete(<a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> from, <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> to)
+<a name="795" href="#795">795</a>     throws <a href="../../../../org/apache/bcel/generic/TargetLostException.html">TargetLostException</a>
+<a name="796" href="#796">796</a>   {
+<a name="797" href="#797">797</a>     remove(from.prev, to.next);
+<a name="798" href="#798">798</a>   }
+<a name="799" href="#799">799</a> 
+<a name="800" href="#800">800</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="801" href="#801">801</a> <font color="#AA0000"><i>   * Remove instructions from instruction `from' to instruction `to' contained</font></i>
+<a name="802" href="#802">802</a> <font color="#AA0000"><i>   * in this list. The user must ensure that `from' is an instruction before</font></i>
+<a name="803" href="#803">803</a> <font color="#AA0000"><i>   * `to', or risk havoc. The corresponding Instruction handles must not be reused!</font></i>
+<a name="804" href="#804">804</a> <font color="#AA0000"><i>   *</font></i>
+<a name="805" href="#805">805</a> <font color="#AA0000"><i>   * @param from where to start deleting (inclusive)</font></i>
+<a name="806" href="#806">806</a> <font color="#AA0000"><i>   * @param to   where to end deleting (inclusive)</font></i>
+<a name="807" href="#807">807</a> <font color="#AA0000"><i>   */</font></i>
+<a name="808" href="#808">808</a>   <b>public</b> <b>void</b> delete(<a href="../../../../org/apache/bcel/generic/Instruction.html">Instruction</a> from, <a href="../../../../org/apache/bcel/generic/Instruction.html">Instruction</a> to) throws TargetLostException {
+<a name="809" href="#809">809</a>     <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> from_ih, to_ih;
+<a name="810" href="#810">810</a> 
+<a name="811" href="#811">811</a>     <b>if</b>((from_ih = findInstruction1(from)) == <b>null</b>)
+<a name="812" href="#812">812</a>       <b>throw</b> <b>new</b> <a href="../../../../org/apache/bcel/generic/ClassGenException.html">ClassGenException</a>(<font color="#000099">"Instruction "</font> + from +
+<a name="813" href="#813">813</a> 				  <font color="#000099">" is not contained in this list."</font>);
+<a name="814" href="#814">814</a> 
+<a name="815" href="#815">815</a>     <b>if</b>((to_ih = findInstruction2(to)) == <b>null</b>)
+<a name="816" href="#816">816</a>       <b>throw</b> <b>new</b> <a href="../../../../org/apache/bcel/generic/ClassGenException.html">ClassGenException</a>(<font color="#000099">"Instruction "</font> + to +
+<a name="817" href="#817">817</a> 				  <font color="#000099">" is not contained in this list."</font>);
+<a name="818" href="#818">818</a>     delete(from_ih, to_ih);
+<a name="819" href="#819">819</a>   }
+<a name="820" href="#820">820</a> 
+<a name="821" href="#821">821</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="822" href="#822">822</a> <font color="#AA0000"><i>   * Search for given Instruction reference, start at beginning of list.</font></i>
+<a name="823" href="#823">823</a> <font color="#AA0000"><i>   *</font></i>
+<a name="824" href="#824">824</a> <font color="#AA0000"><i>   * @param i instruction to search for</font></i>
+<a name="825" href="#825">825</a> <font color="#AA0000"><i>   * @return instruction found on success, null otherwise</font></i>
+<a name="826" href="#826">826</a> <font color="#AA0000"><i>   */</font></i>
+<a name="827" href="#827">827</a>   <b>private</b> <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> findInstruction1(<a href="../../../../org/apache/bcel/generic/Instruction.html">Instruction</a> i) {
+<a name="828" href="#828">828</a>     <b>for</b>(<a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> ih=start; ih != <b>null</b>; ih = ih.next)
+<a name="829" href="#829">829</a>       <b>if</b>(ih.instruction == i)
+<a name="830" href="#830">830</a> 	<b>return</b> ih;
+<a name="831" href="#831">831</a> 
+<a name="832" href="#832">832</a>     <b>return</b> <b>null</b>;
+<a name="833" href="#833">833</a>   }
+<a name="834" href="#834">834</a> 
+<a name="835" href="#835">835</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="836" href="#836">836</a> <font color="#AA0000"><i>   * Search for given Instruction reference, start at end of list</font></i>
+<a name="837" href="#837">837</a> <font color="#AA0000"><i>   *</font></i>
+<a name="838" href="#838">838</a> <font color="#AA0000"><i>   * @param i instruction to search for</font></i>
+<a name="839" href="#839">839</a> <font color="#AA0000"><i>   * @return instruction found on success, null otherwise</font></i>
+<a name="840" href="#840">840</a> <font color="#AA0000"><i>   */</font></i>
+<a name="841" href="#841">841</a>   <b>private</b> <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> findInstruction2(<a href="../../../../org/apache/bcel/generic/Instruction.html">Instruction</a> i) {
+<a name="842" href="#842">842</a>     <b>for</b>(<a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> ih=end; ih != <b>null</b>; ih = ih.prev)
+<a name="843" href="#843">843</a>       <b>if</b>(ih.instruction == i)
+<a name="844" href="#844">844</a> 	<b>return</b> ih;
+<a name="845" href="#845">845</a> 
+<a name="846" href="#846">846</a>     <b>return</b> <b>null</b>;
+<a name="847" href="#847">847</a>   }
+<a name="848" href="#848">848</a> 
+<a name="849" href="#849">849</a>   <b>public</b> <b>boolean</b> contains(<a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> i) {
+<a name="850" href="#850">850</a>     <b>if</b>(i == <b>null</b>)
+<a name="851" href="#851">851</a>       <b>return</b> false;
+<a name="852" href="#852">852</a> 
+<a name="853" href="#853">853</a>     <b>for</b>(<a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> ih=start; ih != <b>null</b>; ih = ih.next)
+<a name="854" href="#854">854</a>       <b>if</b>(ih == i)
+<a name="855" href="#855">855</a> 	<b>return</b> <b>true</b>;
+<a name="856" href="#856">856</a> 
+<a name="857" href="#857">857</a>     <b>return</b> false;
+<a name="858" href="#858">858</a>   }
+<a name="859" href="#859">859</a> 
+<a name="860" href="#860">860</a>   <b>public</b> <b>boolean</b> contains(<a href="../../../../org/apache/bcel/generic/Instruction.html">Instruction</a> i) {
+<a name="861" href="#861">861</a>     <b>return</b> findInstruction1(i) != <b>null</b>;
+<a name="862" href="#862">862</a>   }
+<a name="863" href="#863">863</a> 
+<a name="864" href="#864">864</a>   <b>public</b> <b>void</b> setPositions() {
+<a name="865" href="#865">865</a>     setPositions(false);
+<a name="866" href="#866">866</a>   }
+<a name="867" href="#867">867</a> 
+<a name="868" href="#868">868</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="869" href="#869">869</a> <font color="#AA0000"><i>   * Give all instructions their position number (offset in byte stream), i.e.,</font></i>
+<a name="870" href="#870">870</a> <font color="#AA0000"><i>   * make the list ready to be dumped.</font></i>
+<a name="871" href="#871">871</a> <font color="#AA0000"><i>   *</font></i>
+<a name="872" href="#872">872</a> <font color="#AA0000"><i>   * @param check Perform sanity checks, e.g. if all targeted instructions really belong</font></i>
+<a name="873" href="#873">873</a> <font color="#AA0000"><i>   * to this list</font></i>
+<a name="874" href="#874">874</a> <font color="#AA0000"><i>   */</font></i>
+<a name="875" href="#875">875</a>   <b>public</b> <b>void</b> setPositions(<b>boolean</b> check) {
+<a name="876" href="#876">876</a>     <b>int</b> max_additional_bytes = 0, additional_bytes = 0;
+<a name="877" href="#877">877</a>     <b>int</b> index = 0, count = 0;
+<a name="878" href="#878">878</a>     <b>int</b>[] pos = <b>new</b> <b>int</b>[length];
+<a name="879" href="#879">879</a> 
+<a name="880" href="#880">880</a>     <font color="#329900"><i>/*<font color="#329900"><i> Pass 0: Sanity checks</font></i></font></i>
+<a name="881" href="#881">881</a> <font color="#329900"><i>     */</font></i>
+<a name="882" href="#882">882</a>     <b>if</b>(check) {
+<a name="883" href="#883">883</a>       <b>for</b>(<a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> ih=start; ih != <b>null</b>; ih = ih.next) {
+<a name="884" href="#884">884</a> 	Instruction i = ih.instruction;
+<a name="885" href="#885">885</a> 
+<a name="886" href="#886">886</a> 	<b>if</b>(i instanceof <a href="../../../../org/apache/bcel/generic/BranchInstruction.html">BranchInstruction</a>) { <font color="#329900"><i>// target instruction within list?</font></i>
+<a name="887" href="#887">887</a> 	  Instruction inst = ((BranchInstruction)i).getTarget().instruction;
+<a name="888" href="#888">888</a> 	  <b>if</b>(!contains(inst))
+<a name="889" href="#889">889</a> 	    <b>throw</b> <b>new</b> ClassGenException(<font color="#000099">"Branch target of "</font> +
+<a name="890" href="#890">890</a> 					Constants.OPCODE_NAMES[i.opcode] + <font color="#000099">":"</font> +
+<a name="891" href="#891">891</a> 					inst + <font color="#000099">" not in instruction list"</font>);
+<a name="892" href="#892">892</a> 
+<a name="893" href="#893">893</a> 	  <b>if</b>(i instanceof Select) {
+<a name="894" href="#894">894</a> 	    InstructionHandle[] targets = ((Select)i).getTargets();
+<a name="895" href="#895">895</a> 	    
+<a name="896" href="#896">896</a> 	    <b>for</b>(<b>int</b> j=0; j &lt; targets.length; j++) {
+<a name="897" href="#897">897</a> 	      inst = targets[j].instruction;
+<a name="898" href="#898">898</a> 	      <b>if</b>(!contains(inst))
+<a name="899" href="#899">899</a> 		<b>throw</b> <b>new</b> <a href="../../../../org/apache/bcel/generic/ClassGenException.html">ClassGenException</a>(<font color="#000099">"Branch target of "</font> +
+<a name="900" href="#900">900</a> 					    Constants.OPCODE_NAMES[i.opcode] + <font color="#000099">":"</font> +
+<a name="901" href="#901">901</a> 					    inst + <font color="#000099">" not in instruction list"</font>);
+<a name="902" href="#902">902</a> 	    }
+<a name="903" href="#903">903</a> 	  }
+<a name="904" href="#904">904</a> 
+<a name="905" href="#905">905</a> 	  <b>if</b>(!(ih instanceof BranchHandle))
+<a name="906" href="#906">906</a> 	    <b>throw</b> <b>new</b> ClassGenException(<font color="#000099">"Branch instruction "</font> +
+<a name="907" href="#907">907</a> 					Constants.OPCODE_NAMES[i.opcode] + <font color="#000099">":"</font> +
+<a name="908" href="#908">908</a> 					inst + <font color="#000099">" not contained in BranchHandle."</font>);
+<a name="909" href="#909">909</a> 
+<a name="910" href="#910">910</a> 	}
+<a name="911" href="#911">911</a>       }
+<a name="912" href="#912">912</a>     }
+<a name="913" href="#913">913</a> 
+<a name="914" href="#914">914</a>     <font color="#329900"><i>/*<font color="#329900"><i> Pass 1: Set position numbers and sum up the maximum number of bytes an</font></i></font></i>
+<a name="915" href="#915">915</a> <font color="#329900"><i>     * instruction may be shifted.</font></i>
+<a name="916" href="#916">916</a> <font color="#329900"><i>     */</font></i>
+<a name="917" href="#917">917</a>     <b>for</b>(<a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> ih=start; ih != <b>null</b>; ih = ih.next) {
+<a name="918" href="#918">918</a>       <a href="../../../../org/apache/bcel/generic/Instruction.html">Instruction</a> i = ih.instruction;
+<a name="919" href="#919">919</a> 
+<a name="920" href="#920">920</a>       ih.setPosition(index);
+<a name="921" href="#921">921</a>       pos[count++] = index;
+<a name="922" href="#922">922</a> 
+<a name="923" href="#923">923</a>       <font color="#329900"><i>/*<font color="#329900"><i> Get an estimate about how many additional bytes may be added, because</font></i></font></i>
+<a name="924" href="#924">924</a> <font color="#329900"><i>       * BranchInstructions may have variable length depending on the target</font></i>
+<a name="925" href="#925">925</a> <font color="#329900"><i>       * offset (short vs. int) or alignment issues (TABLESWITCH and</font></i>
+<a name="926" href="#926">926</a> <font color="#329900"><i>       * LOOKUPSWITCH).</font></i>
+<a name="927" href="#927">927</a> <font color="#329900"><i>       */</font></i>
+<a name="928" href="#928">928</a>       <b>switch</b>(i.getOpcode()) {
+<a name="929" href="#929">929</a>       <b>case</b> Constants.JSR: <b>case</b> Constants.GOTO:
+<a name="930" href="#930">930</a> 	max_additional_bytes += 2;
+<a name="931" href="#931">931</a> 	<b>break</b>;
+<a name="932" href="#932">932</a> 
+<a name="933" href="#933">933</a>       <b>case</b> Constants.TABLESWITCH: <b>case</b> Constants.LOOKUPSWITCH:
+<a name="934" href="#934">934</a> 	max_additional_bytes += 3;
+<a name="935" href="#935">935</a> 	<b>break</b>;
+<a name="936" href="#936">936</a>       }
+<a name="937" href="#937">937</a> 
+<a name="938" href="#938">938</a>       index += i.getLength();
+<a name="939" href="#939">939</a>     }
+<a name="940" href="#940">940</a>     
+<a name="941" href="#941">941</a>     <font color="#329900"><i>/*<font color="#329900"><i> Pass 2: Expand the variable-length (Branch)Instructions depending on</font></i></font></i>
+<a name="942" href="#942">942</a> <font color="#329900"><i>     * the target offset (short or int) and ensure that branch targets are</font></i>
+<a name="943" href="#943">943</a> <font color="#329900"><i>     * within this list.</font></i>
+<a name="944" href="#944">944</a> <font color="#329900"><i>     */</font></i>
+<a name="945" href="#945">945</a>     <b>for</b>(<a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> ih=start; ih != <b>null</b>; ih = ih.next)
+<a name="946" href="#946">946</a>       additional_bytes += ih.updatePosition(additional_bytes, max_additional_bytes);
+<a name="947" href="#947">947</a> 
+<a name="948" href="#948">948</a>     <font color="#329900"><i>/*<font color="#329900"><i> Pass 3: Update position numbers (which may have changed due to the</font></i></font></i>
+<a name="949" href="#949">949</a> <font color="#329900"><i>     * preceding expansions), like pass 1.</font></i>
+<a name="950" href="#950">950</a> <font color="#329900"><i>     */</font></i>
+<a name="951" href="#951">951</a>     index=count=0;
+<a name="952" href="#952">952</a>     <b>for</b>(<a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> ih=start; ih != <b>null</b>; ih = ih.next) {
+<a name="953" href="#953">953</a>       <a href="../../../../org/apache/bcel/generic/Instruction.html">Instruction</a> i = ih.instruction;
+<a name="954" href="#954">954</a> 
+<a name="955" href="#955">955</a>       ih.setPosition(index);
+<a name="956" href="#956">956</a>       pos[count++] = index;
+<a name="957" href="#957">957</a>       index += i.getLength();
+<a name="958" href="#958">958</a>     }
+<a name="959" href="#959">959</a> 
+<a name="960" href="#960">960</a>     byte_positions = <b>new</b> <b>int</b>[count]; <font color="#329900"><i>// Trim to proper size</font></i>
+<a name="961" href="#961">961</a>     System.arraycopy(pos, 0, byte_positions, 0, count);
+<a name="962" href="#962">962</a>   }
+<a name="963" href="#963">963</a> 
+<a name="964" href="#964">964</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="965" href="#965">965</a> <font color="#AA0000"><i>   * When everything is finished, use this method to convert the instruction</font></i>
+<a name="966" href="#966">966</a> <font color="#AA0000"><i>   * list into an array of bytes.</font></i>
+<a name="967" href="#967">967</a> <font color="#AA0000"><i>   *</font></i>
+<a name="968" href="#968">968</a> <font color="#AA0000"><i>   * @return the byte code ready to be dumped</font></i>
+<a name="969" href="#969">969</a> <font color="#AA0000"><i>   */</font></i>
+<a name="970" href="#970">970</a>   <b>public</b> byte[] getByteCode() {
+<a name="971" href="#971">971</a>     <font color="#329900"><i>// Update position indices of instructions</font></i>
+<a name="972" href="#972">972</a>     setPositions();
+<a name="973" href="#973">973</a> 
+<a name="974" href="#974">974</a>     ByteArrayOutputStream b   = <b>new</b> ByteArrayOutputStream();
+<a name="975" href="#975">975</a>     DataOutputStream      out = <b>new</b> DataOutputStream(b);
+<a name="976" href="#976">976</a> 
+<a name="977" href="#977">977</a>     <b>try</b> {
+<a name="978" href="#978">978</a>       <b>for</b>(<a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> ih=start; ih != <b>null</b>; ih = ih.next) {
+<a name="979" href="#979">979</a> 	Instruction i = ih.instruction;
+<a name="980" href="#980">980</a> 	i.dump(out); <font color="#329900"><i>// Traverse list</font></i>
+<a name="981" href="#981">981</a>       }
+<a name="982" href="#982">982</a>     } <b>catch</b>(IOException e) { 
+<a name="983" href="#983">983</a>       System.err.println(e);
+<a name="984" href="#984">984</a>       <b>return</b> <b>null</b>;
+<a name="985" href="#985">985</a>     }
+<a name="986" href="#986">986</a> 
+<a name="987" href="#987">987</a>     <b>return</b> b.toByteArray();
+<a name="988" href="#988">988</a>   }
+<a name="989" href="#989">989</a> 
+<a name="990" href="#990">990</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="991" href="#991">991</a> <font color="#AA0000"><i>   * @return an array of instructions without target information for branch instructions.</font></i>
+<a name="992" href="#992">992</a> <font color="#AA0000"><i>   */</font></i>
+<a name="993" href="#993">993</a>   <b>public</b> <a href="../../../../org/apache/bcel/generic/Instruction.html">Instruction</a>[] getInstructions() {
+<a name="994" href="#994">994</a>     <a href="../../../../org/apache/bcel/util/ByteSequence.html">ByteSequence</a>  bytes        = <b>new</b> ByteSequence(getByteCode());
+<a name="995" href="#995">995</a>     ArrayList     instructions = <b>new</b> ArrayList();
+<a name="996" href="#996">996</a> 
+<a name="997" href="#997">997</a>     <b>try</b> {
+<a name="998" href="#998">998</a>       <b>while</b>(bytes.available() &gt; 0) {
+<a name="999" href="#999">999</a> 	instructions.add(Instruction.readInstruction(bytes));
+<a name="1000" href="#1000">1000</a>       }
+<a name="1001" href="#1001">1001</a>     } <b>catch</b>(IOException e) { <b>throw</b> <b>new</b> ClassGenException(e.toString()); }
+<a name="1002" href="#1002">1002</a> 
+<a name="1003" href="#1003">1003</a>     <a href="../../../../org/apache/bcel/generic/Instruction.html">Instruction</a>[] result = <b>new</b> <a href="../../../../org/apache/bcel/generic/Instruction.html">Instruction</a>[instructions.size()];
+<a name="1004" href="#1004">1004</a>     instructions.toArray(result);
+<a name="1005" href="#1005">1005</a>     <b>return</b> result;
+<a name="1006" href="#1006">1006</a>   }
+<a name="1007" href="#1007">1007</a> 
+<a name="1008" href="#1008">1008</a>   <b>public</b> String toString() {
+<a name="1009" href="#1009">1009</a>     <b>return</b> toString(<b>true</b>);
+<a name="1010" href="#1010">1010</a>   }
+<a name="1011" href="#1011">1011</a> 
+<a name="1012" href="#1012">1012</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="1013" href="#1013">1013</a> <font color="#AA0000"><i>   * @param verbose toggle output format</font></i>
+<a name="1014" href="#1014">1014</a> <font color="#AA0000"><i>   * @return String containing all instructions in this list.</font></i>
+<a name="1015" href="#1015">1015</a> <font color="#AA0000"><i>   */</font></i> 
+<a name="1016" href="#1016">1016</a>   <b>public</b> String toString(<b>boolean</b> verbose) {
+<a name="1017" href="#1017">1017</a>     StringBuffer buf = <b>new</b> StringBuffer();
+<a name="1018" href="#1018">1018</a> 
+<a name="1019" href="#1019">1019</a>     <b>for</b>(<a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> ih=start; ih != <b>null</b>; ih = ih.next) {
+<a name="1020" href="#1020">1020</a>       buf.append(ih.toString(verbose) + <font color="#000099">"\n"</font>);
+<a name="1021" href="#1021">1021</a>     }
+<a name="1022" href="#1022">1022</a> 
+<a name="1023" href="#1023">1023</a>     <b>return</b> buf.toString();
+<a name="1024" href="#1024">1024</a>   }
+<a name="1025" href="#1025">1025</a> 
+<a name="1026" href="#1026">1026</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="1027" href="#1027">1027</a> <font color="#AA0000"><i>   * @return Enumeration that lists all instructions (handles)</font></i>
+<a name="1028" href="#1028">1028</a> <font color="#AA0000"><i>   */</font></i>
+<a name="1029" href="#1029">1029</a>   <b>public</b> Iterator iterator() {
+<a name="1030" href="#1030">1030</a>     <b>return</b> <b>new</b> Iterator() {
+<a name="1031" href="#1031">1031</a>       <b>private</b> <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> ih = start;
+<a name="1032" href="#1032">1032</a> 
+<a name="1033" href="#1033">1033</a>       <b>public</b> Object next() {
+<a name="1034" href="#1034">1034</a> 	InstructionHandle i = ih;
+<a name="1035" href="#1035">1035</a> 	ih = ih.next;
+<a name="1036" href="#1036">1036</a> 	<b>return</b> i;
+<a name="1037" href="#1037">1037</a>       }
+<a name="1038" href="#1038">1038</a> 
+<a name="1039" href="#1039">1039</a>       <b>public</b> <b>void</b> remove() {
+<a name="1040" href="#1040">1040</a> 	<b>throw</b> <b>new</b> UnsupportedOperationException();
+<a name="1041" href="#1041">1041</a>       }
+<a name="1042" href="#1042">1042</a> 
+<a name="1043" href="#1043">1043</a>       <b>public</b> <b>boolean</b> hasNext() { <b>return</b> ih != <b>null</b>; }
+<a name="1044" href="#1044">1044</a>     };
+<a name="1045" href="#1045">1045</a>   }
+<a name="1046" href="#1046">1046</a> 
+<a name="1047" href="#1047">1047</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="1048" href="#1048">1048</a> <font color="#AA0000"><i>   * @return array containing all instructions (handles)</font></i>
+<a name="1049" href="#1049">1049</a> <font color="#AA0000"><i>   */</font></i>
+<a name="1050" href="#1050">1050</a>   <b>public</b> <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a>[] getInstructionHandles() {
+<a name="1051" href="#1051">1051</a>     <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a>[] ihs = <b>new</b> <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a>[length];
+<a name="1052" href="#1052">1052</a>     <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a>   ih  = start;
+<a name="1053" href="#1053">1053</a> 
+<a name="1054" href="#1054">1054</a>     <b>for</b>(<b>int</b> i=0; i &lt; length; i++) {
+<a name="1055" href="#1055">1055</a>       ihs[i] = ih;
+<a name="1056" href="#1056">1056</a>       ih = ih.next;
+<a name="1057" href="#1057">1057</a>     }
+<a name="1058" href="#1058">1058</a> 
+<a name="1059" href="#1059">1059</a>     <b>return</b> ihs;
+<a name="1060" href="#1060">1060</a>   }
+<a name="1061" href="#1061">1061</a> 
+<a name="1062" href="#1062">1062</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="1063" href="#1063">1063</a> <font color="#AA0000"><i>   * Get positions (offsets) of all instructions in the list. This relies on that</font></i>
+<a name="1064" href="#1064">1064</a> <font color="#AA0000"><i>   * the list has been freshly created from an byte code array, or that setPositions()</font></i>
+<a name="1065" href="#1065">1065</a> <font color="#AA0000"><i>   * has been called. Otherwise this may be inaccurate.</font></i>
+<a name="1066" href="#1066">1066</a> <font color="#AA0000"><i>   *</font></i>
+<a name="1067" href="#1067">1067</a> <font color="#AA0000"><i>   * @return array containing all instruction's offset in byte code</font></i>
+<a name="1068" href="#1068">1068</a> <font color="#AA0000"><i>   */</font></i>
+<a name="1069" href="#1069">1069</a>   <b>public</b> <b>int</b>[] getInstructionPositions() { <b>return</b> byte_positions; }
+<a name="1070" href="#1070">1070</a> 
+<a name="1071" href="#1071">1071</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="1072" href="#1072">1072</a> <font color="#AA0000"><i>   * @return complete, i.e., deep copy of this list</font></i>
+<a name="1073" href="#1073">1073</a> <font color="#AA0000"><i>   */</font></i>
+<a name="1074" href="#1074">1074</a>   <b>public</b> <a href="../../../../org/apache/bcel/generic/InstructionList.html">InstructionList</a> copy() {
+<a name="1075" href="#1075">1075</a>     HashMap         map = <b>new</b> HashMap();
+<a name="1076" href="#1076">1076</a>     <a href="../../../../org/apache/bcel/generic/InstructionList.html">InstructionList</a> il  = <b>new</b> InstructionList();
+<a name="1077" href="#1077">1077</a> 
+<a name="1078" href="#1078">1078</a>     <font color="#329900"><i>/*<font color="#329900"><i> Pass 1: Make copies of all instructions, append them to the new list</font></i></font></i>
+<a name="1079" href="#1079">1079</a> <font color="#329900"><i>     * and associate old instruction references with the new ones, i.e.,</font></i>
+<a name="1080" href="#1080">1080</a> <font color="#329900"><i>     * a 1:1 mapping.</font></i>
+<a name="1081" href="#1081">1081</a> <font color="#329900"><i>     */</font></i>
+<a name="1082" href="#1082">1082</a>     <b>for</b>(<a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> ih=start; ih != <b>null</b>; ih = ih.next) {
+<a name="1083" href="#1083">1083</a>       <a href="../../../../org/apache/bcel/generic/Instruction.html">Instruction</a> i = ih.instruction;
+<a name="1084" href="#1084">1084</a>       <a href="../../../../org/apache/bcel/generic/Instruction.html">Instruction</a> c = i.copy(); <font color="#329900"><i>// Use clone for shallow copy</font></i>
+<a name="1085" href="#1085">1085</a> 
+<a name="1086" href="#1086">1086</a>       <b>if</b>(c instanceof <a href="../../../../org/apache/bcel/generic/BranchInstruction.html">BranchInstruction</a>)
+<a name="1087" href="#1087">1087</a> 	map.put(ih, il.append((BranchInstruction)c));
+<a name="1088" href="#1088">1088</a>       <b>else</b>
+<a name="1089" href="#1089">1089</a> 	map.put(ih, il.append(c));
+<a name="1090" href="#1090">1090</a>     }
+<a name="1091" href="#1091">1091</a>     
+<a name="1092" href="#1092">1092</a>     <font color="#329900"><i>/*<font color="#329900"><i> Pass 2: Update branch targets.</font></i></font></i>
+<a name="1093" href="#1093">1093</a> <font color="#329900"><i>     */</font></i>
+<a name="1094" href="#1094">1094</a>     <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> ih=start;
+<a name="1095" href="#1095">1095</a>     <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> ch=il.start;
+<a name="1096" href="#1096">1096</a> 
+<a name="1097" href="#1097">1097</a>     <b>while</b>(ih != <b>null</b>) {
+<a name="1098" href="#1098">1098</a>       <a href="../../../../org/apache/bcel/generic/Instruction.html">Instruction</a> i = ih.instruction;
+<a name="1099" href="#1099">1099</a>       <a href="../../../../org/apache/bcel/generic/Instruction.html">Instruction</a> c = ch.instruction;
+<a name="1100" href="#1100">1100</a> 
+<a name="1101" href="#1101">1101</a>       <b>if</b>(i instanceof <a href="../../../../org/apache/bcel/generic/BranchInstruction.html">BranchInstruction</a>) {
+<a name="1102" href="#1102">1102</a> 	BranchInstruction bi      = (BranchInstruction)i;
+<a name="1103" href="#1103">1103</a> 	BranchInstruction bc      = (BranchInstruction)c;
+<a name="1104" href="#1104">1104</a> 	InstructionHandle itarget = bi.getTarget(); <font color="#329900"><i>// old target</font></i>
+<a name="1105" href="#1105">1105</a> 
+<a name="1106" href="#1106">1106</a> 	<font color="#329900"><i>// New target is in hash map</font></i>
+<a name="1107" href="#1107">1107</a> 	bc.setTarget((InstructionHandle)map.get(itarget));
+<a name="1108" href="#1108">1108</a> 
+<a name="1109" href="#1109">1109</a> 	<b>if</b>(bi instanceof <a href="../../../../org/apache/bcel/generic/Select.html">Select</a>) { <font color="#329900"><i>// Either LOOKUPSWITCH or TABLESWITCH</font></i>
+<a name="1110" href="#1110">1110</a> 	  InstructionHandle[] itargets = ((Select)bi).getTargets();
+<a name="1111" href="#1111">1111</a> 	  InstructionHandle[] ctargets = ((Select)bc).getTargets();
+<a name="1112" href="#1112">1112</a> 	  
+<a name="1113" href="#1113">1113</a> 	  <b>for</b>(<b>int</b> j=0; j &lt; itargets.length; j++) { <font color="#329900"><i>// Update all targets</font></i>
+<a name="1114" href="#1114">1114</a> 	    ctargets[j] = (InstructionHandle)map.get(itargets[j]);
+<a name="1115" href="#1115">1115</a> 	  }
+<a name="1116" href="#1116">1116</a> 	}
+<a name="1117" href="#1117">1117</a>       }
+<a name="1118" href="#1118">1118</a> 
+<a name="1119" href="#1119">1119</a>       ih = ih.next;
+<a name="1120" href="#1120">1120</a>       ch = ch.next;
+<a name="1121" href="#1121">1121</a>     }
+<a name="1122" href="#1122">1122</a> 
+<a name="1123" href="#1123">1123</a>     <b>return</b> il;
+<a name="1124" href="#1124">1124</a>   }
+<a name="1125" href="#1125">1125</a> 
+<a name="1126" href="#1126">1126</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>* Replace all references to the old constant pool with references to the new</font></i></font></i>
+<a name="1127" href="#1127">1127</a> <font color="#AA0000"><i>   *  constant pool</font></i>
+<a name="1128" href="#1128">1128</a> <font color="#AA0000"><i>   */</font></i>
+<a name="1129" href="#1129">1129</a>   <b>public</b> <b>void</b> replaceConstantPool(<a href="../../../../org/apache/bcel/generic/ConstantPoolGen.html">ConstantPoolGen</a> old_cp, <a href="../../../../org/apache/bcel/generic/ConstantPoolGen.html">ConstantPoolGen</a> <b>new</b>_cp) {
+<a name="1130" href="#1130">1130</a>     <b>for</b>(<a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> ih=start; ih != <b>null</b>; ih = ih.next) {
+<a name="1131" href="#1131">1131</a>       <a href="../../../../org/apache/bcel/generic/Instruction.html">Instruction</a> i = ih.instruction;
+<a name="1132" href="#1132">1132</a> 
+<a name="1133" href="#1133">1133</a>       <b>if</b>(i instanceof <a href="../../../../org/apache/bcel/generic/CPInstruction.html">CPInstruction</a>) {
+<a name="1134" href="#1134">1134</a> 	CPInstruction ci = (CPInstruction)i;
+<a name="1135" href="#1135">1135</a> 	Constant      c  = old_cp.getConstant(ci.getIndex());
+<a name="1136" href="#1136">1136</a> 	ci.setIndex(<b>new</b>_cp.addConstant(c, old_cp));
+<a name="1137" href="#1137">1137</a>       }
+<a name="1138" href="#1138">1138</a>     }    
+<a name="1139" href="#1139">1139</a>   }
+<a name="1140" href="#1140">1140</a> 
+<a name="1141" href="#1141">1141</a>   <b>private</b> <b>void</b> clear() {
+<a name="1142" href="#1142">1142</a>     start = end = <b>null</b>;
+<a name="1143" href="#1143">1143</a>     length = 0;
+<a name="1144" href="#1144">1144</a>   }
+<a name="1145" href="#1145">1145</a> 
+<a name="1146" href="#1146">1146</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="1147" href="#1147">1147</a> <font color="#AA0000"><i>   * Delete contents of list. Provides besser memory utilization,</font></i>
+<a name="1148" href="#1148">1148</a> <font color="#AA0000"><i>   * because the system then may reuse the instruction handles. This</font></i>
+<a name="1149" href="#1149">1149</a> <font color="#AA0000"><i>   * method is typically called right after</font></i>
+<a name="1150" href="#1150">1150</a> <font color="#AA0000"><i>   * &lt;href="MethodGen.html#getMethod()"&gt;MethodGen.getMethod()&lt;/a&gt;.</font></i>
+<a name="1151" href="#1151">1151</a> <font color="#AA0000"><i>   */</font></i>
+<a name="1152" href="#1152">1152</a>   <b>public</b> <b>void</b> dispose() {
+<a name="1153" href="#1153">1153</a>     <font color="#329900"><i>// Traverse in reverse order, because ih.next is overwritten</font></i>
+<a name="1154" href="#1154">1154</a>     <b>for</b>(<a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> ih=end; ih != <b>null</b>; ih = ih.prev)
+<a name="1155" href="#1155">1155</a>       <font color="#329900"><i>/*<font color="#329900"><i> Causes BranchInstructions to release target and targeters, because it</font></i></font></i>
+<a name="1156" href="#1156">1156</a> <font color="#329900"><i>       * calls dispose() on the contained instruction.</font></i>
+<a name="1157" href="#1157">1157</a> <font color="#329900"><i>       */</font></i>
+<a name="1158" href="#1158">1158</a>       ih.dispose();
+<a name="1159" href="#1159">1159</a> 
+<a name="1160" href="#1160">1160</a>     clear();
+<a name="1161" href="#1161">1161</a>   }
+<a name="1162" href="#1162">1162</a> 
+<a name="1163" href="#1163">1163</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="1164" href="#1164">1164</a> <font color="#AA0000"><i>   * @return start of list</font></i>
+<a name="1165" href="#1165">1165</a> <font color="#AA0000"><i>   */</font></i>
+<a name="1166" href="#1166">1166</a>   <b>public</b> <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> getStart() { <b>return</b> start; }
+<a name="1167" href="#1167">1167</a> 
+<a name="1168" href="#1168">1168</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="1169" href="#1169">1169</a> <font color="#AA0000"><i>   * @return end of list</font></i>
+<a name="1170" href="#1170">1170</a> <font color="#AA0000"><i>   */</font></i>
+<a name="1171" href="#1171">1171</a>   <b>public</b> <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> getEnd()   { <b>return</b> end; }
+<a name="1172" href="#1172">1172</a> 
+<a name="1173" href="#1173">1173</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="1174" href="#1174">1174</a> <font color="#AA0000"><i>   * @return length of list (Number of instructions, not bytes)</font></i>
+<a name="1175" href="#1175">1175</a> <font color="#AA0000"><i>   */</font></i>
+<a name="1176" href="#1176">1176</a>   <b>public</b> <b>int</b> getLength() { <b>return</b> length; }
+<a name="1177" href="#1177">1177</a> 
+<a name="1178" href="#1178">1178</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="1179" href="#1179">1179</a> <font color="#AA0000"><i>   * @return length of list (Number of instructions, not bytes)</font></i>
+<a name="1180" href="#1180">1180</a> <font color="#AA0000"><i>   */</font></i>
+<a name="1181" href="#1181">1181</a>   <b>public</b> <b>int</b> size() { <b>return</b> length; }
+<a name="1182" href="#1182">1182</a> 
+<a name="1183" href="#1183">1183</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="1184" href="#1184">1184</a> <font color="#AA0000"><i>   * Redirect all references from old_target to new_target, i.e., update targets </font></i>
+<a name="1185" href="#1185">1185</a> <font color="#AA0000"><i>   * of branch instructions.</font></i>
+<a name="1186" href="#1186">1186</a> <font color="#AA0000"><i>   *</font></i>
+<a name="1187" href="#1187">1187</a> <font color="#AA0000"><i>   * @param old_target the old target instruction handle</font></i>
+<a name="1188" href="#1188">1188</a> <font color="#AA0000"><i>   * @param new_target the new target instruction handle</font></i>
+<a name="1189" href="#1189">1189</a> <font color="#AA0000"><i>   */</font></i>
+<a name="1190" href="#1190">1190</a>   <b>public</b> <b>void</b> redirectBranches(<a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> old_target, 
+<a name="1191" href="#1191">1191</a> 			       InstructionHandle <b>new</b>_target) {
+<a name="1192" href="#1192">1192</a>     <b>for</b>(<a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> ih = start; ih != <b>null</b>; ih = ih.next) {
+<a name="1193" href="#1193">1193</a>       <a href="../../../../org/apache/bcel/generic/Instruction.html">Instruction</a> i  = ih.getInstruction();
+<a name="1194" href="#1194">1194</a> 
+<a name="1195" href="#1195">1195</a>       <b>if</b>(i instanceof <a href="../../../../org/apache/bcel/generic/BranchInstruction.html">BranchInstruction</a>) {
+<a name="1196" href="#1196">1196</a> 	BranchInstruction b      = (BranchInstruction)i;
+<a name="1197" href="#1197">1197</a> 	InstructionHandle target = b.getTarget();
+<a name="1198" href="#1198">1198</a> 
+<a name="1199" href="#1199">1199</a> 	<b>if</b>(target == old_target)
+<a name="1200" href="#1200">1200</a> 	  b.setTarget(<b>new</b>_target);
+<a name="1201" href="#1201">1201</a> 
+<a name="1202" href="#1202">1202</a> 	<b>if</b>(b instanceof <a href="../../../../org/apache/bcel/generic/Select.html">Select</a>) { <font color="#329900"><i>// Either LOOKUPSWITCH or TABLESWITCH</font></i>
+<a name="1203" href="#1203">1203</a> 	  InstructionHandle[] targets = ((Select)b).getTargets();
+<a name="1204" href="#1204">1204</a> 	  
+<a name="1205" href="#1205">1205</a> 	  <b>for</b>(<b>int</b> j=0; j &lt; targets.length; j++) <font color="#329900"><i>// Update targets</font></i>
+<a name="1206" href="#1206">1206</a> 	    <b>if</b>(targets[j] == old_target)
+<a name="1207" href="#1207">1207</a> 	      ((Select)b).setTarget(j, <b>new</b>_target);
+<a name="1208" href="#1208">1208</a> 	}
+<a name="1209" href="#1209">1209</a>       }
+<a name="1210" href="#1210">1210</a>     }
+<a name="1211" href="#1211">1211</a>   }
+<a name="1212" href="#1212">1212</a> 
+<a name="1213" href="#1213">1213</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="1214" href="#1214">1214</a> <font color="#AA0000"><i>   * Redirect all references of local variables from old_target to new_target.</font></i>
+<a name="1215" href="#1215">1215</a> <font color="#AA0000"><i>   *</font></i>
+<a name="1216" href="#1216">1216</a> <font color="#AA0000"><i>   * @param lg array of local variables</font></i>
+<a name="1217" href="#1217">1217</a> <font color="#AA0000"><i>   * @param old_target the old target instruction handle</font></i>
+<a name="1218" href="#1218">1218</a> <font color="#AA0000"><i>   * @param new_target the new target instruction handle</font></i>
+<a name="1219" href="#1219">1219</a> <font color="#AA0000"><i>   * @see MethodGen</font></i>
+<a name="1220" href="#1220">1220</a> <font color="#AA0000"><i>   */</font></i>
+<a name="1221" href="#1221">1221</a>   <b>public</b> <b>void</b> redirectLocalVariables(<a href="../../../../org/apache/bcel/generic/LocalVariableGen.html">LocalVariableGen</a>[] lg,
+<a name="1222" href="#1222">1222</a> 				     InstructionHandle old_target, 
+<a name="1223" href="#1223">1223</a> 				     InstructionHandle <b>new</b>_target) {
+<a name="1224" href="#1224">1224</a>     <b>for</b>(<b>int</b> i=0; i &lt; lg.length; i++) {
+<a name="1225" href="#1225">1225</a>       <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> start = lg[i].getStart();
+<a name="1226" href="#1226">1226</a>       <a href="../../../../org/apache/bcel/generic/InstructionHandle.html">InstructionHandle</a> end   = lg[i].getEnd();
+<a name="1227" href="#1227">1227</a>       
+<a name="1228" href="#1228">1228</a>       <b>if</b>(start == old_target)
+<a name="1229" href="#1229">1229</a> 	lg[i].setStart(<b>new</b>_target);
+<a name="1230" href="#1230">1230</a> 
+<a name="1231" href="#1231">1231</a>       <b>if</b>(end == old_target)
+<a name="1232" href="#1232">1232</a> 	lg[i].setEnd(<b>new</b>_target);
+<a name="1233" href="#1233">1233</a>     }
+<a name="1234" href="#1234">1234</a>   }
+<a name="1235" href="#1235">1235</a> 
+<a name="1236" href="#1236">1236</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="1237" href="#1237">1237</a> <font color="#AA0000"><i>   * Redirect all references of exception handlers from old_target to new_target.</font></i>
+<a name="1238" href="#1238">1238</a> <font color="#AA0000"><i>   *</font></i>
+<a name="1239" href="#1239">1239</a> <font color="#AA0000"><i>   * @param exceptions array of exception handlers</font></i>
+<a name="1240" href="#1240">1240</a> <font color="#AA0000"><i>   * @param old_target the old target instruction handle</font></i>
+<a name="1241" href="#1241">1241</a> <font color="#AA0000"><i>   * @param new_target the new target instruction handle</font></i>
+<a name="1242" href="#1242">1242</a> <font color="#AA0000"><i>   * @see MethodGen</font></i>
+<a name="1243" href="#1243">1243</a> <font color="#AA0000"><i>   */</font></i>
+<a name="1244" href="#1244">1244</a>   <b>public</b> <b>void</b> redirectExceptionHandlers(<a href="../../../../org/apache/bcel/generic/CodeExceptionGen.html">CodeExceptionGen</a>[] exceptions,
+<a name="1245" href="#1245">1245</a> 					InstructionHandle old_target, 
+<a name="1246" href="#1246">1246</a> 					InstructionHandle <b>new</b>_target) {
+<a name="1247" href="#1247">1247</a>     <b>for</b>(<b>int</b> i=0; i &lt; exceptions.length; i++) {
+<a name="1248" href="#1248">1248</a>       <b>if</b>(exceptions[i].getStartPC() == old_target)
+<a name="1249" href="#1249">1249</a> 	exceptions[i].setStartPC(<b>new</b>_target);
+<a name="1250" href="#1250">1250</a> 
+<a name="1251" href="#1251">1251</a>       <b>if</b>(exceptions[i].getEndPC() == old_target)
+<a name="1252" href="#1252">1252</a> 	exceptions[i].setEndPC(<b>new</b>_target);
+<a name="1253" href="#1253">1253</a> 
+<a name="1254" href="#1254">1254</a>       <b>if</b>(exceptions[i].getHandlerPC() == old_target)
+<a name="1255" href="#1255">1255</a> 	exceptions[i].setHandlerPC(<b>new</b>_target);
+<a name="1256" href="#1256">1256</a>     }
+<a name="1257" href="#1257">1257</a>   }
+<a name="1258" href="#1258">1258</a> 
+<a name="1259" href="#1259">1259</a>   <b>private</b> ArrayList observers;
+<a name="1260" href="#1260">1260</a> 
+<a name="1261" href="#1261">1261</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>* Add observer for this object.</font></i></font></i>
+<a name="1262" href="#1262">1262</a> <font color="#AA0000"><i>   */</font></i>
+<a name="1263" href="#1263">1263</a>   <b>public</b> <b>void</b> addObserver(<a href="../../../../org/apache/bcel/generic/InstructionListObserver.html">InstructionListObserver</a> o) {
+<a name="1264" href="#1264">1264</a>     <b>if</b>(observers == <b>null</b>)
+<a name="1265" href="#1265">1265</a>       observers = <b>new</b> ArrayList();
+<a name="1266" href="#1266">1266</a> 
+<a name="1267" href="#1267">1267</a>     observers.add(o);
+<a name="1268" href="#1268">1268</a>   }
+<a name="1269" href="#1269">1269</a> 
+<a name="1270" href="#1270">1270</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>* Remove observer for this object.</font></i></font></i>
+<a name="1271" href="#1271">1271</a> <font color="#AA0000"><i>   */</font></i>
+<a name="1272" href="#1272">1272</a>   <b>public</b> <b>void</b> removeObserver(<a href="../../../../org/apache/bcel/generic/InstructionListObserver.html">InstructionListObserver</a> o) {
+<a name="1273" href="#1273">1273</a>     <b>if</b>(observers != <b>null</b>)
+<a name="1274" href="#1274">1274</a>       observers.remove(o);
+<a name="1275" href="#1275">1275</a>   }
+<a name="1276" href="#1276">1276</a> 
+<a name="1277" href="#1277">1277</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>* Call notify() method on all observers. This method is not called</font></i></font></i>
+<a name="1278" href="#1278">1278</a> <font color="#AA0000"><i>   * automatically whenever the state has changed, but has to be</font></i>
+<a name="1279" href="#1279">1279</a> <font color="#AA0000"><i>   * called by the user after he has finished editing the object.</font></i>
+<a name="1280" href="#1280">1280</a> <font color="#AA0000"><i>   */</font></i>
+<a name="1281" href="#1281">1281</a>   <b>public</b> <b>void</b> update() {
+<a name="1282" href="#1282">1282</a>     <b>if</b>(observers != <b>null</b>)
+<a name="1283" href="#1283">1283</a>       <b>for</b>(Iterator e = observers.iterator(); e.hasNext(); )
+<a name="1284" href="#1284">1284</a> 	((InstructionListObserver)e.next()).notify(<b>this</b>);
+<a name="1285" href="#1285">1285</a>   }
+<a name="1286" href="#1286">1286</a> }
+<a name="1287" href="#1287">1287</a> 
+</pre>
+<hr><center>This page was automatically generated by <a href="http://jakarta.apache.org/turbine/maven">Maven</a></center></body>
+</html>
+

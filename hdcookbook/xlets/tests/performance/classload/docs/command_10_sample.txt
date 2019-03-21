@@ -1,0 +1,49 @@
+public class ab extends Test {
+    public void aa() {
+        n();
+        ab();
+        ac();
+        ad();
+        ae();
+        af();
+        ag();
+        ah();
+        ai();
+        aj();
+        ak();
+        al();
+    }
+    public void ab() {
+        n();
+    }
+    public void ac() {
+        n();
+    }
+    public void ad() {
+        n();
+    }
+    public void ae() {
+        n();
+    }
+    public void af() {
+        n();
+    }
+    public void ag() {
+        n();
+    }
+    public void ah() {
+        n();
+    }
+    public void ai() {
+        n();
+    }
+    public void aj() {
+        n();
+    }
+    public void ak() {
+        n();
+    }
+    public void al() {
+        n();
+    }
+}

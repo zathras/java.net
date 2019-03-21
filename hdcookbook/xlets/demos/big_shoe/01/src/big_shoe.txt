@@ -1,0 +1,71 @@
+# 
+# This show is a fairly minimal example of a GRIN-based game built
+# from the GrinXlet framework.  
+# 
+# The fun cannot be halted.
+
+show 
+
+exports 
+    segments {
+        S:Initialize 
+    } features { 
+    } handlers { 
+    }
+;
+
+java_generated_class ShoeCommands [[ 
+
+        import com.hdcookbook.grin.Show;
+        import com.hdcookbook.grin.util.Debug;
+        
+        public class ShoeCommands extends com.hdcookbook.grin.GrinXHelper {
+        
+            public ShoeCommands(Show show) { 
+                super(show); 
+            }
+
+            public EdSullivan getDirector() {
+                return (EdSullivan) show.getDirector();
+            }
+        
+            JAVA_COMMAND_BODY
+        
+        }
+
+]]
+
+feature fixed_image F:Shoe.Image
+    ( middle 1000 middle 900 ) 
+    "../../images/shoe_01.png"
+;
+
+
+feature group F:Everything {
+    F:Shoe.Image
+} ;
+
+segment S:Initialize 
+    setup { 
+        F:Everything
+    } on_entry {
+        java_command [[ 
+            Debug.println();
+            Debug.println("***  Initializing big_shoe ***"); 
+            Debug.println();
+        ]]
+    } next {
+        activate_segment S:Running ;
+    }
+;
+
+segment S:Running
+    active {
+        F:Shoe.Image
+    } setup {
+        F:Everything
+    } rc_handlers {
+    }
+;
+
+end_show

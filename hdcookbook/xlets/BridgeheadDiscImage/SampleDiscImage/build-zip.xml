@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="test" default="make-zip" basedir=".">
+  
+    <!-- This build file can be an example for converting any
+         existing disc image's BDMV structure to a file
+         that Bridgehead Xlet can upload.  In an earlier version,
+         this was a zip file; hence the name of this build file.  -->
+    
+    <!-- Property Definitions -->
+    <property file="../../../user.vars.properties"/>
+    <property file="../../../vars.properties"/>
+    <property file="build.properties"/>	
+    
+    <!-- Stuff unzipped from the BridgeheadDiscImage.zip -->
+    <property name="BridgeheadDiscImage" location="bridgehead.unzipped"/>
+    <property name="keystore" location="${BridgeheadDiscImage}/keystore.store"/>
+    <property name="id.bdmv" location="${BridgeheadDiscImage}/CERTIFICATE/id.bdmv"/>
+
+    <!-- Custom properties for your disc image to be uploaded.  -->
+    <!-- OrgID used by the xlets (value should match the perm file and bdjo) -->
+    <property name="app-org-id" value="56789abc"/>
+    <!-- The VFS dir to be uploaded to the bridgehead xlet -->
+    <property name="vfs-dir"  location="dist/VFS"/>
+    <!-- The bdmv source directory used to create vfs-dir -->
+    <property name="bdmv-dir"  location="dist/BDMV"/>
+    <!-- The final directory to create, to be uploaded with Bridgehead -->
+
+    <!-- task setups -->
+    <path id="sec.tools.path">
+        <pathelement location="${security.jar}"/>
+        <pathelement location="${bouncycastle.jar}"/>
+        <pathelement location="${java.home}/../lib/tools.jar"/>   
+    </path>	
+    <presetdef name="jdktools.java">
+        <java fork="true" failOnError="true"/>
+    </presetdef>  
+
+
+    <target name="make-zip">
+
+        <!-- First, unzip the BridgeheadDiscImage.zip -->
+        <mkdir dir="${BridgeheadDiscImage}"/>
+        <unzip src="../BridgeheadDiscImage.zip" 
+               dest="${BridgeheadDiscImage}"/>
+
+        <!-- OPTIONAL: Remove index.bdmv  --> 
+        <!-- One can also upload index.bdmv with first playback title
+         pointing to 90000 BDJO -->
+        <delete file="${bdmv-dir}/index.bdmv"/>
+        <delete file="${bdmv-dir}/BACKUP/index.bdmv"/>
+
+        <!-- generate app certificate in the keystore. -->
+        <jdktools.java classname="net.java.bd.tools.security.BDCertGenerator">
+            <arg value="-keystore"/>
+            <arg value="${keystore}"/>
+            <arg value="-app"/>
+	    <arg value="${app-org-id}"/>
+	    <classpath refid="sec.tools.path"/>
+        </jdktools.java>
+  
+        <!-- Re-sign the jars using the generated app cert -->
+        <jdktools.java classname="net.java.bd.tools.security.BDSigner">
+            <arg value="-keystore"/>
+            <arg value="${keystore}"/>
+            <arg value="${bdmv-dir}/JAR/00000.jar"/>
+            <classpath refid="sec.tools.path"/>	   
+        </jdktools.java>
+    
+        <!-- generate BUMF xml file for the disc image to upload -->
+	<delete dir="${vfs-dir}"/>
+        <jdktools.java jar="${bumfgenerator.jar}">
+            <arg value="${id.bdmv}"/>
+            <arg value="${bdmv-dir}"/>
+            <arg value="${vfs-dir}"/>
+        </jdktools.java> 
+
+        <!-- Sign the generated BUMF xml file (this generates manifest.sf) -->
+        <jdktools.java classname="net.java.bd.tools.security.BDSigner">
+            <arg value="-keystore"/>
+            <arg value="${keystore}"/>
+            <arg value="${vfs-dir}/manifest.xml"/>
+            <classpath refid="sec.tools.path"/>
+        </jdktools.java>
+
+        <!--  Copy the title.txt file to the upload directory -->
+        <copy todir = "${vfs-dir}"
+              file="bdmv/title.txt" />
+
+        <!-- Remove the certificate file --> 
+	<delete dir="${bdmv-dir}/../CERTIFICATE"/>
+	<delete dir="${bdmv-dir}/../DiscImage"/>
+   
+        <echo message="The disc image is created at ${vfs-dir}"/>
+        <echo message="Upload this directory to the bridgehead disc image"/>
+        <echo message="using client.jar supplied in the BridgeheadDiscImage.zip"/>
+    </target>
+    
+    <target name="zip-clean">
+        <delete dir="${BridgeheadDiscImage}"/>
+    </target>
+    
+</project>

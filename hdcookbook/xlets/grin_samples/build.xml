@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Grin samples build" default="all" basedir=".">
+
+        <property file="../../user.vars.properties"/>	
+        <property file="../../vars.properties"/>	
+
+	<property name="bdj.classes"  value="${HDC_BDJ_PLATFORM_CLASSES}"/>
+
+        <target name="all">          
+            <ant dir="HelloGrinWorld"/>
+            <ant dir="GrinBunny"/>
+            <ant dir="Scripts/CustomFeature"/> 
+            <ant dir="Scripts/DrawingOptimization"/>        
+            <ant dir="Scripts/ShowTop"/>        
+            <ant dir="Scripts/Translation"/>                  
+            <ant dir="Scripts/VisualRCHandler"/>         
+            <ant dir="BouncingReddy"/>         
+        </target>
+        
+        <target name="autotest-grinview">
+            <ant dir="HelloGrinWorld" target="test"/>          
+            <ant dir="GrinBunny" target="test"/>          
+            <ant dir="Scripts/CustomFeature" target="autotest-grinview"/> 
+            <ant dir="Scripts/DrawingOptimization" target="autotest-grinview"/> 
+            <ant dir="Scripts/ShowTop" target="autotest-grinview"/> 
+            <ant dir="Scripts/Translation" target="autotest-grinview"/>
+            <ant dir="Scripts/VisualRCHandler" target="autotest-grinview"/>
+            <ant dir="BouncingReddy" target="test"/>         
+        </target>        
+        
+	<target name="clean">      
+            <ant dir="HelloGrinWorld" target="clean"/>     
+            <ant dir="GrinBunny" target="clean"/>     
+            <ant dir="SimpleGame" target="clean"/>     
+            <ant dir="Scripts/CustomFeature" target="clean"/> 
+            <ant dir="Scripts/DrawingOptimization" target="clean"/>        
+            <ant dir="Scripts/ShowTop" target="clean"/>        
+            <ant dir="Scripts/Translation" target="clean"/>                  
+            <ant dir="Scripts/VisualRCHandler" target="clean"/>         
+            <ant dir="BouncingReddy" target="clean"/>         
+	</target>
+	<target name="spotless" depends="clean">
+	    <ant dir="GrinBunny" target="spotless"/>
+	    <ant dir="SimpleGame" target="spotless"/>
+            <ant dir="BouncingReddy" target="spotless"/>         
+	</target>
+</project>

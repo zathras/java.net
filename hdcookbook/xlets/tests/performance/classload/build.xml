@@ -1,0 +1,591 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="ClassloadMeasure" default="deploy" basedir=".">
+    
+    <!-- Property Definitions -->
+    <property file="../../../../user.vars.properties"/>	
+    <property file="../../../../vars.properties"/>	
+    <property file="build.properties"/>	
+    
+    <!-- xlet source dir, build dir, and a distribution dir for a disc image 
+      -->
+    <property name="src.dir"     value="src"/>  
+    <property name="gensrc.dir"  value="gensrc"/>   <!-- generated source -->
+    <property name="build.dir"   value="build"/>
+    <property name="dist.dir"    value="dist"/>  
+    
+    <!-- disc image related properties -->   
+    <property name="bdjo.name"      value="00000"/>
+    <property name="disc.orgid"          value="7fff0001"/>
+    <property name="xlet.orgid"          value="7fff0001"/>
+    <property name="bdjo-desc-file" value="${build.dir}/${bdjo.name}.xml"/>
+    
+    <presetdef name="jdktools.java">
+        <java fork="true" failOnError="true"/>
+    </presetdef>    
+    
+    <presetdef name="xlets.javac">
+        <javac bootclasspath="${bdj.classes}"
+               source="1.3" target="1.3"
+               debug="on" deprecation="on"/>
+    </presetdef>
+    
+    <target name="init" depends="check-tools">
+        <tstamp/>
+    </target>
+
+    <target name="check-tools">
+        <available file="${bdj.classes}" type="file"
+                   property="bdjstubs.ok"/>
+                   
+        <fail unless="bdjstubs.ok"> 
+              .
+        Could not find bd-j platform classes at ${bdj.classes}.
+        Please change the value of the "HDC_BDJ_PLATFORM_CLASSES" property 
+        in the ${basedir}/../../../user.vars.properties file, or the value 
+	of the "bdj.classes" in the ${basedir}/build.properties file.
+                 
+        Don't be alarmed, this is a configuration error.
+        The HDCookbook source repository does not include BD-J platform classes
+        needed for compiling applications against.  These classes need to be
+        provided by you.
+        
+        </fail> 
+
+        <available file="${logger.jar}" type="file" property="logger.ok"/>
+                   
+        <fail unless="logger.ok"> 
+              .
+        Could not find the logger jar file at ${logger.jar}.
+        Please build all the tools under the "hdcookbook/tools" dir 
+        before building this xlet, by calling "ant" in the tools directory,
+        or modify ${basedir}/build.properties so that various jar properties 
+        points to a pre-built hdcookbook tool jars.
+        
+        </fail>        
+    </target>
+    
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+        <delete dir="${dist.dir}"/>
+        <delete dir="${gensrc.dir}"/>
+        <delete file="${ant.project.name}.zip"/>
+    </target>
+
+    <target name="spotless" depends="clean">
+	<delete file="keystore.store"/>
+	<delete file="app.discroot.crt"/>
+	<delete dir="META-INF"/>
+    </target>
+    
+    <target name="deploy" depends="bundle"/>
+    
+    <target name="bundle" depends="jar, gen-bdjo-desc-file, 
+                                   sign-xlet, copy-to-bdmv"
+            description="Make an blu-ray disc image bundle">
+        <zip destfile="${ant.project.name}.zip"
+             basedir="${dist.dir}"/> 
+    </target>
+    
+    <target name="compile"
+            depends="init" description="Compiles the sources">
+    
+	<!-- Compile and jar up the main driver xlet -->
+	<mkdir dir="${build.dir}/driver" />
+	<unzip src="${logger.jar}" dest="${build.dir}/driver" />
+	<delete dir="${build.dir}/driver/META-INF" />
+        <xlets.javac destdir="${build.dir}/driver">
+             <src path="${src.dir}/driver"/>
+        </xlets.javac>
+        <copy todir="${build.dir}/driver">
+            <fileset dir="${src.dir}/driver">
+                <include name="${package}/**.perm"/>
+            </fileset>
+        </copy>   
+
+        <jar jarfile="${build.dir}/00000.jar"
+             basedir="${build.dir}/driver"/>        
+
+	<!-- Generate the source of the 9 xlets using GenXlet -->
+        <delete dir="${gensrc.dir}"/>
+        <mkdir dir="${gensrc.dir}"/>
+       <javac destdir="${gensrc.dir}" debug="true">
+           <src path="${src.dir}/gen"/>
+       </javac>
+       <java
+	    classpath="${gensrc.dir}"
+	    classname="GenXlet">
+	    <arg value="${basedir}/${gensrc.dir}"/>
+	</java>
+
+	<!-- Compile and jar up the 9 xlets using GenXlet -->
+        <antcall target="compile-each">
+            <param name="xletname" value="xlet1"/>
+            <param name="jarname" value="00001"/>
+        </antcall>
+        <antcall target="compile-each">
+            <param name="xletname" value="xlet2"/>
+            <param name="jarname" value="00002"/>
+        </antcall>
+        <antcall target="compile-each">
+            <param name="xletname" value="xlet3"/>
+            <param name="jarname" value="00003"/>
+        </antcall>
+        <antcall target="compile-each">
+            <param name="xletname" value="xlet4"/>
+            <param name="jarname" value="00004"/>
+        </antcall>
+        <antcall target="compile-each">
+            <param name="xletname" value="xlet5"/>
+            <param name="jarname" value="00005"/>
+        </antcall>
+        <antcall target="compile-each">
+            <param name="xletname" value="xlet6"/>
+            <param name="jarname" value="00006"/>
+        </antcall>
+        <antcall target="compile-each">
+            <param name="xletname" value="xlet7"/>
+            <param name="jarname" value="00007"/>
+        </antcall>
+        <antcall target="compile-each">
+            <param name="xletname" value="xlet8"/>
+            <param name="jarname" value="00008"/>
+        </antcall>
+        <antcall target="compile-each">
+            <param name="xletname" value="xlet9"/>
+            <param name="jarname" value="00009"/>
+        </antcall>
+    </target>
+    
+        
+   <target name="compile-each"
+       description = "Compiles and jars the auto-generated xlets' source">
+       <echo message="Compiling ${gensrc.dir}/${xletname} to ${build.dir}/${xletname}..."/>
+       <mkdir dir="${build.dir}/${xletname}"/>
+       <xlets.javac destdir="${build.dir}/${xletname}">
+           <src path="${gensrc.dir}/${xletname}"/>
+       </xlets.javac>
+        
+        <jar jarfile="${build.dir}/${jarname}.jar"
+             basedir="${build.dir}/${xletname}"/>        
+    </target>
+    
+    <target name="jar"
+            depends="compile" 
+            description="Creates an xlet jar file">
+                <!-- jarring is handled by compile-each -->
+    </target>
+    
+    <target name="sign-xlet">    
+        
+        <path id="sec.tools.path">
+            <pathelement location="${security.jar}"/>
+            <pathelement location="${bouncycastle.jar}"/>
+            <pathelement location="${java.home}/../lib/tools.jar"/>   
+        </path>	   
+        
+        <jdktools.java classname="net.java.bd.tools.security.BDCertGenerator">
+            <arg value="-root"/>
+            <arg value="${disc.orgid}"/>
+            <classpath refid="sec.tools.path"/>
+        </jdktools.java>
+        
+        <!-- Make app cert with orgID == xlet's orgID, and sign xlets -->        
+        <jdktools.java classname="net.java.bd.tools.security.BDCertGenerator">
+            <arg value="-app"/>
+            <arg value="${xlet.orgid}"/>
+            <classpath refid="sec.tools.path"/>
+        </jdktools.java>
+        
+        <jdktools.java classname="net.java.bd.tools.security.BDSigner">
+            <arg value="${build.dir}/00000.jar"/>
+            <arg value="${build.dir}/00001.jar"/>
+            <arg value="${build.dir}/00002.jar"/>
+            <arg value="${build.dir}/00003.jar"/>
+            <arg value="${build.dir}/00004.jar"/>
+            <arg value="${build.dir}/00005.jar"/>
+            <arg value="${build.dir}/00006.jar"/>
+            <arg value="${build.dir}/00007.jar"/>
+            <arg value="${build.dir}/00008.jar"/>
+            <arg value="${build.dir}/00009.jar"/>
+            <classpath refid="sec.tools.path"/>	   
+        </jdktools.java>        
+    </target>  
+    
+    <target name="gen-bdjo-desc-file"
+            depends="gen-bdjo-desc.tmp"
+            if="update-bdjo-desc.file">
+        
+        <move file="${bdjo-desc-file}.tmp" tofile="${bdjo-desc-file}"/>
+        
+        <jdktools.java
+            jar="${bdjo.jar}">
+            <arg value="${bdjo-desc-file}"/>
+            <arg value="${build.dir}/${bdjo.name}.bdjo"/>
+        </jdktools.java>
+    </target>
+    
+    <target name="gen-bdmv-files">
+        <jdktools.java jar="${id.jar}">
+            <arg value="bdmv/id.xml"/>
+            <arg value="${build.dir}/id.bdmv"/>              
+        </jdktools.java>
+        <jdktools.java jar="${index.jar}">
+            <arg value="bdmv/index.xml"/>
+            <arg value="${build.dir}/index.bdmv"/>              
+        </jdktools.java>
+        <jdktools.java jar="${movieobject.jar}">
+            <arg value="bdmv/MovieObject.xml"/>
+            <arg value="${build.dir}/MovieObject.bdmv"/>              
+        </jdktools.java>
+    </target>
+    
+    <target name="copy-to-bdmv" 
+            depends="jar, gen-bdjo-desc-file, sign-xlet, gen-bdmv-files">
+        <mkdir dir="${dist.dir}/BDMV/AUXDATA"/>
+        <mkdir dir="${dist.dir}/BDMV/BDJO"/>
+        <mkdir dir="${dist.dir}/BDMV/CLIPINF"/>
+        <mkdir dir="${dist.dir}/BDMV/JAR"/>
+        <mkdir dir="${dist.dir}/BDMV/META"/>
+        <mkdir dir="${dist.dir}/BDMV/PLAYLIST"/>
+        <mkdir dir="${dist.dir}/BDMV/STREAM"/>
+        <mkdir dir="${dist.dir}/CERTIFICATE"/>
+        
+        <copy todir = "${dist.dir}/BDMV/JAR">
+            <fileset dir="${build.dir}">
+                <include name="*.jar"/>
+            </fileset>
+        </copy>
+        <copy todir = "${dist.dir}/BDMV/BDJO" 
+              file="${build.dir}/${bdjo.name}.bdjo"/>
+        <copy todir = "${dist.dir}/CERTIFICATE" 
+              file="app.discroot.crt"/>
+        <copy todir="${dist.dir}/BDMV"
+              file="${build.dir}/index.bdmv"/>
+        <copy todir="${dist.dir}/BDMV"
+              file="${build.dir}/MovieObject.bdmv"/>
+        <copy todir="${dist.dir}/CERTIFICATE"
+              file="${build.dir}/id.bdmv"/>
+              
+        <copy todir="${dist.dir}/CERTIFICATE/BACKUP">
+            <fileset dir="${dist.dir}/CERTIFICATE"/>
+        </copy>
+        <copy todir="${dist.dir}/BDMV/BACKUP">
+            <fileset dir="${dist.dir}/BDMV">
+                <include name="index.bdmv"/>
+                <include name="MovieObject.bdmv"/>                
+                <include name="BDJO/**"/>  
+                <include name="CLIPINF/**"/>     
+                <include name="JAR/**"/> 
+                <include name="PLAYLIST/**"/>                    
+            </fileset>            
+        </copy>        
+    </target>
+    
+    <target name="gen-bdjo-desc.tmp">
+        
+        <concat destfile="${bdjo-desc-file}.tmp"><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!-- This file contains information determined at a build time -->
+<!-- AUTO-GENERATED - DO NOT EDIT -->
+
+<bdjo>
+    <appCacheInfo>
+        <entries>
+            <language>*.*</language>
+            <name>00000</name>
+            <type>1</type>
+        </entries>   
+        <entries>
+            <language>*.*</language>
+            <name>00001</name>
+            <type>1</type>
+        </entries>
+        <entries>
+            <language>*.*</language>
+            <name>00002</name>
+            <type>1</type>
+        </entries>    
+        <entries>
+            <language>*.*</language>
+            <name>00003</name>
+            <type>1</type>
+        </entries>   
+        <entries>
+            <language>*.*</language>
+            <name>00004</name>
+            <type>1</type>
+        </entries>   
+        <entries>
+            <language>*.*</language>
+            <name>00005</name>
+            <type>1</type>
+        </entries>   
+        <entries>
+            <language>*.*</language>
+            <name>00006</name>
+            <type>1</type>
+        </entries>   
+        <entries>
+            <language>*.*</language>
+            <name>00007</name>
+            <type>1</type>
+        </entries>   
+        <entries>
+            <language>*.*</language>
+            <name>00008</name>
+            <type>1</type>
+        </entries>   
+        <entries>
+            <language>*.*</language>
+            <name>00009</name>
+            <type>1</type>
+        </entries>   
+    </appCacheInfo>
+    <applicationManagementTable>
+        <applications>
+            <applicationDescriptor>
+                <baseDirectory>00000</baseDirectory>
+                <binding>TITLE_BOUND_DISC_BOUND</binding>
+                <classpathExtension></classpathExtension>
+                <iconFlags>0x0</iconFlags>
+                <iconLocator></iconLocator>
+                <initialClassName>DriverXlet</initialClassName>
+                <priority>3</priority>
+                <profiles>
+                    <majorVersion>1</majorVersion>
+                    <microVersion>0</microVersion>
+                    <minorVersion>0</minorVersion>
+                    <profile>1</profile>
+                </profiles>
+                <visibility>V_01</visibility>
+            </applicationDescriptor>
+            <applicationId>0x4000</applicationId>
+            <controlCode>0x1</controlCode>
+            <organizationId>0x${xlet.orgid}</organizationId>
+            <type>0x1</type>
+        </applications>
+        <applications>
+            <applicationDescriptor>
+                <baseDirectory>00001</baseDirectory>
+                <binding>TITLE_BOUND_DISC_BOUND</binding>
+                <classpathExtension></classpathExtension>
+                <iconFlags>0x0</iconFlags>
+                <iconLocator></iconLocator>
+                <initialClassName>Test</initialClassName>
+                <priority>3</priority>
+                <profiles>
+                    <majorVersion>1</majorVersion>
+                    <microVersion>0</microVersion>
+                    <minorVersion>0</minorVersion>
+                    <profile>1</profile>
+                </profiles>
+                <visibility>V_01</visibility>
+            </applicationDescriptor>
+            <applicationId>0x4001</applicationId>
+            <controlCode>0x2</controlCode>
+            <organizationId>0x${xlet.orgid}</organizationId>
+            <type>0x1</type>
+        </applications>
+        <applications>
+            <applicationDescriptor>
+                <baseDirectory>00002</baseDirectory>
+                <binding>TITLE_BOUND_DISC_BOUND</binding>
+                <classpathExtension></classpathExtension>
+                <iconFlags>0x0</iconFlags>
+                <iconLocator></iconLocator>
+                <initialClassName>Test</initialClassName>
+                <priority>3</priority>
+                <profiles>
+                    <majorVersion>1</majorVersion>
+                    <microVersion>0</microVersion>
+                    <minorVersion>0</minorVersion>
+                    <profile>1</profile>
+                </profiles>
+                <visibility>V_01</visibility>
+            </applicationDescriptor>
+            <applicationId>0x4002</applicationId>
+            <controlCode>0x2</controlCode>
+            <organizationId>0x${xlet.orgid}</organizationId>
+            <type>0x1</type>
+        </applications>
+        <applications>
+            <applicationDescriptor>
+                <baseDirectory>00003</baseDirectory>
+                <binding>TITLE_BOUND_DISC_BOUND</binding>
+                <classpathExtension></classpathExtension>
+                <iconFlags>0x0</iconFlags>
+                <iconLocator></iconLocator>
+                <initialClassName>Test</initialClassName>
+                <priority>3</priority>
+                <profiles>
+                    <majorVersion>1</majorVersion>
+                    <microVersion>0</microVersion>
+                    <minorVersion>0</minorVersion>
+                    <profile>1</profile>
+                </profiles>
+                <visibility>V_01</visibility>
+            </applicationDescriptor>
+            <applicationId>0x4003</applicationId>
+            <controlCode>0x2</controlCode>
+            <organizationId>0x${xlet.orgid}</organizationId>
+            <type>0x1</type>
+        </applications>
+        <applications>
+            <applicationDescriptor>
+                <baseDirectory>00004</baseDirectory>
+                <binding>TITLE_BOUND_DISC_BOUND</binding>
+                <classpathExtension></classpathExtension>
+                <iconFlags>0x0</iconFlags>
+                <iconLocator></iconLocator>
+                <initialClassName>Test</initialClassName>
+                <priority>3</priority>
+                <profiles>
+                    <majorVersion>1</majorVersion>
+                    <microVersion>0</microVersion>
+                    <minorVersion>0</minorVersion>
+                    <profile>1</profile>
+                </profiles>
+                <visibility>V_01</visibility>
+            </applicationDescriptor>
+            <applicationId>0x4004</applicationId>
+            <controlCode>0x2</controlCode>
+            <organizationId>0x${xlet.orgid}</organizationId>
+            <type>0x1</type>
+        </applications>
+        <applications>
+            <applicationDescriptor>
+                <baseDirectory>00005</baseDirectory>
+                <binding>TITLE_BOUND_DISC_BOUND</binding>
+                <classpathExtension></classpathExtension>
+                <iconFlags>0x0</iconFlags>
+                <iconLocator></iconLocator>
+                <initialClassName>Test</initialClassName>
+                <priority>3</priority>
+                <profiles>
+                    <majorVersion>1</majorVersion>
+                    <microVersion>0</microVersion>
+                    <minorVersion>0</minorVersion>
+                    <profile>1</profile>
+                </profiles>
+                <visibility>V_01</visibility>
+            </applicationDescriptor>
+            <applicationId>0x4005</applicationId>
+            <controlCode>0x2</controlCode>
+            <organizationId>0x${xlet.orgid}</organizationId>
+            <type>0x1</type>
+        </applications>
+        <applications>
+            <applicationDescriptor>
+                <baseDirectory>00006</baseDirectory>
+                <binding>TITLE_BOUND_DISC_BOUND</binding>
+                <classpathExtension></classpathExtension>
+                <iconFlags>0x0</iconFlags>
+                <iconLocator></iconLocator>
+                <initialClassName>Test</initialClassName>
+                <priority>3</priority>
+                <profiles>
+                    <majorVersion>1</majorVersion>
+                    <microVersion>0</microVersion>
+                    <minorVersion>0</minorVersion>
+                    <profile>1</profile>
+                </profiles>
+                <visibility>V_01</visibility>
+            </applicationDescriptor>
+            <applicationId>0x4006</applicationId>
+            <controlCode>0x2</controlCode>
+            <organizationId>0x${xlet.orgid}</organizationId>
+            <type>0x1</type>
+        </applications>
+        <applications>
+            <applicationDescriptor>
+                <baseDirectory>00007</baseDirectory>
+                <binding>TITLE_BOUND_DISC_BOUND</binding>
+                <classpathExtension></classpathExtension>
+                <iconFlags>0x0</iconFlags>
+                <iconLocator></iconLocator>
+                <initialClassName>Test</initialClassName>
+                <priority>3</priority>
+                <profiles>
+                    <majorVersion>1</majorVersion>
+                    <microVersion>0</microVersion>
+                    <minorVersion>0</minorVersion>
+                    <profile>1</profile>
+                </profiles>
+                <visibility>V_01</visibility>
+            </applicationDescriptor>
+            <applicationId>0x4007</applicationId>
+            <controlCode>0x2</controlCode>
+            <organizationId>0x${xlet.orgid}</organizationId>
+            <type>0x1</type>
+        </applications>
+        <applications>
+            <applicationDescriptor>
+                <baseDirectory>00008</baseDirectory>
+                <binding>TITLE_BOUND_DISC_BOUND</binding>
+                <classpathExtension></classpathExtension>
+                <iconFlags>0x0</iconFlags>
+                <iconLocator></iconLocator>
+                <initialClassName>Test</initialClassName>
+                <priority>3</priority>
+                <profiles>
+                    <majorVersion>1</majorVersion>
+                    <microVersion>0</microVersion>
+                    <minorVersion>0</minorVersion>
+                    <profile>1</profile>
+                </profiles>
+                <visibility>V_01</visibility>
+            </applicationDescriptor>
+            <applicationId>0x4008</applicationId>
+            <controlCode>0x2</controlCode>
+            <organizationId>0x${xlet.orgid}</organizationId>
+            <type>0x1</type>
+        </applications>
+        <applications>
+            <applicationDescriptor>
+                <baseDirectory>00009</baseDirectory>
+                <binding>TITLE_BOUND_DISC_BOUND</binding>
+                <classpathExtension></classpathExtension>
+                <iconFlags>0x0</iconFlags>
+                <iconLocator></iconLocator>
+                <initialClassName>Test</initialClassName>
+                <priority>3</priority>
+                <profiles>
+                    <majorVersion>1</majorVersion>
+                    <microVersion>0</microVersion>
+                    <minorVersion>0</minorVersion>
+                    <profile>1</profile>
+                </profiles>
+                <visibility>V_01</visibility>
+            </applicationDescriptor>
+            <applicationId>0x4009</applicationId>
+            <controlCode>0x2</controlCode>
+            <organizationId>0x${xlet.orgid}</organizationId>
+            <type>0x1</type>
+        </applications>
+    </applicationManagementTable>
+    <fileAccessInfo>.</fileAccessInfo>
+    <keyInterestTable>0x0</keyInterestTable>
+    <tableOfAccessiblePlayLists>
+        <accessToAllFlag>false</accessToAllFlag>
+        <autostartFirstPlayListFlag>false</autostartFirstPlayListFlag>
+    </tableOfAccessiblePlayLists>
+    <terminalInfo>
+        <initialHaviConfig>HD_1920_1080</initialHaviConfig>
+        <menuCallMask>false</menuCallMask>
+        <titleSearchMask>false</titleSearchMask>
+    </terminalInfo>
+    <version>V_0200</version>
+</bdjo>
+
+        ]]></concat>
+        
+        <condition property="update-bdjo-desc.file">
+            <not>
+                <filesmatch
+                    file1="${bdjo-desc-file}.tmp"
+                    file2="${bdjo-desc-file}"/>
+            </not>
+        </condition>
+    </target>
+    
+</project>

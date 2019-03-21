@@ -1,0 +1,127 @@
+# 
+# This show is a fairly minimal example of a GRIN-based game built
+# from the GenericGame framework.  It consists of an image that you
+# move around the screen with arrow keys.
+# 
+# This makes calculators look like the cotton gin.  Cube!  
+# Defender of the polyverse.  For more details, see
+# http://www.youtube.com/watch?v=4aGDCE6Nrz0
+# 
+# The fun cannot be halted.
+
+show 
+
+exports 
+    segments {
+        S:Initialize 
+    } features { 
+        F:Cube.Position
+    } handlers { 
+    }
+;
+
+java_generated_class CubeCommands [[ 
+
+        import com.hdcookbook.grin.Show;
+        
+        public class CubeCommands extends com.hdcookbook.grin.GrinXHelper {
+        
+            public CubeCommands(Show show) { 
+                super(show); 
+            }
+
+            public CubeDirector getDirector() {
+                return (CubeDirector) show.getDirector();
+            }
+        
+            JAVA_COMMAND_BODY
+        
+        }
+
+]]
+
+feature fixed_image F:Cube.Image
+    ( middle 0 middle 0 ) 
+    "images/cube.jpg"
+;
+
+feature translator_model F:Cube.Position
+    { 0 960 540 linear-relative }
+;
+
+feature translator F:CubeGroup F:Cube.Position {
+    F:Cube.Position
+    F:Cube.Image
+    sub_feature timer 1 repeat {
+        java_command [[ getDirector().heartbeat(); ]]
+    } ;
+} ;
+
+segment S:Initialize 
+    setup { 
+        F:CubeGroup
+    } next {
+        activate_segment S:Showing ;
+    }
+;
+
+segment S:Showing 
+    active {
+        F:CubeGroup
+    } setup {
+        F:CubeGroup
+    } rc_handlers {
+        H:Left H:Right H:Up H:Down H:Enter
+    } on_entry {
+        java_command [[ getDirector().initialize(); ]]
+    }
+;
+
+rc_handler key_pressed H:Left {
+        left
+    } execute {
+        java_command [[
+            getDirector().cubeDX += -5;
+        ]]
+    }
+;
+
+rc_handler key_pressed H:Right {
+        right
+    } execute {
+        java_command [[
+            getDirector().cubeDX += 5;
+        ]]
+    }
+;
+
+rc_handler key_pressed H:Up {
+        up
+    } execute {
+        java_command [[
+            getDirector().cubeDY += -5;
+        ]]
+    }
+;
+
+rc_handler key_pressed H:Down {
+        down
+    } execute {
+        java_command [[
+            getDirector().cubeDY += 5;
+        ]]
+    }
+;
+
+rc_handler key_pressed H:Enter {
+        enter
+    } execute {
+        java_command [[
+            CubeDirector d = getDirector();
+            d.cubeDY = 0;
+            d.cubeDX = 0;
+        ]]
+    }
+;
+
+end_show

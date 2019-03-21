@@ -1,0 +1,74 @@
+		    .BOD FILE STRUCTURE
+		      @(#)bod_format.txt	1.5 98/02/16
+    
+    This document gives the file format of a bod ("binary object dump")
+    file.  This is the original file format that was used internally for
+    this program, but it has since been obsoleted by the JDK 1.2 heap profile
+    format.
+    
+    This version punts on data types other than int, char array,
+    and reference -- fields of other types simply aren't reported.  This
+    description is in an informal BNF-style syntax, where sometimes a
+    symbol in a grammar is given by itself (i.e. "class"), and sometimes
+    it is given following a descriptive name and a colon (i.e. 
+    statics : static_field[]).  The array syntax means "zero or more
+    of this element".
+
+    A "thing" (like a class or an object) may appear in the dump file more
+    than once.  This rule is intended primarily to make the VM
+    implementation that produces the file easier.  If a thing appears
+    twice, it is expected that it will have the same values, except, perhaps,
+    for the root_flags and the thread_id.  The roots of an object is the
+    union of the roots specified by all occurances of the object in the
+    file (i.e. if an object is referred to by two local variables in two
+    different threads, it will appear at least twice in the file, with
+    an entry indicating each local variable root appearing at least once).
+
+bod file ::= magic_number version_number thing[]
+
+magic_number ::= 0x0b0dd00d
+
+version_number ::= 4
+
+thing ::= type:byte id:int root_flags:byte thread_id:int stuff
+
+    type is object=0, class=1, object array=2, char array=3, other array=4
+    root_flags is static=1, java stack local=2, native ref=4
+    thread_id is id field of the thread object responsible for this
+	being a root, or 0 if not applicable
+
+
+stuff ::= object | class | object_array | char_array
+
+object ::= class_id : int 
+	   num_fields :int
+	   data : int[]
+
+	data is the value of int fields, or the id of object/array fields
+
+class ::= superclass_id : int
+	  name_len : int
+	  name : char[]
+	  num_statics : int
+	  statics : static_field[]
+	  num_fields : int
+	  fields : field[]
+	  instance_size : int		// in bytes, including VM overhead
+
+field ::= name_len : int
+	  name : char[]
+	  signature_len : int
+	  signature : char[]
+
+static_field ::= field
+	         value : int	// value is value of int field, or id of object
+
+object_array ::= size : int		// in bytes, including VM overhead
+		 len : int
+		 object_id : int[]
+
+char_array ::= size : int
+	       len : int
+	       data : char[]
+
+other_array ::= size : int

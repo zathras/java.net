@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Bridgehead" default="bridgehead-deploy" basedir=".">
+    
+    <!-- xlet source dir, build dir, and a distribution dir for a disc image 
+      -->
+    <property name="bridgehead.src.dir"           value="BridgeheadDiscImage/src"/>
+    <property name="bridgehead.build.dir"         value="BridgeheadDiscImage/build"/>
+    <property name="bridgehead.dist.dir"          value="BridgeheadDiscImage/dist"/>
+    <property name="bridgeheadxlet"               value="bridgehead"/>
+    <property name="firsttitlexlet"               value="firsttitle"/>    
+    
+    <!-- properties for the xlet -->
+    <property name="discimage.name"               value="BridgeheadDiscImage" />
+    
+    <!-- disc image related properties -->
+    <property name="premade.bdmv"                 value="tools/DiscImage"/>
+    <property name="bridgeheadxlet-bdjo-name"     value="90000"/>    
+    <property name="logger-name"                  value="90001"/>
+    <property name="firsttitlexlet-bdjo-name"     value="00000"/>
+    <property name="orgid"                        value="56789abc"/>
+    <property name="bridgeheadxlet-bdjo-desc-file" value="${bridgehead.src.dir}/../bdmv/BridgeheadBDJO.xml"/>  
+    <property name="firsttitlexlet-bdjo-desc-file" value="${bridgehead.src.dir}/../bdmv/FirstTitleBDJO.xml"/>
+    <property name="bridgeheadxlet.jar"           value="${bridgeheadxlet-bdjo-name}.jar"/>   
+    <property name="firsttitlexlet.jar"           value="${firsttitlexlet-bdjo-name}.jar"/>
+    
+    <target name="init">
+        <tstamp/>
+        <mkdir dir="${bridgehead.build.dir}/${bridgeheadxlet}/classes"/>
+        <mkdir dir="${bridgehead.build.dir}/${firsttitlexlet}/classes"/>
+        <mkdir dir="${bridgehead.dist.dir}"/>
+    </target>
+    <target name="bridgehead-deploy" depends="jar, gen-bdjo-desc-file, 
+                                   sign-jars, copy-to-bdmv"/>
+    <target name="bridgehead-clean">
+        <delete dir="${bridgehead.build.dir}"/>
+        <delete dir="${bridgehead.dist.dir}"/>
+    </target>
+    <target name="compile"
+            depends="init, compile-bridgeheadxlet, compile-firsttitlexlet" 
+            description="Compiles the sources"/>  
+    <target name="compile-bridgeheadxlet">
+        <javac srcdir="${bridgehead.src.dir}"
+               bootclasspath="${bdj.classes}"
+               classpath="${logger.jar}"
+               destdir="${bridgehead.build.dir}/${bridgeheadxlet}/classes"
+               source="1.3" target="1.3"
+               debug="on" deprecation="on">
+                   <include name="${bridgeheadxlet}/**"/>
+        </javac>
+        <copy todir="${bridgehead.build.dir}/${bridgeheadxlet}/classes">
+            <fileset dir="${bridgehead.src.dir}">
+                <include name="${bridgeheadxlet}/**/*.perm"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="compile-firsttitlexlet">
+        <javac srcdir="${bridgehead.src.dir}"
+               bootclasspath="${bdj.classes}"
+               destdir="${bridgehead.build.dir}/${firsttitlexlet}/classes"
+               source="1.3" target="1.3"
+               debug="on" deprecation="on">
+                   <include name="${firsttitlexlet}/**"/>
+        </javac>
+      <copy todir="${bridgehead.build.dir}/${firsttitlexlet}/classes">
+            <fileset dir="${bridgehead.src.dir}/">
+                <include name="${firsttitlexlet}/**/*.perm"/>
+            </fileset>
+        </copy>        
+    </target>    
+    <target name="jar"
+            depends="compile, jar-bridgeheadxlet, jar-firsttitlexlet" 
+            description="Creates an xlet jar file"/>
+    <target name="jar-bridgeheadxlet">
+        <jar jarfile="${bridgehead.build.dir}/${bridgeheadxlet.jar}"
+             basedir="${bridgehead.build.dir}/${bridgeheadxlet}/classes"/>
+        <copy tofile = "${bridgehead.build.dir}/${logger-name}.jar" 
+              file="${logger.jar}"/>
+    </target>
+    <target name="jar-firsttitlexlet">
+        <jar jarfile="${bridgehead.build.dir}/${firsttitlexlet.jar}"
+             basedir="${bridgehead.build.dir}/${firsttitlexlet}/classes"/>
+    </target>    
+    <target name="init-security-tools">
+        <path id="sec.tools.path">
+            <pathelement location="${security.jar}"/>
+            <pathelement location="${bouncycastle.jar}"/>
+            <pathelement location="${java.home}/../lib/tools.jar"/>
+        </path>
+    </target>
+    <target name="export-certs">
+        <macrodef name="bd.keytool.export">
+            <attribute name="keypass"/>
+            <attribute name="certalias"/>
+            <attribute name="file"/>
+            <sequential>
+                <jdktools.java classname="sun.security.tools.KeyTool">
+                    <classpath refid="sec.tools.path"/>
+                    <arg value="-export"/>
+                    <arg value="-keystore"/>
+                    <arg value="${keystore.dir}/keystore.store"/>
+                    <arg value="-storepass"/>
+                    <arg value="keystorepassword"/>
+                    <arg value="-v"/>
+                    <arg value="-keypass"/>
+                    <arg value="@{keypass}"/>
+                    <arg value="-alias"/>
+                    <arg value="@{certalias}"/>
+                    <arg value="-file"/>
+                    <arg value="@{file}"/>
+                </jdktools.java>
+            </sequential>
+        </macrodef>
+        <bd.keytool.export
+            keypass="rootcertpassword" 
+            certalias="rootcert" 
+            file="${bridgehead.build.dir}/app.discroot.crt"/>
+        <bd.keytool.export
+            keypass="rootcertpassword" 
+            certalias="bucert" 
+            file="${bridgehead.build.dir}/bu.discroot.crt"/>
+    </target>
+    <target name="sign-jars" depends="init-security-tools, export-certs">
+        <jdktools.java classname="net.java.bd.tools.security.BDSigner">
+            <arg value="-keystore"/>
+            <arg value="${keystore.dir}/keystore.store"/>
+            <arg value="${bridgehead.build.dir}/${bridgeheadxlet.jar}"/>
+            <arg value="${bridgehead.build.dir}/${firsttitlexlet.jar}"/>         
+            <arg value="${bridgehead.build.dir}/${logger-name}.jar"/>
+            <classpath refid="sec.tools.path"/>
+        </jdktools.java>
+    </target>
+    <target name="run" depends="bridgehead-deploy">
+        <available property="windvd.exists" file="${WinDVD}"/>
+        <fail unless="windvd.exists" message="WinDVD executable not found at ${WinDVD}."/>
+        <exec executable="${WinDVD}">
+            <arg value="${basedir}\${bridgehead.dist.dir}\BDMV"/>
+        </exec>
+    </target>
+    <target name="gen-bdjo-desc-file">
+        <java  
+            fork="true" failOnError="true"
+            jar="${bdjo.jar}">
+            <arg value="${bridgeheadxlet-bdjo-desc-file}"/>
+            <arg value="${bridgehead.build.dir}/${bridgeheadxlet-bdjo-name}.bdjo"/>
+        </java>
+        <java  
+            fork="true" failOnError="true"
+            jar="${bdjo.jar}">
+            <arg value="${firsttitlexlet-bdjo-desc-file}"/>
+            <arg value="${bridgehead.build.dir}/${firsttitlexlet-bdjo-name}.bdjo"/>
+        </java>        
+    </target>
+    <target name="copy-to-bdmv" 
+            depends="jar, gen-bdjo-desc-file, sign-jars">
+        <property name="target.dir" value="${bridgehead.dist.dir}"/>
+        <copy todir="${target.dir}">
+            <fileset dir="${premade.bdmv}">
+                <exclude name="**/.svn/**"/>
+            </fileset>
+        </copy>
+
+        <copy todir = "${target.dir}/BDMV/JAR" 
+              file="${bridgehead.build.dir}/${bridgeheadxlet-bdjo-name}.jar"/>
+        <copy todir = "${target.dir}/BDMV/JAR" 
+              file="${bridgehead.build.dir}/${firsttitlexlet-bdjo-name}.jar"/>
+        <copy tofile = "${target.dir}/BDMV/JAR/${logger-name}.jar" 
+              file="${bridgehead.build.dir}/${logger-name}.jar"/>
+        <copy todir = "${target.dir}/BDMV/BDJO" 
+              file="${bridgehead.build.dir}/${bridgeheadxlet-bdjo-name}.bdjo"/>
+        <copy todir = "${target.dir}/BDMV/BDJO" 
+              file="${bridgehead.build.dir}/${firsttitlexlet-bdjo-name}.bdjo"/>              
+        <copy todir = "${target.dir}/CERTIFICATE" 
+              file="${bridgehead.build.dir}/app.discroot.crt"/>
+        <copy todir = "${target.dir}/CERTIFICATE" 
+              file="${bridgehead.build.dir}/bu.discroot.crt"/>
+        <copy todir = "${target.dir}/CERTIFICATE/BACKUP" 
+              file="${bridgehead.build.dir}/app.discroot.crt"/>
+        <copy todir = "${target.dir}/CERTIFICATE/BACKUP" 
+              file="${bridgehead.build.dir}/bu.discroot.crt"/>
+    </target>
+</project>

@@ -1,0 +1,315 @@
+#
+#  GRIN show file with the scene graph for the twitter xlet.
+#
+
+show 
+
+exports 
+    segments {
+        S:Initialize
+    } features {
+        F:Window.Mover
+        F:ProfileImage.*
+        F:ScreenName.*
+        F:CreatedTime.*
+        F:Tweet.*
+        F:Footer
+    } handlers {
+    } named_commands {
+    }
+;
+
+java_generated_class TwitterCommands [[
+
+    import com.hdcookbook.grin.Show;
+    import com.hdcookbook.grin.GrinXHelper;
+    import com.hdcookbook.grin.util.Debug;
+
+    public class TwitterCommands extends GrinXHelper {
+
+        public TwitterCommands(Show show) {
+            super(show);
+        }
+
+        public TwitterDirector getDirector() {
+            return (TwitterDirector) show.getDirector();
+        }
+
+        JAVA_COMMAND_BODY
+
+    }
+]]
+
+show_top F:ShowTop ;
+
+#
+#  Use this to move the twitter client on the screen
+#
+feature translator_model F:Window.Mover
+    { 0   150 30 linear-relative } ;
+
+feature translator F:ShowTop F:Window.Mover {
+    sub_feature showtop_group ;
+    F:Window.Mover
+} ;
+
+feature group F:Everything {
+    F:ProfileImage.Blank
+    F:ProfileImage.Default
+    F:Container
+    F:TweetView.All
+    F:Bottom
+} ;
+
+feature group F:Container {
+    sub_feature box ( 0 0 299 399 )
+        outline 3       { 75 75 75 192 } 
+        fill            { 75 75 75 192 }
+    ;
+    sub_feature box ( 3 3 296 396 )
+        outline 3       { 0 0 0 192 }
+    ;
+} ;
+
+    # These next two fixed_image features aren't displayed, but are used to
+    # load the image for use by the director.
+
+feature fixed_image F:ProfileImage.Blank -1000 -1000
+        images/blank_profile.png ;
+
+feature fixed_image F:ProfileImage.Default -1000 -1000
+        images/default_profile_normal.png ;
+
+#
+#  Tweet view 1
+#
+feature fixed_image F:ProfileImage.1 10 14
+        images/default_profile_normal.png ;
+
+feature text F:ScreenName.1 left 70 top 8 { "Screen Name" }
+    SansSerif plain 11 { { 255 255 255 255 } } ;
+
+feature text F:Tweet.1 left 70 top 25 {
+        "This is not a real tweet; it's"
+        "just compiled into the show file"
+        "so we can see the layout of what"
+        "it looks like when full."
+        "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM"
+    } SansSerif plain 12 { { 255 255 255 255 } } ;
+
+feature text F:CreatedTime.1 right 280 top 8 { "2:36 PM Jan 28" }
+    SansSerif plain 11 { { 255 255 255 255 } } ;
+
+feature group F:TweetView.1 {
+    sub_feature box ( 3 3 296 95 )
+        outline 3 { 0 0 0 192 } 
+    ;
+    F:ProfileImage.1
+    F:ScreenName.1
+    F:CreatedTime.1
+    sub_feature clipped F:Tweet.1
+        ( 70 25 290 91 ) ;
+} ;
+
+
+#
+#  Tweet view 2
+#
+feature fixed_image F:ProfileImage.2 10 104
+        images/default_profile_normal.png ;
+
+feature text F:ScreenName.2 left 70 top 98 { "Screen Name" }
+    SansSerif plain 11 { { 255 255 255 255 } } ;
+
+feature text F:Tweet.2 left 70 top 115 {
+        "This is not a real tweet; it's"
+        "just compiled into the show file"
+        "so we can see the layout of what"
+        "it looks like when full."
+        "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM"
+    } SansSerif plain 12 { { 255 255 255 255 } } ;
+
+feature text F:CreatedTime.2 right 280 top 98 { "2:36 PM Jan 28" }
+    SansSerif plain 11 { { 255 255 255 255 } } ;
+
+feature group F:TweetView.2 {
+    sub_feature box ( 3 93 296 185 )
+        outline 3 { 0 0 0 192 } 
+    ;
+    F:ProfileImage.2
+    F:ScreenName.2
+    F:CreatedTime.2
+    sub_feature clipped F:Tweet.2
+        ( 70 115 290 181 ) ;
+} ;
+
+#
+#  Tweet view 3
+#
+feature fixed_image F:ProfileImage.3 10 194
+        images/default_profile_normal.png ;
+
+feature text F:ScreenName.3 left 70 top 188 { "Screen Name" }
+    SansSerif plain 11 { { 255 255 255 255 } } ;
+
+feature text F:Tweet.3 left 70 top 205 {
+        "This is not a real tweet; it's"
+        "just compiled into the show file"
+        "so we can see the layout of what"
+        "it looks like when full."
+        "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM"
+    } SansSerif plain 12 { { 255 255 255 255 } } ;
+
+feature text F:CreatedTime.3 right 280 top 188 { "2:36 PM Jan 28" }
+    SansSerif plain 11 { { 255 255 255 255 } } ;
+
+feature group F:TweetView.3 {
+    sub_feature box ( 3 183 296 275 )
+        outline 3 { 0 0 0 192 } 
+    ;
+    F:ProfileImage.3
+    F:ScreenName.3
+    F:CreatedTime.3
+    sub_feature clipped F:Tweet.3
+        ( 70 205 290 271 ) ;
+} ;
+
+#
+#  Tweet view 4
+#
+feature fixed_image F:ProfileImage.4 10 284
+        images/default_profile_normal.png ;
+
+feature text F:ScreenName.4 left 70 top 278 { "Screen Name" }
+    SansSerif plain 11 { { 255 255 255 255 } } ;
+
+feature text F:Tweet.4 left 70 top 295 {
+        "This is not a real tweet; it's"
+        "just compiled into the show file"
+        "so we can see the layout of what"
+        "it looks like when full."
+        "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM"
+    } SansSerif plain 12 { { 255 255 255 255 } } ;
+
+feature text F:CreatedTime.4 right 280 top 278 { "2:36 PM Jan 28" }
+    SansSerif plain 11 { { 255 255 255 255 } } ;
+
+feature group F:TweetView.4 {
+    sub_feature box ( 3 273 296 365 )
+        outline 3 { 0 0 0 192 } 
+    ;
+    F:ProfileImage.4
+    F:ScreenName.4
+    F:CreatedTime.4
+    sub_feature clipped F:Tweet.4
+        ( 70 295 290 361 ) ;
+} ;
+
+feature group F:TweetView.All {
+    F:TweetView.1
+    F:TweetView.2
+    F:TweetView.3
+    F:TweetView.4
+} ;
+
+#
+# The bottom of the screen
+#
+
+feature text F:Footer left 190 top 370 { "Page: 1" }
+    SansSerif plain 11 { { 255 255 255 255 } } ;
+
+feature fixed_image F:Back.Normal 246 370
+        images/back_n.png ;
+
+feature fixed_image F:Back.Pressed 246 370
+        images/back_h.png ;
+
+feature fixed_image F:Next.Normal 266 370
+        images/next_n.png ;
+
+feature fixed_image F:Next.Pressed 266 370
+        images/next_h.png ;
+
+feature assembly F:Buttons  {
+    normal              sub_feature group {
+                            F:Back.Normal
+                            F:Next.Normal
+                        } ;
+    back                sub_feature group {
+                            F:Back.Pressed
+                            F:Next.Normal
+                            sub_feature timer 10 {
+                                activate_part F:Buttons normal ;
+                            } ;
+                        } ;
+    next                sub_feature group {
+                            F:Back.Normal
+                            F:Next.Pressed
+                            sub_feature timer 10 {
+                                activate_part F:Buttons normal ;
+                            } ;
+                        } ;
+} ;
+
+rc_handler key_pressed H:Left {
+        left
+    } execute {
+        activate_part F:Buttons back ;
+        java_command [[ getDirector().pageBack(); ]]
+    }
+;
+
+rc_handler key_pressed H:Right {
+        right
+    } execute {
+        activate_part F:Buttons next ;
+        java_command [[ getDirector().pageNext(); ]]
+    }
+;
+
+feature group F:Bottom {
+    sub_feature box ( 3 363 296 396 )
+        fill { 0 0 0 192 }
+    ;
+    F:Buttons
+    F:Footer
+} ;
+
+
+feature timer F:PollingTimer 1440 repeat {      # Every 60 seconds
+    java_command [[ getDirector().pollTwitter(); ]]
+} ;
+
+#
+# Start of segments
+#
+segment S:Initialize 
+    setup {
+        F:Everything
+    } on_entry {
+        java_command [[ getDirector().initialize(); ]]
+    } setup_done {
+        java_command [[
+            TwitterDirector dir = getDirector();
+            dir.initializeProfileImages();
+            dir.pollTwitter();
+        ]]
+        activate_segment S:Showing ;
+    }
+;
+
+segment S:Showing 
+    active {
+        F:Container
+        F:TweetView.All
+        F:Bottom
+        F:PollingTimer
+    } setup {
+        F:Everything
+    } rc_handlers {
+        H:Left H:Right
+    }
+;
+
+end_show

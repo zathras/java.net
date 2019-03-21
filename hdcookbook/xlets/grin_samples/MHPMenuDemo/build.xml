@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Sample build file.  See vars.properties for documentation about how to
+set up a new project using this build file.
+-->
+
+<project name="MHPMenuDemo" default="deploy" basedir=".">
+
+    <property file="user.vars.properties"/>
+    <property file="vars.properties"/>
+    <import file="${grin.xlet}/generic_build.xml"/>
+    
+    <target name="post-init">
+        <!-- Generate fontstrip image file -->
+        <jdktools.java jar="${fontimagemaker.jar}">                    
+            <arg value="-out"/>
+            <arg value="${asset.dir}"/>
+            <arg value="-config"/>
+            <arg value="${asset.dir}/fontstrip-config.xml"/>  
+        </jdktools.java>
+    </target>
+    
+    <target name="post-generate-binary-script">
+        <!-- Projects that include this build file can re-define this target -->
+ 	<copy todir="${build.dir}">
+            <fileset dir="${asset.dir}">
+                <include name="fontstrp.inf"/>
+            </fileset>   
+        </copy>
+    </target>  
+    
+    <target name="post-grinview-jar">     
+		<zip destfile="${project.name}-grinview.jar" update="true">
+            <fileset file="${build.dir}/fontstrp.inf"/>
+            <fileset dir="${asset.dir}">
+                <include name="images/fontstrip.png"/>
+            </fileset>
+       </zip>    
+    </target> 
+ 
+    <target name="post-copy-to-bdmv">
+		<copy todir="${dist.dir}/BDMV/JAR/${xlet.jar.basename}">
+            <fileset file="${build.dir}/fontstrp.inf"/>
+            <fileset dir="${asset.dir}">
+                <include name="images/fontstrip.png"/>
+            </fileset>   
+        </copy>      
+    </target>
+
+    <target name="post-spotless">
+		<delete file="${asset.dir}/fontstrp.inf"/>
+		<delete file="${asset.dir}/fontstrip-edit.png"/>
+		<delete file="${asset.dir}/images/fontstrip.png"/>
+    </target>
+	
+	
+</project>
+

@@ -1,0 +1,1145 @@
+<body bgcolor=#EEEEEE>
+<title> Sdiff FontStripText.java </title>
+<table><tr valign=top>
+<td><pre>
+  1 /*  
+  2  * Copyright (c) 2008, Sun Microsystems, Inc.
+  3  * 
+  4  * All rights reserved.
+  5  * 
+  6  * Redistribution and use in source and binary forms, with or without
+  7  * modification, are permitted provided that the following conditions
+  8  * are met:
+  9  * 
+ 10  *  * Redistributions of source code must retain the above copyright
+ 11  *    notice, this list of conditions and the following disclaimer.
+ 12  *  * Redistributions in binary form must reproduce the above copyright
+ 13  *    notice, this list of conditions and the following disclaimer in the
+ 14  *    documentation and/or other materials provided with the distribution.
+ 15  *  * Neither the name of Sun Microsystems nor the names of its contributors
+ 16  *    may be used to endorse or promote products derived from this software
+ 17  *    without specific prior written permission.
+ 18  * 
+ 19  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ 20  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ 21  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ 22  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ 23  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ 24  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ 25  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ 26  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ 27  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ 28  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ 29  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 30  * 
+ 31  *  Note:  In order to comply with the binary form redistribution 
+ 32  *         requirement in the above license, the licensee may include 
+ 33  *         a URL reference to a copy of the required copyright notice, 
+ 34  *         the list of conditions and the disclaimer in a human readable 
+ 35  *         file with the binary form of the code that is subject to the
+ 36  *         above license.  For example, such file could be put on a 
+ 37  *         Blu-ray disc containing the binary form of the code or could 
+ 38  *         be put in a JAR file that is broadcast via a digital television 
+ 39  *         broadcast medium.  In any event, you must include in any end 
+ 40  *         user licenses governing any code that includes the code subject 
+ 41  *         to the above license (in source and/or binary form) a disclaimer 
+ 42  *         that is at least as protective of Sun as the disclaimers in the 
+ 43  *         above license.
+ 44  * 
+ 45  *         A copy of the required copyright notice, the list of conditions and
+ 46  *         the disclaimer will be maintained at 
+ 47  *         https://hdcookbook.dev.java.net/misc/license.html .
+ 48  *         Thus, licensees may comply with the binary form redistribution
+ 49  *         requirement with a text file that contains the following text:
+ 50  * 
+ 51  *             A copy of the license(s) governing this code is located
+ 52  *             at https://hdcookbook.dev.java.net/misc/license.html
+ 53  */
+ 54 
+ 55 package com.hdcookbook.grin.fontstrip;
+ 56 
+ 57 import com.hdcookbook.grin.Feature;
+ 58 import com.hdcookbook.grin.Node;
+ 59 import com.hdcookbook.grin.Show;
+ 60 import com.hdcookbook.grin.animator.DrawRecord;
+ 61 import com.hdcookbook.grin.animator.RenderContext;
+ 62 import com.hdcookbook.grin.io.binary.GrinDataInputStream;
+ 63 import com.hdcookbook.grin.util.Debug;
+ 64 import com.hdcookbook.grin.util.ImageManager;
+ 65 import com.hdcookbook.grin.util.ManagedImage;
+ 66 import com.hdcookbook.grin.util.SetupClient;
+ 67 
+ 68 import java.awt.AlphaComposite;
+ 69 import java.awt.Color;
+ 70 import java.awt.Composite;
+ 71 import java.awt.Graphics2D;
+ 72 import java.awt.Rectangle;
+ 73 import java.io.IOException;
+ 74 import java.util.HashMap;
+ 75 
+ 76 /**
+ 77  * A feature for drawing font strip text.
+ 78  * &lt;p&gt;
+ 79  * See the file READM.TXT in the font strip extension base directory
+ 80  * for more details.
+ 81  **/
+ 82 public class FontStripText extends Feature implements Node, SetupClient {
+ 83     
+ 84      /**
+ 85      * Value for alignment indicating that x refers to the left side
+ 86      * of the text.
+ 87      **/
+ 88     public final static int LEFT = 0x01;
+ 89 
+ 90     /**
+ 91      * Value for alignment indicating that x refers to the middle
+ 92      * of the text.
+ 93      **/
+ 94     public final static int MIDDLE = 0x02;
+ 95 
+ 96     /**
+ 97      * Value for alignment indicating that x refers to the right side
+ 98      * of the text.
+ 99      **/
+100     public final static int RIGHT = 0x03;
+101 
+102     /**
+103      * Value for alignment indicating that y refers to the top side
+104      * of the text.
+105      **/
+106     public final static int TOP = 0x04;
+107 
+108     /**
+109      * Value for alignment indicating that y refers to the baseline
+110      * of the text.
+111      **/
+112     public final static int BASELINE = 0x08;
+113 
+114     /**
+115      * Value for alignment indicating that y refers to the baseline
+116      * of the text.
+117      **/
+118     public final static int BOTTOM = 0x0c;
+119 
+120     /**
+121      * The alignment to apply to x and y.  The value is obtained by or-ing
+122      * (or by adding) a horizontal value (LEFT, MIDDLE or RIGHT) with
+123      * a vertical value (TOP, BASELINE or BOTTOM).
+124      **/
+125     protected int alignment;
+126 
+127     /**
+128      * The name of the fontstrip information file.
+129      */
+130     public final static String INFOFILE ="fontstrp.inf";
+131 
+132     protected int xArg;
+133     protected int yArg;
+134     protected String[] strings;
+135     private CharImageInfo[][] bakedStrings = null;
+136     protected String fontImageFileName;
+137     private FontImageFileInfo fontInfo;
+138     
+139     protected int hspace;
+140     protected int vspace;
+141     protected Color background;
+142 
+143     private boolean isActivated = false;
+144     private int alignedX;
+145     private int alignedY;
+146     private int drawX;
+147     private int drawY;
+148     private int drawWidth;
+149     private int drawHeight;
+150     private boolean changed = false;
+151     private DrawRecord drawRecord = new DrawRecord();
+152     private Object     setupMonitor = new Object();
+153     private boolean    setupMode    = false;    
+154     private boolean imageSetup = false;
+155 
+156     private ManagedImage fontImage = null;
+157 
+158     private static boolean loadingFailed = false;
+159     
+160     public FontStripText(Show show) {
+161         super(show);
+162     }
+163 
+164     /**
+165      * {@inheritDoc}
+166      **/
+167     protected Feature createClone(HashMap clones) {
+168         if (!setupMode || !imageSetup || isActivated) {
+169             throw new IllegalStateException();
+170         }
+171         FontStripText result = new FontStripText(show);
+
+172         result.xArg = xArg;
+173         result.yArg = yArg;
+174         result.strings = strings;
+175         result.bakedStrings = bakedStrings;
+176         result.fontImageFileName = fontImageFileName;
+177         result.fontInfo = fontInfo;
+178         result.hspace = hspace;
+179         result.vspace = vspace;
+180         result.background = background;
+181         result.isActivated = isActivated;
+182         result.alignedX = alignedX;
+183         result.alignedY = alignedY;
+184         result.drawX = drawX;
+185         result.drawY = drawY;
+186         result.drawWidth = drawWidth;
+187         result.drawHeight = drawHeight;
+188         result.changed = changed;
+189         result.setupMode = setupMode;
+190         result.imageSetup = imageSetup;
+191         result.fontImage = fontImage;
+192         result.loadingFailed = loadingFailed;
+193 
+194         if (!loadingFailed) {
+195             ImageManager.getImage(result.fontImage);
+196                 // This increments the reference count of this ManagedImage.
+197                 // See FixedImage.createClone() for details.
+198             result.fontImage.prepare();
+199                 // Balanced by an unprepare in destroy()
+200         }
+201         return result;
+202     }
+203     
+204     public int getX() {
+205         return alignedX;
+206     }
+207 
+208     public int getY() {
+209         return alignedY;
+210     }
+211 
+212     public void initialize() {
+213         if (!FontImageFileInfo.initialized) {
+214             try {
+215                 FontImageFileInfo.initFontImageFileInfo(INFOFILE);
+216             } catch (IOException e) {
+217                 Debug.printStackTrace(e);
+218                 loadingFailed = true;
+219             }
+220         }
+221         
+222         if (loadingFailed) {
+223             return;
+224         }
+225      
+226         fontInfo = FontImageFileInfo.getFontInfo(fontImageFileName);
+227         if (fontInfo == null) {
+228             if (Debug.ASSERT) {
+229                 Debug.println("ERROR: entry for " + fontImageFileName + " not found in the info file.");
+230                 Debug.assertFail();
+231             }
+232             loadingFailed = true;
+233             return;
+234         }        
+235         fontImage = ImageManager.getImage(fontImageFileName);
+236 
+237         bakeStrings();
+238     }
+239 
+240     private void bakeStrings() {
+241         changed = true;
+242         
+243         bakedStrings = new CharImageInfo[strings.length][];
+244         for (int i = 0; i &lt; strings.length; i++) {
+245             bakedStrings[i] = bakeString(strings[i]);
+246         }
+247 
+248         // We know the character size without loading the actual font image,
+249         // since the size is recorded in the fontstrip info size.
+250         int a = (alignment &amp; 0x03);
+251         int width = 0;
+252         if (a == MIDDLE || a == RIGHT) {
+253             for (int i = 0; i &lt; strings.length; i++) {
+254                 CharImageInfo[] string = bakedStrings[i];
+255                 int w = 0;
+256                 for (int j=0; j &lt; string.length; j++) {
+257                     CharImageInfo charInfo = string[j];
+258                     w += charInfo.width + hspace;
+259                 }
+260                 if (w &gt; width) {
+261                     width = w;
+262                 }
+263             }
+264         }
+265         if (a == MIDDLE) {
+266             alignedX = xArg - (width / 2);
+267         } else if (a == RIGHT) {
+268             alignedX = xArg - width;
+269         } else {
+270             alignedX = xArg;
+271         }
+272         a = (alignment &amp; 0x0c);
+273         if (a == BASELINE) {
+274             alignedY = yArg - fontInfo.maxAscent;
+275         } else if (a == BOTTOM) {
+276             int lineHeight = fontInfo.maxAscent + fontInfo.maxDescent;
+277             int h = (vspace + fontInfo.maxLeading) * (strings.length - 1)
+278                      + (strings.length * lineHeight);
+279             alignedY = yArg - h;
+280         } else {
+281             alignedY = yArg;
+282         }
+283 
+284         // Now we calculate the bounding box.  For this, we look at the
+285         // actual drawing position of each character.
+286         // The character positioning is based on
+287         // the original font use to make the font strip (the "bound rect"
+288         // obtained from java.awt.font.TextLayout in SE), but the actual
+289         // drawing for any character can go outside those bounds.  For
+290         // example, the character glyphs might have been edited by
+291         // a graphics designer.
+292 
+293         drawX = alignedX;
+294         drawY = alignedY;
+295         int drawMaxX = alignedX;        // One pixel to right of pixel drawn
+296         int drawMaxY = alignedY;        // One pixel below pixel drawn
+297 
+298         int thisY = alignedY;
+299         for (int i = 0; i &lt; strings.length; i++) {
+300             CharImageInfo[] string = bakedStrings[i];
+301             int thisX = alignedX;
+302             for (int j=0; j &lt; string.length; j++) {
+303                 CharImageInfo charInfo = string[j];
+304                 if (charInfo.charRect.height != 0) {
+305                     int y = thisY + fontInfo.maxAscent - charInfo.ascent;
+306                     if (y &lt; drawY) {
+307                         drawY = y;
+308                     }
+309                     int x = thisX + charInfo.xOffset;
+310                     if (x &lt; drawX) {    // xOffset can be negative
+311                         drawX = x;
+312                     }
+313                     y += charInfo.charRect.height;
+314                     if (y &gt; drawMaxY) {
+315                         drawMaxY = y;
+316                     }
+317                     x += charInfo.charRect.width;
+318                     if (x &gt; drawMaxX) {
+319                         drawMaxX = x;
+320                     }
+321                 }
+322                 thisX += charInfo.width + hspace;
+323             }
+324             thisY += getLineHeight();
+325         }
+326         drawWidth = drawMaxX - drawX;
+327         drawHeight = drawMaxY - drawY;
+328     }
+329 
+330     /**
+331      * {@inheritDoc}
+332      */
+333     public void destroy() {
+334         if (setupMode) {
+335             // That is, if this is a cloned feature.  See FixedImage.destroy().
+336             if (Debug.ASSERT &amp;&amp; !imageSetup) {
+337                 Debug.assertFail();
+338             }
+339             fontImage.unprepare();
+340         }
+341         if (!loadingFailed) {
+342             ImageManager.ungetImage(fontImage);
+343         } else if (Debug.ASSERT &amp;&amp; fontImage != null) {
+344             Debug.assertFail();
+345         }
+346     }
+347 
+348     /**
+349      * {@inheritDoc}
+350      **/
+351     protected int setSetupMode(boolean mode) {
+352         if (loadingFailed) {
+353             return 0;
+354         }
+355         
+356         synchronized(setupMonitor) {
+357             setupMode = mode;
+358             if (setupMode) {
+359                 fontImage.prepare();
+360                 if (fontImage.isLoaded()) {
+361                     imageSetup = true;
+362                     return 0;
+363                 } else {
+364                     show.setupManager.scheduleSetup(this);
+365                     return 1;
+366                 }
+367             } else {
+368                 fontImage.unprepare();
+369                 imageSetup = false;
+370                 return 0;
+371             }
+372         }
+373     }
+374 
+375     /**
+376      * {@inheritDoc}
+377      **/
+378     public void doSomeSetup() {
+379         synchronized(setupMonitor) {
+380             if (!setupMode) {
+381                 return;
+382             }
+383         }
+384         fontImage.load(show.component);
+385         synchronized(setupMonitor) {
+386             if (!setupMode) {
+387                 return;
+388             }
+389             imageSetup = true;
+390         }
+391         sendFeatureSetup();
+392     }
+393 
+394     /**
+395      * {@inheritDoc}
+396      **/
+397     public boolean needsMoreSetup() {
+398         synchronized (setupMonitor) {
+399             return setupMode &amp;&amp; (!imageSetup);
+400         }
+401     }
+402     protected void setActivateMode(boolean mode) {
+403         this.isActivated = mode;
+404     }
+405 
+406     public void addDisplayAreas(RenderContext context) {
+407         drawRecord.setArea(drawX, drawY, drawWidth, drawHeight);
+408         if (changed) {
+409             drawRecord.setChanged();
+410         }
+411         drawRecord.setSemiTransparent();
+412         context.addArea(drawRecord);
+413         changed = false;
+414     }
+415 
+416     public void paintFrame(Graphics2D gr) {
+417         if (!isActivated || loadingFailed) {
+418             return;
+419         }
+420         if (background != null) {
+421             gr.setColor(background);
+422             gr.fillRect(drawX, drawY, drawWidth, drawHeight);
+423         }
+424         int y2 = alignedY + fontInfo.maxAscent;
+425 
+426         Composite old = gr.getComposite();
+427         boolean keepAlpha 
+428             = (old instanceof AlphaComposite) 
+429                &amp;&amp; (((AlphaComposite) old).getRule() == AlphaComposite.SRC_OVER);
+430         if (!keepAlpha) {
+431             gr.setComposite(AlphaComposite.SrcOver);        
+432         }
+433         for (int i = 0; i &lt; bakedStrings.length; i++) {
+434             drawString(gr, bakedStrings[i], alignedX, y2);
+435             y2 += getLineHeight();
+436         }
+437         if (!keepAlpha) {
+438             gr.setComposite(old);            
+439         }
+440     }
+441 
+442     public void nextFrame() {
+443         // nothing to do.
+444     }
+445 
+446     public void markDisplayAreasChanged() {
+447         drawRecord.setChanged();
+448     }
+449 
+450     public void readInstanceData(GrinDataInputStream in, int length) 
+451             throws IOException {
+452         in.readSuperClassData(this);
+453         this.xArg = in.readInt();
+454         this.yArg = in.readInt();
+455         this.alignment = in.readInt();
+456         this.strings = in.readStringArray();
+457         this.fontImageFileName = in.readString();
+458         this.hspace = in.readInt();
+459         this.vspace = in.readInt();
+460         this.background = in.readColor();     
+461         initialize();
+462     }
+463 
+464 
+465     // Get the character info for the given string
+466     private CharImageInfo[] bakeString(String string) {
+467         CharImageInfo[] infos = new CharImageInfo[string.length()];
+468         
+469         for (int i = 0; i &lt; string.length(); i++) {
+470             Character ch = new Character(string.charAt(i));
+471             CharImageInfo charInfo = (CharImageInfo) fontInfo.charMap.get(ch);
+472             if (charInfo == null) {
+473                if (Debug.LEVEL &gt; 0) {
+474                    Debug.println("No charInfo found for " + ch);
+475                }
+476                charInfo = new CharImageInfo();
+477                charInfo.ascent = 0;
+478                charInfo.xOffset = 0;
+479                charInfo.width = 0;
+480                charInfo.charRect = new Rectangle(0,0,0,0);       
+481                fontInfo.charMap.put(ch, charInfo);
+482            }
+483            infos[i] = charInfo;
+484         }
+485         return infos;
+486     }
+487 
+488    
+489     //
+490     // Draw string with starting at x with baseline at y
+491     //
+492     private void drawString(Graphics2D g2, CharImageInfo[] string, int x, int y)
+493     {
+494         for (int i = 0; i &lt; string.length; i++) {
+495             CharImageInfo charInfo = string[i];
+496             fontImage.drawClipped(g2,
+497                     x + charInfo.xOffset, y - charInfo.ascent,
+498                     charInfo.charRect,
+499                     show.component);            
+500             x += charInfo.width + hspace;
+501         }        
+502     }
+503     
+504     /**
+505      * Get the text that's being displayed.
+506      **/
+507     public String[] getText() {
+508         return strings;
+509     }
+510 
+511     /**
+512      * Get the height of a line, including any vertical padding to take it
+513      * to the next line.
+514      **/
+515     public int getLineHeight() {
+516         return fontInfo.maxAscent + fontInfo.maxDescent + fontInfo.maxLeading 
+517                + vspace;
+518     }
+519 
+520     /**
+521      * Give the width of the string when drawn.  This method can be used
+522      * to format text.  If possible, this is better done off-line.
+523      * &lt;p&gt;
+524      * The actual bounding
+525      * box might be a bit larger, if the character's bounding box extends
+526      * to the left or to the right of the character starting position plus
+527      * its width.
+528      **/
+529     public int getStringWidth(String string) {
+530         int width = 0;
+531         int len = string.length();
+532         if (len &gt; 0) {
+533             for (int i = 0; i &lt; len; i++) {
+534                 Character ch = new Character(string.charAt(i));
+535                 CharImageInfo charInfo 
+536                     = (CharImageInfo) fontInfo.charMap.get(ch);
+537                 if (charInfo != null) {
+538                     width += charInfo.width;
+539                 }
+540                 width += hspace;
+541             }
+542             width -= hspace;
+543         }
+544         return width;
+545     }
+546 
+547 
+548     /** 
+549      * Change the text to display.
+550      * This should only be called with the show lock held, at an
+551      * appropriate time in the frame pump loop.  A good time to call
+552      * this is from within a command.
+553      * &lt;p&gt;
+554      * A good way to write this command that calls this is by using
+555      * the java_command structure.  There's an example of this in the
+556      * cookbook menu.
+557      **/
+558     public void setText(String[] newText) {
+559         synchronized(show) {    // Shouldn't be necessary, but doesn't hurt
+560             strings = newText;
+561             bakeStrings();
+562             // We don't want to do a full initialize() here, because that's
+563             // extra work, and because initialize() increments the reference
+564             // count for fontImageFile.
+565         }
+566     }
+567     
+568 }
+</pre></td><td><pre>
+  1 /*  
+  2  * Copyright (c) 2008, Sun Microsystems, Inc.
+  3  * 
+  4  * All rights reserved.
+  5  * 
+  6  * Redistribution and use in source and binary forms, with or without
+  7  * modification, are permitted provided that the following conditions
+  8  * are met:
+  9  * 
+ 10  *  * Redistributions of source code must retain the above copyright
+ 11  *    notice, this list of conditions and the following disclaimer.
+ 12  *  * Redistributions in binary form must reproduce the above copyright
+ 13  *    notice, this list of conditions and the following disclaimer in the
+ 14  *    documentation and/or other materials provided with the distribution.
+ 15  *  * Neither the name of Sun Microsystems nor the names of its contributors
+ 16  *    may be used to endorse or promote products derived from this software
+ 17  *    without specific prior written permission.
+ 18  * 
+ 19  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ 20  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ 21  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ 22  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ 23  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ 24  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ 25  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ 26  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ 27  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ 28  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ 29  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 30  * 
+ 31  *  Note:  In order to comply with the binary form redistribution 
+ 32  *         requirement in the above license, the licensee may include 
+ 33  *         a URL reference to a copy of the required copyright notice, 
+ 34  *         the list of conditions and the disclaimer in a human readable 
+ 35  *         file with the binary form of the code that is subject to the
+ 36  *         above license.  For example, such file could be put on a 
+ 37  *         Blu-ray disc containing the binary form of the code or could 
+ 38  *         be put in a JAR file that is broadcast via a digital television 
+ 39  *         broadcast medium.  In any event, you must include in any end 
+ 40  *         user licenses governing any code that includes the code subject 
+ 41  *         to the above license (in source and/or binary form) a disclaimer 
+ 42  *         that is at least as protective of Sun as the disclaimers in the 
+ 43  *         above license.
+ 44  * 
+ 45  *         A copy of the required copyright notice, the list of conditions and
+ 46  *         the disclaimer will be maintained at 
+ 47  *         https://hdcookbook.dev.java.net/misc/license.html .
+ 48  *         Thus, licensees may comply with the binary form redistribution
+ 49  *         requirement with a text file that contains the following text:
+ 50  * 
+ 51  *             A copy of the license(s) governing this code is located
+ 52  *             at https://hdcookbook.dev.java.net/misc/license.html
+ 53  */
+ 54 
+ 55 package com.hdcookbook.grin.fontstrip;
+ 56 
+ 57 import com.hdcookbook.grin.Feature;
+ 58 import com.hdcookbook.grin.Node;
+ 59 import com.hdcookbook.grin.Show;
+ 60 import com.hdcookbook.grin.animator.DrawRecord;
+ 61 import com.hdcookbook.grin.animator.RenderContext;
+ 62 import com.hdcookbook.grin.io.binary.GrinDataInputStream;
+ 63 import com.hdcookbook.grin.util.Debug;
+ 64 import com.hdcookbook.grin.util.ImageManager;
+ 65 import com.hdcookbook.grin.util.ManagedImage;
+ 66 import com.hdcookbook.grin.util.SetupClient;
+ 67 
+ 68 import java.awt.AlphaComposite;
+ 69 import java.awt.Color;
+ 70 import java.awt.Composite;
+ 71 import java.awt.Graphics2D;
+ 72 import java.awt.Rectangle;
+ 73 import java.io.IOException;
+ 74 import java.util.HashMap;
+ 75 
+ 76 /**
+ 77  * A feature for drawing font strip text.
+ 78  * &lt;p&gt;
+ 79  * See the file READM.TXT in the font strip extension base directory
+ 80  * for more details.
+ 81  **/
+ 82 public class FontStripText extends Feature implements Node, SetupClient {
+ 83     
+ 84      /**
+ 85      * Value for alignment indicating that x refers to the left side
+ 86      * of the text.
+ 87      **/
+ 88     public final static int LEFT = 0x01;
+ 89 
+ 90     /**
+ 91      * Value for alignment indicating that x refers to the middle
+ 92      * of the text.
+ 93      **/
+ 94     public final static int MIDDLE = 0x02;
+ 95 
+ 96     /**
+ 97      * Value for alignment indicating that x refers to the right side
+ 98      * of the text.
+ 99      **/
+100     public final static int RIGHT = 0x03;
+101 
+102     /**
+103      * Value for alignment indicating that y refers to the top side
+104      * of the text.
+105      **/
+106     public final static int TOP = 0x04;
+107 
+108     /**
+109      * Value for alignment indicating that y refers to the baseline
+110      * of the text.
+111      **/
+112     public final static int BASELINE = 0x08;
+113 
+114     /**
+115      * Value for alignment indicating that y refers to the baseline
+116      * of the text.
+117      **/
+118     public final static int BOTTOM = 0x0c;
+119 
+120     /**
+121      * The alignment to apply to x and y.  The value is obtained by or-ing
+122      * (or by adding) a horizontal value (LEFT, MIDDLE or RIGHT) with
+123      * a vertical value (TOP, BASELINE or BOTTOM).
+124      **/
+125     protected int alignment;
+126 
+127     /**
+128      * The name of the fontstrip information file.
+129      */
+130     public final static String INFOFILE ="fontstrp.inf";
+131 
+132     protected int xArg;
+133     protected int yArg;
+134     protected String[] strings;
+135     private CharImageInfo[][] bakedStrings = null;
+136     protected String fontImageFileName;
+137     private FontImageFileInfo fontInfo;
+138     
+139     protected int hspace;
+140     protected int vspace;
+141     protected Color background;
+142 
+143     private boolean isActivated = false;
+144     private int alignedX;
+145     private int alignedY;
+146     private int drawX;
+147     private int drawY;
+148     private int drawWidth;
+149     private int drawHeight;
+150     private boolean changed = false;
+151     private DrawRecord drawRecord = new DrawRecord();
+152     private Object     setupMonitor = new Object();
+153     private boolean    setupMode    = false;    
+154     private boolean imageSetup = false;
+155 
+156     private ManagedImage fontImage = null;
+157 
+158     private static boolean loadingFailed = false;
+159     
+160     public FontStripText(Show show) {
+161         super(show);
+162     }
+163 
+164     /**
+165      * {@inheritDoc}
+166      **/
+167     protected Feature createClone(HashMap clones) {
+168         if (!setupMode || !imageSetup || isActivated) {
+169             throw new IllegalStateException();
+170         }
+171         FontStripText result = new FontStripText(show);
+<FONT COLOR=green><b>172         result.alignment = alignment;</b></FONT>
+173         result.xArg = xArg;
+174         result.yArg = yArg;
+175         result.strings = strings;
+176         result.bakedStrings = bakedStrings;
+177         result.fontImageFileName = fontImageFileName;
+178         result.fontInfo = fontInfo;
+179         result.hspace = hspace;
+180         result.vspace = vspace;
+181         result.background = background;
+182         result.isActivated = isActivated;
+183         result.alignedX = alignedX;
+184         result.alignedY = alignedY;
+185         result.drawX = drawX;
+186         result.drawY = drawY;
+187         result.drawWidth = drawWidth;
+188         result.drawHeight = drawHeight;
+189         result.changed = changed;
+190         result.setupMode = setupMode;
+191         result.imageSetup = imageSetup;
+192         result.fontImage = fontImage;
+193         result.loadingFailed = loadingFailed;
+194 
+195         if (!loadingFailed) {
+196             ImageManager.getImage(result.fontImage);
+197                 // This increments the reference count of this ManagedImage.
+198                 // See FixedImage.createClone() for details.
+199             result.fontImage.prepare();
+200                 // Balanced by an unprepare in destroy()
+201         }
+202         return result;
+203     }
+204     
+205     public int getX() {
+206         return alignedX;
+207     }
+208 
+209     public int getY() {
+210         return alignedY;
+211     }
+212 
+213     public void initialize() {
+214         if (!FontImageFileInfo.initialized) {
+215             try {
+216                 FontImageFileInfo.initFontImageFileInfo(INFOFILE);
+217             } catch (IOException e) {
+218                 Debug.printStackTrace(e);
+219                 loadingFailed = true;
+220             }
+221         }
+222         
+223         if (loadingFailed) {
+224             return;
+225         }
+226      
+227         fontInfo = FontImageFileInfo.getFontInfo(fontImageFileName);
+228         if (fontInfo == null) {
+229             if (Debug.ASSERT) {
+230                 Debug.println("ERROR: entry for " + fontImageFileName + " not found in the info file.");
+231                 Debug.assertFail();
+232             }
+233             loadingFailed = true;
+234             return;
+235         }        
+236         fontImage = ImageManager.getImage(fontImageFileName);
+237 
+238         bakeStrings();
+239     }
+240 
+241     private void bakeStrings() {
+242         changed = true;
+243         
+244         bakedStrings = new CharImageInfo[strings.length][];
+245         for (int i = 0; i &lt; strings.length; i++) {
+246             bakedStrings[i] = bakeString(strings[i]);
+247         }
+248 
+249         // We know the character size without loading the actual font image,
+250         // since the size is recorded in the fontstrip info size.
+251         int a = (alignment &amp; 0x03);
+252         int width = 0;
+253         if (a == MIDDLE || a == RIGHT) {
+254             for (int i = 0; i &lt; strings.length; i++) {
+255                 CharImageInfo[] string = bakedStrings[i];
+256                 int w = 0;
+257                 for (int j=0; j &lt; string.length; j++) {
+258                     CharImageInfo charInfo = string[j];
+259                     w += charInfo.width + hspace;
+260                 }
+261                 if (w &gt; width) {
+262                     width = w;
+263                 }
+264             }
+265         }
+266         if (a == MIDDLE) {
+267             alignedX = xArg - (width / 2);
+268         } else if (a == RIGHT) {
+269             alignedX = xArg - width;
+270         } else {
+271             alignedX = xArg;
+272         }
+273         a = (alignment &amp; 0x0c);
+274         if (a == BASELINE) {
+275             alignedY = yArg - fontInfo.maxAscent;
+276         } else if (a == BOTTOM) {
+277             int lineHeight = fontInfo.maxAscent + fontInfo.maxDescent;
+278             int h = (vspace + fontInfo.maxLeading) * (strings.length - 1)
+279                      + (strings.length * lineHeight);
+280             alignedY = yArg - h;
+281         } else {
+282             alignedY = yArg;
+283         }
+284 
+285         // Now we calculate the bounding box.  For this, we look at the
+286         // actual drawing position of each character.
+287         // The character positioning is based on
+288         // the original font use to make the font strip (the "bound rect"
+289         // obtained from java.awt.font.TextLayout in SE), but the actual
+290         // drawing for any character can go outside those bounds.  For
+291         // example, the character glyphs might have been edited by
+292         // a graphics designer.
+293 
+294         drawX = alignedX;
+295         drawY = alignedY;
+296         int drawMaxX = alignedX;        // One pixel to right of pixel drawn
+297         int drawMaxY = alignedY;        // One pixel below pixel drawn
+298 
+299         int thisY = alignedY;
+300         for (int i = 0; i &lt; strings.length; i++) {
+301             CharImageInfo[] string = bakedStrings[i];
+302             int thisX = alignedX;
+303             for (int j=0; j &lt; string.length; j++) {
+304                 CharImageInfo charInfo = string[j];
+305                 if (charInfo.charRect.height != 0) {
+306                     int y = thisY + fontInfo.maxAscent - charInfo.ascent;
+307                     if (y &lt; drawY) {
+308                         drawY = y;
+309                     }
+310                     int x = thisX + charInfo.xOffset;
+311                     if (x &lt; drawX) {    // xOffset can be negative
+312                         drawX = x;
+313                     }
+314                     y += charInfo.charRect.height;
+315                     if (y &gt; drawMaxY) {
+316                         drawMaxY = y;
+317                     }
+318                     x += charInfo.charRect.width;
+319                     if (x &gt; drawMaxX) {
+320                         drawMaxX = x;
+321                     }
+322                 }
+323                 thisX += charInfo.width + hspace;
+324             }
+325             thisY += getLineHeight();
+326         }
+327         drawWidth = drawMaxX - drawX;
+328         drawHeight = drawMaxY - drawY;
+329     }
+330 
+331     /**
+332      * {@inheritDoc}
+333      */
+334     public void destroy() {
+335         if (setupMode) {
+336             // That is, if this is a cloned feature.  See FixedImage.destroy().
+337             if (Debug.ASSERT &amp;&amp; !imageSetup) {
+338                 Debug.assertFail();
+339             }
+340             fontImage.unprepare();
+341         }
+342         if (!loadingFailed) {
+343             ImageManager.ungetImage(fontImage);
+344         } else if (Debug.ASSERT &amp;&amp; fontImage != null) {
+345             Debug.assertFail();
+346         }
+347     }
+348 
+349     /**
+350      * {@inheritDoc}
+351      **/
+352     protected int setSetupMode(boolean mode) {
+353         if (loadingFailed) {
+354             return 0;
+355         }
+356         
+357         synchronized(setupMonitor) {
+358             setupMode = mode;
+359             if (setupMode) {
+360                 fontImage.prepare();
+361                 if (fontImage.isLoaded()) {
+362                     imageSetup = true;
+363                     return 0;
+364                 } else {
+365                     show.setupManager.scheduleSetup(this);
+366                     return 1;
+367                 }
+368             } else {
+369                 fontImage.unprepare();
+370                 imageSetup = false;
+371                 return 0;
+372             }
+373         }
+374     }
+375 
+376     /**
+377      * {@inheritDoc}
+378      **/
+379     public void doSomeSetup() {
+380         synchronized(setupMonitor) {
+381             if (!setupMode) {
+382                 return;
+383             }
+384         }
+385         fontImage.load(show.component);
+386         synchronized(setupMonitor) {
+387             if (!setupMode) {
+388                 return;
+389             }
+390             imageSetup = true;
+391         }
+392         sendFeatureSetup();
+393     }
+394 
+395     /**
+396      * {@inheritDoc}
+397      **/
+398     public boolean needsMoreSetup() {
+399         synchronized (setupMonitor) {
+400             return setupMode &amp;&amp; (!imageSetup);
+401         }
+402     }
+403     protected void setActivateMode(boolean mode) {
+404         this.isActivated = mode;
+405     }
+406 
+407     public void addDisplayAreas(RenderContext context) {
+408         drawRecord.setArea(drawX, drawY, drawWidth, drawHeight);
+409         if (changed) {
+410             drawRecord.setChanged();
+411         }
+412         drawRecord.setSemiTransparent();
+413         context.addArea(drawRecord);
+414         changed = false;
+415     }
+416 
+417     public void paintFrame(Graphics2D gr) {
+418         if (!isActivated || loadingFailed) {
+419             return;
+420         }
+421         if (background != null) {
+422             gr.setColor(background);
+423             gr.fillRect(drawX, drawY, drawWidth, drawHeight);
+424         }
+425         int y2 = alignedY + fontInfo.maxAscent;
+426 
+427         Composite old = gr.getComposite();
+428         boolean keepAlpha 
+429             = (old instanceof AlphaComposite) 
+430                &amp;&amp; (((AlphaComposite) old).getRule() == AlphaComposite.SRC_OVER);
+431         if (!keepAlpha) {
+432             gr.setComposite(AlphaComposite.SrcOver);        
+433         }
+434         for (int i = 0; i &lt; bakedStrings.length; i++) {
+435             drawString(gr, bakedStrings[i], alignedX, y2);
+436             y2 += getLineHeight();
+437         }
+438         if (!keepAlpha) {
+439             gr.setComposite(old);            
+440         }
+441     }
+442 
+443     public void nextFrame() {
+444         // nothing to do.
+445     }
+446 
+447     public void markDisplayAreasChanged() {
+448         drawRecord.setChanged();
+449     }
+450 
+451     public void readInstanceData(GrinDataInputStream in, int length) 
+452             throws IOException {
+453         in.readSuperClassData(this);
+454         this.xArg = in.readInt();
+455         this.yArg = in.readInt();
+456         this.alignment = in.readInt();
+457         this.strings = in.readStringArray();
+458         this.fontImageFileName = in.readString();
+459         this.hspace = in.readInt();
+460         this.vspace = in.readInt();
+461         this.background = in.readColor();     
+462         initialize();
+463     }
+464 
+465 
+466     // Get the character info for the given string
+467     private CharImageInfo[] bakeString(String string) {
+468         CharImageInfo[] infos = new CharImageInfo[string.length()];
+469         
+470         for (int i = 0; i &lt; string.length(); i++) {
+471             Character ch = new Character(string.charAt(i));
+472             CharImageInfo charInfo = (CharImageInfo) fontInfo.charMap.get(ch);
+473             if (charInfo == null) {
+474                if (Debug.LEVEL &gt; 0) {
+475                    Debug.println("No charInfo found for " + ch);
+476                }
+477                charInfo = new CharImageInfo();
+478                charInfo.ascent = 0;
+479                charInfo.xOffset = 0;
+480                charInfo.width = 0;
+481                charInfo.charRect = new Rectangle(0,0,0,0);       
+482                fontInfo.charMap.put(ch, charInfo);
+483            }
+484            infos[i] = charInfo;
+485         }
+486         return infos;
+487     }
+488 
+489    
+490     //
+491     // Draw string with starting at x with baseline at y
+492     //
+493     private void drawString(Graphics2D g2, CharImageInfo[] string, int x, int y)
+494     {
+495         for (int i = 0; i &lt; string.length; i++) {
+496             CharImageInfo charInfo = string[i];
+497             fontImage.drawClipped(g2,
+498                     x + charInfo.xOffset, y - charInfo.ascent,
+499                     charInfo.charRect,
+500                     show.component);            
+501             x += charInfo.width + hspace;
+502         }        
+503     }
+504     
+505     /**
+506      * Get the text that's being displayed.
+507      **/
+508     public String[] getText() {
+509         return strings;
+510     }
+511 
+512     /**
+513      * Get the height of a line, including any vertical padding to take it
+514      * to the next line.
+515      **/
+516     public int getLineHeight() {
+517         return fontInfo.maxAscent + fontInfo.maxDescent + fontInfo.maxLeading 
+518                + vspace;
+519     }
+520 
+521     /**
+522      * Give the width of the string when drawn.  This method can be used
+523      * to format text.  If possible, this is better done off-line.
+524      * &lt;p&gt;
+525      * The actual bounding
+526      * box might be a bit larger, if the character's bounding box extends
+527      * to the left or to the right of the character starting position plus
+528      * its width.
+529      **/
+530     public int getStringWidth(String string) {
+531         int width = 0;
+532         int len = string.length();
+533         if (len &gt; 0) {
+534             for (int i = 0; i &lt; len; i++) {
+535                 Character ch = new Character(string.charAt(i));
+536                 CharImageInfo charInfo 
+537                     = (CharImageInfo) fontInfo.charMap.get(ch);
+538                 if (charInfo != null) {
+539                     width += charInfo.width;
+540                 }
+541                 width += hspace;
+542             }
+543             width -= hspace;
+544         }
+545         return width;
+546     }
+547 
+548 
+549     /** 
+550      * Change the text to display.
+551      * This should only be called with the show lock held, at an
+552      * appropriate time in the frame pump loop.  A good time to call
+553      * this is from within a command.
+554      * &lt;p&gt;
+555      * A good way to write this command that calls this is by using
+556      * the java_command structure.  There's an example of this in the
+557      * cookbook menu.
+558      **/
+559     public void setText(String[] newText) {
+560         synchronized(show) {    // Shouldn't be necessary, but doesn't hurt
+561             strings = newText;
+562             bakeStrings();
+563             // We don't want to do a full initialize() here, because that's
+564             // extra work, and because initialize() increments the reference
+565             // count for fontImageFile.
+566         }
+567     }
+568     
+569 }
+</pre></td>
+</tr></table>

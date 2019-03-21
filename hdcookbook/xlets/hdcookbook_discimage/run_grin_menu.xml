@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="run-grin-menu" default="all" basedir=".">
+    
+  <!-- This project runs MenuXlet's show text file on GrinView, our grin runtime tool on jdk -->
+  
+  <target name="all">
+       <ant antfile="run_jdktools.xml" target="run-grinview-menu"/>
+  </target>
+
+</project> 

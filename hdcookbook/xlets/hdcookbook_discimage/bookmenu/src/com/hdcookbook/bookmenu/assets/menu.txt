@@ -1,0 +1,2384 @@
+
+#  
+# Copyright (c) 2007, Sun Microsystems, Inc.
+# 
+# All rights reserved.
+# 
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+# 
+#  * Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#  * Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in the
+#    documentation and/or other materials provided with the distribution.
+#  * Neither the name of Sun Microsystems nor the names of its contributors
+#    may be used to endorse or promote products derived from this software
+#    without specific prior written permission.
+# 
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+# PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+# LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+# NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+# 
+#  Note:  In order to comply with the binary form redistribution 
+#         requirement in the above license, the licensee may include 
+#         a URL reference to a copy of the required copyright notice, 
+#         the list of conditions and the disclaimer in a human readable 
+#         file with the binary form of the code that is subject to the
+#         above license.  For example, such file could be put on a 
+#         Blu-ray disc containing the binary form of the code or could 
+#         be put in a JAR file that is broadcast via a digital television 
+#         broadcast medium.  In any event, you must include in any end 
+#         user licenses governing any code that includes the code subject 
+#         to the above license (in source and/or binary form) a disclaimer 
+#         that is at least as protective of Sun as the disclaimers in the 
+#         above license.
+# 
+#         A copy of the required copyright notice, the list of conditions and
+#         the disclaimer will be maintained at 
+#         https://hdcookbook.dev.java.net/misc/license.html .
+#         Thus, licensees may comply with the binary form redistribution
+#         requirement with a text file that contains the following text:
+# 
+#             A copy of the license(s) governing this code is located
+#             at https://hdcookbook.dev.java.net/misc/license.html
+# 
+
+#
+# This is the show file for the main menu xlet in the HD Cookbook's
+# Blu-ray disc image.
+#
+
+show
+
+# ==========
+#  Settings
+# ==========
+
+setting segment_stack_depth     1 ;
+        # We only ever pop the stack of segment states by one
+
+setting draw_targets {
+        T:Default
+        T:MovingMenu
+} ;
+
+setting sticky_images {
+    "Graphics/Menu/Load_0000.png"
+    "Graphics/Menu/Load_0001.png"
+    "Graphics/Menu/Load_0002.png"
+    "Graphics/Menu/Load_0003.png"
+    "Graphics/Menu/Load_0004.png"
+    "Graphics/Menu/Load_0005.png"
+    "Graphics/Menu/Load_0006.png"
+    "Graphics/Menu/Load_0007.png"
+        # We set the rotating yin/yang images to "sticky".  In this
+        # show, we just do this as a way of testing the sticky/unsticky
+        # functionality.  Setting these images means that they won't
+        # be unloaded for as long as the show is active.  This can be
+        # tested by navigating to the S:NullSegment segment (which has
+        # no prepareed features) and then back to S:Initialize, using
+        # GrinView.
+} ;
+
+exports 
+    segments {
+        S:Bio.Available
+        S:Bio.NotAvailable
+        S:BookmarkSnap
+        S:Loading
+        S:Initialize
+        S:StartBonusVideo
+    } features {
+        F:Bio.Bunny
+        F:BookmarksMenu.*.State
+        F:BookmarksMenu.NumBookmarks.Assembly
+        F:BookmarksMenu.[1-5].Text
+        F:UserInput.Message
+    } handlers {
+        H:BookmarksMenu
+    }
+;
+
+java_generated_class com.hdcookbook.bookmenu.menu.commands.MenuShowCommands [[
+
+    package com.hdcookbook.bookmenu.menu.commands;
+
+    import com.hdcookbook.grin.Show;
+    import com.hdcookbook.grin.GrinXHelper;
+
+    XLET_ONLY_[[ 
+        import org.bluray.system.RegisterAccess;
+
+        import com.hdcookbook.bookmenu.menu.MenuXlet; 
+        import com.hdcookbook.bookmenu.menu.MenuDirector; 
+        import com.hdcookbook.bookmenu.menu.MenuDiscNavigator; 
+    ]]
+
+    GRINVIEW_ONLY_[[
+        import com.hdcookbook.grin.test.bigjdk.BDRegisterEmulator;
+    ]]
+
+    public class MenuShowCommands extends GrinXHelper {
+
+        public MenuShowCommands(Show show) {
+            super(show);
+        }
+
+        XLET_ONLY_[[
+
+            private final static RegisterAccess registers 
+                = RegisterAccess.getInstance();
+
+            private MenuDirector getMenuDirector() {
+                return (MenuDirector) show.getDirector();
+            }
+
+        ]]
+
+        GRINVIEW_ONLY_[[
+            private final static BDRegisterEmulator registers 
+                = BDRegisterEmulator.getInstance();
+        ]]
+
+
+        private void setBookmarkUI(int sceneNum, boolean activate) {
+            XLET_ONLY_[[
+                MenuDirector dir = getMenuDirector();
+                long t = dir.setBookmarkUIForScene(sceneNum);
+                if (activate && t != Long.MIN_VALUE) {
+                    MenuDiscNavigator nav = dir.xlet.navigator;
+                    nav.gotoMediaTime(nav.movieVideoStartPL, t);
+                }
+            ]]
+            GRINVIEW_ONLY_[[
+                System.out.println("Setting bookmark UI to scene " + sceneNum
+                                   + ", activate:  " + activate);
+            ]]
+        }
+
+        private void playActivateSound() {
+            XLET_ONLY_[[
+                MenuDiscNavigator nav = getMenuDirector().xlet.navigator;
+                nav.playSound(nav.activateSound);
+            ]]
+            GRINVIEW_ONLY_[[
+                System.out.println("Play activate sound.");
+            ]]
+            //
+            // We increment GPR 1 whenever we play this sound.  This isn't
+            // useful in a real xlet, but it lets us test the UI that
+            // simulates registers.
+            //
+            int i = registers.getGPR(1);
+            registers.setGPR(1, i+1);
+        }
+
+        private void selectAudio(int streamNum) {
+            XLET_ONLY_[[
+                getMenuDirector().xlet.navigator.selectAudioStream(streamNum);
+            ]]
+            GRINVIEW_ONLY_[[
+                System.out.println("Select audio stream " + streamNum);
+            ]]
+        }
+
+        private void selectSubtitles(int streamNum) {
+            XLET_ONLY_[[
+                getMenuDirector().xlet.navigator.selectSubtitleStream(streamNum);
+            ]]
+            GRINVIEW_ONLY_[[
+                System.out.println("Select subtitle stream " + streamNum);
+            ]]
+        }
+
+        private void setText(String text) {
+            XLET_ONLY_[[
+                getMenuDirector().setUserInputText(text);
+            ]]
+            GRINVIEW_ONLY_[[
+                System.out.println("Set text command \"" + text + "\".");
+            ]]
+        }
+
+
+        JAVA_COMMAND_BODY
+
+    }
+
+]]
+
+# ==========
+#  Features
+# ==========
+
+feature image_sequence F:SpinningYinYangClockwise {
+            ( left 250 top 850  scale  1000  1000 mills )
+            ( left 250 top 850  scale  1000  1000 mills )
+            ( left 250 top 850  scale  1000  1000 mills )
+            ( left 250 top 850  scale  1000  1000 mills )
+            ( left 250 top 850  scale  1000  1000 mills )
+            ( left 250 top 850  scale  1000  1000 mills )
+            ( left 250 top 850  scale  1000  1000 mills )
+            ( left 250 top 850  scale  1000  1000 mills )
+            ( left 250 top 850  scale -1000 -1000 mills )
+            ( left 250 top 850  scale -1000 -1000 mills )
+            ( left 250 top 850  scale -1000 -1000 mills )
+            ( left 250 top 850  scale -1000 -1000 mills )
+            ( left 250 top 850  scale -1000 -1000 mills )
+            ( left 250 top 850  scale -1000 -1000 mills )
+            ( left 250 top 850  scale -1000 -1000 mills )
+            ( left 250 top 850  scale -1000 -1000 mills )
+        }
+        "Graphics/Menu/Load_00" {
+                00 01 02 03 04 05 06 07 00 01 02 03 04 05 06 07
+        } ".png" repeat
+                # Images 08..15 are the same as flipping 00..07 both
+                # vertically and horizontally.  A flipped image renders
+                # quickly, so using the flipped version saves image decode
+                # time at slight runtime cost.
+;
+
+feature image_sequence F:SpinningYinYangCCW {
+            ( left   250 top     850    scale -1000 -1000 mills )
+            ( left   250 top     850    scale -1000 -1000 mills )
+            ( middle 313 top     850    scale -1000 -1000 mills )
+            ( right  375 top     850    scale -1000 -1000 mills )
+            ( left   250 middle  913    scale -1000 -1000 mills )
+            ( middle 313 middle  913    scale -1000 -1000 mills )
+            ( right  375 middle  913    scale -1000 -1000 mills )
+            ( left   250 bottom  975    scale -1000 -1000 mills )
+            ( middle 313 bottom  975    scale  1000  1000 mills )
+            ( right  375 bottom  975    scale  1000  1000 mills )
+            ( left   250 top 850        scale  1000  1000 mills )
+            ( left   250 top 850        scale  1000  1000 mills )
+            250 850     # same as ( left 250 top 850 scale 1000 1000 mills )
+            250 850     #
+            250 850     # We also specify different anchor points above just
+            250 850     # to test.  They all land at left 250 top 850.
+        }
+        "Graphics/Menu/Load_00" {
+                07 06 05 04 03 02 01 00 07 06 05 04 03 02 01 00
+        } ".png" repeat
+;
+
+feature text F:LoadingText 430 900 { "Loading..." } 
+        Lisa plain 60 { { 0 255 0 255 } } 
+;
+
+feature group F:Nothing  { 
+} ;
+
+#
+#  Features making up the five menu buttons:
+#
+#       Play   Setup  Scenes  Bonus  X
+#
+#  Each has three states:  Normal, Selected and Activated.
+#  First we have three features for each button (one per state).
+#  Then, we assemble them into groups of each combination that can
+#  be visible at a time.  Finally, we put these in an assembly that
+#  lets us select between the groups.  The final assembly is called
+#  F:MainMenu.
+#
+#  X (as in, close) is a little special:  It shows up on the popup
+#  menu, but not the main menu.
+
+feature fixed_image F:StillYinYang 250 850
+        "Graphics/Menu/Load_0000.png" ;
+
+feature fixed_image F:MainMenu.Play.Normal 450 880
+        "Graphics/Menu/Play_N.png" ;
+
+feature fixed_image F:MainMenu.Play.Selected 450 880
+        "Graphics/Menu/Play_S.png" ;
+
+feature fixed_image F:MainMenu.Play.Activated 450 880
+        "Graphics/Menu/Play_A.png" ;
+
+feature fixed_image F:MainMenu.Setup.Normal 750 880
+        "Graphics/Menu/Setup_N.png" ;
+
+feature fixed_image F:MainMenu.Setup.Selected 750 880
+        "Graphics/Menu/Setup_S.png" ;
+
+feature fixed_image F:MainMenu.Setup.Activated 750 880
+        "Graphics/Menu/Setup_A.png" ;
+
+feature fixed_image F:MainMenu.Scenes.Normal 1050 880
+        "Graphics/Menu/Scenes_N.png" ;
+
+feature fixed_image F:MainMenu.Scenes.Selected 1050 880
+        "Graphics/Menu/Scenes_S.png" ;
+
+feature fixed_image F:MainMenu.Scenes.Activated 1050 880
+        "Graphics/Menu/Scenes_A.png" ;
+
+feature fixed_image F:MainMenu.Bonus.Normal 1350 880
+        "Graphics/Menu/Bonus_N.png" ;
+
+feature fixed_image F:MainMenu.Bonus.Selected 1350 880
+        "Graphics/Menu/Bonus_S.png" ;
+
+feature fixed_image F:MainMenu.Bonus.Activated 1350 880
+        "Graphics/Menu/Bonus_A.png" ;
+
+feature fixed_image F:VideoMenu.Close.Normal 1650 880
+        "Graphics/Menu/Close_N.png" ;
+
+feature fixed_image F:VideoMenu.Close.Selected 1650 880
+        "Graphics/Menu/Close_S.png" ;
+
+feature fixed_image F:VideoMenu.Close.Activated 1650 880
+        "Graphics/Menu/Close_A.png" ;
+
+#
+# First, groups without Close...
+#
+
+feature group F:MainMenu.PlaySelected {
+        F:MainMenu.Play.Selected  F:MainMenu.Setup.Normal
+        F:MainMenu.Scenes.Normal  F:MainMenu.Bonus.Normal
+} ;
+
+feature group F:MainMenu.PlayActivated {
+        F:MainMenu.Play.Activated F:MainMenu.Setup.Normal
+        F:MainMenu.Scenes.Normal  F:MainMenu.Bonus.Normal
+} ;
+
+feature group F:MainMenu.SetupSelected {
+        F:MainMenu.Play.Normal    F:MainMenu.Setup.Selected
+        F:MainMenu.Scenes.Normal  F:MainMenu.Bonus.Normal
+} ;
+
+feature group F:MainMenu.SetupActivated {
+        F:MainMenu.Play.Normal    F:MainMenu.Setup.Activated
+        F:MainMenu.Scenes.Normal  F:MainMenu.Bonus.Normal
+} ;
+
+feature group F:MainMenu.ScenesSelected {
+        F:MainMenu.Play.Normal     F:MainMenu.Setup.Normal
+        F:MainMenu.Scenes.Selected F:MainMenu.Bonus.Normal
+} ;
+
+feature group F:MainMenu.ScenesActivated {
+        F:MainMenu.Play.Normal      F:MainMenu.Setup.Normal
+        F:MainMenu.Scenes.Activated F:MainMenu.Bonus.Normal
+} ;
+
+feature group F:MainMenu.BonusSelected {
+        F:MainMenu.Play.Normal    F:MainMenu.Setup.Normal
+        F:MainMenu.Scenes.Normal  F:MainMenu.Bonus.Selected
+} ;
+
+feature group F:MainMenu.BonusActivated {
+        F:MainMenu.Play.Normal    F:MainMenu.Setup.Normal
+        F:MainMenu.Scenes.Normal  F:MainMenu.Bonus.Activated
+} ;
+
+#
+# Next, we add in Close for the video menu
+#
+
+feature group F:VideoMenu.PlaySelected {
+        F:MainMenu.PlaySelected
+        F:VideoMenu.Close.Normal
+} ;
+
+feature group F:VideoMenu.PlayActivated {
+        F:MainMenu.PlayActivated
+        F:VideoMenu.Close.Normal
+} ;
+
+feature group F:VideoMenu.SetupSelected {
+        F:MainMenu.SetupSelected
+        F:VideoMenu.Close.Normal
+} ;
+
+feature group F:VideoMenu.SetupActivated {
+        F:MainMenu.SetupActivated
+        F:VideoMenu.Close.Normal
+} ;
+
+feature group F:VideoMenu.ScenesSelected {
+        F:MainMenu.ScenesSelected
+        F:VideoMenu.Close.Normal
+} ;
+
+feature group F:VideoMenu.ScenesActivated {
+        F:MainMenu.ScenesActivated
+        F:VideoMenu.Close.Normal
+} ;
+
+feature group F:VideoMenu.BonusSelected {
+        F:MainMenu.BonusSelected
+        F:VideoMenu.Close.Normal
+} ;
+
+feature group F:VideoMenu.BonusActivated {
+        F:MainMenu.BonusActivated
+        F:VideoMenu.Close.Normal
+} ;
+
+feature group F:VideoMenu.CloseSelected {
+        F:MainMenu.Play.Normal    F:MainMenu.Setup.Normal
+        F:MainMenu.Scenes.Normal  F:MainMenu.Bonus.Normal
+        F:VideoMenu.Close.Selected
+} ;
+
+
+feature group F:VideoMenu.CloseActivated {
+        F:MainMenu.Play.Normal    F:MainMenu.Setup.Normal
+        F:MainMenu.Scenes.Normal  F:MainMenu.Bonus.Normal
+        F:VideoMenu.Close.Activated
+} ;
+
+
+#
+# Finally, the assemblies for the main menu, and the
+# video menu.
+#
+
+feature assembly F:MainMenu {
+        play.selected     F:MainMenu.PlaySelected
+        play.activated    F:MainMenu.PlayActivated
+        setup.selected    F:MainMenu.SetupSelected
+        setup.activated   F:MainMenu.SetupActivated
+        scenes.selected   F:MainMenu.ScenesSelected
+        scenes.activated  F:MainMenu.ScenesActivated
+        bonus.selected    F:MainMenu.BonusSelected
+        bonus.activated   F:MainMenu.BonusActivated
+} ;
+
+feature assembly F:VideoMenu {
+        play.selected     F:VideoMenu.PlaySelected
+        play.activated    F:VideoMenu.PlayActivated
+        setup.selected    F:VideoMenu.SetupSelected
+        setup.activated   F:VideoMenu.SetupActivated
+        scenes.selected   F:VideoMenu.ScenesSelected
+        scenes.activated  F:VideoMenu.ScenesActivated
+        bonus.selected    F:VideoMenu.BonusSelected
+        bonus.activated   F:VideoMenu.BonusActivated
+        close.selected    F:VideoMenu.CloseSelected
+        close.activated   F:VideoMenu.CloseActivated
+} ;
+
+#
+# A feature with the main menu sliding in from the left, clipped to not
+# obscure F:StillYinYang
+#
+
+feature translator_model F:MainMenu.In.Coords {
+         0       -750  880      linear
+        24        450  880      linear
+    }
+    end_commands {
+        segment_done ;
+    }
+;
+
+feature translator F:MainMenu.In.Mover
+    F:MainMenu.In.Coords
+    { F:MainMenu.Targeted }
+;
+
+    # To optimize drawing, we put the moving main menu in a different
+    # draw target, and we do a guarantee_fill on it...
+
+feature set_target F:MainMenu.Targeted F:MainMenu.Guaranteed 
+    T:MovingMenu ;
+
+    # We guarantee the entire area of the main menu, and fill in between
+    # the src mode images.  They are:
+    #           play    154x55 @  450, 880
+    #           setup   189x55 @  750, 880
+    #           scenes  210x55 @ 1050, 880
+    #           bonus   197x55 @ 1350, 880
+
+feature guarantee_fill F:MainMenu.Guaranteed F:MainMenu
+        ( 450 880 1546 934 ) {
+                ( 204 880 749 934 )     # between play and setup
+                ( 939 880 1049 934 )    # between setup and scenes
+                ( 1260 880 1349 934 )   # between scenes and bonus
+        }
+;
+
+feature group F:MainMenu.In.Unclipped {
+    F:MainMenu.In.Coords
+    F:MainMenu.In.Mover
+} ;
+
+feature clipped F:MainMenu.In
+        F:MainMenu.In.Unclipped
+        ( 400 880 1979 980 )
+;
+
+
+#
+# A feature with the main menu sliding out to the left, clipped to not
+# obscure F:StillYinYang
+#
+
+feature translator_model F:MainMenu.Out.Coords {
+         0        450  880      linear
+        24       -750  880      linear
+    }
+    end_commands {
+        segment_done ;
+    }
+;
+
+feature translator F:MainMenu.Out.Mover
+    F:MainMenu.Out.Coords
+    { F:MainMenu.Targeted }
+;
+
+feature group F:MainMenu.Out.Unclipped {
+    F:MainMenu.Out.Coords
+    F:MainMenu.Out.Mover
+} ;
+
+feature clipped F:MainMenu.Out
+        F:MainMenu.Out.Unclipped
+        ( 400 880 1979 980 )
+;
+
+#
+# A feature with the video menu sliding in from the left
+#
+
+feature translator_model F:VideoMenu.In.Coords {
+         0       -950  880      linear
+        28        450  880      linear
+    }
+    end_commands {
+        segment_done ;
+    }
+;
+
+feature translator F:VideoMenu.In.Mover
+    F:VideoMenu.In.Coords
+    { F:VideoMenu }
+;
+
+feature group F:VideoMenu.In.Unclipped {
+    F:VideoMenu.In.Coords
+    F:VideoMenu.In.Mover
+} ;
+
+feature clipped F:VideoMenu.In
+        F:VideoMenu.In.Unclipped
+        ( 400 880 1979 980 )
+;
+
+
+#
+# A feature with the video menu sliding out to the left.
+#
+
+feature translator_model F:VideoMenu.Out.Coords {
+         0        450  880      linear
+        28       -950  880      linear
+    }
+    end_commands {
+        segment_done ;
+    }
+;
+
+feature translator F:VideoMenu.Out.Mover
+    F:VideoMenu.Out.Coords
+    { F:VideoMenu }
+;
+
+feature clipped F:VideoMenu.Out
+        sub_feature group {
+            F:VideoMenu.Out.Coords
+            F:VideoMenu.Out.Mover
+        } ;
+        ( 400 880 1979 980 )
+;
+
+#
+#  A feature for an inactive menu in various states.  Close is either 
+# showing or not, by toggling the assembly F:MenuInactive.CloseOrNothing
+#  between "close" and "nothing"
+
+feature assembly F:MenuInactive.CloseOrNothing {
+    "close"     F:VideoMenu.Close.Normal
+    "nothing"   F:Nothing
+} ;
+
+feature group F:MenuInactive.SetupActivated {
+        F:MainMenu.Play.Normal    F:MainMenu.Setup.Activated
+        F:MainMenu.Scenes.Normal  F:MainMenu.Bonus.Normal
+        F:MenuInactive.CloseOrNothing
+} ;
+
+
+feature group F:MenuInactive.ScenesActivated {
+        F:MainMenu.Play.Normal      F:MainMenu.Setup.Normal
+        F:MainMenu.Scenes.Activated F:MainMenu.Bonus.Normal
+        F:MenuInactive.CloseOrNothing
+} ;
+
+
+feature group F:MenuInactive.BonusActivated {
+        F:MainMenu.Play.Normal    F:MainMenu.Setup.Normal
+        F:MainMenu.Scenes.Normal  F:MainMenu.Bonus.Activated
+        F:MenuInactive.CloseOrNothing
+} ;
+
+#
+#  Features for the setup submenu
+#
+
+feature box F:SetupMenu.BG.Box
+    ( 800 200 1200 800 )
+    outline 11 { 223 0 0 255 }
+    fill { 0 0 0 92 }
+;
+
+feature fixed_image F:SetupMenu.BG.Audio 818 212            # +18 +13
+    "Graphics/Menu/Setup_Audio_BG.png" ;
+
+feature fixed_image F:SetupMenu.BG.Subtitles 819 446    # +19 +246
+    "Graphics/Menu/Setup_Subtitles_BG.png" ;
+
+feature group F:SetupMenu.BG.Images {
+        F:SetupMenu.BG.Audio
+        F:SetupMenu.BG.Subtitles
+} ;
+
+feature src_over F:SetupMenu.BG.Images.SrcOver F:SetupMenu.BG.Images ;
+
+feature group F:SetupMenu.BG {
+        F:SetupMenu.BG.Box
+        F:SetupMenu.BG.Images
+} ;
+
+feature fixed_image F:Setup.Audio1.Normal 825 262
+    "Graphics/Menu/Audio1_N.png" ;
+
+feature fixed_image F:Setup.Audio1.Selected 825 262
+    "Graphics/Menu/Audio1_S.png" ;
+
+feature fixed_image F:Setup.Audio2.Normal 825 322
+    "Graphics/Menu/Audio2_N.png" ;
+
+feature fixed_image F:Setup.Audio2.Selected 825 322
+    "Graphics/Menu/Audio2_S.png" ;
+
+feature fixed_image F:Setup.EnglishST.Normal 825 496
+    "Graphics/Menu/Subtitle1_N.png" ;
+
+feature fixed_image F:Setup.EnglishST.Selected 825 496
+    "Graphics/Menu/Subtitle1_S.png" ;
+
+feature fixed_image F:Setup.SpanishST.Normal 825 556
+    "Graphics/Menu/Subtitle2_N.png" ;
+
+feature fixed_image F:Setup.SpanishST.Selected 825 556
+    "Graphics/Menu/Subtitle2_S.png" ;
+
+feature fixed_image F:Setup.NoST.Normal 825 616
+    "Graphics/Menu/Subtitle3_N.png" ;
+
+feature fixed_image F:Setup.NoST.Selected 825 616
+    "Graphics/Menu/Subtitle3_S.png" ;
+
+feature group F:SetupMenu.Audio1.Selected {
+    F:Setup.Audio1.Selected
+    F:Setup.Audio2.Normal
+    F:Setup.EnglishST.Normal
+    F:Setup.SpanishST.Normal
+    F:Setup.NoST.Normal
+} ;
+
+
+feature group F:SetupMenu.Audio2.Selected {
+    F:Setup.Audio1.Normal
+    F:Setup.Audio2.Selected
+    F:Setup.EnglishST.Normal
+    F:Setup.SpanishST.Normal
+    F:Setup.NoST.Normal
+} ;
+
+
+feature group F:SetupMenu.EnglishST.Selected {
+    F:Setup.Audio1.Normal
+    F:Setup.Audio2.Normal
+    F:Setup.EnglishST.Selected
+    F:Setup.SpanishST.Normal
+    F:Setup.NoST.Normal
+} ;
+
+
+feature group F:SetupMenu.SpanishST.Selected {
+    F:Setup.Audio1.Normal
+    F:Setup.Audio2.Normal
+    F:Setup.EnglishST.Normal
+    F:Setup.SpanishST.Selected
+    F:Setup.NoST.Normal
+} ;
+
+
+feature group F:SetupMenu.NoST.Selected {
+    F:Setup.Audio1.Normal
+    F:Setup.Audio2.Normal
+    F:Setup.EnglishST.Normal
+    F:Setup.SpanishST.Normal
+    F:Setup.NoST.Selected
+} ;
+
+feature group F:SetupMenu.None.Selected {
+    F:Setup.Audio1.Normal
+    F:Setup.Audio2.Normal
+    F:Setup.EnglishST.Normal
+    F:Setup.SpanishST.Normal
+    F:Setup.NoST.Normal
+} ;
+
+    # The setup menu is different than others, in that it
+    # doesn't have an activated state.  When an option is selected,
+    # the menu just moves to anotehr state:  After audio is selected,
+    # it moves to subtitle selection.  When a subtitle is selected, it
+    # moves back to the main menu.
+    #
+    # It was done this way just to show that various menu navigation
+    # strategies are possible.
+    #
+    # We also put a src_over above the assembly in the graph as an inline
+    # feature, just to show that this can be done.
+    #
+feature src_over F:SetupMenu F:SetupMenu.Assembly ;
+
+feature assembly F:SetupMenu.Assembly {
+        dts_51          F:SetupMenu.Audio1.Selected
+        dts_71          F:SetupMenu.Audio2.Selected
+        english_st      F:SetupMenu.EnglishST.Selected
+        spanish_st      F:SetupMenu.SpanishST.Selected
+        st_off          F:SetupMenu.NoST.Selected
+        none            F:SetupMenu.None.Selected
+} ; 
+
+#
+#  Features for the scenes submenu
+#
+
+feature box F:ScenesMenu.BG.Box
+    ( 330 580 1641 822 )
+    outline 11 { 223 0 0 255 }
+    fill { 0 0 0 92 }
+;
+
+feature fixed_image F:ScenesMenu.BG.Scene.1 400 620
+    "Graphics/Menu/Scene_1.png" ;
+
+feature fixed_image F:ScenesMenu.BG.Scene.2 650 620
+    "Graphics/Menu/Scene_2.png" ;
+
+feature fixed_image F:ScenesMenu.BG.Scene.3 900 620
+    "Graphics/Menu/Scene_3.png" ;
+
+feature fixed_image F:ScenesMenu.BG.Scene.4 1150 620
+    "Graphics/Menu/Scene_4.png" ;
+
+feature fixed_image F:ScenesMenu.BG.Scene.5 1400 620
+    "Graphics/Menu/Scene_5.png" ;
+
+feature group F:ScenesMenu.BG.Images {
+    F:ScenesMenu.BG.Scene.1
+    F:ScenesMenu.BG.Scene.2
+    F:ScenesMenu.BG.Scene.3
+    F:ScenesMenu.BG.Scene.4
+    F:ScenesMenu.BG.Scene.5
+} ;
+
+feature group F:ScenesMenu.BG {
+    F:ScenesMenu.BG.Box
+    F:ScenesMenu.BG.Images
+} ;
+
+feature fixed_image F:ScenesMenu.Text.1.Normal 370 750
+    "Graphics/Menu/Scene_N.png" ;
+
+feature fixed_image F:ScenesMenu.Text.2.Normal 620 750
+    "Graphics/Menu/Scene_N.png" ;
+
+feature fixed_image F:ScenesMenu.Text.3.Normal 870 750
+    "Graphics/Menu/Scene_N.png" ;
+
+feature fixed_image F:ScenesMenu.Text.4.Normal 1120 750
+    "Graphics/Menu/Scene_N.png" ;
+
+feature fixed_image F:ScenesMenu.Text.5.Normal 1370 750
+    "Graphics/Menu/Scene_N.png" ;
+
+feature fixed_image F:ScenesMenu.Bookmarks.Normal 1216 520
+    "Graphics/Menu/Bookmarks_N.png" ;
+
+feature fixed_image F:ScenesMenu.Text.1.Selected 370 750
+    "Graphics/Menu/Scene_S.png" ;
+
+feature fixed_image F:ScenesMenu.Text.2.Selected 620 750
+    "Graphics/Menu/Scene_S.png" ;
+
+feature fixed_image F:ScenesMenu.Text.3.Selected 870 750
+    "Graphics/Menu/Scene_S.png" ;
+
+feature fixed_image F:ScenesMenu.Text.4.Selected 1120 750
+    "Graphics/Menu/Scene_S.png" ;
+
+feature fixed_image F:ScenesMenu.Text.5.Selected 1370 750
+    "Graphics/Menu/Scene_S.png" ;
+
+feature fixed_image F:ScenesMenu.Bookmarks.Selected 1216 520
+    "Graphics/Menu/Bookmarks_S.png" ;
+
+feature group F:ScenesMenu.1.Selected {
+    F:ScenesMenu.Text.1.Selected
+    F:ScenesMenu.Text.2.Normal
+    F:ScenesMenu.Text.3.Normal
+    F:ScenesMenu.Text.4.Normal
+    F:ScenesMenu.Text.5.Normal
+    F:ScenesMenu.Bookmarks.Normal
+} ;
+
+feature group F:ScenesMenu.2.Selected {
+    F:ScenesMenu.Text.1.Normal
+    F:ScenesMenu.Text.2.Selected
+    F:ScenesMenu.Text.3.Normal
+    F:ScenesMenu.Text.4.Normal
+    F:ScenesMenu.Text.5.Normal
+    F:ScenesMenu.Bookmarks.Normal
+} ;
+
+feature group F:ScenesMenu.3.Selected {
+    F:ScenesMenu.Text.1.Normal
+    F:ScenesMenu.Text.2.Normal
+    F:ScenesMenu.Text.3.Selected
+    F:ScenesMenu.Text.4.Normal
+    F:ScenesMenu.Text.5.Normal
+    F:ScenesMenu.Bookmarks.Normal
+} ;
+
+feature group F:ScenesMenu.4.Selected {
+    F:ScenesMenu.Text.1.Normal
+    F:ScenesMenu.Text.2.Normal
+    F:ScenesMenu.Text.3.Normal
+    F:ScenesMenu.Text.4.Selected
+    F:ScenesMenu.Text.5.Normal
+    F:ScenesMenu.Bookmarks.Normal
+} ;
+
+feature group F:ScenesMenu.5.Selected {
+    F:ScenesMenu.Text.1.Normal
+    F:ScenesMenu.Text.2.Normal
+    F:ScenesMenu.Text.3.Normal
+    F:ScenesMenu.Text.4.Normal
+    F:ScenesMenu.Text.5.Selected
+    F:ScenesMenu.Bookmarks.Normal
+} ;
+
+feature group F:ScenesMenu.Bookmarks.Item.Selected {
+    F:ScenesMenu.Text.1.Normal
+    F:ScenesMenu.Text.2.Normal
+    F:ScenesMenu.Text.3.Normal
+    F:ScenesMenu.Text.4.Normal
+    F:ScenesMenu.Text.5.Normal
+    F:ScenesMenu.Bookmarks.Selected
+} ;
+
+feature group F:ScenesMenu.None.Selected {
+    F:ScenesMenu.Text.1.Normal
+    F:ScenesMenu.Text.2.Normal
+    F:ScenesMenu.Text.3.Normal
+    F:ScenesMenu.Text.4.Normal
+    F:ScenesMenu.Text.5.Normal
+    F:ScenesMenu.Bookmarks.Normal
+} ;
+
+feature assembly F:ScenesMenu.Assembly {
+    1           F:ScenesMenu.1.Selected
+    2           F:ScenesMenu.2.Selected
+    3           F:ScenesMenu.3.Selected
+    4           F:ScenesMenu.4.Selected
+    5           F:ScenesMenu.5.Selected
+    bookmarks   F:ScenesMenu.Bookmarks.Item.Selected
+    none        F:ScenesMenu.None.Selected
+} ;
+
+feature src_over F:ScenesMenu F:ScenesMenu.Assembly ;
+
+#
+# Features for the bookmarks submenu.  This shares a lot with
+# the scenes submenu.
+#
+#  This has a different structure than the others.  It involves
+#  interaction with Java code that's part of the xlet.  The xlet
+#  needs to consult internal state that maintains how many user-set
+#  bookmarks there are.  Depending on that number, it displays a different
+#  number of scenes.  This is accomplished with the assembly
+#  F:BookmarksMenu.NumBookmarks.Assembly.
+#
+#  Within that assembly each scene image has an assembly that can be
+#  toggled to either the normal or selected state.  The xlet toggles
+#  these in response to the commands it gets from H:BookmarksMenu.  For
+#  example, if the handler tells it to select bookmark 4, it will select
+#  bookmark 4 if it's showing, by toggling the state of F:BookmarksMenu.1.State.  
+#  If it's not, it will send a command to the handler to set the selected 
+#  bookmark to the highest one.
+#
+
+feature text F:BookmarksMenu.HelpMessage left 370 top 620 {
+        "Press a color key while the video is playing"
+        "to set a bookmark."
+    } Lisa plain 60 { 
+        { 16 240 16 255 } 
+        { 16 240 16 255 } 
+        { 16 230 36 255 } 
+        { 16 230 36 255 } 
+        { 16 220 56 255 } 
+        { 16 220 56 255 } 
+        { 16 210 76 255 } 
+        { 16 210 76 255 } 
+        { 16 200 96 255 } 
+        { 16 200 96 255 } 
+        { 16 200 116 255 } 
+        { 16 200 116 255 } 
+        { 16 200 96 255 } 
+        { 16 200 96 255 } 
+        { 16 210 76 255 } 
+        { 16 210 76 255 } 
+        { 16 220 56 255 } 
+        { 16 220 56 255 } 
+        { 16 240 36 255 } 
+        { 16 240 36 255 } 
+    } 
+    loop_count infinite
+    background { 0 0 0 128 }
+;
+
+feature text F:BookmarksMenu.DeleteHelpMessage 400 510 {
+        "Press a color key to delete selected bookmark"
+    } Lisa plain 40 { { 16 240 16 255 } } 
+    background { 0 0 0 128 }
+;
+
+feature assembly F:BookmarksMenu.DeleteHelpMessage.State {
+        on      F:BookmarksMenu.DeleteHelpMessage
+        off     F:Nothing
+} ;
+
+feature fixed_image F:BookmarksMenu.Scenes.Normal 1350 520
+    "Graphics/Menu/Scene_N.png" ;
+
+feature fixed_image F:BookmarksMenu.Scenes.Selected 1350 520
+    "Graphics/Menu/Scene_S.png" ;
+
+feature assembly F:BookmarksMenu.Scenes.State {
+        normal          F:BookmarksMenu.Scenes.Normal
+        selected        F:BookmarksMenu.Scenes.Selected
+} ;
+
+feature fixed_image F:BookmarksMenu.1.Normal 400 620
+    "Graphics/Menu/Bookmark_Film_N.png" ;
+
+feature fixed_image F:BookmarksMenu.1.Selected 400 620
+    "Graphics/Menu/Bookmark_Film_S.png" ;
+
+feature assembly F:BookmarksMenu.1.State {
+        normal          F:BookmarksMenu.1.Normal
+        selected        F:BookmarksMenu.1.Selected
+} ;
+
+feature text F:BookmarksMenu.1.Text 394 760 {
+        "00:00:00:00"
+    } Lisa plain 24  { { 240 240 240 255 } }
+    background { 0 0 0 128 }
+;
+
+feature fixed_image F:BookmarksMenu.2.Normal 650 620
+    "Graphics/Menu/Bookmark_Film_N.png" ;
+
+feature fixed_image F:BookmarksMenu.2.Selected 650 620
+    "Graphics/Menu/Bookmark_Film_S.png" ;
+
+feature assembly F:BookmarksMenu.2.State {
+        normal          F:BookmarksMenu.2.Normal
+        selected        F:BookmarksMenu.2.Selected
+} ;
+
+feature text F:BookmarksMenu.2.Text 644 760 {
+        "00:00:00:00"
+    } Lisa plain 24  { { 240 240 240 255 } }
+    background { 0 0 0 128 }
+;
+
+
+feature fixed_image F:BookmarksMenu.3.Normal 900 620
+    "Graphics/Menu/Bookmark_Film_N.png" ;
+
+feature fixed_image F:BookmarksMenu.3.Selected 900 620
+    "Graphics/Menu/Bookmark_Film_S.png" ;
+
+feature assembly F:BookmarksMenu.3.State {
+        normal          F:BookmarksMenu.3.Normal
+        selected        F:BookmarksMenu.3.Selected
+} ;
+
+feature text F:BookmarksMenu.3.Text 894 760 {
+        "00:00:00:00"
+    } Lisa plain 24  { { 240 240 240 255 } }
+    background { 0 0 0 128 }
+;
+
+
+feature fixed_image F:BookmarksMenu.4.Normal 1150 620
+    "Graphics/Menu/Bookmark_Film_N.png" ;
+
+feature fixed_image F:BookmarksMenu.4.Selected 1150 620
+    "Graphics/Menu/Bookmark_Film_S.png" ;
+
+feature assembly F:BookmarksMenu.4.State {
+        normal          F:BookmarksMenu.4.Normal
+        selected        F:BookmarksMenu.4.Selected
+} ;
+
+feature text F:BookmarksMenu.4.Text 1144 760 {
+        "00:00:00:00"
+    } Lisa plain 24  { { 240 240 240 255 } }
+    background { 0 0 0 128 }
+;
+
+
+feature fixed_image F:BookmarksMenu.5.Normal 1400 620
+    "Graphics/Menu/Bookmark_Film_N.png" ;
+
+feature fixed_image F:BookmarksMenu.5.Selected 1400 620
+    "Graphics/Menu/Bookmark_Film_S.png" ;
+
+feature assembly F:BookmarksMenu.5.State {
+        normal          F:BookmarksMenu.5.Normal
+        selected        F:BookmarksMenu.5.Selected
+} ;
+
+feature text F:BookmarksMenu.5.Text 1394 760 {
+        "00:00:00:00"
+    } Lisa plain 24  { { 240 240 240 255 } }
+    background { 0 0 0 128 }
+;
+
+feature group F:BookmarksMenu.HelpMessageAndScenes {
+    F:BookmarksMenu.HelpMessage
+    F:BookmarksMenu.Scenes.State
+} ;
+
+feature group F:BookmarksMenu.1 {
+    F:BookmarksMenu.DeleteHelpMessage.State
+    F:BookmarksMenu.Scenes.State
+    F:BookmarksMenu.1.Text
+    F:BookmarksMenu.1.State
+} ;
+
+feature group F:BookmarksMenu.2 {
+    F:BookmarksMenu.1
+    F:BookmarksMenu.2.Text
+    F:BookmarksMenu.2.State
+} ;
+
+feature group F:BookmarksMenu.3 {
+    F:BookmarksMenu.2
+    F:BookmarksMenu.3.Text
+    F:BookmarksMenu.3.State
+} ;
+
+feature group F:BookmarksMenu.4 {
+    F:BookmarksMenu.3
+    F:BookmarksMenu.4.Text
+    F:BookmarksMenu.4.State
+} ;
+
+feature group F:BookmarksMenu.5 {
+    F:BookmarksMenu.4
+    F:BookmarksMenu.5.Text
+    F:BookmarksMenu.5.State
+} ;
+
+
+feature assembly F:BookmarksMenu.NumBookmarks.Assembly {
+        help    F:BookmarksMenu.HelpMessageAndScenes
+         1      F:BookmarksMenu.1
+         2      F:BookmarksMenu.2
+         3      F:BookmarksMenu.3
+         4      F:BookmarksMenu.4
+         5      F:BookmarksMenu.5
+} ;
+
+feature src_over F:BookmarksMenu F:BookmarksMenu.NumBookmarks.Assembly ;
+
+#
+# Features for the bonus submenu
+#
+
+feature box F:BonusMenu.BG
+    ( 1320 422 1649 821 )
+    outline 11 { 223 0 0 255 }
+    fill { 0 0 0 92 }
+;
+
+feature fixed_image F:BonusMenu.Game.Normal 1335 450
+    "Graphics/Menu/Game_N.png" ;
+
+feature fixed_image F:BonusMenu.Game.Selected 1335 450
+    "Graphics/Menu/Game_S.png" ;
+
+feature fixed_image F:BonusMenu.Bio.Normal 1335 530
+    "Graphics/Menu/Bio_N.png" ;
+
+feature fixed_image F:BonusMenu.Bio.Selected 1335 530
+    "Graphics/Menu/Bio_S.png" ;
+
+feature fixed_image F:BonusMenu.Bonus1.Normal 1335 610
+    "Graphics/Menu/Bonus1_N.png" ;
+
+feature fixed_image F:BonusMenu.Bonus1.Selected 1335 610
+    "Graphics/Menu/Bonus1_S.png" ;
+
+feature group F:BonusMenu.GameSelected {
+    F:BonusMenu.Game.Selected
+    F:BonusMenu.Bio.Normal
+    F:BonusMenu.Bonus1.Normal
+} ;
+
+feature group F:BonusMenu.BioSelected {
+    F:BonusMenu.Game.Normal
+    F:BonusMenu.Bio.Selected
+    F:BonusMenu.Bonus1.Normal
+} ;
+
+feature group F:BonusMenu.Bonus1Selected {
+    F:BonusMenu.Game.Normal
+    F:BonusMenu.Bio.Normal
+    F:BonusMenu.Bonus1.Selected
+} ;
+
+feature group F:BonusMenu.NothingSelected {
+    F:BonusMenu.Game.Normal
+    F:BonusMenu.Bio.Normal
+    F:BonusMenu.Bonus1.Normal
+} ;
+
+feature assembly F:BonusMenu.Assembly {
+    game        F:BonusMenu.GameSelected
+    bio         F:BonusMenu.BioSelected
+    bonus1      F:BonusMenu.Bonus1Selected
+    nothing     F:BonusMenu.NothingSelected
+} ;
+
+feature src_over F:BonusMenu F:BonusMenu.Assembly ;
+
+#
+#  The bookmark snap image, for when the user sets a bookmark
+#
+
+feature fixed_image F:BookmarkSnap.Im 1600 70
+        "Graphics/Menu/Bookmark_Snap.png" ;
+
+feature fade F:BookmarkSnap F:BookmarkSnap.Im {
+        0       255     linear
+        48      255     linear
+        72        0     linear
+} end_commands {
+        segment_done ;
+} ;
+
+
+#
+#  The user input grid
+#
+
+feature text F:UserInput.Message 600 100 { "Enter The Secret Code!" } 
+        Lisa plain 60 { { 16 240 16 255 } } 
+        background { 0 0 0 128 }
+;
+
+feature fixed_image F:UserInput.A.Normal 630 300
+        "Graphics/UserInput/Letter_A_N.png" ;
+
+feature fixed_image F:UserInput.A.Selected 630 300
+        "Graphics/UserInput/Letter_A_S.png" ;
+
+feature fixed_image F:UserInput.A.Activated 630 300
+        "Graphics/UserInput/Letter_A_A.png" ;
+
+feature fixed_image F:UserInput.B.Normal 860 300
+        "Graphics/UserInput/Letter_B_N.png" ;
+
+feature fixed_image F:UserInput.B.Selected 860 300
+        "Graphics/UserInput/Letter_B_S.png" ;
+
+feature fixed_image F:UserInput.B.Activated 860 300
+        "Graphics/UserInput/Letter_B_A.png" ;
+
+feature fixed_image F:UserInput.D.Normal 1090 300
+        "Graphics/UserInput/Letter_D_N.png" ;
+
+feature fixed_image F:UserInput.D.Selected 1090 300
+        "Graphics/UserInput/Letter_D_S.png" ;
+
+feature fixed_image F:UserInput.D.Activated 1090 300
+        "Graphics/UserInput/Letter_D_A.png" ;
+
+feature fixed_image F:UserInput.H.Normal 630 500
+        "Graphics/UserInput/Letter_H_N.png" ;
+
+feature fixed_image F:UserInput.H.Selected 630 500
+        "Graphics/UserInput/Letter_H_S.png" ;
+
+feature fixed_image F:UserInput.H.Activated 630 500
+        "Graphics/UserInput/Letter_H_A.png" ;
+
+feature fixed_image F:UserInput.L.Normal 860 500
+        "Graphics/UserInput/Letter_L_N.png" ;
+
+feature fixed_image F:UserInput.L.Selected 860 500
+        "Graphics/UserInput/Letter_L_S.png" ;
+
+feature fixed_image F:UserInput.L.Activated 860 500
+        "Graphics/UserInput/Letter_L_A.png" ;
+
+feature fixed_image F:UserInput.R.Normal 1090 500
+        "Graphics/UserInput/Letter_R_N.png" ;
+
+feature fixed_image F:UserInput.R.Selected 1090 500
+        "Graphics/UserInput/Letter_R_S.png" ;
+
+feature fixed_image F:UserInput.R.Activated 1090 500
+        "Graphics/UserInput/Letter_R_A.png" ;
+
+feature fixed_image F:UserInput.U.Normal 630 700
+        "Graphics/UserInput/Letter_U_N.png" ;
+
+feature fixed_image F:UserInput.U.Selected 630 700
+        "Graphics/UserInput/Letter_U_S.png" ;
+
+feature fixed_image F:UserInput.U.Activated 630 700
+        "Graphics/UserInput/Letter_U_A.png" ;
+
+feature fixed_image F:UserInput.V.Normal 860 700
+        "Graphics/UserInput/Letter_V_N.png" ;
+
+feature fixed_image F:UserInput.V.Selected 860 700
+        "Graphics/UserInput/Letter_V_S.png" ;
+
+feature fixed_image F:UserInput.V.Activated 860 700
+        "Graphics/UserInput/Letter_V_A.png" ;
+
+feature fixed_image F:UserInput.Y.Normal 1090 700
+        "Graphics/UserInput/Letter_Y_N.png" ;
+
+feature fixed_image F:UserInput.Y.Selected 1090 700
+        "Graphics/UserInput/Letter_Y_S.png" ;
+
+feature fixed_image F:UserInput.Y.Activated 1090 700
+        "Graphics/UserInput/Letter_Y_A.png" ;
+
+feature fixed_image F:UserInput.Enter.Normal 630 900
+        "Graphics/UserInput/Letter_Enter_N.png" ;
+
+feature fixed_image F:UserInput.Enter.Selected 630 900
+        "Graphics/UserInput/Letter_Enter_S.png" ;
+
+feature fixed_image F:UserInput.Enter.Activated 630 900
+        "Graphics/UserInput/Letter_Enter_A.png" ;
+
+feature fixed_image F:UserInput.Close.Normal 1330 930
+        "Graphics/Menu/Close_N.png" ;
+
+feature fixed_image F:UserInput.Close.Selected 1330 930
+        "Graphics/Menu/Close_S.png" ;
+
+feature fixed_image F:UserInput.Close.Activated 1330 930
+        "Graphics/Menu/Close_A.png" ;
+
+feature timer F:UserInput.A.Timer 12 {
+        activate_part F:UserInput  a.selected ;
+} ;
+
+feature timer F:UserInput.B.Timer 12 {
+        activate_part F:UserInput  b.selected ;
+} ;
+
+feature timer F:UserInput.D.Timer 12 {
+        activate_part F:UserInput  d.selected ;
+} ;
+
+feature timer F:UserInput.H.Timer 12 {
+        activate_part F:UserInput  h.selected ;
+} ;
+
+feature timer F:UserInput.L.Timer 12 {
+        activate_part F:UserInput  l.selected ;
+} ;
+
+feature timer F:UserInput.R.Timer 12 {
+        activate_part F:UserInput  r.selected ;
+} ;
+
+feature timer F:UserInput.U.Timer 12 {
+        activate_part F:UserInput  u.selected ;
+} ;
+
+feature timer F:UserInput.V.Timer 12 {
+        activate_part F:UserInput  v.selected ;
+} ;
+
+feature timer F:UserInput.Y.Timer 12 {
+        activate_part F:UserInput  y.selected ;
+} ;
+
+feature timer F:UserInput.Enter.Timer 12 {
+        activate_part F:UserInput  enter.selected ;
+} ;
+
+feature timer F:UserInput.Close.Timer 12 {
+        activate_part F:UserInput  close.selected ;
+} ;
+
+feature menu_assembly F:UserInput 
+    template {
+        all     { F:UserInput.Message }
+        a       { F:UserInput.A.Normal }
+        b       { F:UserInput.B.Normal }
+        d       { F:UserInput.D.Normal }
+        h       { F:UserInput.H.Normal }
+        l       { F:UserInput.L.Normal }
+        r       { F:UserInput.R.Normal }
+        u       { F:UserInput.U.Normal }
+        v       { F:UserInput.V.Normal }
+        y       { F:UserInput.Y.Normal }
+        enter   { F:UserInput.Enter.Normal }
+        close   { F:UserInput.Close.Normal }
+    } parts {
+        a.selected      { a       { F:UserInput.A.Selected } }
+        b.selected      { b       { F:UserInput.B.Selected } }
+        d.selected      { d       { F:UserInput.D.Selected } }
+        h.selected      { h       { F:UserInput.H.Selected } }
+        l.selected      { l       { F:UserInput.L.Selected } }
+        r.selected      { r       { F:UserInput.R.Selected } }
+        u.selected      { u       { F:UserInput.U.Selected } }
+        v.selected      { v       { F:UserInput.V.Selected } }
+        y.selected      { y       { F:UserInput.Y.Selected } }
+        enter.selected  { enter   { F:UserInput.Enter.Selected } }
+        close.selected  { close   { F:UserInput.Close.Selected } }
+
+        a.activated     { a       { F:UserInput.A.Activated
+                                    F:UserInput.A.Timer } }
+        b.activated     { b       { F:UserInput.B.Activated
+                                    F:UserInput.B.Timer } }
+        d.activated     { d       { F:UserInput.D.Activated
+                                    F:UserInput.D.Timer } }
+        h.activated     { h       { F:UserInput.H.Activated
+                                    F:UserInput.H.Timer } }
+        l.activated     { l       { F:UserInput.L.Activated
+                                    F:UserInput.L.Timer } }
+        r.activated     { r       { F:UserInput.R.Activated
+                                    F:UserInput.R.Timer } }
+        u.activated     { u       { F:UserInput.U.Activated
+                                    F:UserInput.U.Timer } }
+        v.activated     { v       { F:UserInput.V.Activated
+                                    F:UserInput.V.Timer } }
+        y.activated     { y       { F:UserInput.Y.Activated
+                                    F:UserInput.Y.Timer } }
+        enter.activated { enter   { F:UserInput.Enter.Activated
+                                    F:UserInput.Enter.Timer } }
+        close.activated { close   { F:UserInput.Close.Selected 
+                                    F:UserInput.Close.Timer } }
+    }
+;
+
+
+#
+# A demonstration of scaling.  Just for fun, when the user correctly
+# enters the code, we make the user input grid expand and fade out.
+#
+
+feature scaling_model F:UserInput.Success.Scale
+    {
+        0       1000    800     1000    1000    mills
+        12      1000    800     -1000   1000    mills
+        24      1000    800     1000    1000    mills
+        28      1000    800     1050    1050    mills
+        32      1000    800     1150    1150    mills
+        36      1000    800     1250    1250    mills
+        72      1000    800     2000    2000    mills
+    }
+    end_commands {
+        segment_done ;
+    }
+;
+
+feature box F:UserInput.Message.Scaled 
+        ( 600 100 1299 159 )
+        fill { 16 240 16 96 }
+        scaling_model F:UserInput.Success.Scale ;
+    # We can't scale text, so we just make a green box and scale it
+
+feature image_sequence F:UserInput.A.Scaled 630 300
+        "Graphics/UserInput/Letter_A_N.png"  { "" } ""
+        scaling_model F:UserInput.Success.Scale ;
+    #  This is an image_sequence just to test scaling an image_sequence
+
+feature fixed_image F:UserInput.B.Scaled 860 300
+        "Graphics/UserInput/Letter_B_N.png" 
+        scaling_model F:UserInput.Success.Scale ;
+
+feature fixed_image F:UserInput.D.Scaled 1090 300
+        "Graphics/UserInput/Letter_D_N.png" 
+        scaling_model F:UserInput.Success.Scale ;
+
+feature fixed_image F:UserInput.H.Scaled 630 500
+        "Graphics/UserInput/Letter_H_N.png" 
+        scaling_model F:UserInput.Success.Scale ;
+
+feature fixed_image F:UserInput.L.Scaled 860 500
+        "Graphics/UserInput/Letter_L_N.png" 
+        scaling_model F:UserInput.Success.Scale ;
+
+feature fixed_image F:UserInput.R.Scaled 1090 500
+        "Graphics/UserInput/Letter_R_N.png" 
+        scaling_model F:UserInput.Success.Scale ;
+
+feature fixed_image F:UserInput.U.Scaled 630 700
+        "Graphics/UserInput/Letter_U_N.png" 
+        scaling_model F:UserInput.Success.Scale ;
+
+feature fixed_image F:UserInput.V.Scaled 860 700
+        "Graphics/UserInput/Letter_V_N.png" 
+        scaling_model F:UserInput.Success.Scale ;
+
+feature fixed_image F:UserInput.Y.Scaled 1090 700
+        "Graphics/UserInput/Letter_Y_N.png" 
+        scaling_model F:UserInput.Success.Scale ;
+
+feature fixed_image F:UserInput.Enter.Scaled 630 900
+        "Graphics/UserInput/Letter_Enter_N.png" 
+        scaling_model F:UserInput.Success.Scale ;
+
+feature fixed_image F:UserInput.Close.Scaled 1330 930
+        "Graphics/Menu/Close_N.png" 
+        scaling_model F:UserInput.Success.Scale ;
+
+
+feature group F:UserInput.Success.Group {
+    F:UserInput.Message.Scaled
+    F:UserInput.Success.Scale
+    F:UserInput.A.Scaled
+    F:UserInput.B.Scaled
+    F:UserInput.D.Scaled
+    F:UserInput.H.Scaled
+    F:UserInput.L.Scaled
+    F:UserInput.R.Scaled
+    F:UserInput.U.Scaled
+    F:UserInput.V.Scaled
+    F:UserInput.Y.Scaled
+    F:UserInput.Enter.Scaled
+    F:UserInput.Close.Scaled
+} ;
+
+feature fade F:UserInput.Success
+    F:UserInput.Success.Group {
+        0       255     linear
+        24      255     linear
+        72      0       linear
+    }
+;
+
+#
+#  The Bio images.
+#
+#  Here, we create two different segments:  One for when a download is 
+# available, and one for when it isn't.
+#
+#  See H:Bio (both .Available and .NotAvailable)
+
+feature fixed_image F:Bio.Bunny.Original 575 200
+        "Graphics/Network/bio00000_img.png" ;
+
+feature modifier BOOK:bio_image F:Bio.Bunny F:Bio.Bunny.Original "" ;
+
+feature fixed_image F:Bio.Download.Normal 580 800
+        "Graphics/Network/Download_N.png" ;
+
+feature fixed_image F:Bio.Download.Selected 580 800
+        "Graphics/Network/Download_S.png" ;
+
+feature fixed_image F:Bio.Close.Normal 500 800
+        "Graphics/Network/Close_N.png" ;
+
+feature fixed_image F:Bio.Close.Selected 500 800
+        "Graphics/Network/Close_S.png" ;
+
+feature group F:Bio.Available.Download.Selected {
+    F:Bio.Download.Selected
+    F:Bio.Close.Normal
+} ;
+
+feature group F:Bio.Available.Close.Selected {
+    F:Bio.Download.Normal
+    F:Bio.Close.Selected
+} ;
+
+feature assembly F:Bio.Available.Assembly {
+        close                   F:Bio.Available.Close.Selected
+        download                F:Bio.Available.Download.Selected
+} ;
+
+
+feature group F:Bio.Available {
+        F:Bio.Bunny
+        F:Bio.Available.Assembly
+} ;
+
+feature group F:Bio.NotAvailable {
+        F:Bio.Bunny
+        F:Bio.Close.Selected
+} ;
+
+#
+# A feature with all assets in it, to keep everything loaded
+#
+feature group F:Everything {
+    F:SpinningYinYangClockwise F:SpinningYinYangCCW
+    F:LoadingText F:MainMenu F:MainMenu.Targeted
+    F:StillYinYang F:MainMenu.In F:MainMenu.Out
+    F:VideoMenu F:VideoMenu.In F:VideoMenu.Out
+    F:MenuInactive.SetupActivated
+    F:MenuInactive.ScenesActivated
+    F:MenuInactive.BonusActivated
+    F:SetupMenu.BG F:SetupMenu
+    F:ScenesMenu.BG F:ScenesMenu
+    F:BonusMenu.BG F:BonusMenu
+    F:BookmarksMenu
+    F:BookmarkSnap F:UserInput
+    F:Bio.Available F:Bio.NotAvailable
+    F:UserInput.Success
+} ;
+
+
+
+# =============================
+#      SEGMENTS - MAIN MENU
+# =============================
+
+segment S:Initialize
+    setup { 
+        F:SpinningYinYangClockwise 
+        F:LoadingText
+    } setup_done {
+        activate_segment S:Loading ;
+    }
+;
+
+segment S:NullSegment 
+;
+        # This is used to test image unloading, using GrinView.
+        # After going to S:NullSegment, the only valid way to
+        # re-enter the show is to re-=start at S:Initialize.
+
+segment S:Loading
+    active {
+        F:SpinningYinYangClockwise 
+        F:LoadingText
+    } 
+    setup {
+        F:Everything
+    } 
+    setup_done {
+        set_visual_rc H:MainMenu state play selected ;
+        activate_part F:MenuInactive.CloseOrNothing nothing ;
+        java_command [[ XLET_ONLY_[[
+            getMenuDirector().xlet.navigator.notifyShowLoaded();
+        ]] ]]
+        BOOK:PlayVideo menu ;
+                # We can't start playing the menu video until our assets
+                # are loaded, because we can't read from the disc while
+                # video is playing.
+        activate_segment S:MenuRollout ;
+    }
+;
+
+segment S:MenuRollout
+    active {
+        F:SpinningYinYangClockwise
+        F:MainMenu.In
+    }
+    setup {
+        F:Everything
+    } 
+    rc_handlers {
+        H:MainMenu
+    }
+    next {
+        activate_segment S:MenuShowing ;
+    }
+;
+
+segment S:MenuShowing
+    active {
+        F:StillYinYang
+        F:MainMenu
+    }
+    setup {
+        F:Everything
+    }
+    rc_handlers {
+        H:MainMenu
+    }
+;
+
+segment S:MainMenuRollIn
+    active {
+        F:SpinningYinYangCCW
+        F:MainMenu.Out
+    }
+    setup {
+        F:Everything
+    }
+    rc_handlers {
+        H:PopupListener
+    }
+    next {
+        activate_segment S:VideoPlaying ;
+    }
+;
+
+
+
+# ==================================
+#      SEGMENTS - VIDEO PLAYING
+# ==================================
+
+segment S:VideoPlaying
+    active {
+    }
+    setup {
+        F:Everything
+    }
+    rc_handlers {
+        H:PopupListener
+        H:MakeBookmarkListener
+    }
+;
+
+segment S:VideoMenuRollout
+    active {
+        F:SpinningYinYangClockwise
+        F:VideoMenu.In
+    }
+    setup {
+        F:Everything
+    } 
+    rc_handlers {
+        H:VideoMenu
+        H:MakeBookmarkListener
+    }
+    next {
+        activate_segment S:VideoMenuShowing ;
+    }
+;
+
+segment S:VideoMenuShowing
+    active {
+        F:StillYinYang
+        F:VideoMenu
+    }
+    setup {
+        F:Everything
+    }
+    rc_handlers {
+        H:VideoMenu
+        H:MakeBookmarkListener
+    }
+;
+
+segment S:VideoMenuRollBack
+    active {
+        F:SpinningYinYangCCW
+        F:VideoMenu.Out
+    }
+    setup {
+        F:Everything
+    } 
+    rc_handlers {
+        H:PopupListener
+        H:MakeBookmarkListener
+    }
+    next {
+        activate_segment S:VideoPlaying ;
+    }
+;
+
+segment S:VideoBonusPlaying
+    active {
+    }
+    setup {
+        F:Everything
+    }
+    rc_handlers {
+        H:PopupListener
+    }
+;
+
+# =============================
+#   Segments - Submenus
+# =============================
+
+segment S:SetupShowing
+    active {
+        F:StillYinYang
+        F:MenuInactive.SetupActivated
+        F:SetupMenu.BG
+        F:SetupMenu
+    }
+    setup {
+        F:Everything
+    }
+    rc_handlers {
+        H:SetupMenu
+    }
+;
+
+segment S:ScenesShowing
+    active {
+        F:StillYinYang
+        F:MenuInactive.ScenesActivated
+        F:ScenesMenu.BG
+        F:ScenesMenu 
+    }
+    setup {
+        F:Everything
+    }
+    rc_handlers {
+        H:ScenesMenu
+    }
+;
+
+segment S:BookmarksShowing
+    active {
+        F:StillYinYang
+        F:MenuInactive.ScenesActivated
+        F:ScenesMenu.BG.Box
+        F:BookmarksMenu
+    }
+    setup {
+        F:Everything
+    }
+    rc_handlers {
+        H:BookmarksMenu
+        H:BookmarksMenu.Color
+    }
+;
+
+segment S:BonusShowing
+    active {
+        F:StillYinYang
+        F:MenuInactive.BonusActivated
+        F:BonusMenu.BG
+        F:BonusMenu
+    }
+    setup {
+        F:Everything
+    }
+    rc_handlers {
+        H:BonusMenu
+    }
+;
+
+segment S:BookmarkSnap
+    active {
+        F:BookmarkSnap
+    }
+    setup {
+        F:Everything
+    }
+    rc_handlers {
+        H:PopupListener
+        H:MakeBookmarkListener
+    }
+    next {
+        activate_segment S:VideoPlaying ;
+    }
+;
+
+segment S:UserInput
+    active {
+        F:UserInput
+    }
+    setup {
+        F:Everything
+    }
+    rc_handlers {
+        H:UserInput
+    }
+    on_entry {
+        activate_part F:UserInput  a.selected ;
+        reset_feature F:UserInput ;
+            # This reset_feature isn't needed here; it was just added
+            # so the command would get tested regularly.
+    }
+;
+
+segment S:StartBonusVideo
+    active {
+        F:UserInput.Success
+    }
+    setup {
+        F:Everything
+    }
+    next {
+        activate_segment S:VideoBonusPlaying ;
+        sync_display ;
+        java_command [[ XLET_ONLY_[[ 
+            MenuDiscNavigator nav = getMenuDirector().xlet.navigator;
+            nav.startVideoAt(nav.bonusVideoStartPL);
+        ]] ]]
+    }
+;
+    # Note that we don't try to start the bonus video until after the
+    # "success" animation runs.  Even the PS/3 doesn't animate perfectly
+    # while setting up video play.
+
+segment S:Bio.Available
+    active {
+        F:Bio.Available
+    }
+    setup {
+        F:Everything
+    }
+    rc_handlers {
+        H:Bio.Available
+    }
+;
+
+segment S:Bio.NotAvailable
+    active {
+        F:Bio.NotAvailable
+    }
+    setup {
+        F:Everything
+    }
+    rc_handlers {
+        H:Bio.NotAvailable
+    }
+;
+
+
+#
+# =========================
+#  Remote Control Handlers
+# =========================
+
+rc_handler visual H:MainMenu
+                # We use the old ( 0 1 ) syntax just so this will continue
+                # to be tested.  It's equivalent to "[ play ]"
+        grid { {   ( 0 1 )   <activate>  <activate>  <activate>  }
+               {    play        setup       scenes      bonus     } }
+        assembly F:MainMenu
+        select { 
+            play        play.selected
+            setup       setup.selected
+            scenes      scenes.selected
+            bonus       bonus.selected
+        } 
+        activate { 
+            play        play.activated          { 
+                            java_command [[ playActivateSound(); ]]
+                            activate_segment S:MainMenuRollIn ; 
+                            BOOK:PlayVideo movie ;
+                        }
+            setup       setup.activated {
+                            set_visual_rc H:SetupMenu state dts_51 selected ;
+                            activate_segment  S:SetupShowing <push> ;
+                        }
+            scenes      scenes.activated {
+                            activate_segment  S:ScenesShowing <push> ;
+                            set_visual_rc H:ScenesMenu state 1 selected ;
+                        }
+            bonus       bonus.activated {
+                            activate_part F:BonusMenu.Assembly game ;
+                            activate_segment  S:BonusShowing <push> ;
+                        }
+        }
+        mouse {
+            play        (  400 860  699 955 )
+            setup       (  700 860  999 955 )
+            scenes      ( 1000 860 1299 955 )
+            bonus       ( 1300 860 1599 955 )
+        }
+;
+
+rc_handler visual H:VideoMenu
+        grid { {    [ play ]  <activate>  <activate>  <activate> [ close ] }
+               {    play        setup      scenes       bonus    close } }
+        assembly F:VideoMenu
+        select { 
+            play        play.selected
+            setup       setup.selected
+            scenes      scenes.selected
+            bonus       bonus.selected
+            close       close.selected
+        }
+        activate { 
+            play        play.activated          { 
+                            activate_segment S:VideoMenuRollBack ;
+                            sync_display ;
+                            BOOK:PlayVideo movie ;
+                            java_command [[ playActivateSound(); ]]
+                        }
+            setup       setup.activated {
+                            set_visual_rc H:SetupMenu state dts_51 selected ;
+                            activate_segment  S:SetupShowing <push> ;
+                        }
+            scenes      scenes.activated {
+                            activate_segment  S:ScenesShowing <push> ;
+                            set_visual_rc H:ScenesMenu state 1 selected ;
+                        }
+            bonus       bonus.activated {
+                            activate_part F:BonusMenu.Assembly game ;
+                            activate_segment  S:BonusShowing <push> ;
+                        }
+            close       close.activated         {
+                            activate_segment S:VideoMenuRollBack ;
+                        }
+        }
+        mouse {
+            play        (  400 860  699 955 )
+            setup       (  700 860  999 955 )
+            scenes      ( 1000 860 1299 955 )
+            bonus       ( 1300 860 1599 955 )
+            close       ( 1600 860 1799 955 )
+        }
+;
+
+    # See the notes under F:SetupMenu.Assembly to see why there's no
+    # visible activated states.
+rc_handler visual H:SetupMenu
+    grid { { dts_51 } 
+           { dts_71 }
+           { english_st }
+           { spanish_st }
+           { st_off }
+           { to_main }
+           { [ to_main ] }
+           { to_main_mouse }
+         }
+    assembly F:SetupMenu.Assembly
+    select {
+        dts_51          dts_51
+        dts_71          dts_71
+        english_st      english_st
+        spanish_st      spanish_st
+        st_off          st_off
+        to_main         {       
+                            set_visual_rc H:MainMenu state setup selected ;
+                            set_visual_rc H:VideoMenu state setup selected ;
+                            activate_segment <pop> ;    
+                        }
+        to_main_mouse   none
+    }
+    activate {
+        dts_51          { 
+                            java_command [[ selectAudio(1); ]]  # DTS 5.1
+                            set_visual_rc H:SetupMenu state 
+                                                english_st selected ;
+                        }
+        dts_71          {
+                            java_command [[ selectAudio(2);  ]]  ## DTS 7.1
+                            set_visual_rc H:SetupMenu state 
+                                                english_st selected ;
+                        }
+        english_st      {
+                            java_command [[ selectSubtitles(1); ]]   # English
+                            set_visual_rc H:MainMenu state setup selected ;
+                            set_visual_rc H:VideoMenu state setup selected ;
+                            activate_segment <pop> ;
+                        }
+        spanish_st      {
+                            java_command [[ selectSubtitles(2); ]]   # Spanish
+                            set_visual_rc H:MainMenu state setup selected ;
+                            set_visual_rc H:VideoMenu state setup selected ;
+                            activate_segment <pop> ;
+                        }
+        st_off          {
+                            java_command [[ selectSubtitles(0); ]]   # None
+                            set_visual_rc H:MainMenu state setup selected ;
+                            set_visual_rc H:VideoMenu state setup selected ;
+                            activate_segment <pop> ;
+                        }
+        to_main_mouse   {
+                            set_visual_rc H:MainMenu state setup selected ;
+                            set_visual_rc H:VideoMenu state setup selected ;
+                            activate_segment <pop> ;
+                        }
+    }
+    mouse {
+        dts_51          ( 815 260 1095 319 )
+        dts_71          ( 815 320 1095 379 )
+        english_st      ( 815 494 1095 553 )
+        spanish_st      ( 815 553 1095 613 )
+        st_off          ( 815 614 1095 669 )
+        to_main_mouse   ( 0   670 1919 1279 )
+    }
+;
+
+rc_handler visual H:ScenesMenu
+    grid { { bookmarks [ bookmarks ] [ bookmarks ] [ bookmarks ] [ bookmarks ] }
+           {    1            2            3              4               5     }
+           {    to_main     [ to_main ]  [ to_main ]  [ to_main ]  [ to_main ] }
+           {  [ to_main ]   [ to_main ]  [ to_main ]  [ to_main ]  [ to_main ] }
+           {  to_main_mouse [ to_main ]  [ to_main ]  [ to_main ]  [ to_main ] } }
+    assembly F:ScenesMenu.Assembly
+    select {
+        1               1
+        2               2
+        3               3
+        4               4
+        5               5
+        bookmarks       bookmarks
+        to_main         {       
+                            set_visual_rc H:VideoMenu state scenes selected ;
+                            set_visual_rc H:MainMenu state scenes selected ;
+                            activate_segment <pop> ;    
+                        }
+        to_main_mouse   none
+    }
+    activate {
+        1               {
+                            BOOK:PlayVideo      scene_1 ;
+                            activate_segment S:MainMenuRollIn ; 
+                        }
+        2               {
+                            BOOK:PlayVideo      scene_2 ;
+                            activate_segment S:MainMenuRollIn ; 
+                        }
+        3               {
+                            BOOK:PlayVideo      scene_3 ;
+                            activate_segment S:MainMenuRollIn ; 
+                        }
+        4               {
+                            BOOK:PlayVideo      scene_4 ;
+                            activate_segment S:MainMenuRollIn ; 
+                        }
+        5               {
+                            BOOK:PlayVideo      scene_5 ;
+                            activate_segment S:MainMenuRollIn ; 
+                        }
+        bookmarks       {
+                            java_command [[ setBookmarkUI(1, false); ]]
+                            activate_segment S:BookmarksShowing ;
+                        }
+        to_main_mouse   {
+                            set_visual_rc H:VideoMenu state scenes selected ;
+                            set_visual_rc H:MainMenu state scenes selected ;
+                            activate_segment <pop> ;    
+                        }
+    }
+    mouse {
+        bookmarks       ( 330 500 1641 579 )
+        1               (  330 580  599 822 )
+        2               (  600 580  849 822 )
+        3               (  850 580 1099 822 )
+        4               ( 1100 580 1349 822 )
+        5               ( 1350 580 1641 822 )
+        to_main_mouse   (    0 840 1919 1279 )
+    }
+;
+
+#
+#  The handler for H:BookmarksMenu lets xlet code opearate on 
+#  the assemblies that conrol the UI appearance.  See the
+#  description of those features for details.  To find this,
+#  search for "H:BookmarksMenu".
+#
+rc_handler visual H:BookmarksMenu
+    grid {   { scenes          [ scenes ]  [ scenes ]  [ scenes ]  [ scenes ] }
+             {    1                2           3           4           5   }
+             {   to_main      [ to_main ] [ to_main ] [ to_main ] [ to_main ] }
+             { [ to_main ]    [ to_main ] [ to_main ] [ to_main ] [ to_main ] }
+             {  to_main_mouse [ to_main ] [ to_main ] [ to_main ]  [ to_main ] } }
+    select {
+        1               {   java_command [[ setBookmarkUI(1, false); ]] }
+        2               {   java_command [[ setBookmarkUI(2, false); ]] }
+        3               {   java_command [[ setBookmarkUI(3, false); ]] }
+        4               {   java_command [[ setBookmarkUI(4, false); ]] }
+        5               {   java_command [[ setBookmarkUI(5, false); ]] }
+        scenes          {   java_command [[ setBookmarkUI(0, false); ]] }
+        to_main         {       
+                            set_visual_rc H:VideoMenu state scenes selected ;
+                            set_visual_rc H:MainMenu state scenes selected ;
+                            activate_segment <pop> ;    
+                        }
+        to_main_mouse   {   java_command [[ setBookmarkUI(-1, false); ]] }
+    }
+    activate {
+        1               {
+                            java_command [[ setBookmarkUI(1, true); ]]
+                            activate_segment S:MainMenuRollIn ; 
+                            java_command [[ playActivateSound(); ]]
+                        }
+        2               {
+                            java_command [[ setBookmarkUI(2, true); ]]
+                            activate_segment S:MainMenuRollIn ; 
+                            java_command [[ playActivateSound(); ]]
+                        }
+        3               {
+                            java_command [[ setBookmarkUI(3, true); ]]
+                            activate_segment S:MainMenuRollIn ; 
+                            java_command [[ playActivateSound(); ]]
+                        }
+        4               {
+                            java_command [[ setBookmarkUI(4, true); ]]
+                            activate_segment S:MainMenuRollIn ; 
+                            java_command [[ playActivateSound(); ]]
+                        }
+        5               {
+                            java_command [[ setBookmarkUI(5, true); ]]
+                            activate_segment S:MainMenuRollIn ; 
+                            java_command [[ playActivateSound(); ]]
+                        }
+        scenes          {
+                            set_visual_rc H:ScenesMenu state 1 selected ;
+                            activate_segment S:ScenesShowing ;
+                        }
+        to_main_mouse   {
+                            set_visual_rc H:VideoMenu state scenes selected ;
+                            set_visual_rc H:MainMenu state scenes selected ;
+                            activate_segment <pop> ;    
+                        }
+    }
+    mouse {
+        scenes          ( 330 500 1641 579 )
+        1               (  330 580  599 822 )
+        2               (  600 580  849 822 )
+        3               (  850 580 1099 822 )
+        4               ( 1100 580 1349 822 )
+        5               ( 1350 580 1641 822 )
+        to_main_mouse   (    0 840 1919 1279 )
+    }
+;
+
+rc_handler key_pressed H:BookmarksMenu.Color
+        { red green yellow blue }
+        execute {
+            java_command [[ XLET_ONLY_[[ 
+                getMenuDirector().deleteCurrentBookmark(); 
+            ]] ]]
+        }
+;
+
+rc_handler key_pressed H:PopupListener
+        { popup_menu }
+        execute {
+            set_visual_rc H:VideoMenu state play selected ;
+            activate_part F:MenuInactive.CloseOrNothing close ;
+            activate_segment S:VideoMenuRollout ; 
+        }
+;
+
+rc_handler key_pressed H:MakeBookmarkListener
+        { red green yellow blue }
+        execute {
+            java_command [[ XLET_ONLY_[[
+                getMenuDirector().makeBookmark(); 
+            ]] ]]
+            activate_segment S:BookmarkSnap ;
+        }
+;
+
+rc_handler visual H:BonusMenu
+    grid { { game }
+           { bio }
+           { bonus1 }
+           { back } 
+           { [ back ] }
+           { back_mouse } }
+    assembly F:BonusMenu.Assembly
+    select {
+        game    game
+        bio     bio
+        bonus1  bonus1
+        back            {       
+                            set_visual_rc H:VideoMenu state bonus selected ;
+                            set_visual_rc H:MainMenu state bonus selected ;
+                            activate_segment <pop> ; 
+                        }
+        back_mouse nothing
+    }
+    activate {
+        game            { 
+                                java_command [[ 
+                                    XLET_ONLY_[[
+                                        getMenuDirector().xlet.startGame();
+                                    ]]
+                                    playActivateSound();
+                                ]]
+                        }
+        bio             {
+                                java_command [[ 
+                                    playActivateSound();
+                                    GRIN_COMMAND_[[ BOOK:PlayVideo nothing ; ]]
+                                    XLET_ONLY_[[
+                                        getMenuDirector().activateBio();
+                                            // Activates S:Bio.Available 
+                                            // or S:Bio.NotAvailable
+                                    ]]
+                                ]]
+                        }
+        bonus1          { 
+                                java_command [[ 
+                                    playActivateSound(); 
+                                    setText("-init-");
+                                ]]
+                                BOOK:PlayVideo nothing ;
+                                activate_segment S:UserInput ;
+                        } 
+        back_mouse      {
+                            set_visual_rc H:VideoMenu state bonus selected ;
+                            set_visual_rc H:MainMenu state bonus selected ;
+                            activate_segment <pop> ; 
+                        }
+    }
+    mouse {
+        game            ( 1320 440 1649  519 )
+        bio             ( 1320 520 1649  599 )
+        bonus1          ( 1320 600 1649  679 )
+        back_mouse      (    0 700 1919 1279 )
+    }
+;
+
+rc_handler visual H:UserInput
+    grid { { [ close ]    a         b         d         [ h ] }
+           {   [ d ]      h         l         r         [ u ] }
+           {   [ r ]      u         v         y       [ enter ] }
+           {  <null>   [ enter ] [ enter ] [ enter ]   <null>   }
+           {  <null>    <null>    [ v ]    [ enter ]   <null>   }
+           {  <null>    [ y ]     enter    close        [ a ]   } }
+    rc_override { { a up close }
+                  { b up close }
+                  { d up close } }
+     
+    assembly F:UserInput 
+        start_selected true
+    select {
+        a       a.selected
+        b       b.selected
+        d       d.selected
+        h       h.selected
+        l       l.selected
+        r       r.selected
+        u       u.selected
+        v       v.selected
+        y       y.selected
+        enter   enter.selected
+        close   close.selected
+    } 
+    activate {
+        a       a.activated             { java_command [[ setText("A"); ]] }
+        b       b.activated             { java_command [[ setText("B"); ]] }
+        d       d.activated             { java_command [[ setText("D"); ]] }
+        h       h.activated             { java_command [[ setText("H"); ]] }
+        l       l.activated             { java_command [[ setText("L"); ]] }
+        r       r.activated             { java_command [[ setText("R"); ]] }
+        u       u.activated             { java_command [[ setText("U"); ]] }
+        v       v.activated             { java_command [[ setText("V"); ]] }
+        y       y.activated             { java_command [[ setText("Y"); ]] }
+        enter   enter.activated         { java_command [[ setText("-enter-"); 
+                                                          playActivateSound(); ]]
+                                        }
+        close   close.activated         {
+                set_visual_rc H:MainMenu state bonus selected ;
+                set_visual_rc H:VideoMenu state bonus selected ;
+                BOOK:PlayVideo menu ;
+                activate_segment S:MenuShowing ;
+        }
+    }
+    mouse {
+        a       (  600 290  829 489 )
+        b       (  830 290 1059 489 )
+        d       ( 1060 290 1289 489 )
+        h       (  600 490  829 689 )
+        l       (  830 490 1059 689 )
+        r       ( 1060 490 1289 689 )
+        u       (  600 690  829 889 )
+        v       (  830 690 1059 889 )
+        y       ( 1060 690 1289 889 )
+        enter   (  600 890 1289 1009 )
+        close   ( 1300 890 1560 1009 )
+    }
+;
+
+rc_handler visual H:Bio.Available
+        grid { { close download } }
+        assembly F:Bio.Available.Assembly
+        select { 
+            close       close
+            download    download
+        } 
+        activate { 
+            close       {
+                            set_visual_rc H:VideoMenu state bonus selected ;
+                            set_visual_rc H:MainMenu state bonus selected ;
+                            BOOK:PlayVideo menu ;
+                            activate_segment S:MenuShowing ;
+                        }
+            download    {
+                            java_command [[ 
+                                playActivateSound(); 
+                                XLET_ONLY_[[
+                                    getMenuDirector().downloadBio(); 
+                                ]]
+                            ]]
+                        }
+        }
+        mouse {
+            download    ( 560 780 1300 874 )
+            close       (   0   0 1919 1279 )
+        }
+;
+
+rc_handler visual H:Bio.NotAvailable
+        grid { { close } }
+        select {
+        }
+        activate {
+            close       {
+                            set_visual_rc H:VideoMenu state bonus selected ;
+                            set_visual_rc H:MainMenu state bonus selected ;
+                            BOOK:PlayVideo menu ;
+                            activate_segment S:MenuShowing ;
+                        }
+        }
+        mouse {
+            close       (   0   0 1919 1279 )
+        }
+;
+
+#
+# =====================
+#  End of Show
+# =====================
+#
+
+end_show
+

@@ -1,0 +1,4 @@
+Clarified a bit of ManagedImage's contract
+--This line, and those below, will be ignored--
+
+M    util/ManagedImage.java

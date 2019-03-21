@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="CreaterWithMultiOrgs xlet" default="deploy" basedir=".">
+
+    <property file="user.vars.properties"/>
+    <property file="vars.properties"/>
+    <import file="${grin.xlet}/generic_build.xml"/>
+
+    <!-- If the keystore is present then the keys are already generated -->
+    <target name="generate-certs" unless="keystore.ok">
+        <path id="sec.tools.path">
+            <pathelement location="${security.jar}"/>
+            <pathelement location="${bouncycastle.jar}"/>
+            <pathelement location="${java.home}/../lib/tools.jar"/>
+        </path>
+        <!-- step1. Create a root certificate with orgID that differes from the disc/xlet OrgID -->
+        <java fork="true" failOnError="true" classname="net.java.bd.tools.security.BDCertGenerator">
+            <arg value="-root"/>
+            <arg value="${root.orgid}"/>
+            <classpath refid="sec.tools.path"/>
+        </java>
+        
+        <!-- step 2: Create an app certificate with xlet/disc orgID  which is not same as the OrgID in the certificate -->
+        <java fork="true" failOnError="true" classname="net.java.bd.tools.security.BDCertGenerator">
+            <arg value="-app"/>
+            <arg value="-debug"/>
+            <arg value="-dn"/>
+            <arg value="CN=Credentialroot, OU=Business Department,O=Vendor A Inc, C=US"/>
+            <arg value="-altname"/>
+            <arg value="credentialroot@vendora.com"/>
+            <arg value="${xlet.orgid}"/>
+            <classpath refid="sec.tools.path"/>
+        </java>
+        <!-- Step3: Create an app certificate for signing the credentials; This certificate has the -->
+        <!-- same OrgID in both the issuer and the subject itself. This is required for -->
+        <!-- credentials to work as per the BD-J Spec Part 3.2, section 12.1.2 -->
+        <!-- Do not generate the app.discroot.crt file; The app disc root created in step 1 is the root -->
+        <java fork="true" failOnError="true" classname="net.java.bd.tools.security.BDCertGenerator">
+            <arg value="-app"/>
+            <arg value="-debug"/>
+            <arg value ="-nodiscroot"/>
+            <arg value="-signeralias"/>
+            <arg value="appcert"/>
+            <arg value="-signerpass"/>
+            <arg value="appcertpassword"/>
+            <arg value="-dn"/>
+            <arg value="CN=Credential Signer, OU=Production Department, O=Vendor A.Inc, C=US"/>
+            <arg value="-altname"/>
+            <arg value="credential_signer@vendora.com"/>
+            <arg value="-alias"/>
+            <arg value="credsigner"/>
+            <arg value="${xlet.orgid}"/>
+            <classpath refid="sec.tools.path"/>
+        </java>
+    </target>
+</project>
+

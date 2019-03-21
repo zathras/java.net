@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Sample build file.  See vars.properties for documentation about how to
+set up a new project using this build file.
+
+The file ${grin.xlet}/generic_build.xml defines a number
+of "post" targets, like post-init, post-clean and post-bundle.
+The intent is that after you copy vars.properties and build.xml
+to your project, you leave generic_build.xml unmodified.  If you
+need to add build steps (e.g. to package your xlet with assets,
+or to install your xlet into an integrated disc image), you do
+this by overriding the definition of one of more post targets.
+The post targets in generic_build.xml don't do anything, so you
+can just put a <target> tag in build.xml to add actions to be performed
+after any target is built.
+-->
+
+<project name="Playground" default="deploy" basedir=".">
+
+    <property file="user.vars.properties"/>
+    <property file="vars.properties"/>
+    <import file="${grin.xlet}/generic_build.xml"/>
+    <target name="post-generate-binary-script">
+        <jdktools.java classname="com.hdcookbook.grin.binaryconverter.Main">
+            <classpath>
+                <pathelement path="${converter.jar}"/>
+                <pathelement path="${build.dir}/gensrc/grinview"/>
+                <pathelement path="${se.lib.zip}"/>
+            </classpath>
+            <arg value="-asset_dir"/>
+            <arg value="${asset.dir}"/>
+            <arg value="-extension_parser"/>
+            <arg value="${extension.parser}"/>
+            <arg value="-avoid_optimization"/>    
+	    	<!-- important so images.map doesn't get stomped on -->
+            <arg value="-out"/>
+            <arg value="${build.dir}"/>
+            <arg value="second_show.txt"/>
+        </jdktools.java>
+    </target>
+
+    <target name="post-grinview-jar">
+	<zip destfile="${project.name}-grinview.jar" update="true">
+	    <fileset file="${build.dir}/second_show.grn"/>
+	    <fileset dir="${asset.dir}">
+		<include name="images/hat_plain.jpg"/>
+		<include name="images/spoo2.png"/>
+		<include name="images/main_menu_background.png"/>
+		<include name="images/regression_menu_background.png"/>
+		<include name="main_show_initialize_segment.txt"/>
+		<include name="main_show_commands.txt"/>
+	    </fileset>
+	</zip>
+    </target>
+
+    <target name="post-copy-to-bdmv">
+	<copy todir="${dist.dir}/BDMV/JAR/${xlet.jar.basename}">
+	    <fileset file="${build.dir}/second_show.grn"/>
+	    <fileset dir="${asset.dir}">
+		<include name="images/hat_plain.jpg"/>
+		<include name="images/spoo2.png"/>
+	    </fileset>
+	</copy>
+    </target>
+
+    <target name="run-grinview" depends="init"
+    		description="Run grinview on game">
+
+	<!--  We build the binary script so that we'll have our
+	      extension parser and java_command implementations  -->
+	<property name="generate.binary.script.optimize.argument"
+	          value="-avoid_optimization"/>
+	<antcall target="generate-binary-script"/>
+	<copy todir="${build.dir}/run-grinview">
+	    <fileset file="${build.dir}/second_show.grn"/>
+	</copy>
+        <jdktools.java classname="com.hdcookbook.grin.test.bigjdk.GrinView">
+	    <classpath>
+		<pathelement path="${grinview.jar}"/>
+		<pathelement path="${build.dir}/gensrc/grinview"/>
+		<pathelement path="${se.lib.zip}"/>
+	    </classpath>
+	    <arg value="-asset_dir"/>
+	    <arg value="${asset.dir}"/>
+	    <arg value="-asset_dir"/>
+	    <arg value="${build.dir}/run-grinview"/>
+	    <arg value="-extension_parser"/>
+	    <arg value="${extension.parser}"/>
+	    <arg value="-director"/>
+	    <arg value="${show.director}"/>
+            <arg value="${show.file}.txt"/>
+        </jdktools.java>
+    </target>
+    
+    <target name="run-grinview2" depends="init"
+    		description="Run grinview on second show">
+
+	<!--  We build the binary script so that we'll have our
+	      extension parser and java_command implementations  -->
+	<property name="generate.binary.script.optimize.argument"
+	          value="-avoid_optimization"/>
+	<antcall target="generate-binary-script"/>
+        <jdktools.java classname="com.hdcookbook.grin.test.bigjdk.GrinView">
+	    <classpath>
+		<pathelement path="${grinview.jar}"/>
+		<pathelement path="${build.dir}/gensrc/grinview"/>
+		<pathelement path="${se.lib.zip}"/>
+	    </classpath>
+	    <arg value="-asset_dir"/>
+	    <arg value="${asset.dir}"/>
+	    <arg value="-asset_dir"/>
+	    <arg value="${build.dir}/run-grinview"/>
+	    <arg value="-extension_parser"/>
+	    <arg value="${extension.parser}"/>
+	    <arg value="-director"/>
+	    <arg value="${show.director}"/>
+            <arg value="second_show.txt"/>
+        </jdktools.java>
+    </target>
+    
+</project>
+

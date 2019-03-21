@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="HelloTVXlet" default="bundle" basedir=".">
+    
+    <!-- Property Definitions -->
+
+    <property file="../../../../user.vars.properties"/>
+    <property file="../../../../vars.properties"/>
+    <xmlproperty file="properties.xml" semanticAttributes="true" keeproot="false"/>
+    <echo message="${bdjo.jar}"/>
+    <!-- xlet source dir, build dir, and a distribution dir for a disc image 
+      -->
+    <property name="testxlet.src.dir"       value="src/VFSUpdateXlet"/>
+    <property name="downloadxlet.src.dir"   value="src/DownloadedXlet"/>
+    <property name="build.dir"              value="build"/>
+    <property name="testxlet.build.dir"     value="${build.dir}/testxlet/classes"/>
+    <property name="downloadxlet.build.dir" value="${build.dir}/upload-bundle/classes"/>
+    <property name="dist.dir"    value="dist"/>  
+    <property name="upload.dir" value="${dist.dir}/Upload"/>
+    
+    <!-- properties for the xlet -->
+    <property name="xlet.name"      value="hellotvxlet.HelloTVXlet" />
+    
+    <!-- disc image related properties -->
+    <property name="premade.bdmv"   value="tools/DiscImage"/>
+    <property name="bdjo-name"      value="00000"/>
+    <property name="logger-name"    value="99999"/>
+    <property name="orgid"          value="56789abc"/>
+    <property name="bdjo-desc-file" value="${build.dir}/${bdjo-name}.xml"/>
+    <property name="xlet.jar"       value="${bdjo-name}.jar"/>
+    
+    <!-- WinDVD executable default location -->
+    <property name="WinDVD"         value="c:/Program Files/InterVideo/DVD8/WinDVD.exe"/>
+    
+    <target name="init" depends="check-tools">
+        <tstamp/>
+        <mkdir dir="${testxlet.build.dir}"/>
+        <mkdir dir="${downloadxlet.build.dir}"/>
+        <mkdir dir="${dist.dir}/DiscImage"/>
+        <mkdir dir="${upload.dir}"/>
+    </target>
+    
+    <target name="check-tools">
+        <available file="${bdj.classes}" type="file"
+                   property="bdjstubs.ok"/>
+                   
+        <fail unless="bdjstubs.ok"> 
+              .
+        Could not find bd-j platform classes at ${bdj.classes}.
+        Please change the value of the "HDC_BDJ_PLATFORM_CLASSES" property 
+        in the ${basedir}/../../../../vars.properties file, or the value of the
+        "bdj.classes" in the ${basedir}/properties.xml file.
+                 
+        Don't be alarmed, this is a configuration error.
+        The HDCookbook source repository does not include BD-J platform classes
+        needed for compiling applications against.  These classes need to be
+        provided by you.
+        
+        </fail> 
+
+        <available file="${logger.jar}" type="file" property="logger.ok"/>
+                   
+        <fail unless="logger.ok"> 
+              .
+        Could not find the logger jar file at ${logger.jar}.
+        Please build all the tools under the "hdcookbook/DiscCreationTools" 
+        and "hdcookbook/AuthoringTools" dirs before building this xlet, 
+        by calling "ant tools" in the toplevel directory,
+        or modify ${basedir}/properties.xml so that various jar properties 
+        points to a pre-built hdcookbook tool jars.
+        
+        </fail>        
+    </target>
+    
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+        <delete dir="${dist.dir}"/>
+        <delete file="keystore.store"/>
+        <delete file="${xlet.name}.zip"/>
+    </target>
+    <target name="spotless" depends="clean">
+	<delete file="src/budafiles/sample.sf"/>
+    </target>
+    
+    <target name="deploy" depends="bundle">
+        <scp todir="${hostdir}" password="${password}" 
+             trust="true">
+            <fileset dir="${upload.dir}"/>
+        </scp>
+    </target>
+         
+    <target name="bundle" depends="jar, gen-bdjo-desc-file, 
+                                   sign-jars, copy-to-bdmv, make-upload-bundle"
+            description="Make an blu-ray disc image">
+                
+        <zip destfile="${xlet.name}.zip"
+             basedir="${dist.dir}"/>
+  
+    </target>         
+    
+    <target name="compile"
+            depends="init" description="Compiles the sources">
+        
+        <javac srcdir="${testxlet.src.dir}"
+               bootclasspath="${bdj.classes}"
+               classpath="${logger.jar}"
+               destdir="${testxlet.build.dir}"
+               source="1.3" target="1.3"
+               debug="on" deprecation="on">
+        </javac>
+        
+        <copy todir="${testxlet.build.dir}">
+            <fileset dir="${testxlet.src.dir}">
+                <include name="**/*.perm"/>
+            </fileset>
+        </copy>
+        
+        <javac srcdir="${downloadxlet.src.dir}"
+               bootclasspath="${bdj.classes}"
+               classpath="${logger.jar}"
+               destdir="${downloadxlet.build.dir}"
+               source="1.3" target="1.3"
+               debug="on" deprecation="on">
+        </javac>
+        
+        <copy todir="${downloadxlet.build.dir}">
+            <fileset dir="${downloadxlet.src.dir}">
+                <include name="**/*.perm"/>
+            </fileset>
+        </copy>
+    </target>
+    
+    <target name="jar"
+            depends="compile" 
+            description="Creates an xlet jar file">
+                
+        <jar jarfile="${build.dir}/${xlet.jar}"
+             basedir="${testxlet.build.dir}"/>
+        <jar jarfile="${downloadxlet.build.dir}/../${xlet.jar}"
+             basedir="${downloadxlet.build.dir}"/>
+        <copy tofile = "${build.dir}/${logger-name}.jar" 
+              file="${logger.jar}"/>
+    </target>
+    
+    <presetdef name="jdktools.java">
+        <java fork="true" failOnError="true"/>
+    </presetdef>
+
+    <target name="init-security-tools">
+        <available file="keystore.store" property="keystore.exists"/>
+        <path id="sec.tools.path">
+            <pathelement location="${security.jar}"/>
+            <pathelement location="${bouncycastle.jar}"/>
+            <pathelement location="${java.home}/../lib/tools.jar"/>
+        </path>
+    </target>
+    
+    <target name="generate-certs" unless="keystore.exists">
+
+        <jdktools.java classname="net.java.bd.tools.security.BDCertGenerator">
+            <arg value="-root"/>
+            <arg value="${orgid}"/>
+            <classpath refid="sec.tools.path"/>
+        </jdktools.java>
+        
+        <jdktools.java classname="net.java.bd.tools.security.BDCertGenerator">
+            <arg value="-app"/>
+            <arg value="${orgid}"/>
+            <classpath refid="sec.tools.path"/>
+        </jdktools.java>
+        
+        <jdktools.java classname="net.java.bd.tools.security.BDCertGenerator">
+            <arg value="-binding"/>
+            <arg value="${orgid}"/>
+            <classpath refid="sec.tools.path"/>
+        </jdktools.java>
+        
+    </target>
+    
+    <target name="sign-jars" depends="init-security-tools, generate-certs">
+         
+        <jdktools.java classname="net.java.bd.tools.security.BDSigner">
+            <arg value="${build.dir}/${xlet.jar}"/>
+            <arg value="${downloadxlet.build.dir}/../${xlet.jar}"/>
+            <arg value="${build.dir}/${logger-name}.jar"/>
+            <classpath refid="sec.tools.path"/>
+        </jdktools.java>
+        
+        <jdktools.java classname="net.java.bd.tools.security.BDSigner">
+            <arg value="src/budafiles/sample.xml"/>
+            <classpath refid="sec.tools.path"/>
+        </jdktools.java>
+        
+    </target>
+    
+    <target name="make-upload-bundle" depends="generate-certs">
+        
+        <copy todir="${upload.dir}"
+              file="${downloadxlet.build.dir}/../${xlet.jar}"/>
+        <copy todir="${upload.dir}"
+              file="src/budafiles/sample.xml"/>
+        <copy todir="${upload.dir}"
+              file="src/budafiles/sample.sf"/>
+    </target>
+        
+    <target name="run" depends="deploy">
+        <available property="windvd.exists" file="${WinDVD}"/>
+        <fail unless="windvd.exists" message="WinDVD executable not found at ${WinDVD}."/>
+        <exec executable="${WinDVD}">
+            <arg value="${basedir}\${dist.dir}\DiscImage\BDMV"/>
+        </exec>
+    </target>
+    
+    <target name="gen-bdjo-desc-file"
+            depends="gen-bdjo-desc.tmp"
+            if="update-bdjo-desc.file">
+        
+        <move file="${bdjo-desc-file}.tmp" tofile="${bdjo-desc-file}"/>
+        
+        <java  
+            fork="true" failOnError="true"
+            jar="${bdjo.jar}">
+            <arg value="${bdjo-desc-file}"/>
+            <arg value="${build.dir}/${bdjo-name}.bdjo"/>
+        </java>
+    </target>
+    
+    <target name="copy-to-bdmv" 
+            depends="jar, gen-bdjo-desc-file, sign-jars">
+        
+        <property name="target.dir" value="${dist.dir}/DiscImage"/>
+        
+        <copy todir="${target.dir}">
+            <fileset dir="${premade.bdmv}">
+                <exclude name="**/.svn/**"/>
+            </fileset>
+        </copy>
+        
+        <copy todir = "${target.dir}/BDMV/JAR" 
+              file="${build.dir}/${bdjo-name}.jar"/>
+        <copy tofile = "${target.dir}/BDMV/JAR/${logger-name}.jar" 
+              file="${build.dir}/${logger-name}.jar"/>
+        <copy todir = "${target.dir}/BDMV/BDJO" 
+              file="${build.dir}/${bdjo-name}.bdjo"/>
+        <copy todir = "${target.dir}/CERTIFICATE" 
+              file="app.discroot.crt"/>
+        <copy todir = "${target.dir}/CERTIFICATE" 
+              file="bu.discroot.crt"/>
+        <copy todir = "${target.dir}/CERTIFICATE/BACKUP" 
+              file="app.discroot.crt"/>
+        <copy todir = "${target.dir}/CERTIFICATE/BACKUP" 
+              file="bu.discroot.crt"/>
+    </target>
+    
+    <target name="gen-bdjo-desc.tmp">
+        
+        <concat destfile="${bdjo-desc-file}.tmp"><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!-- This file contains information determined at a build time -->
+<!-- AUTO-GENERATED - DO NOT EDIT -->
+
+<bdjo>
+    <appCacheInfo>
+        <entries>
+            <language>*.*</language>
+            <name>${bdjo-name}</name>
+            <type>1</type>
+        </entries>
+        <entries>
+            <language>*.*</language>
+            <name>${logger-name}</name>
+            <type>1</type>
+        </entries>
+    </appCacheInfo>
+    <applicationManagementTable>
+        <applications>
+            <applicationDescriptor>
+                <baseDirectory>${bdjo-name}</baseDirectory>
+                <binding>TITLE_BOUND_DISC_BOUND</binding>
+                <classpathExtension>/${logger-name}</classpathExtension>
+                <iconFlags>0x0</iconFlags>
+                <iconLocator></iconLocator>
+                <initialClassName>${xlet.name}</initialClassName>
+                <priority>3</priority>
+                <profiles>
+                    <majorVersion>1</majorVersion>
+                    <microVersion>0</microVersion>
+                    <minorVersion>0</minorVersion>
+                    <profile>1</profile>
+                </profiles>
+                <visibility>V_01</visibility>
+            </applicationDescriptor>
+            <applicationId>0x4000</applicationId>
+            <controlCode>0x1</controlCode>
+            <organizationId>0x${orgid}</organizationId>
+            <type>0x1</type>
+        </applications>
+    </applicationManagementTable>
+    <fileAccessInfo>.</fileAccessInfo>
+    <keyInterestTable>0x0</keyInterestTable>
+    <tableOfAccessiblePlayLists>
+        <accessToAllFlag>false</accessToAllFlag>
+        <autostartFirstPlayListFlag>false</autostartFirstPlayListFlag>
+    </tableOfAccessiblePlayLists>
+    <terminalInfo>
+        <defaultFontFile>00000</defaultFontFile>
+        <initialHaviConfig>HD_1920_1080</initialHaviConfig>
+        <menuCallMask>false</menuCallMask>
+        <titleSearchMask>false</titleSearchMask>
+    </terminalInfo>
+    <version>V_0200</version>
+</bdjo>
+
+        ]]>
+        </concat>
+        <condition property="update-bdjo-desc.file">
+            <not>
+                <filesmatch
+                    file1="${bdjo-desc-file}.tmp"
+                    file2="${bdjo-desc-file}"/>
+            </not>
+        </condition>
+    </target>
+    
+</project>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Grin demo build" default="all" basedir=".">
+
+    <property file="../../user.vars.properties"/>
+    <property file="../../vars.properties"/>	
+
+	<property name="cookbook.dir" value="../../.."/>
+    <property name="bdj.classes"  value="${HDC_BDJ_PLATFORM_CLASSES}"/>
+
+    <target name="all">
+        <ant dir="twitterGRIN"/>
+        <ant dir="weatherWidget"/>
+    </target>
+        
+	<target name="clean">      
+            <ant dir="twitterGrin" target="clean"/>
+            <ant dir="weatherWidget" target="clean"/>
+	</target>
+
+	<target name="spotless" depends="clean">
+	    <ant dir="twitterGrin" target="spotless"/>
+	    <ant dir="weatherWidget" target="spotless"/>
+	</target>
+</project>

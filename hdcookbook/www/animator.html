@@ -1,0 +1,86 @@
+<html>
+<head>
+<title>HDCookbook - Animator</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+</head>
+<body>
+<div style="text-align: center">
+<img width="543" height="298" border="0" src="images/drawopt.jpg" />
+</div>
+<div class="pal">
+<h2>HD Cookbook - The Animation Framework</h2>
+<p>
+This project includes a well-developed animation framework
+that's well suited to the needs of Blu-ray, and other television
+platforms based on PBP, like OCAP and MHP.  This framework
+gives the programmer and author the tools needed to create
+time-based animation withoptimized drawing, where only the areas
+of the screen that have changed are re-drawn.  The 
+<a href="grin.html"><u>GRIN scene graph</u></a>
+uses this animation framework, but the animation framework can also
+be used in a stand-alone fashion.  It features an open architecture that
+allows drawing from multiple sources to be combined into the same
+presentation, with drawing from different source stacked to top of
+eachother.  This allows any Java program to, for example, draw both
+under and over the drawing produced from a GRIN scene graph.
+</p><p>Key to achieving good
+animation framework is to optimize the drawing operations, so that
+the number of pixels tha need to be copied for each frame are minimized.
+A good animation framework also needs a solid threading model, so that
+application programmers don't have to worry too much about mulit-threading.
+</p><p>
+There are important workflow differences between development for TV
+platform and the web:
+</p>
+<ul>
+    <li>In web design, the target device is usually a fast PC, and a large
+        amount of content needs to be created cheaply.  Both factors argue
+	against performance optimization.
+    <li>In TV design, production values like seamless presentation and
+        reliable execution on all devices are critical.
+    <li>For most TV projects like a Blu-ray disc, there is the role of
+        <b>author</b>.  This highly technical role within the workflow is
+	a natural place to optimize and tune presentation, so that the
+	graphics designer's intent is optimally realized on the target
+	medium.
+</ul>
+<p>
+The GRIN animation framework was built around this understanding of
+the workflow, that runs from design, to authoring, to mastering, to
+replication.  A similar workflow is expected for professional TV
+production in other domains, like IPTV.
+</p><p>
+The image at the top of this document is a screen grab of a desktop tool
+that an author can use to visualize and tune the drawing operations
+performed in an animation.  An author can group together related sets
+of drawings (perhaps those co-located on the screen), and can provide
+other information that helps the drawing engine to minimize the drawing
+that needs to be done.  In the screen grab, the areas to be erased are
+showin in red.  The turtles are moving to the right, but because they fill
+a rectangular area with opaque pixels, only the left side of the previous
+image needs to be erased.  The GRIN show that produced this frame is in the
+file grin/samples/GrinViewerXlet/show.txt, and can be run with the command
+&quot;grin/scripts/shell/run_grinviewer.sh test&quot;.
+</p><p>
+The GRIN animation framework has these design goals:
+</p>
+<ul>
+    <li>Runtime efficiency and speed
+    <li>Small code size (around 10K)
+    <li>Little or no production of heap objects during animation,
+        so that GC won't be triggered
+    <li>Support for maintaining a constant animation rate by dropping 
+        frames, rather than slowing down the visual results.
+    <li>Simple, deadlock-free threading model
+    <li>Freely availabile, with no royalties.
+</ul>
+<p>
+More complete and detailed technical information can be found in  the
+<a href="javadocs/grin/javame/com/hdcookbook/grin/animator/doc-files/index.html"><u>Animation
+Framework Usage</u></a> document.
+<p>
+
+</div>
+</body>
+</html>

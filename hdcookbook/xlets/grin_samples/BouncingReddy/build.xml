@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Bouncing Reddy" default="deploy" basedir=".">
+
+    <property file="user.vars.properties"/>
+    <property file="vars.properties"/>
+    <import file="${grin.xlet}/generic_build.xml"/>
+
+    <target name="post-clean">
+	<delete file="other_src/ShowMaker.class"/>
+    </target>
+</project>
+

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="hdcookbook" default="hdcookbook-discimage" basedir=".">
+    <property file="user.vars.properties"/>
+    <property file="vars.properties"/>	
+
+  <!-- This will create a hdcookbook disc image and the tools required for it -->
+    <target name="hdcookbook-discimage" depends="check-stubs, tools">
+      <!-- Build Grin's compile-time (javase-based) library and tools,
+       as well as the hdcookbook sample disc image -->
+        <ant dir="xlets/hdcookbook_discimage"/>
+    </target>
+    
+    <target name="grin">
+      <!-- Build GRIN library and tools, including the mosaic builder -->
+        <ant dir="AuthoringTools"/>
+    </target>
+    
+  <!-- Build all the tools under the AuthoringTools and the DiscCreationTools -->
+    <target name="tools" depends="check-stubs">
+        <ant dir="DiscCreationTools"/>
+        <ant dir="AuthoringTools"/>
+    </target>
+
+    <target name="xlets" depends="tools"
+            description="build all xlets">
+        <ant dir="xlets"/>
+    </target>
+  
+  <!-- A target for doing everything, except for putting javadoc to the www directory-->
+    <target name="all" depends="xlets, javadoc">
+        <!-- Creates a binary bundle -->
+        <ant antfile="dist.xml"/>
+    </target>
+
+  <!-- A target for running the automated tests that we have -->
+    <target name="test">
+        <ant dir="xlets/hdcookbook_discimage" antfile="run_jdktools.xml"
+	     target="autotest-grinview"/>
+        <ant dir="xlets/grin_samples" target="autotest-grinview"/>
+    </target>
+  
+    <!-- Build a GRIN javadoc -->
+    <target name="javadoc">
+        <ant dir="AuthoringTools/grin" target="javadoc"/>
+    </target>
+
+    <!-- Deploy GRIN javadoc to the www area -->
+    <target name="javadoc-deploy" depends="javadoc">
+        <ant dir="AuthoringTools/grin" target="javadoc-deploy"/>
+	<copy file="DiscCreationTools/security/README.html"
+	      tofile="www/security_readme.html"/>
+    </target>
+
+
+  
+    <target name="clean">
+        <ant dir="DiscCreationTools" target="clean"/>
+        <ant dir="AuthoringTools"    target="clean"/>
+        <ant dir="xlets"             target="clean"/>
+        <ant antfile="dist.xml"      target="clean"/>
+        <delete dir="bin"/>
+    </target>
+
+    <target name="spotless">
+        <ant dir="DiscCreationTools" target="spotless"/>
+        <ant dir="AuthoringTools"    target="spotless"/>
+        <ant dir="xlets"             target="spotless"/>
+        <ant antfile="dist.xml"      target="spotless"/>
+        <delete dir="bin"/>
+	<echo message=""/>
+	<echo message="Cleaned out all generated file.  This removed keystore files used for"/>
+	<echo message="signing, which means that the next build you do will result in xlets "/>
+	<echo message="that are signed by a different, new entity."/>
+	<echo message=""/>
+    </target>
+    
+    <target name="check-stubs">
+        <available file="${HDC_BDJ_PLATFORM_CLASSES}" type="file"
+                   property="bdjstubs.ok"/>
+                   
+        <fail unless="bdjstubs.ok"> 
+              .
+        Could not find bd-j platform classes at 
+	${HDC_BDJ_PLATFORM_CLASSES}.
+        Please change the value of the "HDC_BDJ_PLATFORM_CLASSES" property 
+        defined in the ${basedir}/vars.properties file.  
+	A good way to do this is to create a file called
+	${basedir}/user.vars.propreties
+	contining the line "HDC_BDJ_PLATFORM_CLASSES=&lt;your path>/classes.zip"
+                 
+        Don't be alarmed, this is a configuration error.
+        The HDCookbook source repository does not include BD-J platform classes
+        needed for compiling applications against.  These classes need to be
+        provided by you.
+
+	http://wiki.java.net/bin/view/Mobileandembedded/BDJPlatformDefinition
+	describes one way to get them.
+        
+        </fail>      
+    </target>
+
+</project>

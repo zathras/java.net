@@ -1,0 +1,823 @@
+<html>
+<body bgcolor="white">
+<pre>
+<table bgcolor="#FFFFCC" cellpadding="0" cellspacing="0" border="0" width="100%"><a href="../../../../../apidocs/org/apache/bcel/classfile/JavaClass.html">View Javadoc</a></table>
+<a name="1" href="#1">1</a>   <b>package</b> <a href="../../../../org/apache/bcel/classfile/package-summary.html">org.apache.bcel.classfile</a>;
+<a name="2" href="#2">2</a>   
+<a name="3" href="#3">3</a>   <font color="#329900"><i>/*<font color="#329900"><i> ====================================================================</font></i></font></i>
+<a name="4" href="#4">4</a>   <font color="#329900"><i> * The Apache Software License, Version 1.1</font></i>
+<a name="5" href="#5">5</a>   <font color="#329900"><i> *</font></i>
+<a name="6" href="#6">6</a>   <font color="#329900"><i> * Copyright (c) 2001 The Apache Software Foundation.  All rights</font></i>
+<a name="7" href="#7">7</a>   <font color="#329900"><i> * reserved.</font></i>
+<a name="8" href="#8">8</a>   <font color="#329900"><i> *</font></i>
+<a name="9" href="#9">9</a>   <font color="#329900"><i> * Redistribution and use in source and binary forms, with or without</font></i>
+<a name="10" href="#10">10</a>  <font color="#329900"><i> * modification, are permitted provided that the following conditions</font></i>
+<a name="11" href="#11">11</a>  <font color="#329900"><i> * are met:</font></i>
+<a name="12" href="#12">12</a>  <font color="#329900"><i> *</font></i>
+<a name="13" href="#13">13</a>  <font color="#329900"><i> * 1. Redistributions of source code must retain the above copyright</font></i>
+<a name="14" href="#14">14</a>  <font color="#329900"><i> *    notice, this list of conditions and the following disclaimer.</font></i>
+<a name="15" href="#15">15</a>  <font color="#329900"><i> *</font></i>
+<a name="16" href="#16">16</a>  <font color="#329900"><i> * 2. Redistributions in binary form must reproduce the above copyright</font></i>
+<a name="17" href="#17">17</a>  <font color="#329900"><i> *    notice, this list of conditions and the following disclaimer in</font></i>
+<a name="18" href="#18">18</a>  <font color="#329900"><i> *    the documentation and/or other materials provided with the</font></i>
+<a name="19" href="#19">19</a>  <font color="#329900"><i> *    distribution.</font></i>
+<a name="20" href="#20">20</a>  <font color="#329900"><i> *</font></i>
+<a name="21" href="#21">21</a>  <font color="#329900"><i> * 3. The end-user documentation included with the redistribution,</font></i>
+<a name="22" href="#22">22</a>  <font color="#329900"><i> *    if any, must include the following acknowledgment:</font></i>
+<a name="23" href="#23">23</a>  <font color="#329900"><i> *       "This product includes software developed by the</font></i>
+<a name="24" href="#24">24</a>  <font color="#329900"><i> *        Apache Software Foundation (<a href="http://www.apache.org/" target="alexandria_uri">http://www.apache.org/</a>)."</font></i>
+<a name="25" href="#25">25</a>  <font color="#329900"><i> *    Alternately, this acknowledgment may appear in the software itself,</font></i>
+<a name="26" href="#26">26</a>  <font color="#329900"><i> *    if and wherever such third-party acknowledgments normally appear.</font></i>
+<a name="27" href="#27">27</a>  <font color="#329900"><i> *</font></i>
+<a name="28" href="#28">28</a>  <font color="#329900"><i> * 4. The names "Apache" and "Apache Software Foundation" and</font></i>
+<a name="29" href="#29">29</a>  <font color="#329900"><i> *    "Apache BCEL" must not be used to endorse or promote products</font></i>
+<a name="30" href="#30">30</a>  <font color="#329900"><i> *    derived from this software without prior written permission. For</font></i>
+<a name="31" href="#31">31</a>  <font color="#329900"><i> *    written permission, please contact apache@apache.org.</font></i>
+<a name="32" href="#32">32</a>  <font color="#329900"><i> *</font></i>
+<a name="33" href="#33">33</a>  <font color="#329900"><i> * 5. Products derived from this software may not be called "Apache",</font></i>
+<a name="34" href="#34">34</a>  <font color="#329900"><i> *    "Apache BCEL", nor may "Apache" appear in their name, without</font></i>
+<a name="35" href="#35">35</a>  <font color="#329900"><i> *    prior written permission of the Apache Software Foundation.</font></i>
+<a name="36" href="#36">36</a>  <font color="#329900"><i> *</font></i>
+<a name="37" href="#37">37</a>  <font color="#329900"><i> * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED</font></i>
+<a name="38" href="#38">38</a>  <font color="#329900"><i> * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES</font></i>
+<a name="39" href="#39">39</a>  <font color="#329900"><i> * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE</font></i>
+<a name="40" href="#40">40</a>  <font color="#329900"><i> * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR</font></i>
+<a name="41" href="#41">41</a>  <font color="#329900"><i> * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,</font></i>
+<a name="42" href="#42">42</a>  <font color="#329900"><i> * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT</font></i>
+<a name="43" href="#43">43</a>  <font color="#329900"><i> * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF</font></i>
+<a name="44" href="#44">44</a>  <font color="#329900"><i> * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND</font></i>
+<a name="45" href="#45">45</a>  <font color="#329900"><i> * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,</font></i>
+<a name="46" href="#46">46</a>  <font color="#329900"><i> * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT</font></i>
+<a name="47" href="#47">47</a>  <font color="#329900"><i> * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF</font></i>
+<a name="48" href="#48">48</a>  <font color="#329900"><i> * SUCH DAMAGE.</font></i>
+<a name="49" href="#49">49</a>  <font color="#329900"><i> * ====================================================================</font></i>
+<a name="50" href="#50">50</a>  <font color="#329900"><i> *</font></i>
+<a name="51" href="#51">51</a>  <font color="#329900"><i> * This software consists of voluntary contributions made by many</font></i>
+<a name="52" href="#52">52</a>  <font color="#329900"><i> * individuals on behalf of the Apache Software Foundation.  For more</font></i>
+<a name="53" href="#53">53</a>  <font color="#329900"><i> * information on the Apache Software Foundation, please see</font></i>
+<a name="54" href="#54">54</a>  <font color="#329900"><i> * &lt;<a href="http://www.apache.org/&gt" target="alexandria_uri">http://www.apache.org/&gt</a>;.</font></i>
+<a name="55" href="#55">55</a>  <font color="#329900"><i> */</font></i>
+<a name="56" href="#56">56</a>  
+<a name="57" href="#57">57</a>  <b>import</b>  org.apache.bcel.Constants;
+<a name="58" href="#58">58</a>  <b>import</b>  org.apache.bcel.util.SyntheticRepository;
+<a name="59" href="#59">59</a>  <b>import</b>  org.apache.bcel.util.ClassVector;
+<a name="60" href="#60">60</a>  <b>import</b>  org.apache.bcel.util.ClassQueue;
+<a name="61" href="#61">61</a>  <b>import</b>  org.apache.bcel.<b>generic</b>.Type;
+<a name="62" href="#62">62</a>  
+<a name="63" href="#63">63</a>  <b>import</b>  java.io.*;
+<a name="64" href="#64">64</a>  <b>import</b>  java.util.StringTokenizer;
+<a name="65" href="#65">65</a>  
+<a name="66" href="#66">66</a>  <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="67" href="#67">67</a>  <font color="#AA0000"><i> * Represents a Java class, i.e., the data structures, constant pool,</font></i>
+<a name="68" href="#68">68</a>  <font color="#AA0000"><i> * fields, methods and commands contained in a Java .class file.</font></i>
+<a name="69" href="#69">69</a>  <font color="#AA0000"><i> * See &lt;a href="ftp://java.sun.com/docs/specs/"&gt;JVM </font></i>
+<a name="70" href="#70">70</a>  <font color="#AA0000"><i> * specification&lt;/a&gt; for details.</font></i>
+<a name="71" href="#71">71</a>  
+<a name="72" href="#72">72</a>  <font color="#AA0000"><i> * The intent of this class is to represent a parsed or otherwise existing</font></i>
+<a name="73" href="#73">73</a>  <font color="#AA0000"><i> * class file.  Those interested in programatically generating classes</font></i>
+<a name="74" href="#74">74</a>  <font color="#AA0000"><i> * should see the &lt;a href="../generic/ClassGen.html"&gt;ClassGen&lt;/a&gt; class.</font></i>
+<a name="75" href="#75">75</a>  
+<a name="76" href="#76">76</a>  <font color="#AA0000"><i> * @version $Id: JavaClass.html,v 1.1.1.1 2006/05/19 19:22:02 billf Exp $</font></i>
+<a name="77" href="#77">77</a>  <font color="#AA0000"><i> * @see org.apache.bcel.generic.ClassGen</font></i>
+<a name="78" href="#78">78</a>  <font color="#AA0000"><i> * @author  &lt;A HREF="<a href="mailto:markus.dahm@berlin.de" target="alexandria_uri">mailto:markus.dahm@berlin.de</a>"&gt;M. Dahm&lt;/A&gt;</font></i>
+<a name="79" href="#79">79</a>  <font color="#AA0000"><i> */</font></i>
+<a name="80" href="#80">80</a>  <b>public</b> <b>class</b> <a href="../../../../org/apache/bcel/classfile/JavaClass.html">JavaClass</a> <b>extends</b> <a href="../../../../org/apache/bcel/classfile/AccessFlags.html">AccessFlags</a> implements Cloneable, <a href="../../../../org/apache/bcel/classfile/Node.html">Node</a> {
+<a name="81" href="#81">81</a>    <b>private</b> String       file_name;
+<a name="82" href="#82">82</a>    <b>private</<a href="../../../../b> String       <b>package</b>_name/package-summary.html">b> String       <b>package</b>_name</a>;
+<a name="83" href="#83">83</a>    <b>private</b> String       source_file_name = <font color="#000099">"&lt;Unknown&gt;"</font>;
+<a name="84" href="#84">84</a>    <b>private</b> <b>int</b>          <b>class</b>_name_index;
+<a name="85" href="#85">85</a>    <b>private</b> <b>int</b>          superclass_name_index;
+<a name="86" href="#86">86</a>    <b>private</b> String       <b>class</b>_name;
+<a name="87" href="#87">87</a>    <b>private</b> String       superclass_name;
+<a name="88" href="#88">88</a>    <b>private</b> <b>int</b>          major, minor;  <font color="#329900"><i>// Compiler version</font></i>
+<a name="89" href="#89">89</a>    <b>private</b> <a href="../../../../org/apache/bcel/classfile/ConstantPool.html">ConstantPool</a> constant_pool; <font color="#329900"><i>// Constant pool</font></i>
+<a name="90" href="#90">90</a>    <b>private</b> <b>int</b>[]        <b>int</b>erfaces;    <font color="#329900"><i>// implemented interfaces</font></i>
+<a name="91" href="#91">91</a>    <b>private</b> String[]     <b>interface</b>_names;
+<a name="92" href="#92">92</a>    <b>private</b> <a href="../../../../org/apache/bcel/classfile/Field.html">Field</a>[]      fields;        <font color="#329900"><i>// Fields, i.e., variables of class</font></i>
+<a name="93" href="#93">93</a>    <b>private</b> <a href="../../../../org/apache/bcel/classfile/Method.html">Method</a>[]     methods;       <font color="#329900"><i>// methods defined in the class</font></i>
+<a name="94" href="#94">94</a>    <b>private</b> <a href="../../../../org/apache/bcel/classfile/Attribute.html">Attribute</a>[]  attributes;    <font color="#329900"><i>// attributes defined in the class</font></i>
+<a name="95" href="#95">95</a>    <b>private</b> byte         source = HEAP; <font color="#329900"><i>// Generated in memory</font></i>
+<a name="96" href="#96">96</a>  
+<a name="97" href="#97">97</a>    <b>public</b> <b>static</b> <b>final</b> byte HEAP = 1;
+<a name="98" href="#98">98</a>    <b>public</b> <b>static</b> <b>final</b> byte FILE = 2;
+<a name="99" href="#99">99</a>    <b>public</b> <b>static</b> <b>final</b> byte ZIP  = 3;
+<a name="100" href="#100">100</a> 
+<a name="101" href="#101">101</a>   <b>static</b> <b>boolean</b> debug = false; <font color="#329900"><i>// Debugging on/off</font></i>
+<a name="102" href="#102">102</a>   <b>static</b> <b>char</b>    sep   = '/';   <font color="#329900"><i>// directory separator</font></i>
+<a name="103" href="#103">103</a> 
+<a name="104" href="#104">104</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="105" href="#105">105</a> <font color="#AA0000"><i>   * In cases where we go ahead and create something,</font></i>
+<a name="106" href="#106">106</a> <font color="#AA0000"><i>   * use the default SyntheticRepository, because we</font></i>
+<a name="107" href="#107">107</a> <font color="#AA0000"><i>   * don't know any better.</font></i>
+<a name="108" href="#108">108</a> <font color="#AA0000"><i>   */</font></i>
+<a name="109" href="#109">109</a>   <b>private</b> <b>transient</b> org.apache.bcel.util.Repository repository = 
+<a name="110" href="#110">110</a>     SyntheticRepository.getInstance();
+<a name="111" href="#111">111</a> 
+<a name="112" href="#112">112</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="113" href="#113">113</a> <font color="#AA0000"><i>   * Constructor gets all contents as arguments.</font></i>
+<a name="114" href="#114">114</a> <font color="#AA0000"><i>   *</font></i>
+<a name="115" href="#115">115</a> <font color="#AA0000"><i>   * @param class_name_index Index into constant pool referencing a</font></i>
+<a name="116" href="#116">116</a> <font color="#AA0000"><i>   * ConstantClass that represents this class.</font></i>
+<a name="117" href="#117">117</a> <font color="#AA0000"><i>   * @param superclass_name_index Index into constant pool referencing a</font></i>
+<a name="118" href="#118">118</a> <font color="#AA0000"><i>   * ConstantClass that represents this class's superclass.</font></i>
+<a name="119" href="#119">119</a> <font color="#AA0000"><i>   * @param file_name File name</font></i>
+<a name="120" href="#120">120</a> <font color="#AA0000"><i>   * @param major Major compiler version</font></i>
+<a name="121" href="#121">121</a> <font color="#AA0000"><i>   * @param minor Minor compiler version</font></i>
+<a name="122" href="#122">122</a> <font color="#AA0000"><i>   * @param access_flags Access rights defined by bit flags</font></i>
+<a name="123" href="#123">123</a> <font color="#AA0000"><i>   * @param constant_pool Array of constants</font></i>
+<a name="124" href="#124">124</a> <font color="#AA0000"><i>   * @param interfaces Implemented interfaces</font></i>
+<a name="125" href="#125">125</a> <font color="#AA0000"><i>   * @param fields Class fields</font></i>
+<a name="126" href="#126">126</a> <font color="#AA0000"><i>   * @param methods Class methods</font></i>
+<a name="127" href="#127">127</a> <font color="#AA0000"><i>   * @param attributes Class attributes</font></i>
+<a name="128" href="#128">128</a> <font color="#AA0000"><i>   * @param source Read from file or generated in memory?</font></i>
+<a name="129" href="#129">129</a> <font color="#AA0000"><i>   */</font></i>
+<a name="130" href="#130">130</a>   <b>public</b> <a href="../../../../org/apache/bcel/classfile/JavaClass.html">JavaClass</a>(<b>int</b>        <b>class</b>_name_index,
+<a name="131" href="#131">131</a> 		   <b>int</b>        superclass_name_index,
+<a name="132" href="#132">132</a> 		   String     file_name,
+<a name="133" href="#133">133</a> 		   <b>int</b>        major,
+<a name="134" href="#134">134</a> 		   <b>int</b>        minor,
+<a name="135" href="#135">135</a> 		   <b>int</b>        access_flags,
+<a name="136" href="#136">136</a> 		   ConstantPool constant_pool,
+<a name="137" href="#137">137</a> 		   <b>int</b>[]      <b>int</b>erfaces,
+<a name="138" href="#138">138</a> 		   Field[]      fields,
+<a name="139" href="#139">139</a> 		   Method[]     methods,
+<a name="140" href="#140">140</a> 		   Attribute[]  attributes,
+<a name="141" href="#141">141</a> 		   byte          source)
+<a name="142" href="#142">142</a>   {
+<a name="143" href="#143">143</a>     <b>if</b>(interfaces == <b>null</b>) <font color="#329900"><i>// Allowed for backward compatibility</font></i>
+<a name="144" href="#144">144</a>       <b>int</b>erfaces = <b>new</b> <b>int</b>[0];
+<a name="145" href="#145">145</a>     <b>if</b>(attributes == <b>null</b>)
+<a name="146" href="#146">146</a>       <b>this</b>.attributes = <b>new</b> <a href="../../../../org/apache/bcel/classfile/Attribute.html">Attribute</a>[0];
+<a name="147" href="#147">147</a>     <b>if</b>(fields == <b>null</b>)
+<a name="148" href="#148">148</a>       fields = <b>new</b> <a href="../../../../org/apache/bcel/classfile/Field.html">Field</a>[0];
+<a name="149" href="#149">149</a>     <b>if</b>(methods == <b>null</b>)
+<a name="150" href="#150">150</a>       methods = <b>new</b> <a href="../../../../org/apache/bcel/classfile/Method.html">Method</a>[0];
+<a name="151" href="#151">151</a> 
+<a name="152" href="#152">152</a>     <b>this</b>.<b>class</b>_name_index      = <b>class</b>_name_index;
+<a name="153" href="#153">153</a>     <b>this</b>.superclass_name_index = superclass_name_index;
+<a name="154" href="#154">154</a>     <b>this</b>.file_name             = file_name;
+<a name="155" href="#155">155</a>     <b>this</b>.major                 = major;
+<a name="156" href="#156">156</a>     <b>this</b>.minor                 = minor;
+<a name="157" href="#157">157</a>     <b>this</b>.access_flags          = access_flags;
+<a name="158" href="#158">158</a>     <b>this</b>.constant_pool         = constant_pool;
+<a name="159" href="#159">159</a>     <b>this</b>.interfaces            = interfaces;
+<a name="160" href="#160">160</a>     <b>this</b>.fields                = fields;
+<a name="161" href="#161">161</a>     <b>this</b>.methods               = methods;
+<a name="162" href="#162">162</a>     <b>this</b>.attributes            = attributes;
+<a name="163" href="#163">163</a>     <b>this</b>.source                = source;
+<a name="164" href="#164">164</a> 
+<a name="165" href="#165">165</a>     <font color="#329900"><i>// Get source file name if available</font></i>
+<a name="166" href="#166">166</a>     <b>for</b>(<b>int</b> i=0; i &lt; attributes.length; i++) {
+<a name="167" href="#167">167</a>       <b>if</b>(attributes[i] instanceof <a href="../../../../org/apache/bcel/classfile/SourceFile.html">SourceFile</a>) {
+<a name="168" href="#168">168</a> 	source_file_name = ((SourceFile)attributes[i]).getSourceFileName();
+<a name="169" href="#169">169</a> 	<b>break</b>;
+<a name="170" href="#170">170</a>       }
+<a name="171" href="#171">171</a>     }
+<a name="172" href="#172">172</a> 
+<a name="173" href="#173">173</a>     <font color="#329900"><i>/*<font color="#329900"><i> According to the specification the following entries must be of type</font></i></font></i>
+<a name="174" href="#174">174</a> <font color="#329900"><i>     * `ConstantClass' but we check that anyway via the </font></i>
+<a name="175" href="#175">175</a> <font color="#329900"><i>     * `ConstPool.getConstant' method.</font></i>
+<a name="176" href="#176">176</a> <font color="#329900"><i>     */</font></i>
+<a name="177" href="#177">177</a>     <b>class</b>_name = constant_pool.getConstantString(<b>class</b>_name_index, 
+<a name="178" href="#178">178</a> 						 Constants.CONSTANT_Class);
+<a name="179" href="#179">179</a>     <b>class</b>_name = Utility.compactClassName(<b>class</b>_name, false);
+<a name="180" href="#180">180</a> 
+<a name="181" href="#181">181</a>     <b>int</b> index = <b>class</b>_name.lastIndexOf('.');
+<a name="182" href="#182">182</a>     <b>if</b>(index &lt; 0)
+<a name="183" href="#183">183</a>       <b>package</b<a href="../../../../>_name =/package-summary.html">>_name =</a> <font color="#000099">""</font>;
+<a name="184" href="#184">184</a>     <b>else</b>
+<a name="185" href="#185">185</a>       <b>package</b<a href="../../../../>_name = <b>class</b>_name/substring(0, index)/package-summary.html">>_name = <b>class</b>_name.substring(0, index)</a>;
+<a name="186" href="#186">186</a> 
+<a name="187" href="#187">187</a>     <b>if</b>(superclass_name_index &gt; 0) { <font color="#329900"><i>// May be zero -&gt; class is java.lang.Object</font></i>
+<a name="188" href="#188">188</a>       superclass_name = constant_pool.getConstantString(superclass_name_index,
+<a name="189" href="#189">189</a> 							Constants.CONSTANT_Class);
+<a name="190" href="#190">190</a>       superclass_name = Utility.compactClassName(superclass_name, false);
+<a name="191" href="#191">191</a>     }
+<a name="192" href="#192">192</a>     <b>else</b>
+<a name="193" href="#193">193</a>       superclass_name = <font color="#000099">"java.lang.Object"</font>;    
+<a name="194" href="#194">194</a> 
+<a name="195" href="#195">195</a>     <b>interface</b>_names = <b>new</b> String[<b>interface</b>s.length];
+<a name="196" href="#196">196</a>     <b>for</b>(<b>int</b> i=0; i &lt; <b>int</b>erfaces.length; i++) {
+<a name="197" href="#197">197</a>       String str = constant_pool.getConstantString(interfaces[i], Constants.CONSTANT_Class);
+<a name="198" href="#198">198</a>       <b>interface</b>_names[i] = Utility.compactClassName(str, false);
+<a name="199" href="#199">199</a>     }
+<a name="200" href="#200">200</a>   }
+<a name="201" href="#201">201</a> 
+<a name="202" href="#202">202</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="203" href="#203">203</a> <font color="#AA0000"><i>   * Constructor gets all contents as arguments.</font></i>
+<a name="204" href="#204">204</a> <font color="#AA0000"><i>   *</font></i>
+<a name="205" href="#205">205</a> <font color="#AA0000"><i>   * @param class_name_index Class name</font></i>
+<a name="206" href="#206">206</a> <font color="#AA0000"><i>   * @param superclass_name_index Superclass name</font></i>
+<a name="207" href="#207">207</a> <font color="#AA0000"><i>   * @param file_name File name</font></i>
+<a name="208" href="#208">208</a> <font color="#AA0000"><i>   * @param major Major compiler version</font></i>
+<a name="209" href="#209">209</a> <font color="#AA0000"><i>   * @param minor Minor compiler version</font></i>
+<a name="210" href="#210">210</a> <font color="#AA0000"><i>   * @param access_flags Access rights defined by bit flags</font></i>
+<a name="211" href="#211">211</a> <font color="#AA0000"><i>   * @param constant_pool Array of constants</font></i>
+<a name="212" href="#212">212</a> <font color="#AA0000"><i>   * @param interfaces Implemented interfaces</font></i>
+<a name="213" href="#213">213</a> <font color="#AA0000"><i>   * @param fields Class fields</font></i>
+<a name="214" href="#214">214</a> <font color="#AA0000"><i>   * @param methods Class methods</font></i>
+<a name="215" href="#215">215</a> <font color="#AA0000"><i>   * @param attributes Class attributes</font></i>
+<a name="216" href="#216">216</a> <font color="#AA0000"><i>   */</font></i>
+<a name="217" href="#217">217</a>   <b>public</b> <a href="../../../../org/apache/bcel/classfile/JavaClass.html">JavaClass</a>(<b>int</b>        <b>class</b>_name_index,
+<a name="218" href="#218">218</a> 		   <b>int</b>        superclass_name_index,
+<a name="219" href="#219">219</a> 		   String     file_name,
+<a name="220" href="#220">220</a> 		   <b>int</b>        major,
+<a name="221" href="#221">221</a> 		   <b>int</b>        minor,
+<a name="222" href="#222">222</a> 		   <b>int</b>        access_flags,
+<a name="223" href="#223">223</a> 		   ConstantPool constant_pool,
+<a name="224" href="#224">224</a> 		   <b>int</b>[]      <b>int</b>erfaces,
+<a name="225" href="#225">225</a> 		   Field[]      fields,
+<a name="226" href="#226">226</a> 		   Method[]     methods,
+<a name="227" href="#227">227</a> 		   Attribute[]  attributes) {
+<a name="228" href="#228">228</a>     <b>this</b>(<b>class</b>_name_index, <b>super</b><b>class</b>_name_index, file_name, major, minor, access_flags,
+<a name="229" href="#229">229</a> 	 constant_pool, interfaces, fields, methods, attributes, HEAP);
+<a name="230" href="#230">230</a>   }
+<a name="231" href="#231">231</a> 
+<a name="232" href="#232">232</a>       
+<a name="233" href="#233">233</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="234" href="#234">234</a> <font color="#AA0000"><i>   * Called by objects that are traversing the nodes of the tree implicitely</font></i>
+<a name="235" href="#235">235</a> <font color="#AA0000"><i>   * defined by the contents of a Java class. I.e., the hierarchy of methods,</font></i>
+<a name="236" href="#236">236</a> <font color="#AA0000"><i>   * fields, attributes, etc. spawns a tree of objects.</font></i>
+<a name="237" href="#237">237</a> <font color="#AA0000"><i>   *</font></i>
+<a name="238" href="#238">238</a> <font color="#AA0000"><i>   * @param v Visitor object</font></i>
+<a name="239" href="#239">239</a> <font color="#AA0000"><i>   */</font></i>
+<a name="240" href="#240">240</a>   <b>public</b> <b>void</b> accept(<a href="../../../../org/apache/bcel/generic/Visitor.html">Visitor</a> v) {
+<a name="241" href="#241">241</a>     v.visitJavaClass(<b>this</b>);
+<a name="242" href="#242">242</a>   }
+<a name="243" href="#243">243</a> 
+<a name="244" href="#244">244</a>   <font color="#329900"><i>/*<font color="#329900"><i> Print debug information depending on `JavaClass.debug'</font></i></font></i>
+<a name="245" href="#245">245</a> <font color="#329900"><i>   */</font></i>
+<a name="246" href="#246">246</a>   <b>static</b> <b>final</b> <b>void</b> Debug(String str) {
+<a name="247" href="#247">247</a>     <b>if</b>(debug)
+<a name="248" href="#248">248</a>       System.out.println(str);
+<a name="249" href="#249">249</a>   }
+<a name="250" href="#250">250</a> 
+<a name="251" href="#251">251</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>* </font></i></font></i>
+<a name="252" href="#252">252</a> <font color="#AA0000"><i>   * Dump class to a file.</font></i>
+<a name="253" href="#253">253</a> <font color="#AA0000"><i>   *</font></i>
+<a name="254" href="#254">254</a> <font color="#AA0000"><i>   * @param file Output file</font></i>
+<a name="255" href="#255">255</a> <font color="#AA0000"><i>   * @throws IOException</font></i>
+<a name="256" href="#256">256</a> <font color="#AA0000"><i>   */</font></i>
+<a name="257" href="#257">257</a>   <b>public</b> <b>void</b> dump(File file) throws IOException
+<a name="258" href="#258">258</a>   {
+<a name="259" href="#259">259</a>     String parent = file.getParent();
+<a name="260" href="#260">260</a> 
+<a name="261" href="#261">261</a>     <b>if</b>(parent != <b>null</b>) {
+<a name="262" href="#262">262</a>       File dir = <b>new</b> File(parent);
+<a name="263" href="#263">263</a>       
+<a name="264" href="#264">264</a>       <b>if</b>(dir != <b>null</b>)
+<a name="265" href="#265">265</a> 	dir.mkdirs();
+<a name="266" href="#266">266</a>     }
+<a name="267" href="#267">267</a> 
+<a name="268" href="#268">268</a>     dump(<b>new</b> DataOutputStream(<b>new</b> FileOutputStream(file)));
+<a name="269" href="#269">269</a>   }
+<a name="270" href="#270">270</a> 
+<a name="271" href="#271">271</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>* </font></i></font></i>
+<a name="272" href="#272">272</a> <font color="#AA0000"><i>   * Dump class to a file named file_name.</font></i>
+<a name="273" href="#273">273</a> <font color="#AA0000"><i>   *</font></i>
+<a name="274" href="#274">274</a> <font color="#AA0000"><i>   * @param file_name Output file name</font></i>
+<a name="275" href="#275">275</a> <font color="#AA0000"><i>   * @exception IOException</font></i>
+<a name="276" href="#276">276</a> <font color="#AA0000"><i>   */</font></i>
+<a name="277" href="#277">277</a>   <b>public</b> <b>void</b> dump(String file_name) throws IOException
+<a name="278" href="#278">278</a>   {
+<a name="279" href="#279">279</a>     dump(<b>new</b> File(file_name));
+<a name="280" href="#280">280</a>   }
+<a name="281" href="#281">281</a> 
+<a name="282" href="#282">282</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="283" href="#283">283</a> <font color="#AA0000"><i>   * @return class in binary format</font></i>
+<a name="284" href="#284">284</a> <font color="#AA0000"><i>   */</font></i>
+<a name="285" href="#285">285</a>   <b>public</b> byte[] getBytes() {
+<a name="286" href="#286">286</a>     ByteArrayOutputStream s  = <b>new</b> ByteArrayOutputStream();
+<a name="287" href="#287">287</a>     DataOutputStream      ds = <b>new</b> DataOutputStream(s);
+<a name="288" href="#288">288</a> 
+<a name="289" href="#289">289</a>     <b>try</b> {
+<a name="290" href="#290">290</a>       dump(ds);
+<a name="291" href="#291">291</a>     } <b>catch</b>(IOException e) {
+<a name="292" href="#292">292</a>       e.printStackTrace();
+<a name="293" href="#293">293</a>     } <b>finally</b> {
+<a name="294" href="#294">294</a>       <b>try</b> { ds.close(); } <b>catch</b>(IOException e2) { e2.printStackTrace(); }
+<a name="295" href="#295">295</a>     }
+<a name="296" href="#296">296</a> 
+<a name="297" href="#297">297</a>     <b>return</b> s.toByteArray();
+<a name="298" href="#298">298</a>   }
+<a name="299" href="#299">299</a> 
+<a name="300" href="#300">300</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="301" href="#301">301</a> <font color="#AA0000"><i>   * Dump Java class to output stream in binary format.</font></i>
+<a name="302" href="#302">302</a> <font color="#AA0000"><i>   *</font></i>
+<a name="303" href="#303">303</a> <font color="#AA0000"><i>   * @param file Output stream</font></i>
+<a name="304" href="#304">304</a> <font color="#AA0000"><i>   * @exception IOException</font></i>
+<a name="305" href="#305">305</a> <font color="#AA0000"><i>   */</font></i>
+<a name="306" href="#306">306</a>   <b>public</b> <b>void</b> dump(OutputStream file) throws IOException {
+<a name="307" href="#307">307</a>     dump(<b>new</b> DataOutputStream(file));
+<a name="308" href="#308">308</a>   }
+<a name="309" href="#309">309</a> 
+<a name="310" href="#310">310</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="311" href="#311">311</a> <font color="#AA0000"><i>   * Dump Java class to output stream in binary format.</font></i>
+<a name="312" href="#312">312</a> <font color="#AA0000"><i>   *</font></i>
+<a name="313" href="#313">313</a> <font color="#AA0000"><i>   * @param file Output stream</font></i>
+<a name="314" href="#314">314</a> <font color="#AA0000"><i>   * @exception IOException</font></i>
+<a name="315" href="#315">315</a> <font color="#AA0000"><i>   */</font></i>
+<a name="316" href="#316">316</a>   <b>public</b> <b>void</b> dump(DataOutputStream file) throws IOException
+<a name="317" href="#317">317</a>   {
+<a name="318" href="#318">318</a>     file.writeInt(0xcafebabe);
+<a name="319" href="#319">319</a>     file.writeShort(minor);
+<a name="320" href="#320">320</a>     file.writeShort(major);
+<a name="321" href="#321">321</a> 
+<a name="322" href="#322">322</a>     constant_pool.dump(file);
+<a name="323" href="#323">323</a> 	
+<a name="324" href="#324">324</a>     file.writeShort(access_flags);
+<a name="325" href="#325">325</a>     file.writeShort(<b>class</b>_name_index);
+<a name="326" href="#326">326</a>     file.writeShort(superclass_name_index);
+<a name="327" href="#327">327</a> 
+<a name="328" href="#328">328</a>     file.writeShort(interfaces.length);
+<a name="329" href="#329">329</a>     <b>for</b>(<b>int</b> i=0; i &lt; <b>int</b>erfaces.length; i++)
+<a name="330" href="#330">330</a>       file.writeShort(interfaces[i]);
+<a name="331" href="#331">331</a> 
+<a name="332" href="#332">332</a>     file.writeShort(fields.length);
+<a name="333" href="#333">333</a>     <b>for</b>(<b>int</b> i=0; i &lt; fields.length; i++)
+<a name="334" href="#334">334</a>       fields[i].dump(file);
+<a name="335" href="#335">335</a> 
+<a name="336" href="#336">336</a>     file.writeShort(methods.length);
+<a name="337" href="#337">337</a>     <b>for</b>(<b>int</b> i=0; i &lt; methods.length; i++)
+<a name="338" href="#338">338</a>       methods[i].dump(file);
+<a name="339" href="#339">339</a> 
+<a name="340" href="#340">340</a>     <b>if</b>(attributes != <b>null</b>) {
+<a name="341" href="#341">341</a>       file.writeShort(attributes.length);
+<a name="342" href="#342">342</a>       <b>for</b>(<b>int</b> i=0; i &lt; attributes.length; i++)
+<a name="343" href="#343">343</a> 	attributes[i].dump(file);
+<a name="344" href="#344">344</a>     }
+<a name="345" href="#345">345</a>     <b>else</b>
+<a name="346" href="#346">346</a>       file.writeShort(0);
+<a name="347" href="#347">347</a> 
+<a name="348" href="#348">348</a>     file.close();
+<a name="349" href="#349">349</a>   }
+<a name="350" href="#350">350</a> 
+<a name="351" href="#351">351</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="352" href="#352">352</a> <font color="#AA0000"><i>   * @return Attributes of the class.</font></i>
+<a name="353" href="#353">353</a> <font color="#AA0000"><i>   */</font></i>
+<a name="354" href="#354">354</a>   <b>public</b> <a href="../../../../org/apache/bcel/classfile/Attribute.html">Attribute</a>[] getAttributes() { <b>return</b> attributes; }
+<a name="355" href="#355">355</a> 
+<a name="356" href="#356">356</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="357" href="#357">357</a> <font color="#AA0000"><i>   * @return Class name.</font></i>
+<a name="358" href="#358">358</a> <font color="#AA0000"><i>   */</font></i>
+<a name="359" href="#359">359</a>   <b>public</b> String getClassName()       { <b>return</b> <b>class</b>_name; }
+<a name="360" href="#360">360</a> 
+<a name="361" href="#361">361</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="362" href="#362">362</a> <font color="#AA0000"><i>   * @return Package name.</font></i>
+<a name="363" href="#363">363</a> <font color="#AA0000"><i>   */</font></i>
+<a name="364" href="#364">364</a>   <b>public</b> String getPackageName()       { <b>return</b> <b>package</b>_name; }    
+<a name="365" href="#365">365</a> 
+<a name="366" href="#366">366</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="367" href="#367">367</a> <font color="#AA0000"><i>   * @return Class name index.</font></i>
+<a name="368" href="#368">368</a> <font color="#AA0000"><i>   */</font></i>
+<a name="369" href="#369">369</a>   <b>public</b> <b>int</b> getClassNameIndex()   { <b>return</b> <b>class</b>_name_index; }
+<a name="370" href="#370">370</a> 
+<a name="371" href="#371">371</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="372" href="#372">372</a> <font color="#AA0000"><i>   * @return Constant pool.</font></i>
+<a name="373" href="#373">373</a> <font color="#AA0000"><i>   */</font></i>
+<a name="374" href="#374">374</a>   <b>public</b> <a href="../../../../org/apache/bcel/classfile/ConstantPool.html">ConstantPool</a> getConstantPool() { <b>return</b> constant_pool; }
+<a name="375" href="#375">375</a> 
+<a name="376" href="#376">376</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="377" href="#377">377</a> <font color="#AA0000"><i>   * @return Fields, i.e., variables of the class. Like the JVM spec</font></i>
+<a name="378" href="#378">378</a> <font color="#AA0000"><i>   * mandates for the classfile format, these fields are those specific to</font></i>
+<a name="379" href="#379">379</a> <font color="#AA0000"><i>   * this class, and not those of the superclass or superinterfaces.</font></i>
+<a name="380" href="#380">380</a> <font color="#AA0000"><i>   */</font></i>
+<a name="381" href="#381">381</a>   <b>public</b> <a href="../../../../org/apache/bcel/classfile/Field.html">Field</a>[] getFields()         { <b>return</b> fields; }    
+<a name="382" href="#382">382</a> 
+<a name="383" href="#383">383</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="384" href="#384">384</a> <font color="#AA0000"><i>   * @return File name of class, aka SourceFile attribute value</font></i>
+<a name="385" href="#385">385</a> <font color="#AA0000"><i>   */</font></i>
+<a name="386" href="#386">386</a>   <b>public</b> String getFileName()        { <b>return</b> file_name; }    
+<a name="387" href="#387">387</a> 
+<a name="388" href="#388">388</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="389" href="#389">389</a> <font color="#AA0000"><i>   * @return Names of implemented interfaces.</font></i>
+<a name="390" href="#390">390</a> <font color="#AA0000"><i>   */</font></i>
+<a name="391" href="#391">391</a>   <b>public</b> String[] getInterfaceNames()  { <b>return</b> <b>interface</b>_names; }    
+<a name="392" href="#392">392</a> 
+<a name="393" href="#393">393</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="394" href="#394">394</a> <font color="#AA0000"><i>   * @return Indices in constant pool of implemented interfaces.</font></i>
+<a name="395" href="#395">395</a> <font color="#AA0000"><i>   */</font></i>
+<a name="396" href="#396">396</a>   <b>public</b> <b>int</b>[] getInterfaceIndices()     { <b>return</b> <b>int</b>erfaces; }    
+<a name="397" href="#397">397</a> 
+<a name="398" href="#398">398</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="399" href="#399">399</a> <font color="#AA0000"><i>   * @return Major number of class file version.</font></i>
+<a name="400" href="#400">400</a> <font color="#AA0000"><i>   */</font></i>
+<a name="401" href="#401">401</a>   <b>public</b> <b>int</b>  getMajor()           { <b>return</b> major; }    
+<a name="402" href="#402">402</a> 
+<a name="403" href="#403">403</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="404" href="#404">404</a> <font color="#AA0000"><i>   * @return Methods of the class.</font></i>
+<a name="405" href="#405">405</a> <font color="#AA0000"><i>   */</font></i>
+<a name="406" href="#406">406</a>   <b>public</b> <a href="../../../../org/apache/bcel/classfile/Method.html">Method</a>[] getMethods()       { <b>return</b> methods; }    
+<a name="407" href="#407">407</a> 
+<a name="408" href="#408">408</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="409" href="#409">409</a> <font color="#AA0000"><i>   * @return A org.apache.bcel.classfile.Method corresponding to</font></i>
+<a name="410" href="#410">410</a> <font color="#AA0000"><i>   * java.lang.reflect.Method if any</font></i>
+<a name="411" href="#411">411</a> <font color="#AA0000"><i>   */</font></i>
+<a name="412" href="#412">412</a>   <b>public</b> <a href="../../../../org/apache/bcel/classfile/Method.html">Method</a> getMethod(java.lang.reflect.Method m) {
+<a name="413" href="#413">413</a>     <b>for</b>(<b>int</b> i = 0; i &lt; methods.length; i++) {
+<a name="414" href="#414">414</a>       <a href="../../../../org/apache/bcel/classfile/Method.html">Method</a> method = methods[i];
+<a name="415" href="#415">415</a> 
+<a name="416" href="#416">416</a>       <b>if</b>(m.getName().equals(method.getName()) &&
+<a name="417" href="#417">417</a> 	 (m.getModifiers() == method.getModifiers()) &&
+<a name="418" href="#418">418</a> 	 Type.getSignature(m).equals(method.getSignature())) {
+<a name="419" href="#419">419</a> 	<b>return</b> method;
+<a name="420" href="#420">420</a>       }
+<a name="421" href="#421">421</a>     }
+<a name="422" href="#422">422</a> 
+<a name="423" href="#423">423</a>     <b>return</b> <b>null</b>;
+<a name="424" href="#424">424</a>   }
+<a name="425" href="#425">425</a> 
+<a name="426" href="#426">426</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="427" href="#427">427</a> <font color="#AA0000"><i>   * @return Minor number of class file version.</font></i>
+<a name="428" href="#428">428</a> <font color="#AA0000"><i>   */</font></i>
+<a name="429" href="#429">429</a>   <b>public</b> <b>int</b>  getMinor()           { <b>return</b> minor; }    
+<a name="430" href="#430">430</a> 
+<a name="431" href="#431">431</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="432" href="#432">432</a> <font color="#AA0000"><i>   * @return sbsolute path to file where this class was read from</font></i>
+<a name="433" href="#433">433</a> <font color="#AA0000"><i>   */</font></i>
+<a name="434" href="#434">434</a>   <b>public</b> String getSourceFileName()  { <b>return</b> source_file_name; }    
+<a name="435" href="#435">435</a> 
+<a name="436" href="#436">436</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="437" href="#437">437</a> <font color="#AA0000"><i>   * @return Superclass name.</font></i>
+<a name="438" href="#438">438</a> <font color="#AA0000"><i>   */</font></i>
+<a name="439" href="#439">439</a>   <b>public</b> String getSuperclassName()  { <b>return</b> superclass_name; }    
+<a name="440" href="#440">440</a> 
+<a name="441" href="#441">441</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="442" href="#442">442</a> <font color="#AA0000"><i>   * @return Class name index.</font></i>
+<a name="443" href="#443">443</a> <font color="#AA0000"><i>   */</font></i>
+<a name="444" href="#444">444</a>   <b>public</b> <b>int</b> getSuperclassNameIndex() { <b>return</b> superclass_name_index; }    
+<a name="445" href="#445">445</a> 
+<a name="446" href="#446">446</a>   <b>static</b> {
+<a name="447" href="#447">447</a>     <font color="#329900"><i>// Debugging ... on/off</font></i>
+<a name="448" href="#448">448</a>     String debug = System.getProperty(<font color="#000099">"JavaClass.debug"</font>);
+<a name="449" href="#449">449</a> 
+<a name="450" href="#450">450</a>     <b>if</b>(debug != <b>null</b>)
+<a name="451" href="#451">451</a>       JavaClass.debug = <b>new</b> Boolean(debug).booleanValue();
+<a name="452" href="#452">452</a> 
+<a name="453" href="#453">453</a>     <font color="#329900"><i>// Get path separator either / or \ usually</font></i>
+<a name="454" href="#454">454</a>     String sep = System.getProperty(<font color="#000099">"file.separator"</font>);
+<a name="455" href="#455">455</a> 
+<a name="456" href="#456">456</a>     <b>if</b>(sep != <b>null</b>)
+<a name="457" href="#457">457</a>       <b>try</b> {
+<a name="458" href="#458">458</a> 	JavaClass.sep = sep.charAt(0);
+<a name="459" href="#459">459</a>       } <b>catch</b>(StringIndexOutOfBoundsException e) {} <font color="#329900"><i>// Never reached</font></i>
+<a name="460" href="#460">460</a>   }
+<a name="461" href="#461">461</a> 
+<a name="462" href="#462">462</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="463" href="#463">463</a> <font color="#AA0000"><i>   * @param attributes .</font></i>
+<a name="464" href="#464">464</a> <font color="#AA0000"><i>   */</font></i>
+<a name="465" href="#465">465</a>   <b>public</b> <b>void</b> setAttributes(<a href="../../../../org/apache/bcel/classfile/Attribute.html">Attribute</a>[] attributes) {
+<a name="466" href="#466">466</a>     <b>this</b>.attributes = attributes;
+<a name="467" href="#467">467</a>   }    
+<a name="468" href="#468">468</a> 
+<a name="469" href="#469">469</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="470" href="#470">470</a> <font color="#AA0000"><i>   * @param class_name .</font></i>
+<a name="471" href="#471">471</a> <font color="#AA0000"><i>   */</font></i>
+<a name="472" href="#472">472</a>   <b>public</b> <b>void</b> setClassName(String <b>class</b>_name) {
+<a name="473" href="#473">473</a>     <b>this</b>.<b>class</b>_name = <b>class</b>_name;
+<a name="474" href="#474">474</a>   }    
+<a name="475" href="#475">475</a> 
+<a name="476" href="#476">476</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="477" href="#477">477</a> <font color="#AA0000"><i>   * @param class_name_index .</font></i>
+<a name="478" href="#478">478</a> <font color="#AA0000"><i>   */</font></i>
+<a name="479" href="#479">479</a>   <b>public</b> <b>void</b> setClassNameIndex(<b>int</b> <b>class</b>_name_index) {
+<a name="480" href="#480">480</a>     <b>this</b>.<b>class</b>_name_index = <b>class</b>_name_index;
+<a name="481" href="#481">481</a>   }    
+<a name="482" href="#482">482</a> 
+<a name="483" href="#483">483</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="484" href="#484">484</a> <font color="#AA0000"><i>   * @param constant_pool .</font></i>
+<a name="485" href="#485">485</a> <font color="#AA0000"><i>   */</font></i>
+<a name="486" href="#486">486</a>   <b>public</b> <b>void</b> setConstantPool(<a href="../../../../org/apache/bcel/classfile/ConstantPool.html">ConstantPool</a> constant_pool) {
+<a name="487" href="#487">487</a>     <b>this</b>.constant_pool = constant_pool;
+<a name="488" href="#488">488</a>   }    
+<a name="489" href="#489">489</a> 
+<a name="490" href="#490">490</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="491" href="#491">491</a> <font color="#AA0000"><i>   * @param fields .</font></i>
+<a name="492" href="#492">492</a> <font color="#AA0000"><i>   */</font></i>
+<a name="493" href="#493">493</a>   <b>public</b> <b>void</b> setFields(<a href="../../../../org/apache/bcel/classfile/Field.html">Field</a>[] fields) {
+<a name="494" href="#494">494</a>     <b>this</b>.fields = fields;
+<a name="495" href="#495">495</a>   }    
+<a name="496" href="#496">496</a> 
+<a name="497" href="#497">497</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="498" href="#498">498</a> <font color="#AA0000"><i>   * Set File name of class, aka SourceFile attribute value</font></i>
+<a name="499" href="#499">499</a> <font color="#AA0000"><i>   */</font></i>
+<a name="500" href="#500">500</a>   <b>public</b> <b>void</b> setFileName(String file_name) {
+<a name="501" href="#501">501</a>     <b>this</b>.file_name = file_name;
+<a name="502" href="#502">502</a>   }    
+<a name="503" href="#503">503</a> 
+<a name="504" href="#504">504</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="505" href="#505">505</a> <font color="#AA0000"><i>   * @param interface_names .</font></i>
+<a name="506" href="#506">506</a> <font color="#AA0000"><i>   */</font></i>
+<a name="507" href="#507">507</a>   <b>public</b> <b>void</b> setInterfaceNames(String[] <b>interface</b>_names) {
+<a name="508" href="#508">508</a>     <b>this</b>.<b>interface</b>_names = <b>interface</b>_names;
+<a name="509" href="#509">509</a>   }    
+<a name="510" href="#510">510</a> 
+<a name="511" href="#511">511</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="512" href="#512">512</a> <font color="#AA0000"><i>   * @param interfaces .</font></i>
+<a name="513" href="#513">513</a> <font color="#AA0000"><i>   */</font></i>
+<a name="514" href="#514">514</a>   <b>public</b> <b>void</b> setInterfaces(<b>int</b>[] <b>int</b>erfaces) {
+<a name="515" href="#515">515</a>     <b>this</b>.interfaces = interfaces;
+<a name="516" href="#516">516</a>   }    
+<a name="517" href="#517">517</a> 
+<a name="518" href="#518">518</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="519" href="#519">519</a> <font color="#AA0000"><i>   * @param major .</font></i>
+<a name="520" href="#520">520</a> <font color="#AA0000"><i>   */</font></i>
+<a name="521" href="#521">521</a>   <b>public</b> <b>void</b> setMajor(<b>int</b> major) {
+<a name="522" href="#522">522</a>     <b>this</b>.major = major;
+<a name="523" href="#523">523</a>   }    
+<a name="524" href="#524">524</a> 
+<a name="525" href="#525">525</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="526" href="#526">526</a> <font color="#AA0000"><i>   * @param methods .</font></i>
+<a name="527" href="#527">527</a> <font color="#AA0000"><i>   */</font></i>
+<a name="528" href="#528">528</a>   <b>public</b> <b>void</b> setMethods(<a href="../../../../org/apache/bcel/classfile/Method.html">Method</a>[] methods) {
+<a name="529" href="#529">529</a>     <b>this</b>.methods = methods;
+<a name="530" href="#530">530</a>   }    
+<a name="531" href="#531">531</a> 
+<a name="532" href="#532">532</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="533" href="#533">533</a> <font color="#AA0000"><i>   * @param minor .</font></i>
+<a name="534" href="#534">534</a> <font color="#AA0000"><i>   */</font></i>
+<a name="535" href="#535">535</a>   <b>public</b> <b>void</b> setMinor(<b>int</b> minor) {
+<a name="536" href="#536">536</a>     <b>this</b>.minor = minor;
+<a name="537" href="#537">537</a>   }    
+<a name="538" href="#538">538</a> 
+<a name="539" href="#539">539</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="540" href="#540">540</a> <font color="#AA0000"><i>   * Set absolute path to file this class was read from.</font></i>
+<a name="541" href="#541">541</a> <font color="#AA0000"><i>   */</font></i>
+<a name="542" href="#542">542</a>   <b>public</b> <b>void</b> setSourceFileName(String source_file_name) {
+<a name="543" href="#543">543</a>     <b>this</b>.source_file_name = source_file_name;
+<a name="544" href="#544">544</a>   }    
+<a name="545" href="#545">545</a> 
+<a name="546" href="#546">546</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="547" href="#547">547</a> <font color="#AA0000"><i>   * @param superclass_name .</font></i>
+<a name="548" href="#548">548</a> <font color="#AA0000"><i>   */</font></i>
+<a name="549" href="#549">549</a>   <b>public</b> <b>void</b> setSuperclassName(String superclass_name) {
+<a name="550" href="#550">550</a>     <b>this</b>.superclass_name = superclass_name;
+<a name="551" href="#551">551</a>   }    
+<a name="552" href="#552">552</a> 
+<a name="553" href="#553">553</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="554" href="#554">554</a> <font color="#AA0000"><i>   * @param superclass_name_index .</font></i>
+<a name="555" href="#555">555</a> <font color="#AA0000"><i>   */</font></i>
+<a name="556" href="#556">556</a>   <b>public</b> <b>void</b> setSuperclassNameIndex(<b>int</b> superclass_name_index) {
+<a name="557" href="#557">557</a>     <b>this</b>.superclass_name_index = superclass_name_index;
+<a name="558" href="#558">558</a>   }    
+<a name="559" href="#559">559</a> 
+<a name="560" href="#560">560</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="561" href="#561">561</a> <font color="#AA0000"><i>   * @return String representing class contents.</font></i>
+<a name="562" href="#562">562</a> <font color="#AA0000"><i>   */</font></i>
+<a name="563" href="#563">563</a>   <b>public</b> String toString() {
+<a name="564" href="#564">564</a>     String access = Utility.accessToString(access_flags, <b>true</b>);
+<a name="565" href="#565">565</a>     access = access.equals(<font color="#000099">""</font>)? <font color="#000099">""</font> : (access + <font color="#000099">" "</font>);
+<a name="566" href="#566">566</a> 
+<a name="567" href="#567">567</a>     StringBuffer buf = <b>new</b> StringBuffer(access +
+<a name="568" href="#568">568</a> 					Utility.classOrInterface(access_flags) + 
+<a name="569" href="#569">569</a> 					<font color="#000099">" "</font> +
+<a name="570" href="#570">570</a> 					<b>class</b>_name + <font color="#000099">" extends "</font> +
+<a name="571" href="#571">571</a> 					Utility.compactClassName(superclass_name,
+<a name="572" href="#572">572</a> 								 false) + '\n');
+<a name="573" href="#573">573</a>     <b>int</b> size = <b>int</b>erfaces.length;
+<a name="574" href="#574">574</a> 
+<a name="575" href="#575">575</a>     <b>if</b>(size &gt; 0) {
+<a name="576" href="#576">576</a>       buf.append(<font color="#000099">"implements\t\t"</font>);
+<a name="577" href="#577">577</a> 
+<a name="578" href="#578">578</a>       <b>for</b>(<b>int</b> i=0; i &lt; size; i++) {
+<a name="579" href="#579">579</a> 	buf.append(<b>interface</b>_names[i]);
+<a name="580" href="#580">580</a> 	<b>if</b>(i &lt; size - 1)
+<a name="581" href="#581">581</a> 	  buf.append(<font color="#000099">", "</font>);
+<a name="582" href="#582">582</a>       }
+<a name="583" href="#583">583</a> 
+<a name="584" href="#584">584</a>       buf.append('\n');
+<a name="585" href="#585">585</a>     }
+<a name="586" href="#586">586</a> 
+<a name="587" href="#587">587</a>     buf.append(<font color="#000099">"filename\t\t"</font> + file_name + '\n');
+<a name="588" href="#588">588</a>     buf.append(<font color="#000099">"compiled from\t\t"</font> + source_file_name + '\n');
+<a name="589" href="#589">589</a>     buf.append(<font color="#000099">"compiler version\t"</font> + major + <font color="#000099">"."</font> + minor + '\n');
+<a name="590" href="#590">590</a>     buf.append(<font color="#000099">"access flags\t\t"</font> + access_flags + '\n');
+<a name="591" href="#591">591</a>     buf.append(<font color="#000099">"constant pool\t\t"</font> + constant_pool.getLength() + <font color="#000099">" entries\n"</font>);
+<a name="592" href="#592">592</a>     buf.append(<font color="#000099">"ACC_SUPER flag\t\t"</font> + isSuper() + <font color="#000099">"\n"</font>);
+<a name="593" href="#593">593</a> 
+<a name="594" href="#594">594</a>     <b>if</b>(attributes.length &gt; 0) {
+<a name="595" href="#595">595</a>       buf.append(<font color="#000099">"\nAttribute(s):\n"</font>);
+<a name="596" href="#596">596</a>       <b>for</b>(<b>int</b> i=0; i &lt; attributes.length; i++)
+<a name="597" href="#597">597</a> 	buf.append(indent(attributes[i]));
+<a name="598" href="#598">598</a>     }
+<a name="599" href="#599">599</a> 
+<a name="600" href="#600">600</a>     <b>if</b>(fields.length &gt; 0) {
+<a name="601" href="#601">601</a>       buf.append(<font color="#000099">"\n"</font> + fields.length + <font color="#000099">" fields:\n"</font>);
+<a name="602" href="#602">602</a>       <b>for</b>(<b>int</b> i=0; i &lt; fields.length; i++)
+<a name="603" href="#603">603</a> 	buf.append(<font color="#000099">"\t"</font> + fields[i] + '\n');
+<a name="604" href="#604">604</a>     }
+<a name="605" href="#605">605</a> 
+<a name="606" href="#606">606</a>     <b>if</b>(methods.length &gt; 0) {
+<a name="607" href="#607">607</a>       buf.append(<font color="#000099">"\n"</font> + methods.length + <font color="#000099">" methods:\n"</font>);
+<a name="608" href="#608">608</a>       <b>for</b>(<b>int</b> i=0; i &lt; methods.length; i++)
+<a name="609" href="#609">609</a> 	buf.append(<font color="#000099">"\t"</font> + methods[i] + '\n');
+<a name="610" href="#610">610</a>     }
+<a name="611" href="#611">611</a> 
+<a name="612" href="#612">612</a>     <b>return</b> buf.toString();
+<a name="613" href="#613">613</a>   }    
+<a name="614" href="#614">614</a> 
+<a name="615" href="#615">615</a>   <b>private</b> <b>static</b> <b>final</b> String indent(Object obj) {
+<a name="616" href="#616">616</a>     StringTokenizer tok = <b>new</b> StringTokenizer(obj.toString(), <font color="#000099">"\n"</font>);
+<a name="617" href="#617">617</a>     StringBuffer buf = <b>new</b> StringBuffer();
+<a name="618" href="#618">618</a> 
+<a name="619" href="#619">619</a>     <b>while</b>(tok.hasMoreTokens())
+<a name="620" href="#620">620</a>       buf.append(<font color="#000099">"\t"</font> + tok.nextToken() + <font color="#000099">"\n"</font>);
+<a name="621" href="#621">621</a> 
+<a name="622" href="#622">622</a>     <b>return</b> buf.toString();
+<a name="623" href="#623">623</a>   }
+<a name="624" href="#624">624</a> 
+<a name="625" href="#625">625</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="626" href="#626">626</a> <font color="#AA0000"><i>   * @return deep copy of this class</font></i>
+<a name="627" href="#627">627</a> <font color="#AA0000"><i>   */</font></i>
+<a name="628" href="#628">628</a>   <b>public</b> <a href="../../../../org/apache/bcel/classfile/JavaClass.html">JavaClass</a> copy() {
+<a name="629" href="#629">629</a>     <a href="../../../../org/apache/bcel/classfile/JavaClass.html">JavaClass</a> c = <b>null</b>;
+<a name="630" href="#630">630</a> 
+<a name="631" href="#631">631</a>     <b>try</b> {
+<a name="632" href="#632">632</a>       c = (JavaClass)clone();
+<a name="633" href="#633">633</a>     } <b>catch</b>(CloneNotSupportedException e) {}
+<a name="634" href="#634">634</a> 
+<a name="635" href="#635">635</a>     c.constant_pool   = constant_pool.copy();
+<a name="636" href="#636">636</a>     c.<b>int</b>erfaces      = (<b>int</b>[])<b>int</b>erfaces.clone();
+<a name="637" href="#637">637</a>     c.<b>interface</b>_names = (String[])<b>interface</b>_names.clone();
+<a name="638" href="#638">638</a> 
+<a name="639" href="#639">639</a>     c.fields = <b>new</b> <a href="../../../../org/apache/bcel/classfile/Field.html">Field</a>[fields.length];
+<a name="640" href="#640">640</a>     <b>for</b>(<b>int</b> i=0; i &lt; fields.length; i++)
+<a name="641" href="#641">641</a>       c.fields[i] = fields[i].copy(c.constant_pool);
+<a name="642" href="#642">642</a> 
+<a name="643" href="#643">643</a>     c.methods = <b>new</b> <a href="../../../../org/apache/bcel/classfile/Method.html">Method</a>[methods.length];
+<a name="644" href="#644">644</a>     <b>for</b>(<b>int</b> i=0; i &lt; methods.length; i++)
+<a name="645" href="#645">645</a>       c.methods[i] = methods[i].copy(c.constant_pool);
+<a name="646" href="#646">646</a> 
+<a name="647" href="#647">647</a>     c.attributes = <b>new</b> <a href="../../../../org/apache/bcel/classfile/Attribute.html">Attribute</a>[attributes.length];
+<a name="648" href="#648">648</a>     <b>for</b>(<b>int</b> i=0; i &lt; attributes.length; i++)
+<a name="649" href="#649">649</a>       c.attributes[i] = attributes[i].copy(c.constant_pool);
+<a name="650" href="#650">650</a> 
+<a name="651" href="#651">651</a>     <b>return</b> c;
+<a name="652" href="#652">652</a>   }
+<a name="653" href="#653">653</a> 
+<a name="654" href="#654">654</a>   <b>public</b> <b>final</b> <b>boolean</b> isSuper() {
+<a name="655" href="#655">655</a>     <b>return</b> (access_flags & Constants.ACC_SUPER) != 0;
+<a name="656" href="#656">656</a>   }
+<a name="657" href="#657">657</a> 
+<a name="658" href="#658">658</a>   <b>public</b> <b>final</b> <b>boolean</b> isClass() {
+<a name="659" href="#659">659</a>     <b>return</b> (access_flags & Constants.ACC_INTERFACE) == 0;
+<a name="660" href="#660">660</a>   }
+<a name="661" href="#661">661</a> 
+<a name="662" href="#662">662</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>* @return returns either HEAP (generated), FILE, or ZIP</font></i></font></i>
+<a name="663" href="#663">663</a> <font color="#AA0000"><i>   */</font></i>
+<a name="664" href="#664">664</a>   <b>public</b> <b>final</b> byte getSource() {
+<a name="665" href="#665">665</a>     <b>return</b> source;
+<a name="666" href="#666">666</a>   }
+<a name="667" href="#667">667</a> 
+<a name="668" href="#668">668</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>******************** New repository functionality *********************/</font></i></font></i>
+<a name="669" href="#669">669</a> 
+<a name="670" href="#670">670</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="671" href="#671">671</a> <font color="#AA0000"><i>   * Gets the ClassRepository which holds its definition. By default</font></i>
+<a name="672" href="#672">672</a> <font color="#AA0000"><i>   * this is the same as SyntheticRepository.getInstance();</font></i>
+<a name="673" href="#673">673</a> <font color="#AA0000"><i>   */</font></i>
+<a name="674" href="#674">674</a>   <b>public</b> org.apache.bcel.util.Repository getRepository() {
+<a name="675" href="#675">675</a>     <b>return</b> repository;
+<a name="676" href="#676">676</a>   }
+<a name="677" href="#677">677</a> 
+<a name="678" href="#678">678</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="679" href="#679">679</a> <font color="#AA0000"><i>   * Sets the ClassRepository which loaded the JavaClass.</font></i>
+<a name="680" href="#680">680</a> <font color="#AA0000"><i>   * Should be called immediately after parsing is done.</font></i>
+<a name="681" href="#681">681</a> <font color="#AA0000"><i>   */</font></i>
+<a name="682" href="#682">682</a>   <b>public</b> <b>void</b> setRepository(org.apache.bcel.util.Repository repository) {
+<a name="683" href="#683">683</a>     <b>this</b>.repository = repository;
+<a name="684" href="#684">684</a>   }
+<a name="685" href="#685">685</a> 
+<a name="686" href="#686">686</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>* Equivalent to runtime "instanceof" operator.</font></i></font></i>
+<a name="687" href="#687">687</a> <font color="#AA0000"><i>   *</font></i>
+<a name="688" href="#688">688</a> <font color="#AA0000"><i>   * @return true if this JavaClass is derived from teh super class</font></i>
+<a name="689" href="#689">689</a> <font color="#AA0000"><i>   */</font></i>
+<a name="690" href="#690">690</a>   <b>public</b> <b>final</b> <b>boolean</b> instanceOf(<a href="../../../../org/apache/bcel/classfile/JavaClass.html">JavaClass</a> <b>super</b>_<b>class</b>) {
+<a name="691" href="#691">691</a>     <b>if</b>(<b>this</b>.equals(<b>super</b>_<b>class</b>))
+<a name="692" href="#692">692</a>       <b>return</b> <b>true</b>;
+<a name="693" href="#693">693</a> 
+<a name="694" href="#694">694</a>     <a href="../../../../org/apache/bcel/classfile/JavaClass.html">JavaClass</a>[] <b>super</b>_classes = getSuperClasses();
+<a name="695" href="#695">695</a> 
+<a name="696" href="#696">696</a>     <b>for</b>(<b>int</b> i=0; i &lt; <b>super</b>_classes.length; i++) {
+<a name="697" href="#697">697</a>       <b>if</b>(<b>super</b>_<b>class</b>es[i].equals(<b>super</b>_<b>class</b>)) {
+<a name="698" href="#698">698</a> 	<b>return</b> <b>true</b>;
+<a name="699" href="#699">699</a>       }
+<a name="700" href="#700">700</a>     }
+<a name="701" href="#701">701</a> 
+<a name="702" href="#702">702</a>     <b>if</b>(<b>super</b>_<b>class</b>.isInterface()) {
+<a name="703" href="#703">703</a>       <b>return</b> implementationOf(<b>super</b>_<b>class</b>);
+<a name="704" href="#704">704</a>     }
+<a name="705" href="#705">705</a> 
+<a name="706" href="#706">706</a>     <b>return</b> false;
+<a name="707" href="#707">707</a>   }
+<a name="708" href="#708">708</a> 
+<a name="709" href="#709">709</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="710" href="#710">710</a> <font color="#AA0000"><i>   * @return true, if clazz is an implementation of interface inter</font></i>
+<a name="711" href="#711">711</a> <font color="#AA0000"><i>   */</font></i>
+<a name="712" href="#712">712</a>   <b>public</b> <b>boolean</b> implementationOf(<a href="../../../../org/apache/bcel/classfile/JavaClass.html">JavaClass</a> inter) {
+<a name="713" href="#713">713</a>     <b>if</b>(!inter.isInterface()) {
+<a name="714" href="#714">714</a>       <b>throw</b> <b>new</b> IllegalArgumentException(inter.getClassName() + <font color="#000099">" is no interface"</font>);
+<a name="715" href="#715">715</a>     }
+<a name="716" href="#716">716</a> 
+<a name="717" href="#717">717</a>     <b>if</b>(<b>this</b>.equals(inter)) {
+<a name="718" href="#718">718</a>       <b>return</b> <b>true</b>;
+<a name="719" href="#719">719</a>     }
+<a name="720" href="#720">720</a> 
+<a name="721" href="#721">721</a>     <a href="../../../../org/apache/bcel/classfile/JavaClass.html">JavaClass</a>[] <b>super</b>_interfaces = getAllInterfaces();
+<a name="722" href="#722">722</a> 
+<a name="723" href="#723">723</a>     <b>for</b>(<b>int</b> i=0; i &lt; <b>super</b>_<b>int</b>erfaces.length; i++) {
+<a name="724" href="#724">724</a>       <b>if</b>(<b>super</b>_interfaces[i].equals(inter)) {
+<a name="725" href="#725">725</a> 	<b>return</b> <b>true</b>;
+<a name="726" href="#726">726</a>       }
+<a name="727" href="#727">727</a>     }
+<a name="728" href="#728">728</a> 
+<a name="729" href="#729">729</a>     <b>return</b> false;
+<a name="730" href="#730">730</a>   }
+<a name="731" href="#731">731</a> 
+<a name="732" href="#732">732</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="733" href="#733">733</a> <font color="#AA0000"><i>   * @return the superclass for this JavaClass object, or null if this</font></i>
+<a name="734" href="#734">734</a> <font color="#AA0000"><i>   * is java.lang.Object</font></i>
+<a name="735" href="#735">735</a> <font color="#AA0000"><i>   */</font></i>
+<a name="736" href="#736">736</a>   <b>public</b> <a href="../../../../org/apache/bcel/classfile/JavaClass.html">JavaClass</a> getSuperClass() {
+<a name="737" href="#737">737</a>     <b>if</b>(<font color="#000099">"java.lang.Object"</font>.equals(getClassName())) {
+<a name="738" href="#738">738</a>       <b>return</b> <b>null</b>;
+<a name="739" href="#739">739</a>     }
+<a name="740" href="#740">740</a> 
+<a name="741" href="#741">741</a>     <b>try</b> {
+<a name="742" href="#742">742</a>       <b>return</b> repository.loadClass(getSuperclassName());
+<a name="743" href="#743">743</a>     } <b>catch</b>(ClassNotFoundException e) {
+<a name="744" href="#744">744</a>       System.err.println(e);
+<a name="745" href="#745">745</a>       <b>return</b> <b>null</b>;
+<a name="746" href="#746">746</a>     }
+<a name="747" href="#747">747</a>   }
+<a name="748" href="#748">748</a> 
+<a name="749" href="#749">749</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="750" href="#750">750</a> <font color="#AA0000"><i>   * @return list of super classes of this class in ascending order, i.e.,</font></i>
+<a name="751" href="#751">751</a> <font color="#AA0000"><i>   * java.lang.Object is always the last element</font></i>
+<a name="752" href="#752">752</a> <font color="#AA0000"><i>   */</font></i>
+<a name="753" href="#753">753</a>   <b>public</b> <a href="../../../../org/apache/bcel/classfile/JavaClass.html">JavaClass</a>[] getSuperClasses() {
+<a name="754" href="#754">754</a>     <a href="../../../../org/apache/bcel/classfile/JavaClass.html">JavaClass</a>   clazz = <b>this</b>;
+<a name="755" href="#755">755</a>     <a href="../../../../org/apache/bcel/util/ClassVector.html">ClassVector</a> vec   = <b>new</b> ClassVector();
+<a name="756" href="#756">756</a> 
+<a name="757" href="#757">757</a>     <b>for</b>(clazz = clazz.getSuperClass(); clazz != <b>null</b>;
+<a name="758" href="#758">758</a> 	clazz = clazz.getSuperClass())
+<a name="759" href="#759">759</a>     {
+<a name="760" href="#760">760</a>       vec.addElement(clazz);
+<a name="761" href="#761">761</a>     }
+<a name="762" href="#762">762</a> 
+<a name="763" href="#763">763</a>     <b>return</b> vec.toArray();
+<a name="764" href="#764">764</a>   }
+<a name="765" href="#765">765</a> 
+<a name="766" href="#766">766</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="767" href="#767">767</a> <font color="#AA0000"><i>   * Get interfaces directly implemented by this JavaClass.</font></i>
+<a name="768" href="#768">768</a> <font color="#AA0000"><i>   */</font></i>
+<a name="769" href="#769">769</a>   <b>public</b> <a href="../../../../org/apache/bcel/classfile/JavaClass.html">JavaClass</a>[] getInterfaces() {
+<a name="770" href="#770">770</a>     String[]    interfaces = getInterfaceNames();
+<a name="771" href="#771">771</a>     <a href="../../../../org/apache/bcel/classfile/JavaClass.html">JavaClass</a>[] classes    = <b>new</b> JavaClass[interfaces.length];
+<a name="772" href="#772">772</a> 
+<a name="773" href="#773">773</a>     <b>try</b> {
+<a name="774" href="#774">774</a>       <b>for</b>(<b>int</b> i = 0; i &lt; <b>int</b>erfaces.length; i++) {
+<a name="775" href="#775">775</a> 	classes[i] = repository.loadClass(interfaces[i]);
+<a name="776" href="#776">776</a>       }
+<a name="777" href="#777">777</a>     } <b>catch</b>(ClassNotFoundException e) {
+<a name="778" href="#778">778</a>       System.err.println(e);
+<a name="779" href="#779">779</a>       <b>return</b> <b>null</b>;
+<a name="780" href="#780">780</a>     }
+<a name="781" href="#781">781</a> 
+<a name="782" href="#782">782</a>     <b>return</b> classes;
+<a name="783" href="#783">783</a>   }
+<a name="784" href="#784">784</a> 
+<a name="785" href="#785">785</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="786" href="#786">786</a> <font color="#AA0000"><i>   * Get all interfaces implemented by this JavaClass (transitively).</font></i>
+<a name="787" href="#787">787</a> <font color="#AA0000"><i>   */</font></i>
+<a name="788" href="#788">788</a>   <b>public</b> <a href="../../../../org/apache/bcel/classfile/JavaClass.html">JavaClass</a>[] getAllInterfaces() {
+<a name="789" href="#789">789</a>     <a href="../../../../org/apache/bcel/util/ClassQueue.html">ClassQueue</a>  queue = <b>new</b> ClassQueue();
+<a name="790" href="#790">790</a>     <a href="../../../../org/apache/bcel/util/ClassVector.html">ClassVector</a> vec   = <b>new</b> ClassVector();
+<a name="791" href="#791">791</a>     
+<a name="792" href="#792">792</a>     queue.enqueue(<b>this</b>);
+<a name="793" href="#793">793</a>     
+<a name="794" href="#794">794</a>     <b>while</b>(!queue.empty()) {
+<a name="795" href="#795">795</a>       <a href="../../../../org/apache/bcel/classfile/JavaClass.html">JavaClass</a> clazz = queue.dequeue();
+<a name="796" href="#796">796</a>       
+<a name="797" href="#797">797</a>       <a href="../../../../org/apache/bcel/classfile/JavaClass.html">JavaClass</a>   souper     = clazz.getSuperClass();
+<a name="798" href="#798">798</a>       <a href="../../../../org/apache/bcel/classfile/JavaClass.html">JavaClass</a>[] interfaces = clazz.getInterfaces();
+<a name="799" href="#799">799</a>       
+<a name="800" href="#800">800</a>       <b>if</b>(clazz.isInterface()) {
+<a name="801" href="#801">801</a> 	vec.addElement(clazz);
+<a name="802" href="#802">802</a>       } <b>else</b> {
+<a name="803" href="#803">803</a> 	<b>if</b>(souper != <b>null</b>) {
+<a name="804" href="#804">804</a> 	  queue.enqueue(souper);
+<a name="805" href="#805">805</a> 	}
+<a name="806" href="#806">806</a>       }
+<a name="807" href="#807">807</a>       
+<a name="808" href="#808">808</a>       <b>for</b>(<b>int</b> i = 0; i &lt; <b>int</b>erfaces.length; i++) {
+<a name="809" href="#809">809</a> 	queue.enqueue(interfaces[i]);
+<a name="810" href="#810">810</a>       }
+<a name="811" href="#811">811</a>     }
+<a name="812" href="#812">812</a> 	    
+<a name="813" href="#813">813</a>     <b>return</b> vec.toArray();
+<a name="814" href="#814">814</a>   }
+<a name="815" href="#815">815</a> }
+</pre>
+<hr><center>This page was automatically generated by <a href="http://jakarta.apache.org/turbine/maven">Maven</a></center></body>
+</html>
+

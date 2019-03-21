@@ -1,0 +1,9 @@
+bd://0001
+#
+# This is the "title" file that is put in the BUDA.  In the sample
+# disc image, the default tile, "bd://1", would be fine, but we include
+# a title file anyway, as an example.  We also add some leading zeroes,
+# so we can tell that the locator is actually coming from the file.
+#
+# The bridgehead xlet just reads the first line of this file, so these
+# comments are ignored.

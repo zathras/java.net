@@ -1,0 +1,137 @@
+# 
+# This show is a fairly minimal example of a GRIN-based game built
+# from the GrinXlet framework.  
+# 
+# The fun cannot be halted.
+
+show 
+
+exports 
+    segments {
+        S:Initialize 
+    } features { 
+        F:Shoe.Mover
+    } handlers { 
+    }
+;
+
+java_generated_class ShoeCommands [[ 
+
+        import com.hdcookbook.grin.Show;
+        import com.hdcookbook.grin.util.Debug;
+        
+        public class ShoeCommands extends com.hdcookbook.grin.GrinXHelper {
+        
+            public ShoeCommands(Show show) { 
+                super(show); 
+            }
+
+            public EdSullivan getDirector() {
+                return (EdSullivan) show.getDirector();
+            }
+        
+            JAVA_COMMAND_BODY
+        
+        }
+
+]]
+
+feature src_over F:Shoe.Image
+    sub_feature fixed_image 
+        ( middle 0 middle 0 scale 1500 1500 mills ) 
+        "../../images/shoe_01.png" ;
+;
+
+feature translator_model F:Shoe.Mover { 0 1000 900 linear-relative } ;
+
+feature translator F:Shoe F:Shoe.Mover {
+        F:Shoe.Image
+        F:Shoe.Mover
+} ;
+
+feature timer F:HeartbeatTimer 1 repeat {
+    java_command [[ getDirector().heartbeat(); ]]
+} ;
+
+
+feature fixed_image F:Background.Top 
+    ( left 0 top 20 scale 2700 2700 mills )
+    "../../images/bg_top.jpg"
+;
+
+feature fixed_image F:Background.Bottom
+    ( left 0 top 528 scale 2700 2700 mills )
+    "../../images/bg_bottom.jpg"
+;
+
+feature group F:Background {
+    F:Background.Top
+    F:Background.Bottom
+} ;
+
+
+feature group F:Everything {
+    F:Shoe
+    F:Background
+    F:HeartbeatTimer
+} ;
+
+segment S:Initialize 
+    setup { 
+        F:Everything
+    } on_entry {
+        java_command [[ 
+            Debug.println();
+            Debug.println("***  Initializing big_shoe ***"); 
+            Debug.println();
+        ]]
+        java_command [[ 
+            getDirector().initialize();
+        ]]
+    } next {
+        activate_segment S:Running ;
+    }
+;
+
+segment S:Running
+    active {
+        F:Background
+        F:Shoe
+        F:HeartbeatTimer
+    } setup {
+        F:Everything
+    } rc_handlers {
+        H:ShoeLeft H:ShoeRight H:ShoeStop1 H:ShoeStop2
+    }
+;
+
+
+rc_handler key_pressed H:ShoeLeft {
+        left
+    } execute {
+        java_command [[ getDirector().shoeLeft(); ]]
+    }
+;
+
+rc_handler key_pressed H:ShoeRight {
+        right
+    } execute {
+        java_command [[ getDirector().shoeRight(); ]]
+    }
+;
+
+rc_handler key_pressed H:ShoeStop1 {
+        down
+    } execute {
+        java_command [[ getDirector().shoeStop(); ]]
+    }
+;
+
+rc_handler key_released H:ShoeStop2 {
+        left right
+    } execute {
+        java_command [[ getDirector().shoeStop(); ]]
+    }
+;
+
+end_show

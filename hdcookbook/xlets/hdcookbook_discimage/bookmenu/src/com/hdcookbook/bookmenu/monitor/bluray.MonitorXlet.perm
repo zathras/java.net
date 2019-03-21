@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<n:permissionrequestfile xmlns:n="urn:BDA:bdmv;PRF" orgid="0x56789abc" appid="0x4001">
+    <file value="true"></file>
+    <applifecyclecontrol value="true"></applifecyclecontrol>
+    <servicesel value="true"></servicesel>
+    <userpreferences read="true" write="false"></userpreferences>
+    <network>
+	<host action="connect">hdcookbook.com</host>
+    </network>
+</n:permissionrequestfile>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright  1990-2006 Sun Microsystems, Inc. All Rights Reserved.
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version
+2 only, as published by the Free Software Foundation.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+General Public License version 2 for more details (a copy is
+included at /legal/license.txt).
+
+You should have received a copy of the GNU General Public License
+version 2 along with this work; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+02110-1301 USA
+
+Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa
+Clara, CA 95054 or visit www.sun.com if you need additional
+information or have any questions.
+-->
+
+<!-- This ant build script is specific to this progressive playlist
+     project.  It creates a bumf xml, bumf sf, and files that should be
+     written into the buda area to demonstrate the progressive playlist
+     functionality.  -->
+
+<project basedir=".">
+    
+    <target name="generate-bumf" depends="assemble-vfs-dir"
+            description="generate certificates for bumf files">
+        <jdktools.java classname="net.java.bd.tools.security.BDCertGenerator">
+            <arg value="-binding"/>
+            <arg value="${xlet.orgid}"/>
+            <classpath refid="sec.tools.path"/>
+        </jdktools.java>
+	<delete dir="${build.dir}/VFS"/>
+        <jdktools.java jar="${bumfgenerator.jar}">
+            <arg value="${build.dir}/id.bdmv"/>
+            <arg value="${build.dir}/vfstmp/BDMV"/>
+            <arg value="-progressive"/>
+            <arg value="00001"/>
+            <arg value="${build.dir}/VFS"/>
+        </jdktools.java>
+        <jdktools.java classname="net.java.bd.tools.security.BDSigner">
+            <arg value="${build.dir}/VFS/manifest.xml"/>
+            <classpath refid="sec.tools.path"/>
+        </jdktools.java>
+        <zip zipfile="${build.dir}/${vfs.jar}"
+             basedir="${build.dir}/VFS"/>
+    </target>
+    
+    <target name="assemble-vfs-dir" depends="generate-id, generate-playlist"
+            description="assemble files in the build dir for vfs update">
+        <mkdir dir="${build.dir}/vfstmp/BDMV/CLIPINF"/>
+        <mkdir dir="${build.dir}/vfstmp/BDMV/PLAYLIST"/>
+        <mkdir dir="${build.dir}/vfstmp/BDMV/STREAM"/>
+
+        <copy todir="${build.dir}/vfstmp/BDMV/CLIPINF"
+              file="bdmv/BDMV/CLIPINF/00001.clpi"/>
+        <copy todir="${build.dir}/vfstmp/BDMV/PLAYLIST"
+              file="${build.dir}/00000.mpls"/>
+        <copy todir="${build.dir}/vfstmp/BDMV/STREAM"
+              file="bdmv/BDMV/STREAM/00001.m2ts"/>
+    </target>
+    
+</project>

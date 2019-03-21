@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Sample build file.  See vars.properties for documentation about how to
+set up a new project using this build file.
+
+The file ${grin.xlet}/generic_build.xml defines a number
+of "post" targets, like post-init, post-clean and post-bundle.
+The intent is that after you copy vars.properties and build.xml
+to your project, you leave generic_build.xml unmodified.  If you
+need to add build steps (e.g. to package your xlet with assets,
+or to install your xlet into an integrated disc image), you do
+this by overriding the definition of one of more post targets.
+The post targets in generic_build.xml don't do anything, so you
+can just put a <target> tag in build.xml to add actions to be performed
+after any target is built.
+-->
+
+
+<project name="DestoryerForMultiOrgs xlet" default="deploy" basedir=".">
+
+    <property file="user.vars.properties"/>
+    <property file="vars.properties"/>
+    <import file="${grin.xlet}/generic_build.xml"/>
+
+    <target name="post-spotless">
+	<delete file="grantorchain.crt"/>
+    </target>
+    <target name="gen-permission-file" depends="init, check-keystore, generate-certs">
+	<pathconvert property="gen-permission-file.almost.perm.file">
+	    <path path="/${xlet.class.name}"/>
+	    <unpackagemapper from="${kludge.root.dir}*" to="*"/>
+	</pathconvert>
+	<basename property="gen-permission-file.basename"
+		  file="${gen-permission-file.almost.perm.file}"/>
+	<pathconvert property="gen-permission-file.perm.file">
+	    <path path="${build.dir}/classes//${gen-permission-file.almost.perm.file}"/>
+	    <globmapper from="*${gen-permission-file.basename}"
+			to="*bluray.${gen-permission-file.basename}.perm"/>
+	</pathconvert>
+	<concat destfile="${gen-permission-file.perm.file}"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file contains information taken from build.xml -->
+<!-- AUTO-GENERATED - DO NOT EDIT -->
+<n:permissionrequestfile xmlns:n="urn:BDA:bdmv;PRF" orgid="0x${xlet.orgid}" appid="0x${xlet.appid}">
+    <file value="true"></file>
+    <applifecyclecontrol value="true"></applifecyclecontrol>
+    <servicesel value="true"></servicesel>
+    <userpreferences read="true" write="false"></userpreferences>
+    <network>
+        <host action="connect,listen,resolve,accept">*</host>
+    </network>
+    <bd-bindingunitarea value="true"></bd-bindingunitarea>
+     <bd-bindingunitareacredential>
+       <grantoridentifier id="0x7fff0002"/>
+       <expirationdate date="31/12/9999"/>
+       <filename read="true" write="true">7fff0002/*</filename>
+     </bd-bindingunitareacredential>
+     <bd-vfs value="true"></bd-vfs>
+</n:permissionrequestfile>
+]]></concat>
+        <path id="sec.tools.path">
+            <pathelement location="${security.jar}"/>
+            <pathelement location="${bouncycastle.jar}"/>
+            <pathelement location="${java.home}/../lib/tools.jar"/>   
+        </path>
+        <jdktools.java classname="net.java.bd.tools.security.BDCredentialSigner">
+	    <classpath refid="sec.tools.path"/>
+	    <arg value="-debug"/>
+	    <arg value="-buda"/>
+	    <arg value="-gastore"/>
+	    <arg value="../CreatorWithMultiOrgs/keystore.store"/>
+	    <arg value="-gaalias"/>
+	    <arg value="credsigner"/>
+	    <arg value="-gakeypass"/>
+	    <arg value="appcertpassword"/>
+	    <arg value="-gencred"/>
+	    <arg value="-gecert"/>
+	    <arg value="app.discroot.crt"/>
+	    <arg value="build/classes/com/hdcookbook/grinxlet/bluray.GrinXlet.perm"/>
+        </jdktools.java>
+	<antcall target="post-gen-permission-file"/>
+    </target>
+
+    <target name="sign-xlet">
+        <path id="sec.tools.path">
+            <pathelement location="${security.jar}"/>
+            <pathelement location="${bouncycastle.jar}"/>
+            <pathelement location="${java.home}/../lib/tools.jar"/>   
+        </path>
+	<copy file="build/classes/com/hdcookbook/grinxlet/bluray.GrinXlet.perm" todir="com/hdcookbook/grinxlet"/>
+        <jdktools.java classname="net.java.bd.tools.security.BDCredentialSigner">
+	    <classpath refid="sec.tools.path"/>
+	    <arg value="-debug"/>
+	    <arg value="-buda"/>
+	    <arg value="-store"/>
+	    <arg value="keystore.store"/>
+	    <arg value="-updatecerts"/>
+	    <arg value="-gacerts"/>
+	    <arg value="grantorchain.crt"/>
+	    <arg value="com/hdcookbook/grinxlet/bluray.GrinXlet.perm"/>
+	    <arg value="${xlet.jar}"/>
+        </jdktools.java>
+	<delete dir="com"/>
+	<antcall target="post-sign-xlet"/>
+    </target>
+
+</project>
+

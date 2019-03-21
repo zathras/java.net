@@ -1,0 +1,313 @@
+<html>
+<body bgcolor="white">
+<pre>
+<table bgcolor="#FFFFCC" cellpadding="0" cellspacing="0" border="0" width="100%"><a href="../../../../../apidocs/org/apache/bcel/generic/Instruction.html">View Javadoc</a></table>
+<a name="1" href="#1">1</a>   <b>package</b> <a href="../../../../org/apache/bcel/<b>generic</b>/package-summary.html">org.apache.bcel.<b>generic</b></a>;
+<a name="2" href="#2">2</a>   
+<a name="3" href="#3">3</a>   <font color="#329900"><i>/*<font color="#329900"><i> ====================================================================</font></i></font></i>
+<a name="4" href="#4">4</a>   <font color="#329900"><i> * The Apache Software License, Version 1.1</font></i>
+<a name="5" href="#5">5</a>   <font color="#329900"><i> *</font></i>
+<a name="6" href="#6">6</a>   <font color="#329900"><i> * Copyright (c) 2001 The Apache Software Foundation.  All rights</font></i>
+<a name="7" href="#7">7</a>   <font color="#329900"><i> * reserved.</font></i>
+<a name="8" href="#8">8</a>   <font color="#329900"><i> *</font></i>
+<a name="9" href="#9">9</a>   <font color="#329900"><i> * Redistribution and use in source and binary forms, with or without</font></i>
+<a name="10" href="#10">10</a>  <font color="#329900"><i> * modification, are permitted provided that the following conditions</font></i>
+<a name="11" href="#11">11</a>  <font color="#329900"><i> * are met:</font></i>
+<a name="12" href="#12">12</a>  <font color="#329900"><i> *</font></i>
+<a name="13" href="#13">13</a>  <font color="#329900"><i> * 1. Redistributions of source code must retain the above copyright</font></i>
+<a name="14" href="#14">14</a>  <font color="#329900"><i> *    notice, this list of conditions and the following disclaimer.</font></i>
+<a name="15" href="#15">15</a>  <font color="#329900"><i> *</font></i>
+<a name="16" href="#16">16</a>  <font color="#329900"><i> * 2. Redistributions in binary form must reproduce the above copyright</font></i>
+<a name="17" href="#17">17</a>  <font color="#329900"><i> *    notice, this list of conditions and the following disclaimer in</font></i>
+<a name="18" href="#18">18</a>  <font color="#329900"><i> *    the documentation and/or other materials provided with the</font></i>
+<a name="19" href="#19">19</a>  <font color="#329900"><i> *    distribution.</font></i>
+<a name="20" href="#20">20</a>  <font color="#329900"><i> *</font></i>
+<a name="21" href="#21">21</a>  <font color="#329900"><i> * 3. The end-user documentation included with the redistribution,</font></i>
+<a name="22" href="#22">22</a>  <font color="#329900"><i> *    if any, must include the following acknowledgment:</font></i>
+<a name="23" href="#23">23</a>  <font color="#329900"><i> *       "This product includes software developed by the</font></i>
+<a name="24" href="#24">24</a>  <font color="#329900"><i> *        Apache Software Foundation (<a href="http://www.apache.org/" target="alexandria_uri">http://www.apache.org/</a>)."</font></i>
+<a name="25" href="#25">25</a>  <font color="#329900"><i> *    Alternately, this acknowledgment may appear in the software itself,</font></i>
+<a name="26" href="#26">26</a>  <font color="#329900"><i> *    if and wherever such third-party acknowledgments normally appear.</font></i>
+<a name="27" href="#27">27</a>  <font color="#329900"><i> *</font></i>
+<a name="28" href="#28">28</a>  <font color="#329900"><i> * 4. The names "Apache" and "Apache Software Foundation" and</font></i>
+<a name="29" href="#29">29</a>  <font color="#329900"><i> *    "Apache BCEL" must not be used to endorse or promote products</font></i>
+<a name="30" href="#30">30</a>  <font color="#329900"><i> *    derived from this software without prior written permission. For</font></i>
+<a name="31" href="#31">31</a>  <font color="#329900"><i> *    written permission, please contact apache@apache.org.</font></i>
+<a name="32" href="#32">32</a>  <font color="#329900"><i> *</font></i>
+<a name="33" href="#33">33</a>  <font color="#329900"><i> * 5. Products derived from this software may not be called "Apache",</font></i>
+<a name="34" href="#34">34</a>  <font color="#329900"><i> *    "Apache BCEL", nor may "Apache" appear in their name, without</font></i>
+<a name="35" href="#35">35</a>  <font color="#329900"><i> *    prior written permission of the Apache Software Foundation.</font></i>
+<a name="36" href="#36">36</a>  <font color="#329900"><i> *</font></i>
+<a name="37" href="#37">37</a>  <font color="#329900"><i> * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED</font></i>
+<a name="38" href="#38">38</a>  <font color="#329900"><i> * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES</font></i>
+<a name="39" href="#39">39</a>  <font color="#329900"><i> * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE</font></i>
+<a name="40" href="#40">40</a>  <font color="#329900"><i> * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR</font></i>
+<a name="41" href="#41">41</a>  <font color="#329900"><i> * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,</font></i>
+<a name="42" href="#42">42</a>  <font color="#329900"><i> * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT</font></i>
+<a name="43" href="#43">43</a>  <font color="#329900"><i> * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF</font></i>
+<a name="44" href="#44">44</a>  <font color="#329900"><i> * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND</font></i>
+<a name="45" href="#45">45</a>  <font color="#329900"><i> * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,</font></i>
+<a name="46" href="#46">46</a>  <font color="#329900"><i> * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT</font></i>
+<a name="47" href="#47">47</a>  <font color="#329900"><i> * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF</font></i>
+<a name="48" href="#48">48</a>  <font color="#329900"><i> * SUCH DAMAGE.</font></i>
+<a name="49" href="#49">49</a>  <font color="#329900"><i> * ====================================================================</font></i>
+<a name="50" href="#50">50</a>  <font color="#329900"><i> *</font></i>
+<a name="51" href="#51">51</a>  <font color="#329900"><i> * This software consists of voluntary contributions made by many</font></i>
+<a name="52" href="#52">52</a>  <font color="#329900"><i> * individuals on behalf of the Apache Software Foundation.  For more</font></i>
+<a name="53" href="#53">53</a>  <font color="#329900"><i> * information on the Apache Software Foundation, please see</font></i>
+<a name="54" href="#54">54</a>  <font color="#329900"><i> * &lt;<a href="http://www.apache.org/&gt" target="alexandria_uri">http://www.apache.org/&gt</a>;.</font></i>
+<a name="55" href="#55">55</a>  <font color="#329900"><i> */</font></i>
+<a name="56" href="#56">56</a>  
+<a name="57" href="#57">57</a>  <b>import</b> org.apache.bcel.Constants;
+<a name="58" href="#58">58</a>  <b>import</b> org.apache.bcel.classfile.Utility;
+<a name="59" href="#59">59</a>  <b>import</b> org.apache.bcel.classfile.ConstantPool;
+<a name="60" href="#60">60</a>  <b>import</b> java.io.*;
+<a name="61" href="#61">61</a>  <b>import</b> org.apache.bcel.util.ByteSequence;
+<a name="62" href="#62">62</a>  
+<a name="63" href="#63">63</a>  <font color="#AA0000"><i>/**<font color="#AA0000"><i>* </font></i></font></i>
+<a name="64" href="#64">64</a>  <font color="#AA0000"><i> * Abstract super class for all Java byte codes.</font></i>
+<a name="65" href="#65">65</a>  <font color="#AA0000"><i> *</font></i>
+<a name="66" href="#66">66</a>  <font color="#AA0000"><i> * @version $Id: Instruction.html,v 1.1.1.1 2006/05/19 19:23:34 billf Exp $</font></i>
+<a name="67" href="#67">67</a>  <font color="#AA0000"><i> * @author  &lt;A HREF="<a href="mailto:markus.dahm@berlin.de" target="alexandria_uri">mailto:markus.dahm@berlin.de</a>"&gt;M. Dahm&lt;/A&gt;</font></i>
+<a name="68" href="#68">68</a>  <font color="#AA0000"><i> */</font></i>
+<a name="69" href="#69">69</a>  <b>public</b> <b>abstract</b> <b>class</b> <a href="../../../../org/apache/bcel/generic/Instruction.html">Instruction</a> implements Cloneable, Serializable {
+<a name="70" href="#70">70</a>    <b>protected</b> <b>short</b> length = 1;  <font color="#329900"><i>// Length of instruction in bytes </font></i>
+<a name="71" href="#71">71</a>    <b>protected</b> <b>short</b> opcode = -1; <font color="#329900"><i>// Opcode number</font></i>
+<a name="72" href="#72">72</a>  
+<a name="73" href="#73">73</a>    <b>private</b> <b>static</b> <a href="../../../../org/apache/bcel/generic/InstructionComparator.html">InstructionComparator</a> cmp = InstructionComparator.DEFAULT;
+<a name="74" href="#74">74</a>  
+<a name="75" href="#75">75</a>    <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="76" href="#76">76</a>  <font color="#AA0000"><i>   * Empty constructor needed for the Class.newInstance() statement in</font></i>
+<a name="77" href="#77">77</a>  <font color="#AA0000"><i>   * Instruction.readInstruction(). Not to be used otherwise.</font></i>
+<a name="78" href="#78">78</a>  <font color="#AA0000"><i>   */</font></i>
+<a name="79" href="#79">79</a>    <a href="../../../../org/apache/bcel/generic/Instruction.html">Instruction</a>() {}
+<a name="80" href="#80">80</a>  
+<a name="81" href="#81">81</a>    <b>public</b> <a href="../../../../org/apache/bcel/generic/Instruction.html">Instruction</a>(<b>short</b> opcode, <b>short</b> length) {
+<a name="82" href="#82">82</a>      <b>this</b>.length = length;
+<a name="83" href="#83">83</a>      <b>this</b>.opcode = opcode;
+<a name="84" href="#84">84</a>    }
+<a name="85" href="#85">85</a>  
+<a name="86" href="#86">86</a>    <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="87" href="#87">87</a>  <font color="#AA0000"><i>   * Dump instruction as byte code to stream out.</font></i>
+<a name="88" href="#88">88</a>  <font color="#AA0000"><i>   * @param out Output stream</font></i>
+<a name="89" href="#89">89</a>  <font color="#AA0000"><i>   */</font></i>
+<a name="90" href="#90">90</a>    <b>public</b> <b>void</b> dump(DataOutputStream out) throws IOException {
+<a name="91" href="#91">91</a>      out.writeByte(opcode); <font color="#329900"><i>// Common for all instructions</font></i>
+<a name="92" href="#92">92</a>    }
+<a name="93" href="#93">93</a>  
+<a name="94" href="#94">94</a>    <font color="#AA0000"><i>/**<font color="#AA0000"><i>* @return name of instruction, i.e., opcode name</font></i></font></i>
+<a name="95" href="#95">95</a>  <font color="#AA0000"><i>   */</font></i>
+<a name="96" href="#96">96</a>    <b>public</b> String getName() {
+<a name="97" href="#97">97</a>      <b>return</b> Constants.OPCODE_NAMES[opcode];
+<a name="98" href="#98">98</a>    }
+<a name="99" href="#99">99</a>  
+<a name="100" href="#100">100</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="101" href="#101">101</a> <font color="#AA0000"><i>   * Long output format:</font></i>
+<a name="102" href="#102">102</a> <font color="#AA0000"><i>   *</font></i>
+<a name="103" href="#103">103</a> <font color="#AA0000"><i>   * &lt;name of opcode&gt; "["&lt;opcode number&gt;"]" </font></i>
+<a name="104" href="#104">104</a> <font color="#AA0000"><i>   * "("&lt;length of instruction&gt;")"</font></i>
+<a name="105" href="#105">105</a> <font color="#AA0000"><i>   *</font></i>
+<a name="106" href="#106">106</a> <font color="#AA0000"><i>   * @param verbose long/short format switch</font></i>
+<a name="107" href="#107">107</a> <font color="#AA0000"><i>   * @return mnemonic for instruction</font></i>
+<a name="108" href="#108">108</a> <font color="#AA0000"><i>   */</font></i>
+<a name="109" href="#109">109</a>   <b>public</b> String toString(<b>boolean</b> verbose) {
+<a name="110" href="#110">110</a>     <b>if</b>(verbose)
+<a name="111" href="#111">111</a>       <b>return</b> getName() + <font color="#000099">"["</font> + opcode + <font color="#000099">"]("</font> + length + <font color="#000099">")"</font>;
+<a name="112" href="#112">112</a>     <b>else</b>
+<a name="113" href="#113">113</a>       <b>return</b> getName();
+<a name="114" href="#114">114</a>   }
+<a name="115" href="#115">115</a> 
+<a name="116" href="#116">116</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="117" href="#117">117</a> <font color="#AA0000"><i>   * @return mnemonic for instruction in verbose format</font></i>
+<a name="118" href="#118">118</a> <font color="#AA0000"><i>   */</font></i>
+<a name="119" href="#119">119</a>   <b>public</b> String toString() {
+<a name="120" href="#120">120</a>     <b>return</b> toString(<b>true</b>);
+<a name="121" href="#121">121</a>   }
+<a name="122" href="#122">122</a> 
+<a name="123" href="#123">123</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="124" href="#124">124</a> <font color="#AA0000"><i>   * @return mnemonic for instruction with sumbolic references resolved</font></i>
+<a name="125" href="#125">125</a> <font color="#AA0000"><i>   */</font></i>
+<a name="126" href="#126">126</a>   <b>public</b> String toString(<a href="../../../../org/apache/bcel/classfile/ConstantPool.html">ConstantPool</a> cp) {
+<a name="127" href="#127">127</a>     <b>return</b> toString(false);
+<a name="128" href="#128">128</a>   }
+<a name="129" href="#129">129</a> 
+<a name="130" href="#130">130</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="131" href="#131">131</a> <font color="#AA0000"><i>   * Use with caution, since `BranchInstruction's have a `target' reference which</font></i>
+<a name="132" href="#132">132</a> <font color="#AA0000"><i>   * is not copied correctly (only basic types are). This also applies for </font></i>
+<a name="133" href="#133">133</a> <font color="#AA0000"><i>   * `Select' instructions with their multiple branch targets.</font></i>
+<a name="134" href="#134">134</a> <font color="#AA0000"><i>   *</font></i>
+<a name="135" href="#135">135</a> <font color="#AA0000"><i>   * @see BranchInstruction</font></i>
+<a name="136" href="#136">136</a> <font color="#AA0000"><i>   * @return (shallow) copy of an instruction</font></i>
+<a name="137" href="#137">137</a> <font color="#AA0000"><i>   */</font></i>
+<a name="138" href="#138">138</a>   <b>public</b> <a href="../../../../org/apache/bcel/generic/Instruction.html">Instruction</a> copy() {
+<a name="139" href="#139">139</a>     <a href="../../../../org/apache/bcel/generic/Instruction.html">Instruction</a> i = <b>null</b>;
+<a name="140" href="#140">140</a> 
+<a name="141" href="#141">141</a>     <font color="#329900"><i>// "Constant" instruction, no need to duplicate</font></i>
+<a name="142" href="#142">142</a>     <b>if</b>(InstructionConstants.INSTRUCTIONS[<b>this</b>.getOpcode()] != <b>null</b>)
+<a name="143" href="#143">143</a>       i = <b>this</b>;
+<a name="144" href="#144">144</a>     <b>else</b> {
+<a name="145" href="#145">145</a>       <b>try</b> {
+<a name="146" href="#146">146</a> 	i = (Instruction)clone();
+<a name="147" href="#147">147</a>       } <b>catch</b>(CloneNotSupportedException e) {
+<a name="148" href="#148">148</a> 	System.err.println(e);
+<a name="149" href="#149">149</a>       }
+<a name="150" href="#150">150</a>     }
+<a name="151" href="#151">151</a> 
+<a name="152" href="#152">152</a>     <b>return</b> i;
+<a name="153" href="#153">153</a>   }
+<a name="154" href="#154">154</a>   
+<a name="155" href="#155">155</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="156" href="#156">156</a> <font color="#AA0000"><i>   * Read needed data (e.g. index) from file.</font></i>
+<a name="157" href="#157">157</a> <font color="#AA0000"><i>   *</font></i>
+<a name="158" href="#158">158</a> <font color="#AA0000"><i>   * @param bytes byte sequence to read from</font></i>
+<a name="159" href="#159">159</a> <font color="#AA0000"><i>   * @param wide "wide" instruction flag</font></i>
+<a name="160" href="#160">160</a> <font color="#AA0000"><i>   */</font></i>
+<a name="161" href="#161">161</a>   <b>protected</b> <b>void</b> initFromFile(<a href="../../../../org/apache/bcel/util/ByteSequence.html">ByteSequence</a> bytes, <b>boolean</b> wide)
+<a name="162" href="#162">162</a>     throws IOException
+<a name="163" href="#163">163</a>   {}  
+<a name="164" href="#164">164</a> 
+<a name="165" href="#165">165</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="166" href="#166">166</a> <font color="#AA0000"><i>   * Read an instruction from (byte code) input stream and return the</font></i>
+<a name="167" href="#167">167</a> <font color="#AA0000"><i>   * appropiate object.</font></i>
+<a name="168" href="#168">168</a> <font color="#AA0000"><i>   *</font></i>
+<a name="169" href="#169">169</a> <font color="#AA0000"><i>   * @param file file to read from</font></i>
+<a name="170" href="#170">170</a> <font color="#AA0000"><i>   * @return instruction object being read</font></i>
+<a name="171" href="#171">171</a> <font color="#AA0000"><i>   */</font></i>
+<a name="172" href="#172">172</a>   <b>public</b> <b>static</b> <b>final</b> <a href="../../../../org/apache/bcel/generic/Instruction.html">Instruction</a> readInstruction(<a href="../../../../org/apache/bcel/util/ByteSequence.html">ByteSequence</a> bytes)
+<a name="173" href="#173">173</a>     throws IOException
+<a name="174" href="#174">174</a>   {
+<a name="175" href="#175">175</a>     <b>boolean</b>     wide   = false;
+<a name="176" href="#176">176</a>     <b>short</b>       opcode = (<b>short</b>)bytes.readUnsignedByte();
+<a name="177" href="#177">177</a>     <a href="../../../../org/apache/bcel/generic/Instruction.html">Instruction</a> obj    = <b>null</b>;
+<a name="178" href="#178">178</a> 
+<a name="179" href="#179">179</a>     <b>if</b>(opcode == Constants.WIDE) { <font color="#329900"><i>// Read next opcode after wide byte</font></i>
+<a name="180" href="#180">180</a>       wide = <b>true</b>;
+<a name="181" href="#181">181</a>       opcode  = (<b>short</b>)bytes.readUnsignedByte();
+<a name="182" href="#182">182</a>     }
+<a name="183" href="#183">183</a> 
+<a name="184" href="#184">184</a>     <b>if</b>(InstructionConstants.INSTRUCTIONS[opcode] != <b>null</b>)
+<a name="185" href="#185">185</a>       <b>return</b> InstructionConstants.INSTRUCTIONS[opcode]; <font color="#329900"><i>// Used predefined immutable object, if available</font></i>
+<a name="186" href="#186">186</a> 
+<a name="187" href="#187">187</a>     <font color="#329900"><i>/*<font color="#329900"><i> Find appropiate class, instantiate an (empty) instruction object</font></i></font></i>
+<a name="188" href="#188">188</a> <font color="#329900"><i>     * and initialize it by hand.</font></i>
+<a name="189" href="#189">189</a> <font color="#329900"><i>     */</font></i>
+<a name="190" href="#190">190</a>     Class clazz;
+<a name="191" href="#191">191</a> 
+<a name="192" href="#192">192</a>     <b>try</b> {
+<a name="193" href="#193">193</a>       clazz = Class.forName(className(opcode));
+<a name="194" href="#194">194</a>     } <b>catch</b> (ClassNotFoundException cnfe){
+<a name="195" href="#195">195</a>       <font color="#329900"><i>// If a class by that name does not exist, the opcode is illegal.</font></i>
+<a name="196" href="#196">196</a>       <font color="#329900"><i>// Note that IMPDEP1, IMPDEP2, BREAKPOINT are also illegal in a sense.</font></i>
+<a name="197" href="#197">197</a>       <b>throw</b> <b>new</b> <a href="../../../../org/apache/bcel/generic/ClassGenException.html">ClassGenException</a>(<font color="#000099">"Illegal opcode detected."</font>);
+<a name="198" href="#198">198</a>     }
+<a name="199" href="#199">199</a> 
+<a name="200" href="#200">200</a>     <b>try</b> {
+<a name="201" href="#201">201</a>       obj = (Instruction)clazz.newInstance();
+<a name="202" href="#202">202</a> 
+<a name="203" href="#203">203</a>       <b>if</b>(wide && !((obj instanceof LocalVariableInstruction) ||
+<a name="204" href="#204">204</a> 		   (obj instanceof IINC) ||
+<a name="205" href="#205">205</a> 		   (obj instanceof RET)))
+<a name="206" href="#206">206</a> 	<b>throw</b> <b>new</b> Exception(<font color="#000099">"Illegal opcode after wide: "</font> + opcode);
+<a name="207" href="#207">207</a> 
+<a name="208" href="#208">208</a>       obj.setOpcode(opcode);
+<a name="209" href="#209">209</a>       obj.initFromFile(bytes, wide); <font color="#329900"><i>// Do further initializations, if any</font></i>
+<a name="210" href="#210">210</a>       <font color="#329900"><i>// Byte code offset set in InstructionList</font></i>
+<a name="211" href="#211">211</a>     } <b>catch</b>(Exception e) { <b>throw</b> <b>new</b> ClassGenException(e.toString()); }
+<a name="212" href="#212">212</a> 
+<a name="213" href="#213">213</a>     <b>return</b> obj;
+<a name="214" href="#214">214</a>   }
+<a name="215" href="#215">215</a> 
+<a name="216" href="#216">216</a>   <b>private</b> <b>static</b> <b>final</b> String className(<b>short</b> opcode) {
+<a name="217" href="#217">217</a>     String name = Constants.OPCODE_NAMES[opcode].toUpperCase();
+<a name="218" href="#218">218</a> 
+<a name="219" href="#219">219</a>     <font color="#329900"><i>/*<font color="#329900"><i> ICONST_0, etc. will be shortened to ICONST, etc., since ICONST_0 and the like</font></i></font></i>
+<a name="220" href="#220">220</a> <font color="#329900"><i>     * are not implemented (directly).</font></i>
+<a name="221" href="#221">221</a> <font color="#329900"><i>     */</font></i>
+<a name="222" href="#222">222</a>     <b>try</b> {
+<a name="223" href="#223">223</a>       <b>int</b>  len = name.length();
+<a name="224" href="#224">224</a>       <b>char</b> ch1 = name.<b>char</b>At(len - 2), ch2 = name.<b>char</b>At(len - 1);
+<a name="225" href="#225">225</a> 
+<a name="226" href="#226">226</a>       <b>if</b>((ch1 == '_') && (ch2 &gt;= '0')  && (ch2 &lt;= '5'))
+<a name="227" href="#227">227</a> 	name = name.substring(0, len - 2);
+<a name="228" href="#228">228</a>       
+<a name="229" href="#229">229</a>       <b>if</b>(name.equals(<font color="#000099">"ICONST_M1"</font>)) <font color="#329900"><i>// Special case</font></i>
+<a name="230" href="#230">230</a> 	name = <font color="#000099">"ICONST"</font>;
+<a name="231" href="#231">231</a>     } <b>catch</b>(StringIndexOutOfBoundsException e) { System.err.println(e); }
+<a name="232" href="#232">232</a> 
+<a name="233" href="#233">233</a>     <b>return</b> <font color="#000099">"org.apache.bcel.generic."</font> + name;
+<a name="234" href="#234">234</a>   }
+<a name="235" href="#235">235</a> 
+<a name="236" href="#236">236</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="237" href="#237">237</a> <font color="#AA0000"><i>   * This method also gives right results for instructions whose</font></i>
+<a name="238" href="#238">238</a> <font color="#AA0000"><i>   * effect on the stack depends on the constant pool entry they</font></i>
+<a name="239" href="#239">239</a> <font color="#AA0000"><i>   * reference.</font></i>
+<a name="240" href="#240">240</a> <font color="#AA0000"><i>   *  @return Number of words consumed from stack by this instruction,</font></i>
+<a name="241" href="#241">241</a> <font color="#AA0000"><i>   * or Constants.UNPREDICTABLE, if this can not be computed statically</font></i>
+<a name="242" href="#242">242</a> <font color="#AA0000"><i>   */</font></i>
+<a name="243" href="#243">243</a>   <b>public</b> <b>int</b> consumeStack(<a href="../../../../org/apache/bcel/generic/ConstantPoolGen.html">ConstantPoolGen</a> cpg) {
+<a name="244" href="#244">244</a>     <b>return</b> Constants.CONSUME_STACK[opcode];
+<a name="245" href="#245">245</a>   }
+<a name="246" href="#246">246</a> 
+<a name="247" href="#247">247</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="248" href="#248">248</a> <font color="#AA0000"><i>   * This method also gives right results for instructions whose</font></i>
+<a name="249" href="#249">249</a> <font color="#AA0000"><i>   * effect on the stack depends on the constant pool entry they</font></i>
+<a name="250" href="#250">250</a> <font color="#AA0000"><i>   * reference.</font></i>
+<a name="251" href="#251">251</a> <font color="#AA0000"><i>   * @return Number of words produced onto stack by this instruction,</font></i>
+<a name="252" href="#252">252</a> <font color="#AA0000"><i>   * or Constants.UNPREDICTABLE, if this can not be computed statically</font></i>
+<a name="253" href="#253">253</a> <font color="#AA0000"><i>   */</font></i>
+<a name="254" href="#254">254</a>   <b>public</b> <b>int</b> produceStack(<a href="../../../../org/apache/bcel/generic/ConstantPoolGen.html">ConstantPoolGen</a> cpg) {
+<a name="255" href="#255">255</a>     <b>return</b> Constants.PRODUCE_STACK[opcode];
+<a name="256" href="#256">256</a>   }
+<a name="257" href="#257">257</a> 
+<a name="258" href="#258">258</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="259" href="#259">259</a> <font color="#AA0000"><i>   * @return this instructions opcode</font></i>
+<a name="260" href="#260">260</a> <font color="#AA0000"><i>   */</font></i>
+<a name="261" href="#261">261</a>   <b>public</b> <b>short</b> getOpcode()    { <b>return</b> opcode; }
+<a name="262" href="#262">262</a> 
+<a name="263" href="#263">263</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="264" href="#264">264</a> <font color="#AA0000"><i>   * @return length (in bytes) of instruction</font></i>
+<a name="265" href="#265">265</a> <font color="#AA0000"><i>   */</font></i>
+<a name="266" href="#266">266</a>   <b>public</b> <b>int</b> getLength()   { <b>return</b> length; }
+<a name="267" href="#267">267</a> 
+<a name="268" href="#268">268</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="269" href="#269">269</a> <font color="#AA0000"><i>   * Needed in readInstruction.</font></i>
+<a name="270" href="#270">270</a> <font color="#AA0000"><i>   */</font></i>
+<a name="271" href="#271">271</a>   <b>private</b> <b>void</b> setOpcode(<b>short</b> opcode) { <b>this</b>.opcode = opcode; }
+<a name="272" href="#272">272</a> 
+<a name="273" href="#273">273</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>* Some instructions may be reused, so don't do anything by default.</font></i></font></i>
+<a name="274" href="#274">274</a> <font color="#AA0000"><i>   */</font></i>
+<a name="275" href="#275">275</a>   <b>void</b> dispose() {}
+<a name="276" href="#276">276</a> 
+<a name="277" href="#277">277</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="278" href="#278">278</a> <font color="#AA0000"><i>   * Call corresponding visitor method(s). The order is:</font></i>
+<a name="279" href="#279">279</a> <font color="#AA0000"><i>   * Call visitor methods of implemented interfaces first, then</font></i>
+<a name="280" href="#280">280</a> <font color="#AA0000"><i>   * call methods according to the class hierarchy in descending order,</font></i>
+<a name="281" href="#281">281</a> <font color="#AA0000"><i>   * i.e., the most specific visitXXX() call comes last.</font></i>
+<a name="282" href="#282">282</a> <font color="#AA0000"><i>   *</font></i>
+<a name="283" href="#283">283</a> <font color="#AA0000"><i>   * @param v Visitor object</font></i>
+<a name="284" href="#284">284</a> <font color="#AA0000"><i>   */</font></i>
+<a name="285" href="#285">285</a>   <b>public</b> <b>abstract</b> <b>void</b> accept(<a href="../../../../org/apache/bcel/classfile/Visitor.html">Visitor</a> v);
+<a name="286" href="#286">286</a> 
+<a name="287" href="#287">287</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>* Get Comparator object used in the equals() method to determine</font></i></font></i>
+<a name="288" href="#288">288</a> <font color="#AA0000"><i>   * equality of instructions.</font></i>
+<a name="289" href="#289">289</a> <font color="#AA0000"><i>   *</font></i>
+<a name="290" href="#290">290</a> <font color="#AA0000"><i>   * @return currently used comparator for equals()</font></i>
+<a name="291" href="#291">291</a> <font color="#AA0000"><i>   */</font></i>
+<a name="292" href="#292">292</a>   <b>public</b> <b>static</b> <a href="../../../../org/apache/bcel/generic/InstructionComparator.html">InstructionComparator</a> getComparator() { <b>return</b> cmp; }
+<a name="293" href="#293">293</a> 
+<a name="294" href="#294">294</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>* Set comparator to be used for equals().</font></i></font></i>
+<a name="295" href="#295">295</a> <font color="#AA0000"><i>   */</font></i>
+<a name="296" href="#296">296</a>   <b>public</b> <b>static</b> <b>void</b> setComparator(<a href="../../../../org/apache/bcel/generic/InstructionComparator.html">InstructionComparator</a> c) { cmp = c; }
+<a name="297" href="#297">297</a> 
+<a name="298" href="#298">298</a>   <font color="#AA0000"><i>/**<font color="#AA0000"><i>* Check for equality, delegated to comparator</font></i></font></i>
+<a name="299" href="#299">299</a> <font color="#AA0000"><i>   * @return true if that is an Instruction and has the same opcode</font></i>
+<a name="300" href="#300">300</a> <font color="#AA0000"><i>   */</font></i>
+<a name="301" href="#301">301</a>   <b>public</b> <b>boolean</b> equals(Object that) {
+<a name="302" href="#302">302</a>     <b>return</b> (that instanceof Instruction)?
+<a name="303" href="#303">303</a>       cmp.equals(<b>this</b>, (Instruction)that) : false;
+<a name="304" href="#304">304</a>   }
+<a name="305" href="#305">305</a> }
+</pre>
+<hr><center>This page was automatically generated by <a href="http://jakarta.apache.org/turbine/maven">Maven</a></center></body>
+</html>
+

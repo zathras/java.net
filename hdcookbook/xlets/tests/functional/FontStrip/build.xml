@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="FontStrip" default="deploy" basedir=".">
+    
+    <!-- Property Definitions -->
+    <property file="../../../../user.vars.properties"/>	
+    <property file="../../../../vars.properties"/>	
+    <property file="build.properties"/>	
+    
+    <!-- xlet source dir, build dir, and a distribution dir for a disc image 
+      -->
+    <property name="src.dir"     value="src"/>  
+    <property name="build.dir"   value="build"/>
+    <property name="dist.dir"    value="dist"/>  
+    
+    <!-- disc image related properties -->   
+    <property name="bdjo.name"      value="00000"/>
+    <property name="orgid"          value="7fff0001"/>
+    <property name="appid"          value="4000"/>
+    <property name="xlet.name"          value="Main"/>
+    <property name="script1.name" value="show-lisa"/>
+    <property name="script2.name" value="show-test2"/>
+    <property name="bdjo-desc-file" value="${build.dir}/${bdjo.name}.xml"/>
+    <property name="xlet.jar" value="${build.dir}/00000.jar"/>
+    
+    <presetdef name="jdktools.java">
+        <java fork="true" failOnError="true"/>
+    </presetdef>    
+    
+    <presetdef name="xlets.javac">
+        <javac srcdir="${src.dir}"
+               bootclasspath="${bdj.classes}"
+               source="1.3" target="1.3"
+               debug="on" deprecation="on"/>
+    </presetdef>
+    
+    <target name="init" depends="check-tools">
+        <tstamp/>
+        <mkdir dir="${build.dir}/classes"/> 
+    </target>
+
+    <target name="check-tools">
+        <available file="${bdj.classes}" type="file"
+                   property="bdjstubs.ok"/>
+                   
+        <fail unless="bdjstubs.ok"> 
+              .
+        Could not find bd-j platform classes at ${bdj.classes}.
+        Please change the value of the "HDC_BDJ_PLATFORM_CLASSES" property 
+        in the ${basedir}/../../../vars.properties file, or the value of the
+        "bdj.classes" in the ${basedir}/build.properties file.
+                 
+        Don't be alarmed, this is a configuration error.
+        The HDCookbook source repository does not include BD-J platform classes
+        needed for compiling applications against.  These classes need to be
+        provided by you.
+        
+        </fail> 
+    </target>
+    
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+        <delete dir="${dist.dir}"/>
+        <delete file="${ant.project.name}.zip"/>
+    </target>
+
+    <target name="spotless" depends="clean">
+	<delete file="keystore.store"/>
+	<delete file="app.discroot.crt"/>
+	<delete dir="META-INF"/>
+    </target>
+    
+    <target name="deploy" depends="bundle"/>
+    
+    <target name="bundle" depends="jar, gen-bdjo-desc-file, 
+                                   sign-xlet, copy-to-bdmv"
+            description="Make an blu-ray disc image bundle">
+        <zip destfile="${ant.project.name}.zip"
+             basedir="${dist.dir}"/> 
+    </target>
+    
+    <target name="generate_binary_script1"> 
+        <jdktools.java jar="${fontimagemaker.jar}">  
+            <jvmarg value="-Xms64m"/>
+            <arg value="-asset_dir"/>
+            <arg value="src/assets"/>
+            <arg value="-config"/>
+            <arg value="input1.xml"/>
+            <arg value="-out"/>
+            <arg value="${build.dir}"/>
+        </jdktools.java>
+    
+        <jdktools.java classname="com.hdcookbook.grin.binaryconverter.Main">
+	    <classpath>
+		<pathelement path="${converter.classes}"/>
+                <pathelement path="${sefontstrip.jar}"/>
+	    </classpath>
+            <arg value="-asset_dir"/>
+            <arg value="."/>
+            <arg value="-asset_dir"/>
+            <arg value="${build.dir}"/>
+	    <arg value="-extension_parser"/>
+	    <arg value="${extension.parser}"/>
+            <arg value="-out"/>
+            <arg value="${build.dir}"/>
+	    <arg value="-avoid_optimization"/>
+            <arg value="${script1.name}.txt"/>
+        </jdktools.java>
+    </target>
+    <target name="generate_binary_script2">
+        <jdktools.java jar="${fontimagemaker.jar}">  
+            <arg value="-asset_dir"/>
+            <arg value="src/assets"/>
+            <arg value="-config"/>
+            <arg value="input2.xml"/>
+            <arg value="-out"/>
+            <arg value="${build.dir}"/>
+        </jdktools.java>          
+        <jdktools.java classname="com.hdcookbook.grin.binaryconverter.Main">
+	    <classpath>
+		<pathelement path="${converter.classes}"/>
+                <pathelement path="${sefontstrip.jar}"/>
+	    </classpath>
+            <arg value="-asset_dir"/>
+            <arg value="."/>
+            <arg value="-asset_dir"/>
+            <arg value="${build.dir}"/>
+	    <arg value="-extension_parser"/>
+	    <arg value="${extension.parser}"/>
+            <arg value="-out"/>
+            <arg value="${build.dir}"/>
+	    <arg value="-avoid_optimization"/>
+            <arg value="${script2.name}.txt"/>
+        </jdktools.java>
+    </target>
+    <target name="grinview" depends="run-grinview"/>
+    <target name="run-grinview" depends="init, generate_binary_script1"
+    		description="Run grinview on main menu">
+                    
+        <jdktools.java classname="com.hdcookbook.grin.test.bigjdk.GrinView">
+	    <classpath>
+		<pathelement path="${grinview.classes}"/>
+                <pathelement path="${sefontstrip.jar}"/>
+	    </classpath>
+	    <arg value="-asset_dir"/>
+	    <arg value="."/>
+	    <arg value="-asset_dir"/>
+	    <arg value="${build.dir}"/> 
+	    <arg value="-extension_parser"/>
+	    <arg value="${extension.parser}"/>            
+            <arg value="${script1.name}.txt"/>
+        </jdktools.java>
+    </target>
+
+    <target name="grinview2" depends="run-grinview2"/>
+    <target name="run-grinview2" depends="init, generate_binary_script2"
+    		description="Run grinview on main menu">
+        <jdktools.java classname="com.hdcookbook.grin.test.bigjdk.GrinView">
+	    <classpath>
+		<pathelement path="${grinview.classes}"/>
+                <pathelement path="${sefontstrip.jar}"/>
+	    </classpath>
+	    <arg value="-asset_dir"/>
+	    <arg value="."/>
+            <arg value="-asset_dir"/>
+	    <arg value="${build.dir}"/>
+	    <arg value="-extension_parser"/>
+	    <arg value="${extension.parser}"/>
+            <arg value="${script2.name}.txt"/>
+        </jdktools.java>
+    </target>
+    <target name="run-grinview2-binary" depends="init, generate_binary_script2"
+    		description="Run grinview on main menu">
+        <jdktools.java classname="com.hdcookbook.grin.test.bigjdk.GrinView">
+	    <classpath>
+		<pathelement path="${grinview.classes}"/>               
+                <pathelement path="${sefontstrip.jar}"/>
+	    </classpath>
+	    <arg value="-asset_dir"/>
+	    <arg value="src"/>
+	    <arg value="-asset_dir"/>
+	    <arg value="build"/>
+	    <arg value="-binary"/>
+            <arg value="${script2.name}.grin"/>
+        </jdktools.java>
+    </target>
+
+    <target name="compile"
+            depends="init, generate_binary_script1"
+	    description="Compiles the sources">
+        <mkdir dir="${build.dir}/classes"/>
+        <xlets.javac destdir="${build.dir}/classes">
+            <src path="${grin.library.src.dir}" />            
+        </xlets.javac>
+        <copy todir="${build.dir}/classes">
+            <fileset dir="${src.dir}">
+                <include name="**.perm"/>
+            </fileset>
+        </copy>   
+    </target>
+    
+    <target name="jar" depends="compile" description="Creates a jar file">
+        <jar destfile="${xlet.jar}">
+            <fileset dir="${build.dir}/classes" includes="**/*.class"/>
+            <fileset dir="${build.dir}" includes="*.grin"/>
+	    <fileset dir="${build.dir}" includes="*.png"/>
+	    <fileset dir="${build.dir}" includes="fontstrp.inf"/>
+        </jar>
+        <jar destfile="${xlet.jar}" update="true">
+            <zipfileset src="${fontstrip.jar}"/>
+        </jar>             
+    </target>
+    
+    <target name="sign-xlet">
+        
+        <path id="sec.tools.path">
+            <pathelement location="${security.jar}"/>
+            <pathelement location="${bouncycastle.jar}"/>
+            <pathelement location="${java.home}/../lib/tools.jar"/>   
+        </path>	   
+        
+        <jdktools.java classname="net.java.bd.tools.security.BDCertGenerator">
+            <arg value="-root"/>
+            <arg value="${orgid}"/>
+            <classpath refid="sec.tools.path"/>
+        </jdktools.java>
+        
+        <jdktools.java classname="net.java.bd.tools.security.BDCertGenerator">
+            <arg value="-app"/>
+            <arg value="${orgid}"/>
+            <classpath refid="sec.tools.path"/>
+        </jdktools.java>
+        
+        <jdktools.java classname="net.java.bd.tools.security.BDSigner">
+            <arg value="${xlet.jar}"/>
+            <classpath refid="sec.tools.path"/>	   
+        </jdktools.java>
+    </target>  
+    
+    <target name="gen-bdjo-desc-file"
+            depends="gen-bdjo-desc.tmp"
+            if="update-bdjo-desc.file">
+        
+        <move file="${bdjo-desc-file}.tmp" tofile="${bdjo-desc-file}"/>
+        
+        <jdktools.java
+            jar="${bdjo.jar}">
+            <arg value="${bdjo-desc-file}"/>
+            <arg value="${build.dir}/${bdjo.name}.bdjo"/>
+        </jdktools.java>
+    </target>
+    
+    <target name="gen-bdmv-files">
+        <jdktools.java jar="${id.jar}">
+            <arg value="bdmv/id.xml"/>
+            <arg value="${build.dir}/id.bdmv"/>              
+        </jdktools.java>
+        <jdktools.java jar="${index.jar}">
+            <arg value="bdmv/index.xml"/>
+            <arg value="${build.dir}/index.bdmv"/>              
+        </jdktools.java>
+        <jdktools.java jar="${movieobject.jar}">
+            <arg value="bdmv/MovieObject.xml"/>
+            <arg value="${build.dir}/MovieObject.bdmv"/>              
+        </jdktools.java>
+    </target>
+    
+    <target name="copy-to-bdmv" 
+            depends="jar, gen-bdjo-desc-file, sign-xlet, gen-bdmv-files">
+        <mkdir dir="${dist.dir}/BDMV/AUXDATA"/>
+        <mkdir dir="${dist.dir}/BDMV/BDJO"/>
+        <mkdir dir="${dist.dir}/BDMV/CLIPINF"/>
+        <mkdir dir="${dist.dir}/BDMV/JAR"/>
+        <mkdir dir="${dist.dir}/BDMV/META"/>
+        <mkdir dir="${dist.dir}/BDMV/PLAYLIST"/>
+        <mkdir dir="${dist.dir}/BDMV/STREAM"/>
+        <mkdir dir="${dist.dir}/CERTIFICATE"/>
+        
+        <copy todir = "${dist.dir}/BDMV/JAR">
+            <fileset dir="${build.dir}">
+                <include name="*.jar"/>
+            </fileset>
+        </copy>
+        <copy todir = "${dist.dir}/BDMV/BDJO" 
+              file="${build.dir}/${bdjo.name}.bdjo"/>
+        <copy todir = "${dist.dir}/CERTIFICATE" 
+              file="app.discroot.crt"/>
+        <copy todir="${dist.dir}/BDMV"
+              file="${build.dir}/index.bdmv"/>
+        <copy todir="${dist.dir}/BDMV"
+              file="${build.dir}/MovieObject.bdmv"/>
+        <copy todir="${dist.dir}/CERTIFICATE"
+              file="${build.dir}/id.bdmv"/>
+        <copy tofile="${dist.dir}/BDMV/AUXDATA/00000.otf"       
+              file="src/assets/lisa.otf"/>
+         <copy todir="${dist.dir}/BDMV/AUXDATA"       
+              file="src/assets/dvb.fontindex"/>
+              
+        <copy todir="${dist.dir}/CERTIFICATE/BACKUP">
+            <fileset dir="${dist.dir}/CERTIFICATE"/>
+        </copy>
+        <copy todir="${dist.dir}/BDMV/BACKUP">
+            <fileset dir="${dist.dir}/BDMV">
+                <include name="index.bdmv"/>
+                <include name="MovieObject.bdmv"/>                
+                <include name="BDJO/**"/>  
+                <include name="CLIPINF/**"/>     
+                <include name="JAR/**"/> 
+                <include name="PLAYLIST/**"/>                    
+            </fileset>            
+        </copy>        
+    </target>
+    
+    <target name="gen-bdjo-desc.tmp">
+        
+        <concat destfile="${bdjo-desc-file}.tmp"><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!-- This file contains information determined at a build time -->
+<!-- AUTO-GENERATED - DO NOT EDIT -->
+
+<bdjo>
+    <appCacheInfo>
+        <entries>
+            <language>*.*</language>
+            <name>00000</name>
+            <type>1</type>
+        </entries>
+    </appCacheInfo>
+    <applicationManagementTable>
+        <applications>
+            <applicationDescriptor>
+                <baseDirectory>00000</baseDirectory>
+                <binding>TITLE_BOUND_DISC_BOUND</binding>
+                <classpathExtension></classpathExtension>
+                <iconFlags>0x0</iconFlags>
+                <iconLocator></iconLocator>
+                <initialClassName>${xlet.name}</initialClassName>
+                <priority>3</priority>
+                <profiles>
+                    <majorVersion>1</majorVersion>
+                    <microVersion>0</microVersion>
+                    <minorVersion>0</minorVersion>
+                    <profile>1</profile>
+                </profiles>
+                <visibility>V_11</visibility>
+            </applicationDescriptor>
+            <applicationId>0x${appid}</applicationId>
+            <controlCode>0x1</controlCode>
+            <organizationId>0x${orgid}</organizationId>
+            <type>0x1</type>
+        </applications>
+    </applicationManagementTable>
+    <fileAccessInfo>.</fileAccessInfo>
+    <keyInterestTable>0x0</keyInterestTable>
+    <tableOfAccessiblePlayLists>
+        <accessToAllFlag>false</accessToAllFlag>
+        <autostartFirstPlayListFlag>false</autostartFirstPlayListFlag>
+        <playListFileNames>00004</playListFileNames>    
+    </tableOfAccessiblePlayLists>
+    <terminalInfo>
+        <defaultFontFile>00000</defaultFontFile>
+        <initialHaviConfig>HD_1920_1080</initialHaviConfig>
+        <menuCallMask>false</menuCallMask>
+        <titleSearchMask>false</titleSearchMask>
+    </terminalInfo>
+    <version>V_0200</version>
+</bdjo>
+
+        ]]></concat>
+        
+        <condition property="update-bdjo-desc.file">
+            <not>
+                <filesmatch
+                    file1="${bdjo-desc-file}.tmp"
+                    file2="${bdjo-desc-file}"/>
+            </not>
+        </condition>
+    </target>
+    
+</project>

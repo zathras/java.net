@@ -1,0 +1,33 @@
+#!/bin/sh
+#
+#  TASS program.  I recommend making a symbolic link from 
+#  ~/bin/tass or /usr/bin/tass to this file.
+#
+
+PROG=`readlink -f $0`
+TASS_DIR=`dirname $PROG`/..
+BCEL_DIR=$TASS_DIR/bcel-5.1
+
+PRG=$1
+shift
+if [[ "" = "$PRG" ]] ; then
+    echo ""
+    echo "Usage:  tass <command> [args], where command is one of:"
+    echo "        a or AddToTassDatabase"
+    echo "        r or ReportFromTassDatabase"
+    echo "        m or MergeTassDatabases"
+    echo "        v or dbview.TdbViewer"
+    echo "        t or Test"
+    echo ""
+    exit 1;
+fi
+case "$PRG" in
+    "a"	)	PRG=AddToTassDatabase ;;
+    "r"	)	PRG=ReportFromTassDatabase ;;
+    "m"	)	PRG=MergeTassDatabases ;;
+    "v"	)	PRG=dbview.TdbViewer ;;
+    "t" )	PRG=Test ;;
+esac
+
+java -classpath $TASS_DIR/classes:$BCEL_DIR/bcel-5.1.jar \
+	com.sun.billf.tass.$PRG $*

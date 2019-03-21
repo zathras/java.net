@@ -1,0 +1,51 @@
+
+<project name="tass" default="prog" basedir=".">
+
+    <target name="init" >
+	<property name="bcel_jar" value="bcel-5.1/bcel-5.1.jar" />
+	<property name="javadocs" value="javadocs" />
+	<property name="jovial_dir" value="/Users/billf/misc/jovial_www/tass" />
+	<tstamp />
+    </target>
+
+
+    <target name="prog" depends="init">
+	<mkdir dir="classes" />
+	<javac srcdir="src" destdir="classes" classpath="${bcel_jar}" 
+		debug="on" />
+    </target>
+
+    <target name="docs" depends="init">
+	<mkdir dir="${javadocs}" />
+	<javadoc sourcepath="src" destdir="${javadocs}" classpath="${bcel_jar}" 
+		 packagenames="com." />
+    </target>
+
+    <target name="clean" depends="init">
+	<delete dir="${javadocs}" />
+	<delete dir="classes" />
+    </target>
+
+    <target name="all" depends="init,prog,docs">
+	<tstamp />
+    </target>
+
+    <target name="install" depends="init,all" >
+	<delete file="www/tass.zip" />
+	<copy todir="www/javadocs" >
+	    <fileset dir="${javadocs}" />
+	</copy>
+	<zip destfile="www/tass.zip" excludes="www/tass.zip" whenempty="fail">
+	     <zipfileset dir="." prefix="tass" />
+	</zip>
+    </target>
+
+    <target name="jovial" depends="install">
+	<delete dir="${jovial_dir}" />
+	<copy todir="${jovial_dir}" >
+	    <fileset dir="www" />
+	</copy>
+    </target>
+
+</project>
+

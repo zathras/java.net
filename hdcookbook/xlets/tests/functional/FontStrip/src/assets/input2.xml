@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<inputData>
+    
+    <fontDescription name="Edwardian"> <!-- Windows system font -->
+        <physicalName>Edwardian Script ITC</physicalName>
+        <fontSize>250</fontSize>
+        <margin>20</margin>
+        <backgroundColorValue>0xffffff</backgroundColorValue>
+        <charactorColorValue>0x123456</charactorColorValue>
+        <boundingRectColorValue>0x004455</boundingRectColorValue>
+        <pixelRectColorValue>0xff0000</pixelRectColorValue>
+    </fontDescription>
+
+    <fontDescription name="arial">
+        <fontSize>80</fontSize>
+        <!-- fontFileName>arial.ttf</fontFileName --> <!-- Loads from a file -->
+        <physicalName>Arial</physicalName> <!-- Use system font -->
+        <margin>10</margin>
+        <backgroundColorValue>0xffffff</backgroundColorValue>
+        <charactorColorValue>0x000000</charactorColorValue>
+        <boundingRectColorValue>0x004455</boundingRectColorValue>
+        <pixelRectColorValue>0xff0000</pixelRectColorValue>
+    </fontDescription>   
+    
+    <fontImageFile>
+        <fontName>arial</fontName> <!-- Points to fontDescription -->
+        <maxImageWidth>1000</maxImageWidth>
+        <maxImageHeight>3000</maxImageHeight>                
+        <designImage>ArialAlphabetsEdit.png</designImage>       
+        <finalImage>Arial.png</finalImage>
+        <charList>ABCDEFGHIJKLMNOPQRSTUVWXYZ</charList>
+    </fontImageFile>    
+    <fontImageFile>
+        <fontName>arial</fontName> <!-- Points to fontDescription -->
+        <maxImageWidth>1000</maxImageWidth>
+        <maxImageHeight>3000</maxImageHeight>                
+        <designImage>ArialNumbersEdit.png</designImage>       
+        <finalImage>Arial.png</finalImage>
+        <charList>1234567890 []</charList>
+    </fontImageFile>
+    <fontImageFile>
+        <maxImageWidth>1000</maxImageWidth>
+        <maxImageHeight>6000</maxImageHeight>             
+        <fontName>Edwardian</fontName> <!-- Points to fontDescription -->
+        <designImage>EdwardianEdit.png</designImage>
+        <finalImage>Edwardian.png</finalImage>
+        <charList> abcdefghij!*klmn</charList>
+    </fontImageFile>
+    
+</inputData>

@@ -1,0 +1,544 @@
+
+#  
+# Copyright (c) 2011, Oracle
+# 
+# All rights reserved.
+# 
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+# 
+#  * Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#  * Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in the
+#    documentation and/or other materials provided with the distribution.
+#  * Neither the name of Sun Microsystems nor the names of its contributors
+#    may be used to endorse or promote products derived from this software
+#    without specific prior written permission.
+# 
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+# PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+# LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+# NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+# 
+#  Note:  In order to comply with the binary form redistribution 
+#         requirement in the above license, the licensee may include 
+#         a URL reference to a copy of the required copyright notice, 
+#         the list of conditions and the disclaimer in a human readable 
+#         file with the binary form of the code that is subject to the
+#         above license.  For example, such file could be put on a 
+#         Blu-ray disc containing the binary form of the code or could 
+#         be put in a JAR file that is broadcast via a digital television 
+#         broadcast medium.  In any event, you must include in any end 
+#         user licenses governing any code that includes the code subject 
+#         to the above license (in source and/or binary form) a disclaimer 
+#         that is at least as protective of Sun as the disclaimers in the 
+#         above license.
+# 
+#         A copy of the required copyright notice, the list of conditions and
+#         the disclaimer will be maintained at 
+#         https://hdcookbook.dev.java.net/misc/license.html .
+#         Thus, licensees may comply with the binary form redistribution
+#         requirement with a text file that contains the following text:
+# 
+#             A copy of the license(s) governing this code is located
+#             at https://hdcookbook.dev.java.net/misc/license.html
+# 
+
+
+#
+# This is the show file for the gun bunny game in the HD Cookbook's
+# Blu-ray disc image.
+#
+
+show
+
+setting draw_targets {
+    T:Default
+    T:Carrot
+    T:Bunny
+    T:Turtles
+} ;
+
+exports
+    segments {
+        S:Initialize
+        S:GameOver
+    } features {
+        F:TimeMessage
+        F:TimeLeftCircle
+        F:ScoreMessage
+        F:TurtleSaucer.Assembly
+        F:TurtleSaucer.Pos
+        F:TurtleTrooper.Assembly
+        F:TurtleTrooper.Pos
+        F:TurtleTrooper
+        F:TurtleTroopers
+        F:TrooperRestore
+        F:Bunny.Pos
+        F:Carrot.Assembly
+        F:Carrot.Pos
+    } handlers {
+    }
+;
+
+java_generated_class com.hdcookbook.grinbunny.GrinBunnyShowCommands [[
+
+    package com.hdcookbook.grinbunny;
+
+    import com.hdcookbook.grin.Show;
+    import com.hdcookbook.grin.GrinXHelper;
+    import com.hdcookbook.grin.util.Debug;
+
+    public class GrinBunnyShowCommands extends GrinXHelper {
+
+        public GrinBunnyShowCommands(Show show) {
+            super(show);
+        }
+
+        public GrinBunnyDirector getDirector() {
+            return (GrinBunnyDirector) show.getDirector();
+        }
+
+        JAVA_COMMAND_BODY
+    
+    }
+
+
+]]
+
+#
+#
+#  The visible features
+#
+#
+
+
+#
+#  Features for start-up
+#
+
+feature fixed_image F:TitleScreen 
+        ( middle 960 middle 540 )
+        "images/text_title.png" ;
+
+feature text F:GameStartMessage
+        left 600 top 870
+        "Hit Enter to begin!"
+            Lisa plain 60
+            { { 240 0 0 255 } } ;
+ 
+#
+#  Features for game play
+#
+
+
+#
+#  The flying saucer.  This is the big turtle at the top of the screen
+#  that flies acrosss at random times.
+#
+
+
+feature assembly F:TurtleSaucer.Assembly {
+    showing     sub_feature guarantee_fill
+                    sub_feature fixed_image 0 80 "images/turtle_saucer.png" ;
+                ( 0 80 226 244 ) { } ;
+    blam        sub_feature group {
+                    sub_feature guarantee_fill
+                        sub_feature fixed_image 0 80 "images/turtle_saucer_blam.png" ;
+                    ( 0 80 226 244 ) { } ;
+                    sub_feature timer 14 {
+                        activate_part F:TurtleSaucer.Assembly cooldown ;
+                    } ;
+                } ;
+    cooldown    sub_feature timer 24 {
+                    activate_part F:TurtleSaucer.Assembly empty ;
+                } ;
+    empty       sub_feature group { } ;
+} ;
+
+feature translator_model F:TurtleSaucer.Pos {
+        0       0 0     linear-relative         # Controlled by director
+} ;
+
+feature translator F:TurtleSaucer F:TurtleSaucer.Pos {
+        F:TurtleSaucer.Pos
+        F:TurtleSaucer.Assembly         # In the default draw target
+} ;
+
+
+#
+#  The troopers.  They are the eight turtles just under where the flying
+#  saucer appears.  Here, we only have one trooper; GrinBunnyDirector clones
+#  this trooper clones this trooper seven times, for a total of eight.
+#
+
+feature assembly F:TurtleTrooper.Assembly {
+    showing     sub_feature guarantee_fill
+                    sub_feature fixed_image 0 240       "images/turtle_trooper.png" ;
+                ( 0 240 62 349 ) { } ;
+    blam        sub_feature group {
+                    sub_feature guarantee_fill
+                        sub_feature fixed_image 0 240 
+                                           "images/turtle_trooper_blam.png" ;
+                    ( 0 240 62 349 ) { } ;
+                    sub_feature timer 10 {
+                        activate_part F:TurtleTrooper.Assembly empty ;
+                    } ;
+                } ;
+    empty       sub_feature group { } ;
+} ;
+
+feature translator_model F:TurtleTrooper.Pos {
+        0       0 0     linear-relative         # Controlled by director
+            # Having this translator_model associated with each trooper
+            # allows GrinBunnyDirector to position each trooper.
+} ;
+
+feature translator F:TurtleTrooper F:TurtleTrooper.Pos {
+        F:TurtleTrooper.Assembly
+        F:TurtleTrooper.Pos
+} ;
+
+feature group F:TurtleTroopers {
+        F:TurtleTrooper
+            # F:TurtleTroopers only contains one trooper in the show file, but
+            # the director makes seven clones that it adds to this group to
+            # populate the line of trooopers.
+            #
+            # Equivalently, one could have just declared eight copies of 
+            # F:TurtleTrooper in the show file, but doing it the way we have
+            # is perhaps a bit more elegant.  It also serves to demonstrate 
+            # having Java code set up elements in a show  graph, which is 
+            # an especially useful technique when the number of
+            # some object is determined dynamically.
+} ;
+
+feature set_target F:TurtleTroopers.Opt F:TurtleTroopers T:Turtles ;
+
+#
+#  A timer/assembly combo that the show uses to re-set the troopers
+#  a second after the last one is destroyed.
+#
+
+feature assembly F:TrooperRestore {
+
+    default     sub_feature group { } ;
+
+    countdown   sub_feature timer 24 {
+                    java_command [[ getDirector().restoreTroopers();  ]]
+                    activate_part F:TrooperRestore default ;
+                } ;
+} ;
+
+#
+#  Our beloved bunny
+#
+
+feature translator_model F:Bunny.Pos {
+        0       0 0     linear-relative         # Controlled by director
+} ;
+
+feature translator F:Bunny F:Bunny.Pos {
+        F:Bunny.Pos
+        sub_feature guarantee_fill 
+            sub_feature fixed_image  ( left -88 top 775 ) "images/bunny.png" ;
+        ( -88 775 86 974 ) { } ;
+                # The guarantee_fill is possible because the image is drawn in src
+                # mode.  Doing this allows the animation engine to erase fewer pixels.
+} ;
+
+
+feature set_target F:Bunny.Opt F:Bunny T:Bunny ;
+    # The set_target cause the bunny to be drawn within a different
+    # "draw target" of the animation manager.  This way, when the bunny
+    # changes position while (e.g.) a turtle is exploding, the animation
+    # will redraw two small rectangles on the screen rather than one
+    # big one.
+
+
+#
+# The carrot that the bunny shoots
+#
+
+feature translator_model F:Carrot.Pos {
+        0       0 0     linear-relative         # Controlled by director
+} ;
+
+feature assembly F:Carrot.Assembly {
+    firing      sub_feature fixed_image  ( middle -3 bottom 790 ) 
+                                "images/carrot.png" ;
+                        # That's aligned to be just over the bunny's nose
+    empty       sub_feature group { } ;
+} ;
+
+feature clipped F:Carrot
+    sub_feature translator F:Carrot.Pos {
+        F:Carrot.Pos
+        F:Carrot.Assembly
+    } ;
+    ( 0 80 1919 1279 )  # Clip the carrot ten pixels before it runs into text
+;
+
+feature set_target F:Carrot.Opt F:Carrot T:Carrot ;
+
+
+#
+# Two text features for the time remaining and the score
+#
+
+feature extension fontstrip:text 
+    F:TimeMessage 
+       "images/fontstrip.png" 
+       left 85 top 10 
+       "MM:SS" ;
+
+feature extension fontstrip:text 
+    F:ScoreMessage 
+       "images/fontstrip.png" 
+       left 1410 top 10 
+       "Score:  0" ;
+
+feature extension GB:Arc F:TimeLeftCircle 
+        { 240  0 0 255 }                # red
+        x 20 y 10 width 60 height 60 startAngle 0 arcAngle 360 ;
+
+
+
+#
+# A timer that lets us stick on a segment for one frame, then move
+# on.
+#
+feature timer F:SegmentDoneTimer 1 {
+    segment_done ;
+} ;
+
+
+
+#
+#  The "heartbeat" timer.  While the show is playing, this timer calls
+#  the director's heartbeat() method for each frame of animation, that is,
+#  24 times per second.
+#
+#  This is basically equivalent to overriding Director.notifyNextFrame().
+#  One thing that's nice about using a "heartbeat" timer, though, is that
+#  the director only gets called when the timer is active.  In our case,
+#  that means the show is in the S:Playing state.
+#
+
+feature timer F:PlayHeartbeat 1 repeat {
+    java_command [[
+        getDirector().heartbeat();
+                // The command that calls this gets posted just before
+                // it's executed, so any other commands (e.g. from keypresses)
+                // will come before the call to heartbeat() in the command
+                // queue.
+    ]] 
+} ;
+
+#
+#  Features for game end
+#
+
+feature fixed_image F:GameOverScreen
+        ( middle 960 middle 540 )
+        "images/text_title_gameover.png" ;
+
+feature text F:GameOverMessage
+        left 450 top 870
+        "Hit Enter to play again."
+            Lisa plain 60 { { 240 0 0 255 } } ;
+
+#
+# Bookkeeping features
+#
+
+feature group F:Everything {
+    F:TitleScreen
+    F:SegmentDoneTimer
+    F:GameStartMessage
+    F:TurtleSaucer
+    F:TimeMessage
+    F:TimeLeftCircle
+    F:ScoreMessage
+    F:PlayHeartbeat
+    F:GameOverScreen
+    F:GameOverMessage
+    F:TurtleTroopers.Opt
+    F:TrooperRestore
+    F:Bunny.Opt
+    F:Carrot.Opt
+} ;
+
+
+
+#
+#
+#  Segments
+#
+#
+
+
+segment S:Initialize
+    setup { 
+        F:TitleScreen
+    } setup_done {
+        activate_segment S:Loading ;
+    }
+;
+
+segment S:Loading
+    active {
+        F:TitleScreen
+    } setup {
+        F:Everything
+    } setup_done {
+        java_command [[ getDirector().initializeGame(); ]]
+        activate_segment S:ReadyToPlay ;
+    }
+;
+
+segment S:ReadyToPlay
+    active {
+        F:TitleScreen
+        F:GameStartMessage
+    } setup {
+        F:Everything
+    } rc_handlers {
+        H:ReadyToPlay
+    }
+;
+
+segment S:StartPlaying 
+    active {
+        F:TitleScreen
+        F:SegmentDoneTimer
+    } setup {
+        F:Everything
+    } next {
+        sync_display ;
+        activate_segment S:StartPlaying2 ;
+    }
+;
+
+segment S:StartPlaying2
+    active {
+        F:TitleScreen
+    } setup {
+        F:Everything
+    } setup_done {
+        java_command [[ 
+            Debug.println();
+            Debug.println("*** Since MHP Demo has no video, trigger gameRunning on setup_done ***");
+            Debug.println();
+            if (!getDirector().gameRunning) {
+                getDirector().gameRunning = true;
+                GRIN_COMMAND_[[ sync_display ; ]]
+                GRIN_COMMAND_[[ activate_segment S:Playing ;  ]]
+                    // This way, we don't start playing the game until
+                    // the stars video is presenting.  On some players,
+                    // starting a playlist consumes most of the CPU for
+                    // several frames.
+            }
+        ]]  
+    } 
+;
+
+segment S:Playing
+    active {
+        F:TimeLeftCircle
+        F:TimeMessage
+        F:ScoreMessage
+        F:TurtleSaucer
+        F:TurtleTroopers.Opt
+        F:TrooperRestore
+        F:Bunny.Opt
+        F:Carrot.Opt    # Carrot goes on top
+        F:PlayHeartbeat
+    } setup {
+        F:Everything
+    } rc_handlers {
+        H:PlayLeft
+        H:PlayRight
+        H:PlayFire
+        H:PlayStop
+    } on_entry {
+        activate_part F:TrooperRestore default ;
+        java_command [[ getDirector().startGame(); ]]
+    }
+;
+
+segment S:GameOver
+    active {
+        F:GameOverScreen
+        F:GameOverMessage
+    } setup {
+        F:Everything
+    } rc_handlers {
+        H:GameOver
+    }
+;
+
+#
+#
+#  Remote control handlers
+#
+#
+
+rc_handler key_pressed H:ReadyToPlay
+    { enter }
+    execute {
+        activate_segment S:StartPlaying ;
+    }
+;
+
+rc_handler key_pressed  H:PlayLeft
+    { left }
+    execute {
+        java_command [[ getDirector().moveBunnyLeft(); ]]
+    }
+;
+
+rc_handler key_pressed  H:PlayRight
+    { right }
+    execute {
+        java_command [[ getDirector().moveBunnyRight(); ]]
+    }
+;
+
+rc_handler key_pressed  H:PlayFire
+    { up enter }
+    execute {
+        java_command [[ getDirector().fire(); ]]
+    }
+;
+
+rc_handler key_pressed H:PlayStop
+    { down }
+    execute {
+        java_command [[ getDirector().stopBunny(); ]]
+    }
+;
+
+rc_handler key_pressed H:GameOver
+    { enter }
+    execute {
+        activate_segment S:StartPlaying ;
+    }
+;
+
+#
+# =====================
+#  End of Show
+# =====================
+#
+
+end_show

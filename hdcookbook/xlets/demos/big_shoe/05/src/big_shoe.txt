@@ -1,0 +1,224 @@
+# 
+# This show is a fairly minimal example of a GRIN-based game built
+# from the GrinXlet framework.  
+# 
+# The fun cannot be halted.
+
+show 
+
+setting draw_targets {
+        T:Default
+        T:Bush
+} ;
+
+exports 
+    segments {
+        S:Initialize 
+    } features { 
+        F:Shoe.Mover
+        F:SpinningShoe.Mover
+    } handlers { 
+    }
+;
+
+java_generated_class ShoeCommands [[ 
+
+        import com.hdcookbook.grin.Show;
+        import com.hdcookbook.grin.util.Debug;
+        
+        public class ShoeCommands extends com.hdcookbook.grin.GrinXHelper {
+        
+            public ShoeCommands(Show show) { 
+                super(show); 
+            }
+
+            public EdSullivan getDirector() {
+                return (EdSullivan) show.getDirector();
+            }
+        
+            JAVA_COMMAND_BODY
+        
+        }
+
+]]
+
+feature src_over F:Shoe.Image
+    sub_feature fixed_image 
+        ( middle 0 middle 0 scale 1500 1500 mills ) 
+        "../../images/shoe_01.png" ;
+;
+
+feature set_target F:Shoe.Image.Targeted F:Shoe.Image T:Bush ;
+
+feature translator_model F:Shoe.Mover { 0 1000 900 linear-relative } ;
+
+feature translator F:Shoe F:Shoe.Mover {
+        F:Shoe.Image.Targeted
+        F:Shoe.Mover
+} ;
+
+feature timer F:HeartbeatTimer 1 repeat {
+    java_command [[ getDirector().heartbeat(); ]]
+} ;
+
+
+feature fixed_image F:Background.Top 
+    ( left 0 top 20 scale 2700 2700 mills )
+    "../../images/bg_top.jpg"
+;
+
+feature fixed_image F:Background.Bottom
+    ( left 0 top 528 scale 2700 2700 mills )
+    "../../images/bg_bottom.jpg"
+;
+
+
+feature src_over F:Bush.Image
+    sub_feature fixed_image
+        ( middle 1000 bottom 528 scale 2000 2000 mills )
+        "../../images/disgraced_ex_president.png" ;
+;
+
+feature translator_model F:Bush.Mover { 
+        0    0    200   linear-relative
+        10   0      0   linear-relative
+        60   0      0   linear-relative
+        70   0    200   linear-relative
+} ;
+
+feature translator F:Bush F:Bush.Mover {
+        F:Bush.Image
+        F:Bush.Mover
+} ;
+
+feature assembly F:Bush.Assembly {
+    hiding      sub_feature group { } ;
+    showing     F:Bush
+} ;
+
+feature group F:Background {
+    F:Background.Top
+    F:Bush.Assembly
+    F:Background.Bottom
+} ;
+
+
+feature group F:Everything {
+    F:Shoe
+    F:Background
+    F:HeartbeatTimer
+    F:SpinningShoe
+} ;
+
+segment S:Initialize 
+    setup { 
+        F:Everything
+    } on_entry {
+        java_command [[ 
+            Debug.println();
+            Debug.println("***  Initializing big_shoe ***"); 
+            Debug.println();
+        ]]
+        java_command [[ 
+            getDirector().initialize();
+        ]]
+    } next {
+        activate_segment S:Running ;
+    }
+;
+
+segment S:Running
+    active {
+        F:Background
+        F:Shoe
+        F:HeartbeatTimer
+    } setup {
+        F:Everything
+    } rc_handlers {
+        H:ShoeLeft H:ShoeRight H:ShoeStop1 H:ShoeStop2
+        H:ShoeFire
+    }
+;
+
+
+rc_handler key_pressed H:ShoeLeft {
+        left
+    } execute {
+        java_command [[ getDirector().shoeLeft(); ]]
+    }
+;
+
+rc_handler key_pressed H:ShoeRight {
+        right
+    } execute {
+        java_command [[ getDirector().shoeRight(); ]]
+    }
+;
+
+rc_handler key_pressed H:ShoeStop1 {
+        down
+    } execute {
+        java_command [[ getDirector().shoeStop(); ]]
+    }
+;
+
+rc_handler key_released H:ShoeStop2 {
+        left right
+    } execute {
+        java_command [[ getDirector().shoeStop(); ]]
+    }
+;
+
+rc_handler key_pressed H:ShoeFire {
+        up enter
+    } execute {
+        java_command [[ getDirector().startFiringSequence(); ]]
+        activate_segment S:Shoeting ;
+    }
+;
+
+feature scaling_model F:SpinningShoe.Scaler {
+        0       0  0    1500 1500 mills
+        20      0  0    1125 1125 mills
+        40      0  0     844  844 mills
+        60      0  0     632  632 mills
+        80      0  0     475  475 mills
+    }
+;
+
+feature src_over F:SpinningShoe.Image
+    sub_feature image_sequence
+        ( middle 0 middle 0 ) 
+        "../../images/shoe_"
+        { 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 }
+        ".png" 
+        repeat 
+        scaling_model F:SpinningShoe.Scaler ;
+;
+
+feature translator_model F:SpinningShoe.Mover { 
+        0  1000 900 linear-relative 
+        60 1000   0 linear-relative 
+} ;
+
+feature translator F:SpinningShoe F:SpinningShoe.Mover {
+        F:SpinningShoe.Image
+        F:SpinningShoe.Mover
+        F:SpinningShoe.Scaler
+} ;
+
+
+
+segment S:Shoeting
+    active {
+        F:Background
+        F:SpinningShoe
+        F:HeartbeatTimer
+    } setup {
+        F:Everything
+    } next {
+        activate_segment S:Running ;
+    }
+;
+
+end_show

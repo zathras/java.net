@@ -1,0 +1,261 @@
+<?xml version="1.0"?>
+<!--
+Copyright  1990-2006 Sun Microsystems, Inc. All Rights Reserved.
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version
+2 only, as published by the Free Software Foundation.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+General Public License version 2 for more details (a copy is
+included at /legal/license.txt).
+
+You should have received a copy of the GNU General Public License
+version 2 along with this work; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+02110-1301 USA
+
+Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa
+Clara, CA 95054 or visit www.sun.com if you need additional
+information or have any questions.
+-->
+
+<project name="build hdcookbook sample disc image" basedir="." default="build-hdcookbook-xlets">
+
+    <import file="preset_defs.xml"/>
+    
+    <property name="HDC_BUILD_DIR" value="build"/>
+    <property name="HDC_DISC_BDMV" value="dist/DiscImage/BDMV"/>
+    
+    <property name="XLETS_DEST" value="${HDC_BUILD_DIR}/xlets"/>
+    <property name="BUILDTIME_TOOLS" value="${HDC_BUILD_DIR}/xlets_tools"/>
+    <property name="MENUXLET_DEST" value="${XLETS_DEST}/menuxlet"/>
+    <property name="MENUASSETS_DEST" value="${XLETS_DEST}/menuassets"/>
+    <property name="MONITORXLET_DEST" value="${XLETS_DEST}/monitorxlet"/>
+    <property name="GAMEXLET_DEST" value="${XLETS_DEST}/gamexlet"/>
+    <property name="MENUTOOLS_DEST" value="${BUILDTIME_TOOLS}/menuxlet"/>    
+    <property name="MENU_GENERATED" value="${XLETS_DEST}/menu_generated"/>
+    <property name="MENU_SHOW_COMMANDS" value="com/hdcookbook/bookmenu/menu/commands/MenuShowCommands.java" />
+    <property name="GRIN_LIBRARY_DEST" value="${HDC_BUILD_DIR}/grin_library"/>
+    
+    <target name="clean">
+        <delete dir="${HDC_BUILD_DIR}"/>
+        <delete dir="dist"/>
+        <delete file="HDCookbookDiscImage.zip"/>
+    </target>
+
+    <target name="spotless" depends="clean">
+	<delete file="keystore.store"/>
+	<delete file="appcert.cer"/>
+	<delete file="appcert.csr"/>
+	<delete dir="META-INF"/>
+    </target>
+    
+    <target name="build-hdcookbook-xlets" 
+            depends="init, build-xlets, bundle"/>
+    
+    <target name="bundle">
+          <zip basedir="${HDC_DISC_BDMV}/.." 
+               destfile="HDCookbookDiscImage.zip"/>
+    </target>
+    
+    <target name="init" depends="check-tools, init-preset-defs, init-xlet-dirs"/>
+        
+    <target name="init-xlet-dirs">
+        <mkdir dir="${HDC_DISC_BDMV}/JAR"/>
+        <mkdir dir="${HDC_DISC_BDMV}/PLAYLIST"/>        
+        <mkdir dir="${HDC_BUILD_DIR}"/>	
+        <mkdir dir="${MENUXLET_DEST}/classes"/>
+        <mkdir dir="${MENUASSETS_DEST}"/>
+        <mkdir dir="${MONITORXLET_DEST}/classes"/>         
+        <mkdir dir="${GAMEXLET_DEST}/classes"/> 
+        <mkdir dir="${MENUTOOLS_DEST}/classes"/>
+        <mkdir dir="${GRIN_LIBRARY_DEST}"/>
+    </target>
+    
+    <target name="check-tools">
+        <available file="${bdj.classes}" type="file"
+                   property="bdjstubs.ok"/>
+                   
+        <fail unless="bdjstubs.ok"> 
+              .
+        Could not find bd-j platform classes at 
+	${HDC_BDJ_PLATFORM_CLASSES}.
+        Please change the value of the "HDC_BDJ_PLATFORM_CLASSES" property 
+        defined in the ${basedir}../../vars.properties file.  
+	A good way to do this is to create a file called
+	${basedir}/user.vars.propreties
+	contining the line "HDC_BDJ_PLATFORM_CLASSES=&lt;your path>/classes.zip"
+                 
+        Don't be alarmed, this is a configuration error.
+        The HDCookbook source repository does not include BD-J platform classes
+        needed for compiling applications against.  These classes need to be
+        provided by you.
+
+	http://wiki.java.net/bin/view/Mobileandembedded/BDJPlatformDefinition
+	describes one way to get them.
+        
+        </fail> 
+
+        <available file="${grincompiler.jar}" type="file" property="grincompiler.ok"/>
+                   
+        <fail unless="grincompiler.ok"> 
+              .
+        Could not find the grin compiler jar file at ${grincompiler.jar}.
+        Please build all the tools under the "hdcookbook/DiscCreationTools" 
+        and "hdcookbook/AuthoringTools" dirs before building this xlet, 
+        by calling "ant tools" in the toplevel directory,
+        or modify ${basedir}/build.properties so that various jar properties 
+        points to a pre-built hdcookbook tool jars.
+        
+        </fail>        
+    </target>
+    
+    <target name="build-xlets" depends="init, compile-me-library,
+            build-monitor-xlet, build-game-xlet, build-menu-xlet, 
+            sign-xlets, generate-bdjo, generate-bdmv-files"/>
+            
+    <target name="compile-me-library" depends="init">
+       <xlets.javac
+             destdir="${GRIN_LIBRARY_DEST}">
+            <src path="${grin.library.src.dir}" />                 
+       </xlets.javac>
+    </target>
+    
+    <target name="build-menu-xlet" depends="init, build-menu-assets, compile-me-library">
+        <xlets.javac    
+               classpath="${GRIN_LIBRARY_DEST}"
+               destdir="${MENUXLET_DEST}/classes">
+            <src path="bookmenu/src" />
+	    <src path="${MENU_GENERATED}/xlet" />    
+            <src path="tools/shared/src"/>
+            <exclude name="com/hdcookbook/bookmenu/monitor/**" />
+        </xlets.javac>
+        
+        <copy todir="${MENUXLET_DEST}/classes/com/hdcookbook/bookmenu/menu">
+            <fileset dir="bookmenu/src/com/hdcookbook/bookmenu/menu" includes="*.perm"/>
+        </copy>
+        
+        <jar jarfile="${MENUXLET_DEST}/00002.jar">
+            <fileset dir="${MENUXLET_DEST}/classes"/>
+            <fileset dir="${GRIN_LIBRARY_DEST}"/>
+        </jar>        
+        
+        <copy file="${MENUXLET_DEST}/00002.jar" todir="${HDC_DISC_BDMV}/JAR"/>	    
+    </target>
+    
+    <target name="build-monitor-xlet" depends="init">
+        <xlets.javac 
+               destdir="${MONITORXLET_DEST}/classes">
+            <src path="bookmenu/src" />        
+            <src path="${grin.library.src.dir}"/> <!-- this is just to include Debug.java... -->
+            <include name="com/hdcookbook/bookmenu/monitor/*.java"/>
+            <include name="com/hdcookbook/bookmenu/MonitorIXCInterface.java"/>
+            <include name="com/hdcookbook/grin/util/*.java"/>
+        </xlets.javac>
+      
+        <copy todir="${MONITORXLET_DEST}/classes/com/hdcookbook/bookmenu/monitor">
+            <fileset dir="bookmenu/src/com/hdcookbook/bookmenu/monitor" includes="*.perm"/>
+        </copy>
+        <jar basedir="${MONITORXLET_DEST}/classes" destfile="${MONITORXLET_DEST}/00001.jar"/>      
+        <copy file="${MONITORXLET_DEST}/00001.jar" todir="${HDC_DISC_BDMV}/JAR"/>	
+        
+    </target>        
+    
+    <target name="build-game-xlet" depends="init">
+        
+        <xlets.javac 
+               destdir="${GAMEXLET_DEST}/classes">
+            <src path="gunbunny/src" />
+            <include name="com/hdcookbook/gunbunny/*.java" />
+            <include name="com/hdcookbook/gunbunny/util/*.java" />
+        </xlets.javac>
+        
+        <copy todir="${GAMEXLET_DEST}/classes">
+            <fileset dir="gunbunny/src/com/hdcookbook/gunbunny/assets" excludes="**/*.svn" />
+        </copy>
+        <jar basedir="${GAMEXLET_DEST}/classes" destfile="${GAMEXLET_DEST}/00003.jar"/>       
+        <copy file="${GAMEXLET_DEST}/00003.jar" todir="${HDC_DISC_BDMV}/JAR"/>	
+        
+    </target>    
+    
+    <target name="build-menu-assets" depends="copy-menu-assets, generate-binary-script">
+        
+        <delete file="${HDC_DISC_BDMV}/AUXDATA/*"/>
+        
+        <move todir="${HDC_DISC_BDMV}/AUXDATA" file="${MENUASSETS_DEST}/sound.bdmv"/>
+        <move tofile="${HDC_DISC_BDMV}/AUXDATA/00000.otf" file="${MENUASSETS_DEST}/Font/Lisa.ttf"/>
+        <move todir="${HDC_DISC_BDMV}/AUXDATA" file="${MENUASSETS_DEST}/Font/dvb.fontindex"/>
+        
+        <jar destfile="${HDC_DISC_BDMV}/JAR/00004.jar">
+            <fileset dir="${MENUASSETS_DEST}" 
+                 excludes="Font/**, Graphics/**"/>
+        </jar>    
+        
+    </target>	
+    
+    <target name="copy-menu-assets">
+        <copy todir="${MENUASSETS_DEST}">
+            <fileset dir="bookmenu/src/com/hdcookbook/bookmenu/assets" excludes="**/*.svn"/>
+        </copy>	
+    </target>
+    
+    <target name="generate-binary-script" depends="copy-menu-assets,
+                 compile-extension-reader"> 
+                     
+        <path id="compiler_menuxlet_path">                
+            <pathelement path="${MENUTOOLS_DEST}"/>
+            <pathelement path="${grincompiler.jar}"/>
+            <pathelement path="${MENUASSETS_DEST}"/>
+        </path>          
+        
+        <grincompiler.jdktools.java classname="com.hdcookbook.grin.binaryconverter.Main"
+                       classpath.ref="compiler_menuxlet_path">   
+            <arg value="-extension_parser"/>
+            <arg value="com.hdcookbook.bookmenu.menu.MenuExtensionParser"/>
+            <arg value="-asset_dir"/>
+            <arg value="${MENUASSETS_DEST}"/>
+            <arg value="-out"/>
+            <arg value="${MENUASSETS_DEST}"/>
+            <arg value="-debug"/>
+            <arg value="-show_mosaic"/>
+            <arg value="menu.txt"/>
+            <arg value="mosaics.txt"/>
+        </grincompiler.jdktools.java>	
+        
+        <move file="${MENUASSETS_DEST}/menu.grinview.java"
+              tofile="${MENU_GENERATED}/grinview/${MENU_SHOW_COMMANDS}" />
+        <move file="${MENUASSETS_DEST}/menu.xlet.java"
+              tofile="${MENU_GENERATED}/xlet/${MENU_SHOW_COMMANDS}" />        
+	<jdktools.javac destdir="${MENU_GENERATED}/grinview" srcdir="${MENU_GENERATED}/grinview" debug="on">
+	    <classpath>
+	       <pathelement path="${grinviewer.jar}"/>
+               <pathelement path="${MENUTOOLS_DEST}"/>
+	    </classpath>
+	</jdktools.javac>
+    </target>       
+    
+    <target name="compile-extension-reader" depends="init">          
+        <jdktools.javac 
+               classpath="${grincompiler.jar}"
+               destdir="${MENUTOOLS_DEST}" >
+                   <src path="tools/jdk/src"/>
+                   <src path="tools/shared/src"/>
+        </jdktools.javac>           
+    </target>   
+ 
+    <target name="generate-bdjo">
+        <ant antfile="build_bdjo_security.xml"/>
+    </target>
+
+    <target name="sign-xlets">
+        <ant antfile="build_bdjo_security.xml" target="sign-xlets"/>        
+    </target> 
+    
+    <target name="generate-bdmv-files">
+        <ant antfile="build_bdjo_security.xml" target="generate-bdmv-files"/>        
+    </target>       
+</project>

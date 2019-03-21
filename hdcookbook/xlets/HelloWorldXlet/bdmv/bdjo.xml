@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<!-- Generic template xml file of a bdjo object file.           -->
+<!-- Some variables in this file will be replaced during build time. --->
+
+<!-- variables to be replaced :                                -->
+<!--      XLET_JAR_ NAME  = 5 digit number corresponding to xlet's jar--> 
+<!--      XLET_CLASS_NAME = fully qualified xlet class name       --> 
+<!--      XLET_APPID      = 4 digit hex number, ex, 0x4000        --> 
+<!--      XLET_ORGID      = 8 digit hex number, ex, 0x7fff0001    --> 
+
+<bdjo>
+    <appCacheInfo>
+        <entries>
+            <language>*.*</language>
+            <name>00000</name>
+            <type>1</type>
+        </entries>
+    </appCacheInfo>
+    <applicationManagementTable>
+        <applications>
+            <applicationDescriptor>
+                <baseDirectory>@XLET_JAR_NAME@</baseDirectory>
+                <binding>TITLE_BOUND_DISC_BOUND</binding>
+                <classpathExtension></classpathExtension>
+                <iconFlags>0x0</iconFlags>
+                <iconLocator></iconLocator>
+                <initialClassName>@XLET_CLASS_NAME@</initialClassName>
+                <priority>3</priority>
+                <profiles>
+                    <majorVersion>1</majorVersion>
+                    <microVersion>0</microVersion>
+                    <minorVersion>0</minorVersion>
+                    <profile>1</profile>
+                </profiles>
+                <visibility>V_11</visibility>
+            </applicationDescriptor>
+            <applicationId>@XLET_APPID@</applicationId>
+            <controlCode>0x1</controlCode>
+            <organizationId>@XLET_ORGID@</organizationId>
+            <type>0x1</type>
+        </applications>
+    </applicationManagementTable>
+    <fileAccessInfo>.</fileAccessInfo>
+    <keyInterestTable>0x0</keyInterestTable>
+    <tableOfAccessiblePlayLists>
+        <accessToAllFlag>false</accessToAllFlag>
+        <autostartFirstPlayListFlag>false</autostartFirstPlayListFlag>
+        <playListFileNames>00004</playListFileNames>    
+    </tableOfAccessiblePlayLists>
+    <terminalInfo>
+        <defaultFontFile>00000</defaultFontFile>
+        <initialHaviConfig>HD_1920_1080</initialHaviConfig>
+        <menuCallMask>false</menuCallMask>
+        <titleSearchMask>false</titleSearchMask>
+    </terminalInfo>
+    <version>V_0200</version>
+</bdjo>
+
+        

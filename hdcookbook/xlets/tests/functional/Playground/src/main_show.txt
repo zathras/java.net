@@ -1,0 +1,1094 @@
+#
+#  The show file for the main menu
+#
+
+
+show
+
+setting grinview_background {
+        images/main_menu_background.png
+        images/regression_menu_background.png
+} ;
+
+exports
+    segments { 
+        S:Initialize 
+    } features {
+        F:MainScaler
+        F:BoxedStuffPosition
+        F:BoxedStuffFade
+        F:EnterText
+        F:ReplaceImage.Image
+        F:AC.Assembly
+        F:AC.ClonedGroup
+        F:ArcTest
+        F:SM.Text
+        F:SM.Arc
+        F:OffScreenImagePosition
+        F:MyShow
+        F:IC.Image
+        F:IC.Group
+        F:RandomImageSequence.Im
+        F:RandomImageSequence
+    } handlers {
+    } named_commands {
+        C:GotoAssemblyCloneTest
+    }
+;
+
+$include main_show_commands.txt ;
+    # We're just doing this to test that include works.
+
+$include main_show_initialize_segment.txt ;
+    # Note that in GrinView, clicking on S:Initialize brings us
+    # to the include directive.
+
+
+#########################################################
+#                       MAIN MENU                       #
+#########################################################
+
+segment S:Main 
+    active {
+        F:MainText
+        F:EnterAssembly
+    } setup {
+        F:Everything
+    } rc_handlers {
+        H:1 H:2 H:3 H:4 H:5 H:6 H:7
+        H:EnterPress H:EnterRelease
+    }
+;
+
+segment S:RegressionMenu
+    active {
+        F:RegressionText
+    } setup {
+        F:Everything
+    } rc_handlers {
+        H:R.1 H:R.2 H:R.3 H:R.4 H:R.5
+    }
+;
+
+feature group F:Everything {
+    F:MainText
+    F:RegressionText
+    F:ProgrammaticDemo
+    F:EnterAssembly
+    F:FadeTestEverything
+    F:SlowModelTest
+    F:OffScreenImageTestEverything
+    F:OrbitEverything
+    F:GridSwitchEverything
+} ;
+
+feature text F:MainText
+        left 200 top 200 {
+            "Press a number key..."
+            "     1 - Restore Normal Menu"
+            "     2 - Put new show on top of menu"
+            "     3 - Show programmatic control of scene graph"
+            "     4 - Run show with extension feature"
+            "     5 - Regression tests menu"
+            "     6 - Run orbit test"
+            "     7 - Visual RC handler grid switch test"
+        }
+        SansSerif plain 32 { { 255 255 255 255 } }
+        background { 0 0 0 127 } 
+;
+
+feature text F:RegressionText
+        left 200 top 200 {
+            "Press a number key..."
+            "     1 - Run regression test for issue 121 (fade and redisplay)"
+            "     2 - Run regression test for issues 131, 143 (assembly and cloning)"
+            "     3 - Run test for issue 134 (falling behind in nextFrame()"
+            "     4 - Run test for issue 138 (offscreen image)"
+            "     5 - Set/Unset a clip region around the show (issue 139)"
+        }
+        SansSerif plain 32 { { 255 255 255 255 } }
+        background { 0 0 0 127 } 
+;
+
+rc_handler key_pressed H:1 { 1 } execute {
+    java_command [[ 
+        getMainDirector().restoreNormalMenu();
+    ]]
+} ;
+
+rc_handler key_pressed H:2 { 2 } execute {
+    java_command [[
+        getMainDirector().putNewShowOnTopOfMenu("S:Initialize");
+    ]]
+} ;
+
+rc_handler key_pressed H:3 { 3 } execute {
+    activate_segment S:ProgrammaticSceneGraphControl ;
+} ;
+
+rc_handler key_pressed H:4 { 4 } execute {
+    java_command [[ 
+        getMainDirector().putNewShowOnTopOfMenu("S:ExtensionTest");
+    ]]
+} ;
+
+named_command C:GotoFadeTest {
+        activate_segment S:FadeTest ;
+} ;
+
+rc_handler key_pressed H:5 { 5 } execute {
+        activate_segment S:RegressionMenu ;
+} ;
+
+rc_handler key_pressed H:6 { 6 } execute {
+        activate_segment S:ShowOrbit ;
+} ;
+
+rc_handler key_pressed H:7 { 7 } execute {
+        activate_segment S:GridSwitch ;
+} ;
+
+rc_handler key_pressed H:R.1 { 1 } execute {
+        run_named_commands C:GotoFadeTest ;
+                # That's right above us; we do this just as a test of
+                # named commands with one command in the list.
+} ;
+
+named_command C:GotoAssemblyCloneTest {
+        activate_segment S:AssemblyCloneTest ;
+        java_command [[ Debug.println("Running assemby clone test"); ]]
+} ;
+
+rc_handler key_pressed H:R.2 { 2 } execute {
+        java_command [[ 
+            getMainDirector().runGotoAssemblyCloneTest(grinCaller); 
+        ]]
+        # That's right above us; we do this just as a test of
+        # looking up named commands from Java, and a named command
+        # list with > 1 commands on it.
+} ;
+
+rc_handler key_pressed H:R.3 { 3 } execute {
+        activate_segment S:SlowModelTest ;
+} ;
+
+rc_handler key_pressed H:R.4 { 4 } execute {
+        activate_segment S:OffScreenImageTest ;
+} ;
+
+rc_handler key_pressed H:R.5 { 5 } execute {
+        activate_segment S:ToplevelClippingTest ;
+} ;
+
+rc_handler key_pressed H:EnterPress { enter } execute {
+        activate_part F:EnterAssembly press ;
+} ;
+
+rc_handler key_released H:EnterRelease { enter } execute {
+        activate_part F:EnterAssembly release ;
+} ;
+
+#########################################################
+#           PROGRAMMATIC SCENE GRAPH CONTROL            #
+#########################################################
+
+
+    # A scaling model to flip a couple of images and a box
+    # around.  To make a scaling_model programmable, you specify
+    # just one key frame, and then you programmatically set the
+    # values of the parameters to something different.
+
+feature scaling_model F:MainScaler 
+            { 0 980 560 1000 1000 mills }
+;
+
+    # A box that gets scaled by our scaler
+
+feature box F:Box ( 800 440 1400 750 )
+        outline 30 { 0 0 255 255 }
+        scaling_model F:MainScaler 
+;
+
+    # A turtle that gets scaled by our scaler
+
+feature fixed_image F:TurtleSaucer ( left 1050 middle 580 )
+        "images/turtle_saucer.png"
+        scaling_model F:MainScaler 
+;
+
+    # An animated yin/yang that gets scaled by our scaler
+
+feature image_sequence F:YinYang ( left 900 middle 580 )
+        "images/yinyang/Load_" {
+                0000 0001 0002 0003 0004 0005 0006 0007
+                0008 0009 0010 0011 0012 0013 0014 0015
+         } ".png"
+         repeat
+         scaling_model F:MainScaler 
+;
+
+    # A group containing the stuff in the box, all of which gets
+    # scaled
+
+feature group F:BoxedStuffGroup {
+        F:MainScaler 
+        F:Box 
+        F:TurtleSaucer 
+        F:YinYang
+} ;
+
+    # And a programmatically controlled fade that we use to make the
+    # box fade in and out randomly.
+
+feature fade F:BoxedStuffFade F:BoxedStuffGroup {
+            0   255 linear              
+            # 1 entry means "this is the default value for programmatic control"
+    }
+;
+
+
+    # A translator and translator_model to move F:BoxedStuffGroup around.
+    # The model only has one entry, because we set the value programmatically.
+
+feature translator_model F:BoxedStuffPosition {
+        0       0 0     linear-relative
+} ;
+
+feature translator F:BoxTranslator F:BoxedStuffPosition {
+        F:BoxedStuffFade
+} ;
+
+    # Now, some text (that we change programmatically), plus an
+    # assembly/fade combo we use to randomly make it fade out then in
+    # from time to time.
+
+feature text F:EnterText
+        middle 980 baseline 540 {
+            "Press enter"
+            "to return"
+        }
+        SansSerif plain 180 { { 0 255 0 255 } }
+        background { 0 0 0 255 } 
+;
+
+feature fade F:FadeText F:EnterText {
+            0   255 linear
+           11     0 linear
+           23   255 linear
+    } end_commands {
+        activate_part F:TextAssembly normal ;
+    }
+;
+
+feature assembly F:TextAssembly {
+        normal  F:EnterText
+        fading  F:FadeText
+    }
+;
+
+    #  Now, something to show when the enter key is pressed, and (if supported
+    #  by the player) released.
+
+feature assembly F:EnterAssembly {
+        normal  sub_feature group { } ;
+        press   sub_feature group {
+                    sub_feature timer 20 { activate_part F:EnterAssembly normal ; } ;
+                    sub_feature text middle 980 baseline 960 { "Enter Pressed" }
+                        SansSerif plain 36 { { 255 0 0 255 } }
+                        background { 0 0 0 255 } ;
+                } ;
+        release sub_feature group {
+                    sub_feature timer 20 { activate_part F:EnterAssembly normal ; } ;
+                    sub_feature text middle 980 baseline 960 { "Enter Released " }
+                        SansSerif plain 36 { { 255 0 0 255 } }
+                        background { 0 0 0 255 } ;
+                } ;
+} ;
+
+    # This is cute:  We make a timer on every frame that flips
+    # a coin, and sometimes makes the text fade out for a beat.
+    # If the text is already going through a fade, nothing happens,
+    # because we just re-select the assembly.
+    #
+    # This could could equally well have been put directly into
+    # the implementation of Director.notifyNextFrame(), or as a method
+    # of MainDirector, as is done for the other programmatic control 
+    # being shown.  These latter two are somewhat more elegant,
+    # since we have a natural place for the instance data member.
+    # Because many instances of MainShowCommands get created, we don't
+    # want to define any instance data members on this class.
+
+feature timer F:ChangeSceneGraphTimer 1 repeat {
+        java_command [[
+            if (random.nextInt(80) == 42) {
+                GRIN_COMMAND_[[
+                    activate_part F:TextAssembly fading ;
+                ]]
+            }
+            getMainDirector().programmaticallyChageSceneGraph();
+        ]]
+    }
+;
+
+    #
+    # An animated yin/yang to test the fix of issue number 117,
+    # "Null images in image sequences are broken"
+    #
+
+feature image_sequence F:Issue117 ( left 50 top 50 scale 500 500 mills )
+        "images/yinyang/Load_" {
+                0000 + + 0001 + + 0002 + + 0003 + + 0004 + + 
+                0005 + + 0006 + + 0007 + + 0008 + + 0009 + +
+                0010 + + 0011 + + 0012 + + 0013 + + 0014 + + 
+                0015 + +
+                - - - - - - - - - -
+         } ".png"
+         repeat
+         scaling_model F:MainScaler 
+;
+
+    #
+    # An extension feature that's a frame around a fixed_image.  This is kind
+    # of silly as an extension feature; it's a contrived example,
+    # made to test forward references in an extension parser.
+    # The RFE for that was issue 130.
+    #
+
+feature extension Playground:image_frame F:ReplaceImage.Frame
+        F:ReplaceImage.Image
+        outline 10 { 255 0 0 255 }              # Red
+;
+
+    #
+    #  A fixed_image whose contents we swap with an image that we load
+    #  and unload under programmatic control.  This RFE was issue 126.
+    #
+feature fixed_image F:ReplaceImage.Image ( middle 100 middle 850 )
+        "images/pope.jpg"
+;
+
+
+feature group F:ReplaceImage {
+    F:ReplaceImage.Frame
+    F:ReplaceImage.Image
+    sub_feature timer 1 repeat { java_command [[
+        getMainDirector().replaceImage();
+    ]] } ;
+} ;
+
+
+feature image_sequence F:RandomImageSequence.Im 1400 200 "images/" {
+        hat_plain.jpg pope.jpg spoo2.png turtle_saucer.png
+    } "" repeat ;
+
+feature clipped F:RandomImageSequence F:RandomImageSequence.Im
+        ( 1400 200 1600 400 )
+;
+
+    #  Finaly, we put the whole scene graph in one group, which makes
+    # it a bit easier to list in F:Everything.
+
+feature group F:ProgrammaticDemo {
+        F:TextAssembly
+        F:ChangeSceneGraphTimer
+        F:BoxTranslator
+        F:BoxedStuffPosition
+        F:Issue117
+        F:ReplaceImage
+        F:RandomImageSequence
+} ;
+
+    # Then, a segment to show it, and an RC handler to get us back to the
+    # menu
+
+segment S:ProgrammaticSceneGraphControl
+        active { F:ProgrammaticDemo }
+        setup { F:Everything }
+        rc_handlers { H:ProgrammaticEscape }
+        on_entry {
+        } 
+;
+
+rc_handler key_pressed H:ProgrammaticEscape { enter } execute {
+    java_command [[  getMainDirector().stopImageReplacement(); ]]
+    activate_segment S:Main ;
+} ;
+
+
+#########################################################
+#           FADE TEST (Issue 121 regression test)       #
+#########################################################
+
+feature text F:FadeTestText 100 100 {
+        "You should see a faded blue rectangle.  Press enter to continue"
+    } SansSerif plain 48 { { 255 255 255 255 } } ;
+
+feature text F:FadeTestText2 100 100 {
+        "You should see an opaque blue rectangle.  Press enter to go back to menu"
+    } SansSerif plain 48 { { 255 255 255 255 } } ;
+
+
+feature box F:Red ( 100 200 960 980 ) 
+        fill { 255 0 0 255 } ;
+
+feature box F:Green ( 960 200 1820 980 )
+        fill { 0 255 0 255 } ;
+
+feature box F:Blue ( 500 400 1400 800 )
+        fill { 0 0 255 255 } ;
+
+feature fade F:FadedBlue F:Blue src_over {  0 100 linear } ;
+
+
+feature group F:FadeTestEverything {
+        F:Red F:Green F:FadedBlue 
+} ;
+
+rc_handler key_pressed H:FadeTest { enter } execute {
+    java_command [[ 
+        getMainDirector().getShow().segmentDone();
+                // This is the same as just saying "segment_done".  It's
+                // done here to test the method on Show.
+
+        getMainDirector().getShow().syncDisplay();
+                // Similarly, this is just to test the method on Show.
+    ]]
+} ;
+
+segment S:FadeTest 
+   active {
+        F:Red
+        F:Green
+        F:FadedBlue
+        F:FadeTestText
+    } setup {
+        F:Everything
+    } rc_handlers {
+        H:FadeTest
+    } next {
+        activate_segment S:FadeTest_2 ;
+    }
+;
+
+segment S:FadeTest_2
+   active {
+        F:Red
+        F:Green
+        F:Blue
+        F:FadeTestText2
+    } setup {
+        F:Everything
+    } rc_handlers {
+        H:FadeTest
+    } next {
+        activate_segment S:Main ;
+    }
+;
+
+###################################################################
+#           ASSEMBLY CLONE TEST (Issue 131 regression test)       #
+###################################################################
+
+feature text F:AC.Text 
+        left 200 top 200 {
+                "If you see this, The issue 131 test worked."
+                "Press enter for image clone test."
+        }
+        SansSerif plain 72 { { 0 255 0 255 } }
+        background { 0 0 0 255 }  ;
+
+feature assembly F:AC.Assembly {
+    first       F:AC.Text
+    second      F:AC.Text
+} ;
+
+feature group F:AC.ClonedGroup {
+} ;
+
+segment S:AssemblyCloneTest
+   active {
+    } setup {
+        F:Everything
+        F:AC.Assembly
+        F:AC.ClonedGroup
+    } rc_handlers {
+    } next {
+        java_command [[ getMainDirector().createAssemblyCloneTest(); ]]
+        activate_segment S:AssemblyCloneTest_2 ;
+    }
+;
+
+segment S:AssemblyCloneTest_2
+    active {
+        F:AC.ClonedGroup        # It's populated in createAssemblyCloneTest() 
+    } setup {
+        F:Everything
+        F:AC.Assembly
+        F:AC.ClonedGroup
+    } rc_handlers {
+        H:ACTest
+    } next {
+        java_command [[ getMainDirector().destroyAssemblyCloneTest(); ]]
+        activate_segment S:IC.Start ;   # Chain to image clone test
+    }
+;
+
+rc_handler key_pressed H:ACTest { enter } execute { segment_done ; } ;
+
+###################################################################
+#           IMAGE CLONE TEST (Issue 143 regression test)          #
+###################################################################
+
+
+feature text F:IC.Text 
+        left 200 top 200 {
+                "If you see this, The issue 143 test worked."
+                "Press enter."
+        }
+        SansSerif plain 72 { { 0 255 0 255 } }
+        background { 0 0 0 255 }  ;
+
+feature fixed_image F:IC.Image ( left 1050 middle 580 )
+        "images/spoo2.png"
+;
+
+feature group F:IC.Group { } ;
+
+segment S:IC.Start
+   active {
+    } setup {
+        F:Everything
+        F:IC.Text
+        F:IC.Image
+        F:IC.Group
+    } rc_handlers {
+    } next {
+        java_command [[ getMainDirector().cloneImageTestSetup(); ]]
+        activate_segment S:IC.2 ;
+    }
+;
+
+segment S:IC.2
+    active {
+        F:IC.Text
+        F:IC.Group
+    } setup {
+        F:Everything
+    } rc_handlers {
+        H:ACTest
+    } next {
+        java_command [[ getMainDirector().cloneImageTestDestroy(); ]]
+        activate_segment S:Main ;
+    }
+;
+
+
+
+
+######################################################
+#    SLOW MODEL TEST  (issue 134)
+######################################################
+
+
+feature text F:SM.Text
+        left 150 top 150 {
+                "Model delay:  0 ms"
+        }
+        SansSerif plain 64 { { 0 255 0 255 } }
+        background { 0 0 0 255 }  ;
+
+feature extension Playground:arc F:SM.Arc
+        { 255 0 0 255 }         # Red
+        x 250 y 250 width 600 height 600 startAngle 90 arcAngle 15
+;
+
+feature timer F:SM.Timer 1 repeat {
+    java_command [[
+        getMainDirector().slowModelHeartbeat();
+    ]]
+} ;
+
+feature group F:SlowModelTest {
+        F:SM.Text
+        F:SM.Arc
+        F:SM.Timer
+} ;
+
+segment S:SlowModelTest
+    active {
+        F:SlowModelTest
+    } setup {
+        F:Everything
+    } rc_handlers {
+        H:SlowModelTest
+    } on_entry {
+        java_command [[ getMainDirector().initSlowModel(); ]]
+    } next {
+        activate_segment S:Main ;
+    }
+;
+
+
+rc_handler key_pressed H:SlowModelTest { enter } execute { segment_done ; } ;
+
+# Issue 138 Off-screen image test
+
+feature text F:OffScreenImageInstruction 100 100 
+      { 
+      "Use step drawing on GrinView to check that repaint isn't happening"
+      "beyond what a moving turtle in the screen requires."
+      "Press ENTER to return to the main menu."
+      }
+     SansSerif plain 36 { { 255 255 255 255 } } ;
+
+feature translator_model F:OffScreenImagePosition {
+        0       0 0     linear-relative  # set programmatically
+    } ; 
+
+feature translator F:OffScreenImageTranslator F:OffScreenImagePosition {
+        F:OffScreenImage 
+        sub_feature timer 10 repeat {
+           java_command [[ getMainDirector().toggleImagePosition(); ]]
+        } ;
+} ;
+
+feature fixed_image F:OffScreenImage ( left 1050 middle 580 )
+        "images/turtle_saucer.png"
+;
+
+feature translator_model F:OnScreenImagePosition {
+        0       0 0             linear-relative
+        24      200 -200        linear-relative
+        48      400 0           linear-relative
+        72      200 200         linear-relative
+        96      0 0             linear-relative
+} loop_count infinite ;
+
+feature translator F:OnScreenImageTranslator F:OnScreenImagePosition {
+        F:OnScreenImage
+} ;
+
+feature fixed_image F:OnScreenImage ( left 850 middle 580 )
+        "images/turtle_saucer.png"
+;
+
+feature group F:OffScreenImageTestEverything {
+        F:OffScreenImageInstruction
+        F:OffScreenImageTranslator
+        F:OffScreenImagePosition
+        F:OnScreenImageTranslator
+        F:OnScreenImagePosition
+} ;
+
+rc_handler key_pressed H:OffScreenImageTest { enter } execute { segment_done ; } ;
+
+segment S:OffScreenImageTest
+    active {
+        F:OffScreenImageTestEverything
+    } setup {
+        F:Everything
+    } rc_handlers {
+        H:OffScreenImageTest     
+    } next {
+        activate_segment S:Main ;
+    }
+;
+
+# Issue 139 show's toplevel feature
+
+feature showtop_group F:MyShow.Body ;
+    # This gives a name to the "slot" where the current
+    # segment's active features go
+
+feature clipped F:MyShow.Clip.Still F:MyShow.Body
+        ( 0 0 1920 1080 ) ;          # Show clipped to this rectangle
+
+feature clipped F:MyShow.Clip.Moving F:MyShow.Body
+        ( 0 0 600 1000 ) ;            # Show clipped to this rectangle
+
+feature translator_model F:MyShow.Pos.Still
+        { 0  0 0      linear-relative  } ;  
+
+feature translator_model F:MyShow.Pos.Moving {
+        0       0 0             linear-relative
+        96      0 480           linear-relative
+        192      0 0             linear-relative  
+} loop_count infinite ;
+
+feature translator F:MyShow.Still F:MyShow.Pos.Still {
+        F:MyShow.Pos.Still
+        F:MyShow.Clip.Still
+} ;
+
+feature translator F:MyShow.Moving F:MyShow.Pos.Moving {
+        F:MyShow.Pos.Moving
+        F:MyShow.Clip.Moving
+} ;
+
+feature assembly F:MyShow {
+    still       F:MyShow.Still
+    moving      F:MyShow.Moving
+} ;
+
+show_top F:MyShow ;
+        # When the show is displayed, the top of the scene graph will be
+        # F:MyShow, with the current segment's active features slotted in
+        # at F:MyShow.Body
+
+segment S:ToplevelClippingTest
+    active {
+    } setup {
+        F:Everything
+    } rc_handlers {
+        H:OffScreenImageTest 
+    } on_entry {
+           java_command [[ getMainDirector().toggleShowTopClip(); ]]    
+    } next {
+        activate_segment S:Main ;
+    }
+;
+
+
+#########################################################
+#           SHOW ORBIT                                  #
+#########################################################
+
+
+feature fixed_image F:Orbit.Earth ( middle 660 middle 540 ) images/earth.png ;
+
+feature fixed_image F:Orbit.Moon ( middle 660 middle 540 ) images/moon.png ;
+
+#
+# This translator shows the usage of pre-calculated points.  The
+# GRIN compiler approximates these points with a set of linear
+# interpolation segments.  The points listed below were generated
+# using ../other_src/kepler.java, which is solving the equations for
+# orbital position as a function of time using Kepler's Laws of
+# Planetary Motion 
+# (http://en.wikipedia.org/wiki/Kepler%27s_Laws_of_Planetary_Motion).
+#
+# When approximated as linear interpolation with a max-error of 2,
+# this results in only 35 added keyframes.  If the max-error is set
+# to 0, it's still just 193 keyframes to cover these 360 points.
+#
+# It is, of course, a bit absurd to go to all the trouble of using
+# a real orbit equation for an orbit that's all wrong anyway.  The
+# point of this demo is that you can pre-calculate points using any
+# path you want, using as sophisticated equations as you want, and
+# the xlet runtime is simple and fast, because it uses pre-computed
+# points.
+#
+feature translator_model F:Orbit.Moon.Pos {
+        0       -286 0  start
+        360 -286 0 ease-points {
+                    ( -286 11 ) ( -285 21 ) ( -284 32 ) ( -283 43 ) 
+                    ( -282 53 ) ( -281 64 ) ( -279 74 ) ( -277 85 ) 
+                    ( -274 95 ) ( -272 105 ) ( -269 116 ) ( -265 126 ) 
+                    ( -262 136 ) ( -258 146 ) ( -254 156 ) ( -250 166 ) 
+                    ( -246 175 ) ( -241 185 ) ( -236 195 ) ( -231 204 ) 
+                    ( -225 213 ) ( -219 222 ) ( -214 231 ) ( -207 240 ) 
+                    ( -201 248 ) ( -195 257 ) ( -188 265 ) ( -181 273 ) 
+                    ( -174 281 ) ( -166 289 ) ( -159 297 ) ( -151 304 ) 
+                    ( -143 311 ) ( -135 318 ) ( -127 325 ) ( -119 332 ) 
+                    ( -111 338 ) ( -102 344 ) ( -93 351 ) ( -84 356 ) 
+                    ( -76 362 ) ( -67 367 ) ( -57 373 ) ( -48 378 ) 
+                    ( -39 382 ) ( -30 387 ) ( -20 391 ) ( -11 396 ) 
+                    ( -1 400 ) ( 9 403 ) ( 18 407 ) ( 28 410 ) 
+                    ( 38 413 ) ( 48 416 ) ( 57 419 ) ( 67 422 ) 
+                    ( 77 424 ) ( 87 426 ) ( 97 428 ) ( 107 430 ) 
+                    ( 116 431 ) ( 126 432 ) ( 136 434 ) ( 146 434 ) 
+                    ( 155 435 ) ( 165 436 ) ( 175 436 ) ( 184 436 ) 
+                    ( 194 436 ) ( 203 436 ) ( 213 436 ) ( 222 435 ) 
+                    ( 231 435 ) ( 241 434 ) ( 250 433 ) ( 259 432 ) 
+                    ( 268 431 ) ( 277 429 ) ( 285 428 ) ( 294 426 ) 
+                    ( 303 424 ) ( 311 422 ) ( 320 420 ) ( 328 418 ) 
+                    ( 336 415 ) ( 344 413 ) ( 352 410 ) ( 360 408 ) 
+                    ( 368 405 ) ( 376 402 ) ( 383 399 ) ( 391 396 ) 
+                    ( 398 393 ) ( 406 389 ) ( 413 386 ) ( 420 382 ) 
+                    ( 427 379 ) ( 434 375 ) ( 440 372 ) ( 447 368 ) 
+                    ( 453 364 ) ( 460 360 ) ( 466 356 ) ( 472 352 ) 
+                    ( 478 348 ) ( 484 344 ) ( 490 340 ) ( 495 335 ) 
+                    ( 501 331 ) ( 506 327 ) ( 512 322 ) ( 517 318 ) 
+                    ( 522 313 ) ( 527 309 ) ( 532 304 ) ( 536 300 ) 
+                    ( 541 295 ) ( 546 291 ) ( 550 286 ) ( 554 281 ) 
+                    ( 559 277 ) ( 563 272 ) ( 567 267 ) ( 571 263 ) 
+                    ( 575 258 ) ( 578 253 ) ( 582 248 ) ( 586 244 ) 
+                    ( 589 239 ) ( 592 234 ) ( 596 229 ) ( 599 225 ) 
+                    ( 602 220 ) ( 605 215 ) ( 608 210 ) ( 611 205 ) 
+                    ( 613 201 ) ( 616 196 ) ( 619 191 ) ( 621 186 ) 
+                    ( 624 182 ) ( 626 177 ) ( 628 172 ) ( 630 167 ) 
+                    ( 632 162 ) ( 634 158 ) ( 636 153 ) ( 638 148 ) 
+                    ( 640 144 ) ( 642 139 ) ( 644 134 ) ( 645 129 ) 
+                    ( 647 125 ) ( 648 120 ) ( 650 115 ) ( 651 111 ) 
+                    ( 652 106 ) ( 654 101 ) ( 655 97 ) ( 656 92 ) 
+                    ( 657 87 ) ( 658 83 ) ( 659 78 ) ( 660 73 ) 
+                    ( 661 69 ) ( 661 64 ) ( 662 60 ) ( 663 55 ) 
+                    ( 663 50 ) ( 664 46 ) ( 665 41 ) ( 665 37 ) 
+                    ( 665 32 ) ( 666 27 ) ( 666 23 ) ( 666 18 ) 
+                    ( 666 14 ) ( 667 9 ) ( 667 5 ) ( 667 0 ) 
+                    ( 667 -5 ) ( 667 -9 ) ( 666 -14 ) ( 666 -18 ) 
+                    ( 666 -23 ) ( 666 -27 ) ( 665 -32 ) ( 665 -37 ) 
+                    ( 665 -41 ) ( 664 -46 ) ( 663 -50 ) ( 663 -55 ) 
+                    ( 662 -60 ) ( 661 -64 ) ( 661 -69 ) ( 660 -73 ) 
+                    ( 659 -78 ) ( 658 -83 ) ( 657 -87 ) ( 656 -92 ) 
+                    ( 655 -97 ) ( 654 -101 ) ( 652 -106 ) ( 651 -111 ) 
+                    ( 650 -115 ) ( 648 -120 ) ( 647 -125 ) ( 645 -129 ) 
+                    ( 644 -134 ) ( 642 -139 ) ( 640 -144 ) ( 638 -148 ) 
+                    ( 636 -153 ) ( 634 -158 ) ( 632 -162 ) ( 630 -167 ) 
+                    ( 628 -172 ) ( 626 -177 ) ( 624 -182 ) ( 621 -186 ) 
+                    ( 619 -191 ) ( 616 -196 ) ( 613 -201 ) ( 611 -205 ) 
+                    ( 608 -210 ) ( 605 -215 ) ( 602 -220 ) ( 599 -225 ) 
+                    ( 596 -229 ) ( 592 -234 ) ( 589 -239 ) ( 586 -244 ) 
+                    ( 582 -248 ) ( 578 -253 ) ( 575 -258 ) ( 571 -263 ) 
+                    ( 567 -267 ) ( 563 -272 ) ( 559 -277 ) ( 554 -281 ) 
+                    ( 550 -286 ) ( 546 -291 ) ( 541 -295 ) ( 536 -300 ) 
+                    ( 532 -304 ) ( 527 -309 ) ( 522 -313 ) ( 517 -318 ) 
+                    ( 512 -322 ) ( 506 -327 ) ( 501 -331 ) ( 495 -335 ) 
+                    ( 490 -340 ) ( 484 -344 ) ( 478 -348 ) ( 472 -352 ) 
+                    ( 466 -356 ) ( 460 -360 ) ( 453 -364 ) ( 447 -368 ) 
+                    ( 440 -372 ) ( 434 -375 ) ( 427 -379 ) ( 420 -382 ) 
+                    ( 413 -386 ) ( 406 -389 ) ( 398 -393 ) ( 391 -396 ) 
+                    ( 383 -399 ) ( 376 -402 ) ( 368 -405 ) ( 360 -408 ) 
+                    ( 352 -410 ) ( 344 -413 ) ( 336 -415 ) ( 328 -418 ) 
+                    ( 320 -420 ) ( 311 -422 ) ( 303 -424 ) ( 294 -426 ) 
+                    ( 285 -428 ) ( 277 -429 ) ( 268 -431 ) ( 259 -432 ) 
+                    ( 250 -433 ) ( 241 -434 ) ( 231 -435 ) ( 222 -435 ) 
+                    ( 213 -436 ) ( 203 -436 ) ( 194 -436 ) ( 184 -436 ) 
+                    ( 175 -436 ) ( 165 -436 ) ( 155 -435 ) ( 146 -434 ) 
+                    ( 136 -434 ) ( 126 -432 ) ( 116 -431 ) ( 107 -430 ) 
+                    ( 97 -428 ) ( 87 -426 ) ( 77 -424 ) ( 67 -422 ) 
+                    ( 57 -419 ) ( 48 -416 ) ( 38 -413 ) ( 28 -410 ) 
+                    ( 18 -407 ) ( 9 -403 ) ( -1 -400 ) ( -11 -396 ) 
+                    ( -20 -391 ) ( -30 -387 ) ( -39 -382 ) ( -48 -378 ) 
+                    ( -57 -373 ) ( -67 -367 ) ( -76 -362 ) ( -84 -356 ) 
+                    ( -93 -351 ) ( -102 -344 ) ( -111 -338 ) ( -119 -332 ) 
+                    ( -127 -325 ) ( -135 -318 ) ( -143 -311 ) ( -151 -304 ) 
+                    ( -159 -297 ) ( -166 -289 ) ( -174 -281 ) ( -181 -273 ) 
+                    ( -188 -265 ) ( -195 -257 ) ( -201 -248 ) ( -207 -240 ) 
+                    ( -214 -231 ) ( -219 -222 ) ( -225 -213 ) ( -231 -204 ) 
+                    ( -236 -195 ) ( -241 -185 ) ( -246 -175 ) ( -250 -166 ) 
+                    ( -254 -156 ) ( -258 -146 ) ( -262 -136 ) ( -265 -126 ) 
+                    ( -269 -116 ) ( -272 -105 ) ( -274 -95 ) ( -277 -85 ) 
+                    ( -279 -74 ) ( -281 -64 ) ( -282 -53 ) ( -283 -43 ) 
+                    ( -284 -32 ) ( -285 -21 ) ( -286 -11 ) ( -286 0 ) 
+                } 
+                max-error 2
+    } repeat 1
+;
+
+feature translator F:Orbit.Moon.Translator F:Orbit.Moon.Pos {
+        F:Orbit.Moon
+} ;
+
+feature text F:Orbit.Text
+        right 1800 baseline 900 {
+            "Press enter"
+            "to return"
+            "to menu"
+        }
+        SansSerif plain 32 { { 0 255 0 255 } }
+        background { 0 0 0 255 } 
+;
+
+feature group F:OrbitEverything {
+    F:Orbit.Text
+    F:Orbit.Earth
+    F:Orbit.Moon.Pos
+    F:Orbit.Moon.Translator
+} ;
+
+segment S:ShowOrbit
+    active {
+        F:OrbitEverything
+    } setup {
+        F:Everything
+    } rc_handlers {
+        H:ShowOrbit
+    } next {
+        activate_segment S:Main ;
+    }
+;
+
+rc_handler key_pressed H:ShowOrbit { enter } execute { segment_done ; } ;
+        
+
+#########################################################
+#           VISUAL RC HANDLER GRID SWITCH               #
+#########################################################
+
+feature text F:GridSwitch.Text.1
+        left 270 top 200 "Do Nothing"
+        SansSerif plain 32 { { 255 255 255 255 } }
+;
+
+feature text F:GridSwitch.Arrow.1
+        left 200 top 200 "-->"
+        SansSerif plain 32 { { 255 255 255 255 } }
+;
+
+feature text F:GridSwitch.Arrow.Activated.1
+        left 200 top 200 "-->"
+        SansSerif plain 32 { { 255 96 96 255 } }
+;
+
+feature text F:GridSwitch.Text.2.Enabled
+        left 270 top 250 "Enable Third Choice"
+        SansSerif plain 32 { { 255 255 255 255 } }
+;
+
+feature text F:GridSwitch.Text.2.Disabled
+        left 270 top 250 "Enable Third Choice"
+        SansSerif plain 32 { { 96 96 96 255 } }
+;
+
+feature assembly F:GridSwitch.Text.2 {
+    enabled     F:GridSwitch.Text.2.Enabled
+    disabled    F:GridSwitch.Text.2.Disabled
+} ;
+
+feature text F:GridSwitch.Arrow.2
+        left 200 top 250 "-->"
+        SansSerif plain 32 { { 255 255 255 255 } }
+;
+
+feature text F:GridSwitch.Arrow.Activated.2
+        left 200 top 250 "-->"
+        SansSerif plain 32 { { 255 96 96 255 } }
+;
+
+feature text F:GridSwitch.Text.3.Enabled
+        left 270 top 300 "Disable Third Choice"
+        SansSerif plain 32 { { 255 255 255 255 } }
+;
+
+feature text F:GridSwitch.Text.3.Disabled
+        left 270 top 300 "Disable Third Choice"
+        SansSerif plain 32 { { 96 96 96 255 } }
+;
+
+feature assembly F:GridSwitch.Text.3 {
+    enabled     F:GridSwitch.Text.3.Enabled
+    disabled    F:GridSwitch.Text.3.Disabled
+} ;
+
+
+feature text F:GridSwitch.Arrow.3
+        left 200 top 300 "-->"
+        SansSerif plain 32 { { 255 255 255 255 } }
+;
+
+feature text F:GridSwitch.Arrow.Activated.3
+        left 200 top 300 "-->"
+        SansSerif plain 32 { { 255 96 96 255 } }
+;
+
+feature text F:GridSwitch.Text.4
+        left 270 top 350 "Return to Main Menu"
+        SansSerif plain 32 { { 255 255 255 255 } }
+;
+
+feature text F:GridSwitch.Arrow.4
+        left 200 top 350 "-->"
+        SansSerif plain 32 { { 255 255 255 255 } }
+;
+
+feature text F:GridSwitch.Arrow.Activated.4
+        left 200 top 350 "-->"
+        SansSerif plain 32 { { 255 96 96 255 } }
+;
+
+feature assembly F:GridSwitch.Arrows {
+        1       F:GridSwitch.Arrow.1
+        2       F:GridSwitch.Arrow.2
+        3       F:GridSwitch.Arrow.3
+        4       F:GridSwitch.Arrow.4
+        1a      sub_feature group {
+                    F:GridSwitch.Arrow.Activated.1
+                    sub_feature timer 18 {
+                        set_visual_rc H:GridSwitch current selected ;
+                    } ;
+                } ;
+        2a      sub_feature group {
+                    F:GridSwitch.Arrow.Activated.2
+                    sub_feature timer 18 {
+                        set_visual_rc H:GridSwitch state 3 selected
+                                      grid_alternate three ;
+                        activate_part F:GridSwitch.Text.2 disabled ;
+                        activate_part F:GridSwitch.Text.3 enabled ;
+                    } ;
+                } ;
+        3a      sub_feature group {
+                    F:GridSwitch.Arrow.Activated.3
+                    sub_feature timer 18 {
+                        set_visual_rc H:GridSwitch state 2 selected
+                                      grid_alternate two ;
+                        activate_part F:GridSwitch.Text.2 enabled ;
+                        activate_part F:GridSwitch.Text.3 disabled ;
+                    } ;
+                } ;
+        4a      sub_feature group {
+                    sub_feature timer 18 {
+                        segment_done ;
+                    } ;
+                    F:GridSwitch.Arrow.Activated.4
+                } ;
+} ;
+
+feature group F:GridSwitchEverything {
+        F:GridSwitch.Arrows
+        F:GridSwitch.Text.1
+        F:GridSwitch.Text.2
+        F:GridSwitch.Text.3
+        F:GridSwitch.Text.4
+} ;
+
+segment S:GridSwitch
+    active {
+        F:GridSwitchEverything
+    } setup {
+        F:Everything
+    } rc_handlers {
+        H:GridSwitch
+    } on_entry {
+        set_visual_rc H:GridSwitch state 1 selected ;
+        activate_part F:GridSwitch.Text.2 enabled ;
+        activate_part F:GridSwitch.Text.3 disabled ;
+    } next {
+        activate_segment S:Main ;
+    }
+;
+
+rc_handler visual H:GridSwitch
+    grid_alternates {
+        two { 
+            { 1 }
+            { 2 }
+            { 4 }
+            rc_override {
+                    # Define some random overrides to test the mechanism...
+                    # These aren't designed to produce a particularly reasonable
+                    # user experience!
+                { 4 down 1 }
+                { 2 right 4 }
+            }
+        } three {
+            { 1 }
+            { 3 }
+            { 4 }
+        }
+    }
+    assembly F:GridSwitch.Arrows
+    select {
+        1       1
+        2       2
+        3       3
+        4       4
+    } activate {
+        1       1a
+        2       2a
+        3       3a
+        4       4a
+    }
+;
+
+end_show 

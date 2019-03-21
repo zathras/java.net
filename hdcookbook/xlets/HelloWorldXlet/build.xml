@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright  1990-2006 Sun Microsystems, Inc. All Rights Reserved.
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version
+2 only, as published by the Free Software Foundation.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+General Public License version 2 for more details (a copy is
+included at /legal/license.txt).
+
+You should have received a copy of the GNU General Public License
+version 2 along with this work; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+02110-1301 USA
+
+Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa
+Clara, CA 95054 or visit www.sun.com if you need additional
+information or have any questions.
+-->
+
+<project name="HelloTVXlet" default="all" basedir=".">  
+
+  <!-- Property Definitions -->
+    <property file="user.vars.properties"/>
+    <property file="vars.properties"/>
+    <property name="src.dir"         value="src"/>
+    <property name="build.dir"       value="build"/>
+    <property name="bdmv.src.dir"    value="bdmv"/>
+    <property name="bdmv.build.dir"  value="${build.dir}/bdmv"/>
+    <property name="dist.dir"        value="dist"/>
+    <property name="xlet.classname"  value="helloworld.HelloTVXlet" />
+    <property name="xlet.jarname"    value="00000" />
+    <property name="xlet.orgid"      value="0x7fff0001"/>
+    <property name="xlet.appid"      value="0x4000"/>
+    <property name="bdjo.name"       value="00000"/>
+    
+    <import file="generate-discimage.xml"/>
+    
+    <target name="init" depends="check-tools">
+        <mkdir dir="${build.dir}/classes"/>
+        <mkdir dir="${bdmv.build.dir}"/>
+        <mkdir dir="${dist.dir}"/>
+    </target>
+    
+    <target name="check-tools">
+        <available file="${bdj.classes}" type="file"
+                   property="bdjstubs.ok"/>
+        <fail unless="bdjstubs.ok"> 
+              .
+        Could not find bd-j platform classes at ${bdj.classes}.
+        Please change the value of the "bdj.classes" property 
+        in the ${basedir}/user.vars.properties file.
+        </fail>
+        <available file="${id.jar}" type="file" property="id.ok"/>
+        <fail unless="id.ok"> 
+              .
+        Could not find id.jar file at ${id.jar}, available in the hdcookbook
+        repository.  Please configure the ${basedir}/user.vars.properties file.
+        </fail>
+    </target>
+    
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+        <delete dir="${dist.dir}"/>
+        <delete file="${ant.project.name}.zip"/>
+    </target>
+    
+    <target name="compile" depends="init" 
+            description="Compiles the sources">
+
+    <!-- Building xlet jar -->
+        <javac srcdir="${src.dir}"
+           classpath="${bdj.classes}"
+           destdir="${build.dir}/classes"
+	   source="1.3" target="1.3"
+           debug="on" deprecation="on">
+        </javac>
+    
+    <!-- copy the permission request file and replace some keywords.  -->
+        <copy todir="${build.dir}/classes">
+            <fileset dir="${src.dir}">
+                <include name="**/*.perm"/>
+            </fileset>
+            <filterchain>
+                <striplinecomments>
+                    <comment value="&lt;!--"/>
+                </striplinecomments>
+                <ignoreblank/>
+                <replacetokens>
+                    <token key="XLET_ORGID"     value="${xlet.orgid}"/>
+                    <token key="XLET_APPID"     value="${xlet.appid}"/>
+                </replacetokens>
+            </filterchain>
+        </copy>
+    </target>
+    
+    <target name="jar"
+         depends="compile" description="Creates the xlet jar file">
+        <jar jarfile="${build.dir}/${xlet.jarname}.jar"
+             basedir="${build.dir}/classes"/>
+    </target>
+    
+    <target name="bundle"
+            description="Creates a zip file of the blu-ray disc structure">
+        <zip destfile="${ant.project.name}.zip"
+             basedir="${dist.dir}"/>
+    </target>
+    
+    <target name="all" depends="jar, sign-xlet, generate-bdmv-files, 
+                                  assemble-bdmv-structure, bundle"
+          description="Builds sources and deployment zip"/>    
+
+</project>

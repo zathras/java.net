@@ -1,0 +1,1343 @@
+<html>
+<body bgcolor="white">
+<pre>
+<table bgcolor="#FFFFCC" cellpadding="0" cellspacing="0" border="0" width="100%"><a href="../../../../../../apidocs/org/apache/bcel/verifier/statics/Pass2Verifier.html">View Javadoc</a></table>
+<a name="1" href="#1">1</a>   <b>package</b> <a href="../../../../../org/apache/bcel/verifier/statics/package-summary.html">org.apache.bcel.verifier.statics</a>;
+<a name="2" href="#2">2</a>   
+<a name="3" href="#3">3</a>   <font color="#329900"><i>/*<font color="#329900"><i> ====================================================================</font></i></font></i>
+<a name="4" href="#4">4</a>   <font color="#329900"><i> * The Apache Software License, Version 1.1</font></i>
+<a name="5" href="#5">5</a>   <font color="#329900"><i> *</font></i>
+<a name="6" href="#6">6</a>   <font color="#329900"><i> * Copyright (c) 2001 The Apache Software Foundation.  All rights</font></i>
+<a name="7" href="#7">7</a>   <font color="#329900"><i> * reserved.</font></i>
+<a name="8" href="#8">8</a>   <font color="#329900"><i> *</font></i>
+<a name="9" href="#9">9</a>   <font color="#329900"><i> * Redistribution and use in source and binary forms, with or without</font></i>
+<a name="10" href="#10">10</a>  <font color="#329900"><i> * modification, are permitted provided that the following conditions</font></i>
+<a name="11" href="#11">11</a>  <font color="#329900"><i> * are met:</font></i>
+<a name="12" href="#12">12</a>  <font color="#329900"><i> *</font></i>
+<a name="13" href="#13">13</a>  <font color="#329900"><i> * 1. Redistributions of source code must retain the above copyright</font></i>
+<a name="14" href="#14">14</a>  <font color="#329900"><i> *    notice, this list of conditions and the following disclaimer.</font></i>
+<a name="15" href="#15">15</a>  <font color="#329900"><i> *</font></i>
+<a name="16" href="#16">16</a>  <font color="#329900"><i> * 2. Redistributions in binary form must reproduce the above copyright</font></i>
+<a name="17" href="#17">17</a>  <font color="#329900"><i> *    notice, this list of conditions and the following disclaimer in</font></i>
+<a name="18" href="#18">18</a>  <font color="#329900"><i> *    the documentation and/or other materials provided with the</font></i>
+<a name="19" href="#19">19</a>  <font color="#329900"><i> *    distribution.</font></i>
+<a name="20" href="#20">20</a>  <font color="#329900"><i> *</font></i>
+<a name="21" href="#21">21</a>  <font color="#329900"><i> * 3. The end-user documentation included with the redistribution,</font></i>
+<a name="22" href="#22">22</a>  <font color="#329900"><i> *    if any, must include the following acknowledgment:</font></i>
+<a name="23" href="#23">23</a>  <font color="#329900"><i> *       "This product includes software developed by the</font></i>
+<a name="24" href="#24">24</a>  <font color="#329900"><i> *        Apache Software Foundation (<a href="http://www.apache.org/" target="alexandria_uri">http://www.apache.org/</a>)."</font></i>
+<a name="25" href="#25">25</a>  <font color="#329900"><i> *    Alternately, this acknowledgment may appear in the software itself,</font></i>
+<a name="26" href="#26">26</a>  <font color="#329900"><i> *    if and wherever such third-party acknowledgments normally appear.</font></i>
+<a name="27" href="#27">27</a>  <font color="#329900"><i> *</font></i>
+<a name="28" href="#28">28</a>  <font color="#329900"><i> * 4. The names "Apache" and "Apache Software Foundation" and</font></i>
+<a name="29" href="#29">29</a>  <font color="#329900"><i> *    "Apache BCEL" must not be used to endorse or promote products</font></i>
+<a name="30" href="#30">30</a>  <font color="#329900"><i> *    derived from this software without prior written permission. For</font></i>
+<a name="31" href="#31">31</a>  <font color="#329900"><i> *    written permission, please contact apache@apache.org.</font></i>
+<a name="32" href="#32">32</a>  <font color="#329900"><i> *</font></i>
+<a name="33" href="#33">33</a>  <font color="#329900"><i> * 5. Products derived from this software may not be called "Apache",</font></i>
+<a name="34" href="#34">34</a>  <font color="#329900"><i> *    "Apache BCEL", nor may "Apache" appear in their name, without</font></i>
+<a name="35" href="#35">35</a>  <font color="#329900"><i> *    prior written permission of the Apache Software Foundation.</font></i>
+<a name="36" href="#36">36</a>  <font color="#329900"><i> *</font></i>
+<a name="37" href="#37">37</a>  <font color="#329900"><i> * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED</font></i>
+<a name="38" href="#38">38</a>  <font color="#329900"><i> * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES</font></i>
+<a name="39" href="#39">39</a>  <font color="#329900"><i> * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE</font></i>
+<a name="40" href="#40">40</a>  <font color="#329900"><i> * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR</font></i>
+<a name="41" href="#41">41</a>  <font color="#329900"><i> * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,</font></i>
+<a name="42" href="#42">42</a>  <font color="#329900"><i> * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT</font></i>
+<a name="43" href="#43">43</a>  <font color="#329900"><i> * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF</font></i>
+<a name="44" href="#44">44</a>  <font color="#329900"><i> * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND</font></i>
+<a name="45" href="#45">45</a>  <font color="#329900"><i> * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,</font></i>
+<a name="46" href="#46">46</a>  <font color="#329900"><i> * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT</font></i>
+<a name="47" href="#47">47</a>  <font color="#329900"><i> * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF</font></i>
+<a name="48" href="#48">48</a>  <font color="#329900"><i> * SUCH DAMAGE.</font></i>
+<a name="49" href="#49">49</a>  <font color="#329900"><i> * ====================================================================</font></i>
+<a name="50" href="#50">50</a>  <font color="#329900"><i> *</font></i>
+<a name="51" href="#51">51</a>  <font color="#329900"><i> * This software consists of voluntary contributions made by many</font></i>
+<a name="52" href="#52">52</a>  <font color="#329900"><i> * individuals on behalf of the Apache Software Foundation.  For more</font></i>
+<a name="53" href="#53">53</a>  <font color="#329900"><i> * information on the Apache Software Foundation, please see</font></i>
+<a name="54" href="#54">54</a>  <font color="#329900"><i> * &lt;<a href="http://www.apache.org/&gt" target="alexandria_uri">http://www.apache.org/&gt</a>;.</font></i>
+<a name="55" href="#55">55</a>  <font color="#329900"><i> */</font></i>
+<a name="56" href="#56">56</a>  
+<a name="57" href="#57">57</a>  <b>import</b> org.apache.bcel.Constants;
+<a name="58" href="#58">58</a>  <b>import</b> org.apache.bcel.Repository;
+<a name="59" href="#59">59</a>  <b>import</b> <a href="../../../../../org/apache/bcel/classfile/package-summary.html">org.apache.bcel.classfile</a>.*;
+<a name="60" href="#60">60</a>  <b>import</b> org.apache.bcel.classfile.DescendingVisitor; <font color="#329900"><i>// Use _this_ one!</font></i>
+<a name="61" href="#61">61</a>  <b>import</b> org.apache.bcel.classfile.EmptyVisitor; <font color="#329900"><i>// Use _this_ one!</font></i>
+<a name="62" href="#62">62</a>  <b>import</b> org.apache.bcel.classfile.Visitor; <font color="#329900"><i>// Use _this_ one!</font></i>
+<a name="63" href="#63">63</a>  <b>import</b> org.apache.bcel.<b>generic</b>.*;
+<a name="64" href="#64">64</a>  <b>import</b> <a href="../../../../../org/apache/bcel/verifier/package-summary.html">org.apache.bcel.verifier</a>.*;
+<a name="65" href="#65">65</a>  <b>import</b> <a href="../../../../../org/apache/bcel/verifier/exc/package-summary.html">org.apache.bcel.verifier.exc</a>.*;
+<a name="66" href="#66">66</a>  <b>import</b> java.util.HashMap;
+<a name="67" href="#67">67</a>  <b>import</b> java.util.HashSet;
+<a name="68" href="#68">68</a>  
+<a name="69" href="#69">69</a>  <font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="70" href="#70">70</a>  <font color="#AA0000"><i> * This PassVerifier verifies a class file according to</font></i>
+<a name="71" href="#71">71</a>  <font color="#AA0000"><i> * pass 2 as described in The Java Virtual Machine</font></i>
+<a name="72" href="#72">72</a>  <font color="#AA0000"><i> * Specification, 2nd edition.</font></i>
+<a name="73" href="#73">73</a>  <font color="#AA0000"><i> * More detailed information is to be found at the do_verify()</font></i>
+<a name="74" href="#74">74</a>  <font color="#AA0000"><i> * method's documentation.</font></i>
+<a name="75" href="#75">75</a>  <font color="#AA0000"><i> *</font></i>
+<a name="76" href="#76">76</a>  <font color="#AA0000"><i> * @version $Id: Pass2Verifier.html,v 1.1.1.1 2006/05/19 19:25:21 billf Exp $</font></i>
+<a name="77" href="#77">77</a>  <font color="#AA0000"><i> * @author &lt;A HREF="<a href="http://www.inf.fu" target="alexandria_uri">http://www.inf.fu</a>-berlin.de/~ehaase"/&gt;Enver Haase&lt;/A&gt;</font></i>
+<a name="78" href="#78">78</a>  <font color="#AA0000"><i> * @see #do_verify()</font></i>
+<a name="79" href="#79">79</a>  <font color="#AA0000"><i> */</font></i>
+<a name="80" href="#80">80</a>  <b>public</b> <b>final</b> <b>class</b> Pass2Verifier <b>extends</b> <a href="../../../../../org/apache/bcel/verifier/PassVerifier.html">PassVerifier</a> implements <a href="../../../../../org/apache/bcel/Constants.html">Constants</a>{
+<a name="81" href="#81">81</a>  
+<a name="82" href="#82">82</a>  	<font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="83" href="#83">83</a>  <font color="#AA0000"><i>	 * The LocalVariableInfo instances used by Pass3bVerifier.</font></i>
+<a name="84" href="#84">84</a>  <font color="#AA0000"><i>	 * localVariablesInfos[i] denotes the information for the</font></i>
+<a name="85" href="#85">85</a>  <font color="#AA0000"><i>	 * local variables of method number i in the</font></i>
+<a name="86" href="#86">86</a>  <font color="#AA0000"><i>	 * JavaClass this verifier operates on.</font></i>
+<a name="87" href="#87">87</a>  <font color="#AA0000"><i>	 */</font></i>
+<a name="88" href="#88">88</a>  	<b>private</b> <a href="../../../../../org/apache/bcel/verifier/statics/LocalVariablesInfo.html">LocalVariablesInfo</a>[] localVariablesInfos;
+<a name="89" href="#89">89</a>  	
+<a name="90" href="#90">90</a>  	<font color="#AA0000"><i>/**<font color="#AA0000"><i>* The <a href="../../../../../org/apache/bcel/verifier/Verifier.html">Verifier</a> that created this. */</font></i></font></i>
+<a name="91" href="#91">91</a>  	<b>private</b> <a href="../../../../../org/apache/bcel/verifier/Verifier.html">Verifier</a> myOwner;
+<a name="92" href="#92">92</a>  
+<a name="93" href="#93">93</a>  	<font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="94" href="#94">94</a>  <font color="#AA0000"><i>	 * Should only be instantiated by a Verifier.</font></i>
+<a name="95" href="#95">95</a>  <font color="#AA0000"><i>	 *</font></i>
+<a name="96" href="#96">96</a>  <font color="#AA0000"><i>	 * @see Verifier</font></i>
+<a name="97" href="#97">97</a>  <font color="#AA0000"><i>	 */</font></i>
+<a name="98" href="#98">98</a>  	<b>public</b> Pass2Verifier(<a href="../../../../../org/apache/bcel/verifier/Verifier.html">Verifier</a> owner){
+<a name="99" href="#99">99</a>  		myOwner = owner;
+<a name="100" href="#100">100</a> 	}
+<a name="101" href="#101">101</a> 
+<a name="102" href="#102">102</a> 	<font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="103" href="#103">103</a> <font color="#AA0000"><i>	 * Returns a LocalVariablesInfo object containing information</font></i>
+<a name="104" href="#104">104</a> <font color="#AA0000"><i>	 * about the usage of the local variables in the Code attribute</font></i>
+<a name="105" href="#105">105</a> <font color="#AA0000"><i>	 * of the said method or &lt;B&gt;null&lt;/B&gt; if the class file this</font></i>
+<a name="106" href="#106">106</a> <font color="#AA0000"><i>	 * Pass2Verifier operates on could not be pass-2-verified correctly.</font></i>
+<a name="107" href="#107">107</a> <font color="#AA0000"><i>	 * The method number method_nr is the method you get using</font></i>
+<a name="108" href="#108">108</a> <font color="#AA0000"><i>	 * &lt;B&gt;Repository.lookupClass(myOwner.getClassname()).getMethods()[method_nr];&lt;/B&gt;.</font></i>
+<a name="109" href="#109">109</a> <font color="#AA0000"><i>	 * You should not add own information. Leave that to JustIce.</font></i>
+<a name="110" href="#110">110</a> <font color="#AA0000"><i>	 */</font></i>
+<a name="111" href="#111">111</a> 	<b>public</b> <a href="../../../../../org/apache/bcel/verifier/statics/LocalVariablesInfo.html">LocalVariablesInfo</a> getLocalVariablesInfo(<b>int</b> method_nr){
+<a name="112" href="#112">112</a> 		<b>if</b> (<b>this</b>.ver<b>if</b>y() != Ver<b>if</b>icationResult.VR_OK) <b>return</b> <b>null</b>; <font color="#329900"><i>// It's cached, don't worry.</font></i>
+<a name="113" href="#113">113</a> 		<b>if</b> (method_nr &lt; 0 || method_nr &gt;= localVariablesInfos.length){
+<a name="114" href="#114">114</a> 			<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/AssertionViolatedException.html">AssertionViolatedException</a>(<font color="#000099">"Method number out of range."</font>);
+<a name="115" href="#115">115</a> 		}
+<a name="116" href="#116">116</a> 		<b>return</b> localVariablesInfos[method_nr];
+<a name="117" href="#117">117</a> 	}
+<a name="118" href="#118">118</a> 	
+<a name="119" href="#119">119</a> 	<font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="120" href="#120">120</a> <font color="#AA0000"><i>	 * Pass 2 is the pass where static properties of the</font></i>
+<a name="121" href="#121">121</a> <font color="#AA0000"><i>	 * class file are checked without looking into "Code"</font></i>
+<a name="122" href="#122">122</a> <font color="#AA0000"><i>	 * arrays of methods.</font></i>
+<a name="123" href="#123">123</a> <font color="#AA0000"><i>	 * This verification pass is usually invoked when</font></i>
+<a name="124" href="#124">124</a> <font color="#AA0000"><i>	 * a class is resolved; and it may be possible that</font></i>
+<a name="125" href="#125">125</a> <font color="#AA0000"><i>	 * this verification pass has to load in other classes</font></i>
+<a name="126" href="#126">126</a> <font color="#AA0000"><i>	 * such as superclasses or implemented interfaces.</font></i>
+<a name="127" href="#127">127</a> <font color="#AA0000"><i>	 * Therefore, Pass 1 is run on them.&lt;BR&gt;</font></i>
+<a name="128" href="#128">128</a> <font color="#AA0000"><i>	 * Note that most referenced classes are &lt;B&gt;not&lt;/B&gt; loaded</font></i>
+<a name="129" href="#129">129</a> <font color="#AA0000"><i>	 * in for verification or for an existance check by this</font></i>
+<a name="130" href="#130">130</a> <font color="#AA0000"><i>	 * pass; only the syntactical correctness of their names</font></i>
+<a name="131" href="#131">131</a> <font color="#AA0000"><i>	 * and descriptors (a.k.a. signatures) is checked.&lt;BR&gt;</font></i>
+<a name="132" href="#132">132</a> <font color="#AA0000"><i>	 * Very few checks that conceptually belong here</font></i>
+<a name="133" href="#133">133</a> <font color="#AA0000"><i>	 * are delayed until pass 3a in JustIce. JustIce does</font></i>
+<a name="134" href="#134">134</a> <font color="#AA0000"><i>	 * not only check for syntactical correctness but also</font></i>
+<a name="135" href="#135">135</a> <font color="#AA0000"><i>	 * for semantical sanity - therefore it needs access to</font></i>
+<a name="136" href="#136">136</a> <font color="#AA0000"><i>	 * the "Code" array of methods in a few cases. Please</font></i>
+<a name="137" href="#137">137</a> <font color="#AA0000"><i>	 * see the pass 3a documentation, too.</font></i>
+<a name="138" href="#138">138</a> <font color="#AA0000"><i>	 *</font></i>
+<a name="139" href="#139">139</a> <font color="#AA0000"><i>	 * @see org.apache.bcel.verifier.statics.Pass3aVerifier</font></i>
+<a name="140" href="#140">140</a> <font color="#AA0000"><i>	 */</font></i>
+<a name="141" href="#141">141</a> 	<b>public</b> <a href="../../../../../org/apache/bcel/verifier/VerificationResult.html">VerificationResult</a> <b>do</b>_verify(){
+<a name="142" href="#142">142</a> 		VerificationResult vr1 = myOwner.doPass1();
+<a name="143" href="#143">143</a> 		<b>if</b> (vr1.equals(Ver<b>if</b>icationResult.VR_OK)){
+<a name="144" href="#144">144</a> 			
+<a name="145" href="#145">145</a> 			<font color="#329900"><i>// For every method, we could have information about the local variables out of LocalVariableTable attributes of</font></i>
+<a name="146" href="#146">146</a> 			<font color="#329900"><i>// the Code attributes.</font></i>
+<a name="147" href="#147">147</a> 			localVariablesInfos = <b>new</b> <a href="../../../../../org/apache/bcel/verifier/statics/LocalVariablesInfo.html">LocalVariablesInfo</a>[Repository.lookupClass(myOwner.getClassName()).getMethods().length];
+<a name="148" href="#148">148</a> 
+<a name="149" href="#149">149</a> 			VerificationResult vr = VerificationResult.VR_OK; <font color="#329900"><i>// default.</font></i>
+<a name="150" href="#150">150</a> 			<b>try</b>{
+<a name="151" href="#151">151</a> 				constant_pool_entries_satisfy_<b>static</b>_constraints();
+<a name="152" href="#152">152</a> 				field_and_method_refs_are_valid();
+<a name="153" href="#153">153</a> 				every_<b>class</b>_has_an_accessible_<b>super</b><b>class</b>();
+<a name="154" href="#154">154</a> 				<b>final</b>_methods_are_not_overridden();
+<a name="155" href="#155">155</a> 			}
+<a name="156" href="#156">156</a> 			<b>catch</b> (ClassConstraintException cce){
+<a name="157" href="#157">157</a> 				vr = <b>new</b> <a href="../../../../../org/apache/bcel/verifier/VerificationResult.html">VerificationResult</a>(VerificationResult.VERIFIED_REJECTED, cce.getMessage());
+<a name="158" href="#158">158</a> 			}
+<a name="159" href="#159">159</a> 			<b>return</b> vr;
+<a name="160" href="#160">160</a> 		}
+<a name="161" href="#161">161</a> 		<b>else</b>
+<a name="162" href="#162">162</a> 			<b>return</b> VerificationResult.VR_NOTYET;
+<a name="163" href="#163">163</a> 	}
+<a name="164" href="#164">164</a> 
+<a name="165" href="#165">165</a> 	<font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="166" href="#166">166</a> <font color="#AA0000"><i>	 * Ensures that every class has a super class and that</font></i>
+<a name="167" href="#167">167</a> <font color="#AA0000"><i>	 * &lt;B&gt;final&lt;/B&gt; classes are not subclassed.</font></i>
+<a name="168" href="#168">168</a> <font color="#AA0000"><i>	 * This means, the class this Pass2Verifier operates</font></i>
+<a name="169" href="#169">169</a> <font color="#AA0000"><i>	 * on has proper super classes (transitively) up to</font></i>
+<a name="170" href="#170">170</a> <font color="#AA0000"><i>	 * java.lang.Object.</font></i>
+<a name="171" href="#171">171</a> <font color="#AA0000"><i>	 * The reason for really loading (and Pass1-verifying)</font></i>
+<a name="172" href="#172">172</a> <font color="#AA0000"><i>	 * all of those classes here is that we need them in</font></i>
+<a name="173" href="#173">173</a> <font color="#AA0000"><i>	 * Pass2 anyway to verify no final methods are overridden</font></i>
+<a name="174" href="#174">174</a> <font color="#AA0000"><i>	 * (that could be declared anywhere in the ancestor hierarchy).</font></i>
+<a name="175" href="#175">175</a> <font color="#AA0000"><i>	 *</font></i>
+<a name="176" href="#176">176</a> <font color="#AA0000"><i>	 * @throws ClassConstraintException otherwise.</font></i>
+<a name="177" href="#177">177</a> <font color="#AA0000"><i>	 */</font></i>
+<a name="178" href="#178">178</a> 	<b>private</b> <b>void</b> every_<b>class</b>_has_an_accessible_<b>super</b><b>class</b>(){
+<a name="179" href="#179">179</a> 		HashSet hs = <b>new</b> HashSet(); <font color="#329900"><i>// save class names to detect circular inheritance</font></i>
+<a name="180" href="#180">180</a> 		JavaClass jc = Repository.lookupClass(myOwner.getClassName());
+<a name="181" href="#181">181</a> 		<b>int</b> supidx = -1;
+<a name="182" href="#182">182</a> 
+<a name="183" href="#183">183</a> 		<b>while</b> (supidx != 0){
+<a name="184" href="#184">184</a> 			supidx = jc.getSuperclassNameIndex();
+<a name="185" href="#185">185</a> 		
+<a name="186" href="#186">186</a> 			<b>if</b> (supidx == 0){
+<a name="187" href="#187">187</a> 				<b>if</b> (jc != Repository.lookupClass(Type.OBJECT.getClassName())){
+<a name="188" href="#188">188</a> 					<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Superclass of '"</font>+jc.getClassName()+<font color="#000099">"' missing but not "</font>+Type.OBJECT.getClassName()+<font color="#000099">" itself!"</font>);
+<a name="189" href="#189">189</a> 				}
+<a name="190" href="#190">190</a> 			}
+<a name="191" href="#191">191</a> 			<b>else</b>{
+<a name="192" href="#192">192</a> 				String supername = jc.getSuperclassName();
+<a name="193" href="#193">193</a> 				<b>if</b> (! hs.add(supername)){	<font color="#329900"><i>// If supername already is in the list</font></i>
+<a name="194" href="#194">194</a> 					<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Circular superclass hierarchy detected."</font>);
+<a name="195" href="#195">195</a> 				}
+<a name="196" href="#196">196</a> 				Verifier v = VerifierFactory.getVerifier(supername);
+<a name="197" href="#197">197</a> 				VerificationResult vr = v.doPass1();
+<a name="198" href="#198">198</a> 
+<a name="199" href="#199">199</a> 				<b>if</b> (vr != Ver<b>if</b>icationResult.VR_OK){
+<a name="200" href="#200">200</a> 					<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Could not load in ancestor class '"</font>+supername+<font color="#000099">"'."</font>);
+<a name="201" href="#201">201</a> 				}
+<a name="202" href="#202">202</a> 				jc = Repository.lookupClass(supername);
+<a name="203" href="#203">203</a> 
+<a name="204" href="#204">204</a> 				<b>if</b> (jc.isFinal()){
+<a name="205" href="#205">205</a> 					<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Ancestor class '"</font>+supername+<font color="#000099">"' has the FINAL access modifier and must therefore not be subclassed."</font>);
+<a name="206" href="#206">206</a> 				}
+<a name="207" href="#207">207</a> 			}
+<a name="208" href="#208">208</a> 		}
+<a name="209" href="#209">209</a> 	}
+<a name="210" href="#210">210</a> 
+<a name="211" href="#211">211</a> 	<font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="212" href="#212">212</a> <font color="#AA0000"><i>	 * Ensures that &lt;B&gt;final&lt;/B&gt; methods are not overridden.</font></i>
+<a name="213" href="#213">213</a> <font color="#AA0000"><i>	 * &lt;B&gt;Precondition to run this method:</font></i>
+<a name="214" href="#214">214</a> <font color="#AA0000"><i>	 * constant_pool_entries_satisfy_static_constraints() and</font></i>
+<a name="215" href="#215">215</a> <font color="#AA0000"><i>	 * every_class_has_an_accessible_superclass() have to be invoked before</font></i>
+<a name="216" href="#216">216</a> <font color="#AA0000"><i>	 * (in that order).&lt;/B&gt;</font></i>
+<a name="217" href="#217">217</a> <font color="#AA0000"><i>	 *</font></i>
+<a name="218" href="#218">218</a> <font color="#AA0000"><i>	 * @throws ClassConstraintException otherwise.</font></i>
+<a name="219" href="#219">219</a> <font color="#AA0000"><i>	 * @see #constant_pool_entries_satisfy_static_constraints()</font></i>
+<a name="220" href="#220">220</a> <font color="#AA0000"><i>	 * @see #every_class_has_an_accessible_superclass()</font></i>
+<a name="221" href="#221">221</a> <font color="#AA0000"><i>	 */</font></i>
+<a name="222" href="#222">222</a> 	<b>private</b> <b>void</b> <b>final</b>_methods_are_not_overridden(){
+<a name="223" href="#223">223</a> 		HashMap hashmap = <b>new</b> HashMap();
+<a name="224" href="#224">224</a> 		JavaClass jc = Repository.lookupClass(myOwner.getClassName());
+<a name="225" href="#225">225</a> 		
+<a name="226" href="#226">226</a> 		<b>int</b> supidx = -1;
+<a name="227" href="#227">227</a> 		<b>while</b> (supidx != 0){
+<a name="228" href="#228">228</a> 			supidx = jc.getSuperclassNameIndex();
+<a name="229" href="#229">229</a> 
+<a name="230" href="#230">230</a> 			Method[] methods = jc.getMethods();
+<a name="231" href="#231">231</a> 			<b>for</b> (<b>int</b> i=0; i&lt;methods.length; i++){
+<a name="232" href="#232">232</a> 				String name_and_sig = (methods[i].getName()+methods[i].getSignature());
+<a name="233" href="#233">233</a> 
+<a name="234" href="#234">234</a> 				<b>if</b> (hashmap.containsKey(name_and_sig)){
+<a name="235" href="#235">235</a> 					<b>if</b> (methods[i].isFinal()){
+<a name="236" href="#236">236</a> 						<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Method '"</font>+name_and_sig+<font color="#000099">"' in class '"</font>+hashmap.get(name_and_sig)+<font color="#000099">"' overrides the final (not-overridable) definition in class '"</font>+jc.getClassName()+<font color="#000099">"'."</font>);
+<a name="237" href="#237">237</a> 					}
+<a name="238" href="#238">238</a> 					<b>else</b>{
+<a name="239" href="#239">239</a> 						<b>if</b> (!methods[i].isStatic()){ <font color="#329900"><i>// static methods don't inherit</font></i>
+<a name="240" href="#240">240</a> 							hashmap.put(name_and_sig, jc.getClassName());
+<a name="241" href="#241">241</a> 						}
+<a name="242" href="#242">242</a> 					}
+<a name="243" href="#243">243</a> 				}
+<a name="244" href="#244">244</a> 				<b>else</b>{
+<a name="245" href="#245">245</a> 					<b>if</b> (!methods[i].isStatic()){ <font color="#329900"><i>// static methods don't inherit</font></i>
+<a name="246" href="#246">246</a> 						hashmap.put(name_and_sig, jc.getClassName());
+<a name="247" href="#247">247</a> 					}
+<a name="248" href="#248">248</a> 				}
+<a name="249" href="#249">249</a> 			}
+<a name="250" href="#250">250</a> 		
+<a name="251" href="#251">251</a> 			jc = Repository.lookupClass(jc.getSuperclassName());	<font color="#329900"><i>// Well, for OBJECT this returns OBJECT so it works (could return anything but must not throw an Exception).</font></i>
+<a name="252" href="#252">252</a> 		}
+<a name="253" href="#253">253</a> 
+<a name="254" href="#254">254</a> 	}
+<a name="255" href="#255">255</a> 
+<a name="256" href="#256">256</a> 	<font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="257" href="#257">257</a> <font color="#AA0000"><i>	 * Ensures that the constant pool entries satisfy the static constraints</font></i>
+<a name="258" href="#258">258</a> <font color="#AA0000"><i>	 * as described in The Java Virtual Machine Specification, 2nd Edition.</font></i>
+<a name="259" href="#259">259</a> <font color="#AA0000"><i>	 *</font></i>
+<a name="260" href="#260">260</a> <font color="#AA0000"><i>	 * @throws ClassConstraintException otherwise.</font></i>
+<a name="261" href="#261">261</a> <font color="#AA0000"><i>	 */</font></i>
+<a name="262" href="#262">262</a> 	<b>private</b> <b>void</b> constant_pool_entries_satisfy_<b>static</b>_constraints(){
+<a name="263" href="#263">263</a> 		<font color="#329900"><i>// Most of the consistency is handled internally by BCEL; here</font></i>
+<a name="264" href="#264">264</a> 		<font color="#329900"><i>// we only have to verify if the indices of the constants point</font></i>
+<a name="265" href="#265">265</a> 		<font color="#329900"><i>// to constants of the appropriate type and such.</font></i>
+<a name="266" href="#266">266</a> 		JavaClass jc = Repository.lookupClass(myOwner.getClassName());
+<a name="267" href="#267">267</a> 		<b>new</b> CPESSC_Visitor(jc); <font color="#329900"><i>// constructor implicitely traverses jc</font></i>
+<a name="268" href="#268">268</a> 	}
+<a name="269" href="#269">269</a> 
+<a name="270" href="#270">270</a> 	<font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="271" href="#271">271</a> <font color="#AA0000"><i>	 * A Visitor class that ensures the constant pool satisfies the static</font></i>
+<a name="272" href="#272">272</a> <font color="#AA0000"><i>	 * constraints.</font></i>
+<a name="273" href="#273">273</a> <font color="#AA0000"><i>   * The visitXXX() methods throw ClassConstraintException instances otherwise.</font></i>
+<a name="274" href="#274">274</a> <font color="#AA0000"><i>   *</font></i>
+<a name="275" href="#275">275</a> <font color="#AA0000"><i>   * @see #constant_pool_entries_satisfy_static_constraints()</font></i>
+<a name="276" href="#276">276</a> <font color="#AA0000"><i>	 */</font></i>
+<a name="277" href="#277">277</a> 	<b>private</b> <b>class</b> CPESSC_Visitor <b>extends</b> org.apache.bcel.<b>class</b>file.EmptyVisitor implements <a href="../../../../../org/apache/bcel/classfile/Visitor.html">Visitor</a>{
+<a name="278" href="#278">278</a> 		<b>private</b> Class CONST_Class;
+<a name="279" href="#279">279</a> 		<font color="#329900"><i>/*</font></i>
+<a name="280" href="#280">280</a> <font color="#329900"><i>        private Class CONST_Fieldref;</font></i>
+<a name="281" href="#281">281</a> <font color="#329900"><i>		private Class CONST_Methodref;</font></i>
+<a name="282" href="#282">282</a> <font color="#329900"><i>		private Class CONST_InterfaceMethodref;</font></i>
+<a name="283" href="#283">283</a> <font color="#329900"><i>        */</font></i>
+<a name="284" href="#284">284</a> 		<b>private</b> Class CONST_String;
+<a name="285" href="#285">285</a> 		<b>private</b> Class CONST_Integer;
+<a name="286" href="#286">286</a> 		<b>private</b> Class CONST_Float;
+<a name="287" href="#287">287</a> 		<b>private</b> Class CONST_Long;
+<a name="288" href="#288">288</a> 		<b>private</b> Class CONST_Double;
+<a name="289" href="#289">289</a> 		<b>private</b> Class CONST_NameAndType;
+<a name="290" href="#290">290</a> 		<b>private</b> Class CONST_Utf8;
+<a name="291" href="#291">291</a> 
+<a name="292" href="#292">292</a> 		<b>private</b> <b>final</b> <a href="../../../../../org/apache/bcel/classfile/JavaClass.html">JavaClass</a> jc;
+<a name="293" href="#293">293</a> 		<b>private</b> <b>final</b> <a href="../../../../../org/apache/bcel/classfile/ConstantPool.html">ConstantPool</a> cp; <font color="#329900"><i>// ==jc.getConstantPool() -- only here to save typing work and computing power.</font></i>
+<a name="294" href="#294">294</a> 		<b>private</b> <b>final</b> <b>int</b> cplen; <font color="#329900"><i>// == cp.getLength() -- to save computing power.</font></i>
+<a name="295" href="#295">295</a> 		<b>private</b> <a href="../../../../../org/apache/bcel/classfile/DescendingVisitor.html">DescendingVisitor</a> carrier;
+<a name="296" href="#296">296</a> 
+<a name="297" href="#297">297</a> 		<b>private</b> HashSet field_names = <b>new</b> HashSet();
+<a name="298" href="#298">298</a> 		<b>private</b> HashSet field_names_and_desc = <b>new</b> HashSet();
+<a name="299" href="#299">299</a> 		<b>private</b> HashSet method_names_and_desc = <b>new</b> HashSet();
+<a name="300" href="#300">300</a> 
+<a name="301" href="#301">301</a> 		<b>private</b> CPESSC_Visitor(<a href="../../../../../org/apache/bcel/classfile/JavaClass.html">JavaClass</a> _jc){
+<a name="302" href="#302">302</a> 			jc = _jc;
+<a name="303" href="#303">303</a> 			cp = _jc.getConstantPool();
+<a name="304" href="#304">304</a> 			cplen = cp.getLength();
+<a name="305" href="#305">305</a> 
+<a name="306" href="#306">306</a> 			CONST_Class = org.apache.bcel.<b>class</b>file.ConstantClass.<b>class</b>;
+<a name="307" href="#307">307</a> 			<font color="#329900"><i>/*</font></i>
+<a name="308" href="#308">308</a> <font color="#329900"><i>            CONST_Fieldref = org.apache.bcel.classfile.ConstantFieldref.class;</font></i>
+<a name="309" href="#309">309</a> <font color="#329900"><i>			CONST_Methodref = org.apache.bcel.classfile.ConstantMethodref.class;</font></i>
+<a name="310" href="#310">310</a> <font color="#329900"><i>			CONST_InterfaceMethodref = org.apache.bcel.classfile.ConstantInterfaceMethodref.class;</font></i>
+<a name="311" href="#311">311</a> <font color="#329900"><i>            */</font></i>
+<a name="312" href="#312">312</a> 			CONST_String = org.apache.bcel.<b>class</b>file.ConstantString.<b>class</b>;
+<a name="313" href="#313">313</a> 			CONST_Integer = org.apache.bcel.<b>class</b>file.ConstantInteger.<b>class</b>;
+<a name="314" href="#314">314</a> 			CONST_Float = org.apache.bcel.<b>class</b>file.ConstantFloat.<b>class</b>;
+<a name="315" href="#315">315</a> 			CONST_Long = org.apache.bcel.<b>class</b>file.ConstantLong.<b>class</b>;
+<a name="316" href="#316">316</a> 			CONST_Double = org.apache.bcel.<b>class</b>file.ConstantDouble.<b>class</b>;
+<a name="317" href="#317">317</a> 			CONST_NameAndType = org.apache.bcel.<b>class</b>file.ConstantNameAndType.<b>class</b>;
+<a name="318" href="#318">318</a> 			CONST_Utf8 = org.apache.bcel.<b>class</b>file.ConstantUtf8.<b>class</b>;
+<a name="319" href="#319">319</a> 
+<a name="320" href="#320">320</a> 			carrier = <b>new</b> <a href="../../../../../org/apache/bcel/classfile/DescendingVisitor.html">DescendingVisitor</a>(_jc, <b>this</b>);
+<a name="321" href="#321">321</a> 			carrier.visit();
+<a name="322" href="#322">322</a> 		}
+<a name="323" href="#323">323</a> 
+<a name="324" href="#324">324</a> 		<b>private</b> <b>void</b> checkIndex(<a href="../../../../../org/apache/bcel/classfile/Node.html">Node</a> referrer, <b>int</b> index, Class shouldbe){
+<a name="325" href="#325">325</a> 			<b>if</b> ((index &lt; 0) || (index &gt;= cplen)){
+<a name="326" href="#326">326</a> 				<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Invalid index '"</font>+index+<font color="#000099">"' used by '"</font>+tostring(referrer)+<font color="#000099">"'."</font>);
+<a name="327" href="#327">327</a> 			}
+<a name="328" href="#328">328</a> 			Constant c = cp.getConstant(index);
+<a name="329" href="#329">329</a> 			<b>if</b> (! shouldbe.isInstance(c)){
+<a name="330" href="#330">330</a> 				<font color="#329900"><i>/*<font color="#329900"><i> String isnot = shouldbe.toString().substring(shouldbe.toString().lastIndexOf(".")+1); //Cut all before last "." */</font></i></font></i>
+<a name="331" href="#331">331</a> 				<b>throw</b> <b>new</b> ClassCastException(<font color="#000099">"Illegal constant '"</font>+tostring(c)+<font color="#000099">"' at index '"</font>+index+<font color="#000099">"'. '"</font>+tostring(referrer)+<font color="#000099">"' expects a '"</font>+shouldbe+<font color="#000099">"'."</font>);
+<a name="332" href="#332">332</a> 			}
+<a name="333" href="#333">333</a> 		}
+<a name="334" href="#334">334</a> 		<font color="#329900"><i>///////////////////////////////////////</font></i>
+<a name="335" href="#335">335</a> 		<font color="#329900"><i>// ClassFile structure (vmspec2 4.1) //</font></i>
+<a name="336" href="#336">336</a> 		<font color="#329900"><i>///////////////////////////////////////</font></i>
+<a name="337" href="#337">337</a> 		<b>public</b> <b>void</b> visitJavaClass(<a href="../../../../../org/apache/bcel/classfile/JavaClass.html">JavaClass</a> obj){
+<a name="338" href="#338">338</a> 			Attribute[] atts = obj.getAttributes();
+<a name="339" href="#339">339</a> 			<b>boolean</b> foundSourceFile = false;
+<a name="340" href="#340">340</a> 			<b>boolean</b> foundInnerClasses = false;
+<a name="341" href="#341">341</a> 
+<a name="342" href="#342">342</a> 			<font color="#329900"><i>// Is there an InnerClass referenced?</font></i>
+<a name="343" href="#343">343</a> 			<font color="#329900"><i>// This is a costly check; existing verifiers don't do it!</font></i>
+<a name="344" href="#344">344</a> 			<b>boolean</b> hasInnerClass = <b>new</b> InnerClassDetector(jc).innerClassReferenced();
+<a name="345" href="#345">345</a> 
+<a name="346" href="#346">346</a> 			<b>for</b> (<b>int</b> i=0; i&lt;atts.length; i++){
+<a name="347" href="#347">347</a> 				<b>if</b> ((! (atts[i] instanceof SourceFile)) &&
+<a name="348" href="#348">348</a> 				    (! (atts[i] instanceof Deprecated))     &&
+<a name="349" href="#349">349</a> 				    (! (atts[i] instanceof InnerClasses)) &&
+<a name="350" href="#350">350</a> 				    (! (atts[i] instanceof Synthetic))){
+<a name="351" href="#351">351</a> 					addMessage(<font color="#000099">"Attribute '"</font>+tostring(atts[i])+<font color="#000099">"' as an attribute of the ClassFile structure '"</font>+tostring(obj)+<font color="#000099">"' is unknown and will therefore be ignored."</font>);
+<a name="352" href="#352">352</a> 				}
+<a name="353" href="#353">353</a> 
+<a name="354" href="#354">354</a> 				<b>if</b> (atts[i] instanceof SourceFile){
+<a name="355" href="#355">355</a> 					<b>if</b> (foundSourceFile == false) foundSourceFile = <b>true</b>;
+<a name="356" href="#356">356</a> 					<b>else</b> <b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"A ClassFile structure (like '"</font>+tostring(obj)+<font color="#000099">"') may have no more than one SourceFile attribute."</font>); <font color="#329900"><i>//vmspec2 4.7.7</font></i>
+<a name="357" href="#357">357</a> 				}
+<a name="358" href="#358">358</a> 
+<a name="359" href="#359">359</a> 				<b>if</b> (atts[i] instanceof InnerClasses){
+<a name="360" href="#360">360</a> 					<b>if</b> (foundInnerClasses == false) foundInnerClasses = <b>true</b>;
+<a name="361" href="#361">361</a> 					<b>else</b>{
+<a name="362" href="#362">362</a> 						<b>if</b> (hasInnerClass){
+<a name="363" href="#363">363</a> 							<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"A Classfile structure (like '"</font>+tostring(obj)+<font color="#000099">"') must have exactly one InnerClasses attribute if at least one Inner Class is referenced (which is the case). More than one InnerClasses attribute was found."</font>);
+<a name="364" href="#364">364</a> 						}
+<a name="365" href="#365">365</a> 					}
+<a name="366" href="#366">366</a> 					<b>if</b> (!hasInnerClass){
+<a name="367" href="#367">367</a> 						addMessage(<font color="#000099">"No referenced Inner Class found, but InnerClasses attribute '"</font>+tostring(atts[i])+<font color="#000099">"' found. Strongly suggest removal of that attribute."</font>);
+<a name="368" href="#368">368</a> 					}
+<a name="369" href="#369">369</a> 				}
+<a name="370" href="#370">370</a> 
+<a name="371" href="#371">371</a> 			}
+<a name="372" href="#372">372</a> 			<b>if</b> (hasInnerClass && !foundInnerClasses){
+<a name="373" href="#373">373</a> 				<font color="#329900"><i>//throw new ClassConstraintException("A Classfile structure (like '"+tostring(obj)+"') must have exactly one InnerClasses attribute if at least one Inner Class is referenced (which is the case). No InnerClasses attribute was found.");</font></i>
+<a name="374" href="#374">374</a> 				<font color="#329900"><i>//vmspec2, page 125 says it would be a constraint: but existing verifiers</font></i>
+<a name="375" href="#375">375</a> 				<font color="#329900"><i>//don't check it and javac doesn't satisfy it when it comes to anonymous</font></i>
+<a name="376" href="#376">376</a> 				<font color="#329900"><i>//inner classes</font></i>
+<a name="377" href="#377">377</a> 				addMessage(<font color="#000099">"A Classfile structure (like '"</font>+tostring(obj)+<font color="#000099">"') must have exactly one InnerClasses attribute if at least one Inner Class is referenced (which is the case). No InnerClasses attribute was found."</font>);
+<a name="378" href="#378">378</a> 			}
+<a name="379" href="#379">379</a> 		}
+<a name="380" href="#380">380</a> 		<font color="#329900"><i>/////////////////////////////</font></i>
+<a name="381" href="#381">381</a> 		<font color="#329900"><i>// CONSTANTS (vmspec2 4.4) //</font></i>
+<a name="382" href="#382">382</a> 		<font color="#329900"><i>/////////////////////////////</font></i>
+<a name="383" href="#383">383</a> 		<b>public</b> <b>void</b> visitConstantClass(<a href="../../../../../org/apache/bcel/classfile/ConstantClass.html">ConstantClass</a> obj){
+<a name="384" href="#384">384</a> 			<b>if</b> (obj.getTag() != Constants.CONSTANT_Class){
+<a name="385" href="#385">385</a> 				<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Wrong constant tag in '"</font>+tostring(obj)+<font color="#000099">"'."</font>);
+<a name="386" href="#386">386</a> 			}
+<a name="387" href="#387">387</a> 			checkIndex(obj, obj.getNameIndex(), CONST_Utf8);
+<a name="388" href="#388">388</a> 
+<a name="389" href="#389">389</a> 		}
+<a name="390" href="#390">390</a> 		<b>public</b> <b>void</b> visitConstantFieldref(<a href="../../../../../org/apache/bcel/classfile/ConstantFieldref.html">ConstantFieldref</a> obj){
+<a name="391" href="#391">391</a> 			<b>if</b> (obj.getTag() != Constants.CONSTANT_Fieldref){
+<a name="392" href="#392">392</a> 				<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Wrong constant tag in '"</font>+tostring(obj)+<font color="#000099">"'."</font>);
+<a name="393" href="#393">393</a> 			}
+<a name="394" href="#394">394</a> 			checkIndex(obj, obj.getClassIndex(), CONST_Class);
+<a name="395" href="#395">395</a> 			checkIndex(obj, obj.getNameAndTypeIndex(), CONST_NameAndType);
+<a name="396" href="#396">396</a> 		}
+<a name="397" href="#397">397</a> 		<b>public</b> <b>void</b> visitConstantMethodref(<a href="../../../../../org/apache/bcel/classfile/ConstantMethodref.html">ConstantMethodref</a> obj){
+<a name="398" href="#398">398</a> 			<b>if</b> (obj.getTag() != Constants.CONSTANT_Methodref){
+<a name="399" href="#399">399</a> 				<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Wrong constant tag in '"</font>+tostring(obj)+<font color="#000099">"'."</font>);
+<a name="400" href="#400">400</a> 			}
+<a name="401" href="#401">401</a> 			checkIndex(obj, obj.getClassIndex(), CONST_Class);
+<a name="402" href="#402">402</a> 			checkIndex(obj, obj.getNameAndTypeIndex(), CONST_NameAndType);
+<a name="403" href="#403">403</a> 		}
+<a name="404" href="#404">404</a> 		<b>public</b> <b>void</b> visitConstantInterfaceMethodref(<a href="../../../../../org/apache/bcel/classfile/ConstantInterfaceMethodref.html">ConstantInterfaceMethodref</a> obj){
+<a name="405" href="#405">405</a> 			<b>if</b> (obj.getTag() != Constants.CONSTANT_InterfaceMethodref){
+<a name="406" href="#406">406</a> 				<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Wrong constant tag in '"</font>+tostring(obj)+<font color="#000099">"'."</font>);
+<a name="407" href="#407">407</a> 			}
+<a name="408" href="#408">408</a> 			checkIndex(obj, obj.getClassIndex(), CONST_Class);
+<a name="409" href="#409">409</a> 			checkIndex(obj, obj.getNameAndTypeIndex(), CONST_NameAndType);
+<a name="410" href="#410">410</a> 		}
+<a name="411" href="#411">411</a> 		<b>public</b> <b>void</b> visitConstantString(<a href="../../../../../org/apache/bcel/classfile/ConstantString.html">ConstantString</a> obj){
+<a name="412" href="#412">412</a> 			<b>if</b> (obj.getTag() != Constants.CONSTANT_String){
+<a name="413" href="#413">413</a> 				<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Wrong constant tag in '"</font>+tostring(obj)+<font color="#000099">"'."</font>);
+<a name="414" href="#414">414</a> 			}
+<a name="415" href="#415">415</a> 			checkIndex(obj, obj.getStringIndex(), CONST_Utf8);
+<a name="416" href="#416">416</a> 		}
+<a name="417" href="#417">417</a> 		<b>public</b> <b>void</b> visitConstantInteger(<a href="../../../../../org/apache/bcel/classfile/ConstantInteger.html">ConstantInteger</a> obj){
+<a name="418" href="#418">418</a> 			<b>if</b> (obj.getTag() != Constants.CONSTANT_Integer){
+<a name="419" href="#419">419</a> 				<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Wrong constant tag in '"</font>+tostring(obj)+<font color="#000099">"'."</font>);
+<a name="420" href="#420">420</a> 			}
+<a name="421" href="#421">421</a> 			<font color="#329900"><i>// no indices to check</font></i>
+<a name="422" href="#422">422</a> 		}
+<a name="423" href="#423">423</a> 		<b>public</b> <b>void</b> visitConstantFloat(<a href="../../../../../org/apache/bcel/classfile/ConstantFloat.html">ConstantFloat</a> obj){
+<a name="424" href="#424">424</a> 			<b>if</b> (obj.getTag() != Constants.CONSTANT_Float){
+<a name="425" href="#425">425</a> 				<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Wrong constant tag in '"</font>+tostring(obj)+<font color="#000099">"'."</font>);
+<a name="426" href="#426">426</a> 			}
+<a name="427" href="#427">427</a> 			<font color="#329900"><i>//no indices to check</font></i>
+<a name="428" href="#428">428</a> 		}
+<a name="429" href="#429">429</a> 		<b>public</b> <b>void</b> visitConstantLong(<a href="../../../../../org/apache/bcel/classfile/ConstantLong.html">ConstantLong</a> obj){
+<a name="430" href="#430">430</a> 			<b>if</b> (obj.getTag() != Constants.CONSTANT_Long){
+<a name="431" href="#431">431</a> 				<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Wrong constant tag in '"</font>+tostring(obj)+<font color="#000099">"'."</font>);
+<a name="432" href="#432">432</a> 			}
+<a name="433" href="#433">433</a> 			<font color="#329900"><i>//no indices to check</font></i>
+<a name="434" href="#434">434</a> 		}
+<a name="435" href="#435">435</a> 		<b>public</b> <b>void</b> visitConstantDouble(<a href="../../../../../org/apache/bcel/classfile/ConstantDouble.html">ConstantDouble</a> obj){
+<a name="436" href="#436">436</a> 			<b>if</b> (obj.getTag() != Constants.CONSTANT_Double){
+<a name="437" href="#437">437</a> 				<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Wrong constant tag in '"</font>+tostring(obj)+<font color="#000099">"'."</font>);
+<a name="438" href="#438">438</a> 			}
+<a name="439" href="#439">439</a> 			<font color="#329900"><i>//no indices to check</font></i>
+<a name="440" href="#440">440</a> 		}
+<a name="441" href="#441">441</a> 		<b>public</b> <b>void</b> visitConstantNameAndType(<a href="../../../../../org/apache/bcel/classfile/ConstantNameAndType.html">ConstantNameAndType</a> obj){
+<a name="442" href="#442">442</a> 			<b>if</b> (obj.getTag() != Constants.CONSTANT_NameAndType){
+<a name="443" href="#443">443</a> 				<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Wrong constant tag in '"</font>+tostring(obj)+<font color="#000099">"'."</font>);
+<a name="444" href="#444">444</a> 			}
+<a name="445" href="#445">445</a> 			checkIndex(obj, obj.getNameIndex(), CONST_Utf8);
+<a name="446" href="#446">446</a> 			<font color="#329900"><i>//checkIndex(obj, obj.getDescriptorIndex(), CONST_Utf8); //inconsistently named in BCEL, see below.</font></i>
+<a name="447" href="#447">447</a> 			checkIndex(obj, obj.getSignatureIndex(), CONST_Utf8);
+<a name="448" href="#448">448</a> 		}
+<a name="449" href="#449">449</a> 		<b>public</b> <b>void</b> visitConstantUtf8(ConstantUtf8 obj){
+<a name="450" href="#450">450</a> 			<b>if</b> (obj.getTag() != Constants.CONSTANT_Utf8){
+<a name="451" href="#451">451</a> 				<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Wrong constant tag in '"</font>+tostring(obj)+<font color="#000099">"'."</font>);
+<a name="452" href="#452">452</a> 			}
+<a name="453" href="#453">453</a> 			<font color="#329900"><i>//no indices to check</font></i>
+<a name="454" href="#454">454</a> 		}
+<a name="455" href="#455">455</a> 		<font color="#329900"><i>//////////////////////////</font></i>
+<a name="456" href="#456">456</a> 		<font color="#329900"><i>// FIELDS (vmspec2 4.5) //</font></i>
+<a name="457" href="#457">457</a> 		<font color="#329900"><i>//////////////////////////</font></i>
+<a name="458" href="#458">458</a> 		<b>public</b> <b>void</b> visitField(<a href="../../../../../org/apache/bcel/classfile/Field.html">Field</a> obj){
+<a name="459" href="#459">459</a> 
+<a name="460" href="#460">460</a> 			<b>if</b> (jc.isClass()){
+<a name="461" href="#461">461</a> 				<b>int</b> maxone=0;
+<a name="462" href="#462">462</a> 				<b>if</b> (obj.isPrivate()) maxone++;
+<a name="463" href="#463">463</a> 				<b>if</b> (obj.isProtected()) maxone++;
+<a name="464" href="#464">464</a> 				<b>if</b> (obj.isPublic()) maxone++;
+<a name="465" href="#465">465</a> 				<b>if</b> (maxone &gt; 1){
+<a name="466" href="#466">466</a> 					<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Field '"</font>+tostring(obj)+<font color="#000099">"' must only have at most one of its ACC_PRIVATE, ACC_PROTECTED, ACC_PUBLIC modifiers set."</font>);
+<a name="467" href="#467">467</a> 				}
+<a name="468" href="#468">468</a> 
+<a name="469" href="#469">469</a> 				<b>if</b> (obj.isFinal() && obj.isVolatile()){
+<a name="470" href="#470">470</a> 					<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Field '"</font>+tostring(obj)+<font color="#000099">"' must only have at most one of its ACC_FINAL, ACC_VOLATILE modifiers set."</font>);
+<a name="471" href="#471">471</a> 				}
+<a name="472" href="#472">472</a> 			}
+<a name="473" href="#473">473</a> 			<b>else</b>{ <font color="#329900"><i>// isInterface!</font></i>
+<a name="474" href="#474">474</a> 				<b>if</b> (!obj.isPublic()){
+<a name="475" href="#475">475</a> 					<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Interface field '"</font>+tostring(obj)+<font color="#000099">"' must have the ACC_PUBLIC modifier set but hasn't!"</font>);
+<a name="476" href="#476">476</a> 				}
+<a name="477" href="#477">477</a> 				<b>if</b> (!obj.isStatic()){
+<a name="478" href="#478">478</a> 					<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Interface field '"</font>+tostring(obj)+<font color="#000099">"' must have the ACC_STATIC modifier set but hasn't!"</font>);
+<a name="479" href="#479">479</a> 				}
+<a name="480" href="#480">480</a> 				<b>if</b> (!obj.isFinal()){
+<a name="481" href="#481">481</a> 					<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Interface field '"</font>+tostring(obj)+<font color="#000099">"' must have the ACC_FINAL modifier set but hasn't!"</font>);
+<a name="482" href="#482">482</a> 				}
+<a name="483" href="#483">483</a> 			}
+<a name="484" href="#484">484</a> 
+<a name="485" href="#485">485</a> 			<b>if</b> ((obj.getAccessFlags() & ~(ACC_PUBLIC|ACC_PRIVATE|ACC_PROTECTED|ACC_STATIC|ACC_FINAL|ACC_VOLATILE|ACC_TRANSIENT)) &gt; 0){
+<a name="486" href="#486">486</a> 				addMessage(<font color="#000099">"Field '"</font>+tostring(obj)+<font color="#000099">"' has access flag(s) other than ACC_PUBLIC, ACC_PRIVATE, ACC_PROTECTED, ACC_STATIC, ACC_FINAL, ACC_VOLATILE, ACC_TRANSIENT set (ignored)."</font>);
+<a name="487" href="#487">487</a> 			}
+<a name="488" href="#488">488</a> 
+<a name="489" href="#489">489</a> 			checkIndex(obj, obj.getNameIndex(), CONST_Utf8);
+<a name="490" href="#490">490</a> 
+<a name="491" href="#491">491</a> 			String name = obj.getName();
+<a name="492" href="#492">492</a> 			<b>if</b> (! validFieldName(name)){
+<a name="493" href="#493">493</a> 				<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Field '"</font>+tostring(obj)+<font color="#000099">"' has illegal name '"</font>+obj.getName()+<font color="#000099">"'."</font>);
+<a name="494" href="#494">494</a> 			}
+<a name="495" href="#495">495</a> 
+<a name="496" href="#496">496</a> 			<font color="#329900"><i>// A descriptor is often named signature in BCEL</font></i>
+<a name="497" href="#497">497</a> 			checkIndex(obj, obj.getSignatureIndex(), CONST_Utf8);
+<a name="498" href="#498">498</a> 
+<a name="499" href="#499">499</a> 			String sig  = ((ConstantUtf8) (cp.getConstant(obj.getSignatureIndex()))).getBytes(); <font color="#329900"><i>// Field or Method signature(=descriptor)</font></i>
+<a name="500" href="#500">500</a> 
+<a name="501" href="#501">501</a> 			<b>try</b>{
+<a name="502" href="#502">502</a> 				Type.getType(sig);  <font color="#329900"><i>/*<font color="#329900"><i> Don't need the return value */</font></i></font></i>
+<a name="503" href="#503">503</a> 			}
+<a name="504" href="#504">504</a> 			<b>catch</b> (ClassFormatError cfe){ <font color="#329900"><i>// sometimes BCEL is a little harsh describing exceptional situations.</font></i>
+<a name="505" href="#505">505</a> 				<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Illegal descriptor (==signature) '"</font>+sig+<font color="#000099">"' used by '"</font>+tostring(obj)+<font color="#000099">"'."</font>);
+<a name="506" href="#506">506</a> 			}
+<a name="507" href="#507">507</a> 
+<a name="508" href="#508">508</a> 			String nameanddesc = (name+sig);
+<a name="509" href="#509">509</a> 			<b>if</b> (field_names_and_desc.contains(nameanddesc)){
+<a name="510" href="#510">510</a> 				<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"No two fields (like '"</font>+tostring(obj)+<font color="#000099">"') are allowed have same names and descriptors!"</font>);
+<a name="511" href="#511">511</a> 			}
+<a name="512" href="#512">512</a> 			<b>if</b> (field_names.contains(name)){
+<a name="513" href="#513">513</a> 				addMessage(<font color="#000099">"More than one field of name '"</font>+name+<font color="#000099">"' detected (but with different type descriptors). This is very unusual."</font>);
+<a name="514" href="#514">514</a> 			}
+<a name="515" href="#515">515</a> 			field_names_and_desc.add(nameanddesc);
+<a name="516" href="#516">516</a> 			field_names.add(name);
+<a name="517" href="#517">517</a> 
+<a name="518" href="#518">518</a> 			Attribute[] atts = obj.getAttributes();
+<a name="519" href="#519">519</a> 			<b>for</b> (<b>int</b> i=0; i&lt;atts.length; i++){
+<a name="520" href="#520">520</a> 				<b>if</b> ((! (atts[i] instanceof ConstantValue)) &&
+<a name="521" href="#521">521</a> 				    (! (atts[i] instanceof Synthetic))     &&
+<a name="522" href="#522">522</a> 				    (! (atts[i] instanceof Deprecated))){
+<a name="523" href="#523">523</a> 					addMessage(<font color="#000099">"Attribute '"</font>+tostring(atts[i])+<font color="#000099">"' as an attribute of Field '"</font>+tostring(obj)+<font color="#000099">"' is unknown and will therefore be ignored."</font>);
+<a name="524" href="#524">524</a> 				}
+<a name="525" href="#525">525</a> 				<b>if</b>  (! (atts[i] instanceof ConstantValue)){
+<a name="526" href="#526">526</a> 					addMessage(<font color="#000099">"Attribute '"</font>+tostring(atts[i])+<font color="#000099">"' as an attribute of Field '"</font>+tostring(obj)+<font color="#000099">"' is not a ConstantValue and is therefore only of use for debuggers and such."</font>);
+<a name="527" href="#527">527</a> 				}
+<a name="528" href="#528">528</a> 			}
+<a name="529" href="#529">529</a> 		}
+<a name="530" href="#530">530</a> 		<font color="#329900"><i>///////////////////////////</font></i>
+<a name="531" href="#531">531</a> 		<font color="#329900"><i>// METHODS (vmspec2 4.6) //</font></i>
+<a name="532" href="#532">532</a> 		<font color="#329900"><i>///////////////////////////</font></i>
+<a name="533" href="#533">533</a> 		<b>public</b> <b>void</b> visitMethod(<a href="../../../../../org/apache/bcel/classfile/Method.html">Method</a> obj){
+<a name="534" href="#534">534</a> 
+<a name="535" href="#535">535</a> 			checkIndex(obj, obj.getNameIndex(), CONST_Utf8);
+<a name="536" href="#536">536</a> 
+<a name="537" href="#537">537</a> 			String name = obj.getName();
+<a name="538" href="#538">538</a> 			<b>if</b> (! validMethodName(name, <b>true</b>)){
+<a name="539" href="#539">539</a> 				<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Method '"</font>+tostring(obj)+<font color="#000099">"' has illegal name '"</font>+name+<font color="#000099">"'."</font>);
+<a name="540" href="#540">540</a> 			}
+<a name="541" href="#541">541</a> 
+<a name="542" href="#542">542</a> 			<font color="#329900"><i>// A descriptor is often named signature in BCEL</font></i>
+<a name="543" href="#543">543</a> 			checkIndex(obj, obj.getSignatureIndex(), CONST_Utf8);
+<a name="544" href="#544">544</a> 
+<a name="545" href="#545">545</a> 			String sig  = ((ConstantUtf8) (cp.getConstant(obj.getSignatureIndex()))).getBytes(); <font color="#329900"><i>// Method's signature(=descriptor)</font></i>
+<a name="546" href="#546">546</a> 
+<a name="547" href="#547">547</a> 			Type t;
+<a name="548" href="#548">548</a> 			Type[] ts; <font color="#329900"><i>// needed below the try block.</font></i>
+<a name="549" href="#549">549</a> 			<b>try</b>{
+<a name="550" href="#550">550</a> 				t  = Type.getReturnType(sig);
+<a name="551" href="#551">551</a> 				ts = Type.getArgumentTypes(sig);
+<a name="552" href="#552">552</a> 			}
+<a name="553" href="#553">553</a> 			<b>catch</b> (ClassFormatError cfe){
+<a name="554" href="#554">554</a> 				<font color="#329900"><i>// Well, BCEL sometimes is a little harsh describing exceptional situations.</font></i>
+<a name="555" href="#555">555</a> 				<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Illegal descriptor (==signature) '"</font>+sig+<font color="#000099">"' used by Method '"</font>+tostring(obj)+<font color="#000099">"'."</font>);
+<a name="556" href="#556">556</a> 			}
+<a name="557" href="#557">557</a> 
+<a name="558" href="#558">558</a> 			<font color="#329900"><i>// Check if referenced objects exist.</font></i>
+<a name="559" href="#559">559</a> 			Type act = t;
+<a name="560" href="#560">560</a> 			<b>if</b> (act instanceof ArrayType) act = ((ArrayType) act).getBasicType();
+<a name="561" href="#561">561</a> 			<b>if</b> (act instanceof ObjectType){
+<a name="562" href="#562">562</a> 				Verifier v = VerifierFactory.getVerifier( ((ObjectType) act).getClassName() );
+<a name="563" href="#563">563</a> 				VerificationResult vr = v.doPass1();
+<a name="564" href="#564">564</a> 				<b>if</b> (vr != Ver<b>if</b>icationResult.VR_OK) {
+<a name="565" href="#565">565</a> 					<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Method '"</font>+tostring(obj)+<font color="#000099">"' has a return type that does not pass verification pass 1: '"</font>+vr+<font color="#000099">"'."</font>);
+<a name="566" href="#566">566</a> 				}
+<a name="567" href="#567">567</a> 			}
+<a name="568" href="#568">568</a> 
+<a name="569" href="#569">569</a> 			<b>for</b> (<b>int</b> i=0; i&lt;ts.length; i++){
+<a name="570" href="#570">570</a> 				act = ts[i];
+<a name="571" href="#571">571</a> 				<b>if</b> (act instanceof ArrayType) act = ((ArrayType) act).getBasicType();
+<a name="572" href="#572">572</a> 				<b>if</b> (act instanceof ObjectType){
+<a name="573" href="#573">573</a> 					Verifier v = VerifierFactory.getVerifier( ((ObjectType) act).getClassName() );
+<a name="574" href="#574">574</a> 					VerificationResult vr = v.doPass1();
+<a name="575" href="#575">575</a> 					<b>if</b> (vr != Ver<b>if</b>icationResult.VR_OK) {
+<a name="576" href="#576">576</a> 						<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Method '"</font>+tostring(obj)+<font color="#000099">"' has an argument type that does not pass verification pass 1: '"</font>+vr+<font color="#000099">"'."</font>);
+<a name="577" href="#577">577</a> 					}
+<a name="578" href="#578">578</a> 				}
+<a name="579" href="#579">579</a> 			}
+<a name="580" href="#580">580</a> 
+<a name="581" href="#581">581</a> 			<font color="#329900"><i>// Nearly forgot this! Funny return values are allowed, but a non-empty arguments list makes a different method out of it!</font></i>
+<a name="582" href="#582">582</a> 			<b>if</b> (name.equals(STATIC_INITIALIZER_NAME) && (ts.length != 0)){
+<a name="583" href="#583">583</a> 				<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Method '"</font>+tostring(obj)+<font color="#000099">"' has illegal name '"</font>+name+<font color="#000099">"'. It's name resembles the class or interface initialization method which it isn't because of its arguments (==descriptor)."</font>);
+<a name="584" href="#584">584</a> 			}
+<a name="585" href="#585">585</a> 
+<a name="586" href="#586">586</a> 			<b>if</b> (jc.isClass()){
+<a name="587" href="#587">587</a> 				<b>int</b> maxone=0;
+<a name="588" href="#588">588</a> 				<b>if</b> (obj.isPrivate()) maxone++;
+<a name="589" href="#589">589</a> 				<b>if</b> (obj.isProtected()) maxone++;
+<a name="590" href="#590">590</a> 				<b>if</b> (obj.isPublic()) maxone++;
+<a name="591" href="#591">591</a> 				<b>if</b> (maxone &gt; 1){
+<a name="592" href="#592">592</a> 					<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Method '"</font>+tostring(obj)+<font color="#000099">"' must only have at most one of its ACC_PRIVATE, ACC_PROTECTED, ACC_PUBLIC modifiers set."</font>);
+<a name="593" href="#593">593</a> 				}
+<a name="594" href="#594">594</a> 
+<a name="595" href="#595">595</a> 				<b>if</b> (obj.isAbstract()){
+<a name="596" href="#596">596</a> 					<b>if</b> (obj.isFinal()) <b>throw</b> <b>new</b> ClassConstraintException(<font color="#000099">"Abstract method '"</font>+tostring(obj)+<font color="#000099">"' must not have the ACC_FINAL modifier set."</font>);
+<a name="597" href="#597">597</a> 					<b>if</b> (obj.isNative()) <b>throw</b> <b>new</b> ClassConstraintException(<font color="#000099">"Abstract method '"</font>+tostring(obj)+<font color="#000099">"' must not have the ACC_NATIVE modifier set."</font>);
+<a name="598" href="#598">598</a> 					<b>if</b> (obj.isPrivate()) <b>throw</b> <b>new</b> ClassConstraintException(<font color="#000099">"Abstract method '"</font>+tostring(obj)+<font color="#000099">"' must not have the ACC_PRIVATE modifier set."</font>);
+<a name="599" href="#599">599</a> 					<b>if</b> (obj.isStatic()) <b>throw</b> <b>new</b> ClassConstraintException(<font color="#000099">"Abstract method '"</font>+tostring(obj)+<font color="#000099">"' must not have the ACC_STATIC modifier set."</font>);
+<a name="600" href="#600">600</a> 					<b>if</b> (obj.isStrictfp()) <b>throw</b> <b>new</b> ClassConstraintException(<font color="#000099">"Abstract method '"</font>+tostring(obj)+<font color="#000099">"' must not have the ACC_STRICT modifier set."</font>);
+<a name="601" href="#601">601</a> 					<b>if</b> (obj.isSynchronized()) <b>throw</b> <b>new</b> ClassConstraintException(<font color="#000099">"Abstract method '"</font>+tostring(obj)+<font color="#000099">"' must not have the ACC_SYNCHRONIZED modifier set."</font>);
+<a name="602" href="#602">602</a> 				}
+<a name="603" href="#603">603</a> 			}
+<a name="604" href="#604">604</a> 			<b>else</b>{ <font color="#329900"><i>// isInterface!</font></i>
+<a name="605" href="#605">605</a> 				<b>if</b> (!name.equals(STATIC_INITIALIZER_NAME)){<font color="#329900"><i>//vmspec2, p.116, 2nd paragraph</font></i>
+<a name="606" href="#606">606</a> 					<b>if</b> (!obj.isPublic()){
+<a name="607" href="#607">607</a> 						<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Interface method '"</font>+tostring(obj)+<font color="#000099">"' must have the ACC_PUBLIC modifier set but hasn't!"</font>);
+<a name="608" href="#608">608</a> 					}
+<a name="609" href="#609">609</a> 					<b>if</b> (!obj.isAbstract()){
+<a name="610" href="#610">610</a> 						<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Interface method '"</font>+tostring(obj)+<font color="#000099">"' must have the ACC_STATIC modifier set but hasn't!"</font>);
+<a name="611" href="#611">611</a> 					}
+<a name="612" href="#612">612</a> 					<b>if</b> (	obj.isPrivate() ||
+<a name="613" href="#613">613</a> 								obj.isProtected() ||
+<a name="614" href="#614">614</a> 								obj.isStatic() ||
+<a name="615" href="#615">615</a> 								obj.isFinal() ||
+<a name="616" href="#616">616</a> 								obj.isSynchronized() ||
+<a name="617" href="#617">617</a> 								obj.isNative() ||
+<a name="618" href="#618">618</a> 								obj.isStrictfp() ){
+<a name="619" href="#619">619</a> 						<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Interface method '"</font>+tostring(obj)+<font color="#000099">"' must not have any of the ACC_PRIVATE, ACC_PROTECTED, ACC_STATIC, ACC_FINAL, ACC_SYNCHRONIZED, ACC_NATIVE, ACC_ABSTRACT, ACC_STRICT modifiers set."</font>);
+<a name="620" href="#620">620</a> 					}
+<a name="621" href="#621">621</a> 				}
+<a name="622" href="#622">622</a> 			}
+<a name="623" href="#623">623</a> 
+<a name="624" href="#624">624</a> 			<font color="#329900"><i>// A specific instance initialization method... (vmspec2,Page 116).</font></i>
+<a name="625" href="#625">625</a> 			<b>if</b> (name.equals(CONSTRUCTOR_NAME)){
+<a name="626" href="#626">626</a> 				<font color="#329900"><i>//..may have at most one of ACC_PRIVATE, ACC_PROTECTED, ACC_PUBLIC set: is checked above.</font></i>
+<a name="627" href="#627">627</a> 				<font color="#329900"><i>//..may also have ACC_STRICT set, but none of the other flags in table 4.5 (vmspec2, page 115)</font></i>
+<a name="628" href="#628">628</a> 				<b>if</b> (	obj.isStatic() ||
+<a name="629" href="#629">629</a> 							obj.isFinal() ||
+<a name="630" href="#630">630</a> 							obj.isSynchronized() ||
+<a name="631" href="#631">631</a> 							obj.isNative() ||
+<a name="632" href="#632">632</a> 							obj.isAbstract() ){
+<a name="633" href="#633">633</a> 					<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Instance initialization method '"</font>+tostring(obj)+<font color="#000099">"' must not have any of the ACC_STATIC, ACC_FINAL, ACC_SYNCHRONIZED, ACC_NATIVE, ACC_ABSTRACT modifiers set."</font>);
+<a name="634" href="#634">634</a> 				}
+<a name="635" href="#635">635</a> 			}
+<a name="636" href="#636">636</a> 
+<a name="637" href="#637">637</a> 			<font color="#329900"><i>// Class and interface initialization methods...</font></i>
+<a name="638" href="#638">638</a> 			<b>if</b> (name.equals(STATIC_INITIALIZER_NAME)){
+<a name="639" href="#639">639</a> 				<b>if</b> ((obj.getAccessFlags() & (~ACC_STRICT)) &gt; 0){
+<a name="640" href="#640">640</a> 					addMessage(<font color="#000099">"Class or interface initialization method '"</font>+tostring(obj)+<font color="#000099">"' has superfluous access modifier(s) set: everything but ACC_STRICT is ignored."</font>);
+<a name="641" href="#641">641</a> 				}
+<a name="642" href="#642">642</a> 				<b>if</b> (obj.isAbstract()){
+<a name="643" href="#643">643</a> 					<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Class or interface initialization method '"</font>+tostring(obj)+<font color="#000099">"' must not be abstract. This contradicts the Java Language Specification, Second Edition (which omits this constraint) but is common practice of existing verifiers."</font>);
+<a name="644" href="#644">644</a> 				}
+<a name="645" href="#645">645</a> 			}
+<a name="646" href="#646">646</a> 
+<a name="647" href="#647">647</a> 			<b>if</b> ((obj.getAccessFlags() & ~(ACC_PUBLIC|ACC_PRIVATE|ACC_PROTECTED|ACC_STATIC|ACC_FINAL|ACC_SYNCHRONIZED|ACC_NATIVE|ACC_ABSTRACT|ACC_STRICT)) &gt; 0){
+<a name="648" href="#648">648</a> 				addMessage(<font color="#000099">"Method '"</font>+tostring(obj)+<font color="#000099">"' has access flag(s) other than ACC_PUBLIC, ACC_PRIVATE, ACC_PROTECTED, ACC_STATIC, ACC_FINAL, ACC_SYNCHRONIZED, ACC_NATIVE, ACC_ABSTRACT, ACC_STRICT set (ignored)."</font>);
+<a name="649" href="#649">649</a> 			}
+<a name="650" href="#650">650</a> 
+<a name="651" href="#651">651</a> 			String nameanddesc = (name+sig);
+<a name="652" href="#652">652</a> 			<b>if</b> (method_names_and_desc.contains(nameanddesc)){
+<a name="653" href="#653">653</a> 				<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"No two methods (like '"</font>+tostring(obj)+<font color="#000099">"') are allowed have same names and desciptors!"</font>);
+<a name="654" href="#654">654</a> 			}
+<a name="655" href="#655">655</a> 			method_names_and_desc.add(nameanddesc);
+<a name="656" href="#656">656</a> 
+<a name="657" href="#657">657</a> 			Attribute[] atts = obj.getAttributes();
+<a name="658" href="#658">658</a> 			<b>int</b> num_code_atts = 0;
+<a name="659" href="#659">659</a> 			<b>for</b> (<b>int</b> i=0; i&lt;atts.length; i++){
+<a name="660" href="#660">660</a> 				<b>if</b> ((! (atts[i] instanceof Code)) &&
+<a name="661" href="#661">661</a> 				    (! (atts[i] instanceof ExceptionTable))     &&
+<a name="662" href="#662">662</a> 				    (! (atts[i] instanceof Synthetic)) &&
+<a name="663" href="#663">663</a> 				    (! (atts[i] instanceof Deprecated))){
+<a name="664" href="#664">664</a> 					addMessage(<font color="#000099">"Attribute '"</font>+tostring(atts[i])+<font color="#000099">"' as an attribute of Method '"</font>+tostring(obj)+<font color="#000099">"' is unknown and will therefore be ignored."</font>);
+<a name="665" href="#665">665</a> 				}
+<a name="666" href="#666">666</a> 				<b>if</b> ((! (atts[i] instanceof Code)) &&
+<a name="667" href="#667">667</a> 						(! (atts[i] instanceof ExceptionTable))){
+<a name="668" href="#668">668</a> 					addMessage(<font color="#000099">"Attribute '"</font>+tostring(atts[i])+<font color="#000099">"' as an attribute of Method '"</font>+tostring(obj)+<font color="#000099">"' is neither Code nor Exceptions and is therefore only of use for debuggers and such."</font>);
+<a name="669" href="#669">669</a> 				}
+<a name="670" href="#670">670</a> 				<b>if</b> ((atts[i] instanceof Code) && (obj.isNative() || obj.isAbstract())){
+<a name="671" href="#671">671</a> 					<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Native or abstract methods like '"</font>+tostring(obj)+<font color="#000099">"' must not have a Code attribute like '"</font>+tostring(atts[i])+<font color="#000099">"'."</font>); <font color="#329900"><i>//vmspec2 page120, 4.7.3</font></i>
+<a name="672" href="#672">672</a> 				}
+<a name="673" href="#673">673</a> 				<b>if</b> (atts[i] instanceof Code) num_code_atts++;
+<a name="674" href="#674">674</a> 			}
+<a name="675" href="#675">675</a> 			<b>if</b> ( !obj.isNative() && !obj.isAbstract() && num_code_atts != 1){
+<a name="676" href="#676">676</a> 				<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Non-native, non-abstract methods like '"</font>+tostring(obj)+<font color="#000099">"' must have exactly one Code attribute (found: "</font>+num_code_atts+<font color="#000099">")."</font>);
+<a name="677" href="#677">677</a> 			}
+<a name="678" href="#678">678</a> 		}
+<a name="679" href="#679">679</a> 		<font color="#329900"><i>///////////////////////////////////////////////////////</font></i>
+<a name="680" href="#680">680</a> 		<font color="#329900"><i>// ClassFile-structure-ATTRIBUTES (vmspec2 4.1, 4.7) //</font></i>
+<a name="681" href="#681">681</a> 		<font color="#329900"><i>///////////////////////////////////////////////////////</font></i>
+<a name="682" href="#682">682</a> 		<b>public</b> <b>void</b> visitSourceFile(<a href="../../../../../org/apache/bcel/classfile/SourceFile.html">SourceFile</a> obj){<font color="#329900"><i>//vmspec2 4.7.7</font></i>
+<a name="683" href="#683">683</a> 
+<a name="684" href="#684">684</a> 			<font color="#329900"><i>// zero or one SourceFile attr per ClassFile: see visitJavaClass()</font></i>
+<a name="685" href="#685">685</a> 
+<a name="686" href="#686">686</a> 			checkIndex(obj, obj.getNameIndex(), CONST_Utf8);
+<a name="687" href="#687">687</a> 
+<a name="688" href="#688">688</a> 			String name = ((ConstantUtf8) cp.getConstant(obj.getNameIndex())).getBytes();
+<a name="689" href="#689">689</a> 			<b>if</b> (! name.equals(<font color="#000099">"SourceFile"</font>)){
+<a name="690" href="#690">690</a> 				<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"The SourceFile attribute '"</font>+tostring(obj)+<font color="#000099">"' is not correctly named 'SourceFile' but '"</font>+name+<font color="#000099">"'."</font>);
+<a name="691" href="#691">691</a> 			}
+<a name="692" href="#692">692</a> 
+<a name="693" href="#693">693</a> 			checkIndex(obj, obj.getSourceFileIndex(), CONST_Utf8);
+<a name="694" href="#694">694</a> 
+<a name="695" href="#695">695</a> 			String sourcefilename = ((ConstantUtf8) cp.getConstant(obj.getSourceFileIndex())).getBytes(); <font color="#329900"><i>//==obj.getSourceFileName() ?</font></i>
+<a name="696" href="#696">696</a> 			String sourcefilenamelc = sourcefilename.toLowerCase();
+<a name="697" href="#697">697</a> 
+<a name="698" href="#698">698</a> 			<b>if</b> (	(sourcefilename.indexOf('/') != -1) ||
+<a name="699" href="#699">699</a> 						(sourcefilename.indexOf('&#47;&#47;') != -1) ||
+<a name="700" href="#700">700</a> 						(sourcefilename.indexOf(':') != -1) ||
+<a name="701" href="#701">701</a> 						(sourcefilenamelc.lastIndexOf(<font color="#000099">".java"</font>) == -1)	){
+<a name="702" href="#702">702</a> 				addMessage(<font color="#000099">"SourceFile attribute '"</font>+tostring(obj)+<font color="#000099">"' has a funny name: remember not to confuse certain parsers working on javap's output. Also, this name ('"</font>+sourcefilename+<font color="#000099">"') is considered an unqualified (simple) file name only."</font>);
+<a name="703" href="#703">703</a> 			}
+<a name="704" href="#704">704</a> 		}
+<a name="705" href="#705">705</a> 		<b>public</b> <b>void</b> visitDeprecated(<a href="../../../../../org/apache/bcel/classfile/Deprecated.html">Deprecated</a> obj){<font color="#329900"><i>//vmspec2 4.7.10</font></i>
+<a name="706" href="#706">706</a> 			checkIndex(obj, obj.getNameIndex(), CONST_Utf8);
+<a name="707" href="#707">707</a> 
+<a name="708" href="#708">708</a> 			String name = ((ConstantUtf8) cp.getConstant(obj.getNameIndex())).getBytes();
+<a name="709" href="#709">709</a> 			<b>if</b> (! name.equals(<font color="#000099">"Deprecated"</font>)){
+<a name="710" href="#710">710</a> 				<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"The Deprecated attribute '"</font>+tostring(obj)+<font color="#000099">"' is not correctly named 'Deprecated' but '"</font>+name+<font color="#000099">"'."</font>);
+<a name="711" href="#711">711</a> 			}
+<a name="712" href="#712">712</a> 		}
+<a name="713" href="#713">713</a> 		<b>public</b> <b>void</b> visitSynthetic(<a href="../../../../../org/apache/bcel/classfile/Synthetic.html">Synthetic</a> obj){<font color="#329900"><i>//vmspec2 4.7.6</font></i>
+<a name="714" href="#714">714</a> 			checkIndex(obj, obj.getNameIndex(), CONST_Utf8);
+<a name="715" href="#715">715</a> 			String name = ((ConstantUtf8) cp.getConstant(obj.getNameIndex())).getBytes();
+<a name="716" href="#716">716</a> 			<b>if</b> (! name.equals(<font color="#000099">"Synthetic"</font>)){
+<a name="717" href="#717">717</a> 				<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"The Synthetic attribute '"</font>+tostring(obj)+<font color="#000099">"' is not correctly named 'Synthetic' but '"</font>+name+<font color="#000099">"'."</font>);
+<a name="718" href="#718">718</a> 			}
+<a name="719" href="#719">719</a> 		}
+<a name="720" href="#720">720</a> 		<b>public</b> <b>void</b> visitInnerClasses(<a href="../../../../../org/apache/bcel/classfile/InnerClasses.html">InnerClasses</a> obj){<font color="#329900"><i>//vmspec2 4.7.5</font></i>
+<a name="721" href="#721">721</a> 
+<a name="722" href="#722">722</a> 			<font color="#329900"><i>// exactly one InnerClasses attr per ClassFile if some inner class is refernced: see visitJavaClass()</font></i>
+<a name="723" href="#723">723</a> 
+<a name="724" href="#724">724</a> 			checkIndex(obj, obj.getNameIndex(), CONST_Utf8);
+<a name="725" href="#725">725</a> 
+<a name="726" href="#726">726</a> 			String name = ((ConstantUtf8) cp.getConstant(obj.getNameIndex())).getBytes();
+<a name="727" href="#727">727</a> 			<b>if</b> (! name.equals(<font color="#000099">"InnerClasses"</font>)){
+<a name="728" href="#728">728</a> 				<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"The InnerClasses attribute '"</font>+tostring(obj)+<font color="#000099">"' is not correctly named 'InnerClasses' but '"</font>+name+<font color="#000099">"'."</font>);
+<a name="729" href="#729">729</a> 			}
+<a name="730" href="#730">730</a> 
+<a name="731" href="#731">731</a> 			InnerClass[] ics = obj.getInnerClasses();
+<a name="732" href="#732">732</a> 
+<a name="733" href="#733">733</a> 			<b>for</b> (<b>int</b> i=0; i&lt;ics.length; i++){
+<a name="734" href="#734">734</a> 				checkIndex(obj, ics[i].getInnerClassIndex(), CONST_Class);
+<a name="735" href="#735">735</a> 				<b>int</b> <b>outer</b>_idx = ics[i].getOuterClassIndex();
+<a name="736" href="#736">736</a> 				<b>if</b> (<b>outer</b>_idx != 0){
+<a name="737" href="#737">737</a> 					checkIndex(obj, <b>outer</b>_idx, CONST_Class);
+<a name="738" href="#738">738</a> 				}
+<a name="739" href="#739">739</a> 				<b>int</b> innername_idx = ics[i].getInnerNameIndex();
+<a name="740" href="#740">740</a> 				<b>if</b> (innername_idx != 0){
+<a name="741" href="#741">741</a> 					checkIndex(obj, innername_idx, CONST_Utf8);
+<a name="742" href="#742">742</a> 				}
+<a name="743" href="#743">743</a> 				<b>int</b> acc = ics[i].getInnerAccessFlags();
+<a name="744" href="#744">744</a> 				acc = acc & (~ (ACC_PUBLIC | ACC_PRIVATE | ACC_PROTECTED | ACC_STATIC | ACC_FINAL | ACC_INTERFACE | ACC_ABSTRACT));
+<a name="745" href="#745">745</a> 				<b>if</b> (acc != 0){
+<a name="746" href="#746">746</a> 					addMessage(<font color="#000099">"Unknown access flag for inner class '"</font>+tostring(ics[i])+<font color="#000099">"' set (InnerClasses attribute '"</font>+tostring(obj)+<font color="#000099">"')."</font>);
+<a name="747" href="#747">747</a> 				}
+<a name="748" href="#748">748</a> 			}
+<a name="749" href="#749">749</a> 			<font color="#329900"><i>// Semantical consistency is not yet checked by Sun, see vmspec2 4.7.5.</font></i>
+<a name="750" href="#750">750</a> 			<font color="#329900"><i>// [marked TODO in JustIce]</font></i>
+<a name="751" href="#751">751</a> 		}
+<a name="752" href="#752">752</a> 		<font color="#329900"><i>////////////////////////////////////////////////////////</font></i>
+<a name="753" href="#753">753</a> 		<font color="#329900"><i>// field_info-structure-ATTRIBUTES (vmspec2 4.5, 4.7) //</font></i>
+<a name="754" href="#754">754</a> 		<font color="#329900"><i>////////////////////////////////////////////////////////</font></i>
+<a name="755" href="#755">755</a> 		<b>public</b> <b>void</b> visitConstantValue(<a href="../../../../../org/apache/bcel/classfile/ConstantValue.html">ConstantValue</a> obj){<font color="#329900"><i>//vmspec2 4.7.2</font></i>
+<a name="756" href="#756">756</a> 			<font color="#329900"><i>// Despite its name, this really is an Attribute,</font></i>
+<a name="757" href="#757">757</a> 			<font color="#329900"><i>// not a constant!</font></i>
+<a name="758" href="#758">758</a> 			checkIndex(obj, obj.getNameIndex(), CONST_Utf8);
+<a name="759" href="#759">759</a> 
+<a name="760" href="#760">760</a> 			String name = ((ConstantUtf8) cp.getConstant(obj.getNameIndex())).getBytes();
+<a name="761" href="#761">761</a> 			<b>if</b> (! name.equals(<font color="#000099">"ConstantValue"</font>)){
+<a name="762" href="#762">762</a> 				<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"The ConstantValue attribute '"</font>+tostring(obj)+<font color="#000099">"' is not correctly named 'ConstantValue' but '"</font>+name+<font color="#000099">"'."</font>);
+<a name="763" href="#763">763</a> 			}
+<a name="764" href="#764">764</a> 
+<a name="765" href="#765">765</a> 			Object pred = carrier.predecessor();
+<a name="766" href="#766">766</a> 			<b>if</b> (pred instanceof Field){ <font color="#329900"><i>//ConstantValue attributes are quite senseless if the predecessor is not a field.</font></i>
+<a name="767" href="#767">767</a> 				Field f = (Field) pred;
+<a name="768" href="#768">768</a> 				<font color="#329900"><i>// Field constraints have been checked before -- so we are safe using their type information.</font></i>
+<a name="769" href="#769">769</a> 				Type field_type = Type.getType(((ConstantUtf8) (cp.getConstant(f.getSignatureIndex()))).getBytes());
+<a name="770" href="#770">770</a> 
+<a name="771" href="#771">771</a> 				<b>int</b> index = obj.getConstantValueIndex();
+<a name="772" href="#772">772</a> 				<b>if</b> ((index &lt; 0) || (index &gt;= cplen)){
+<a name="773" href="#773">773</a> 					<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Invalid index '"</font>+index+<font color="#000099">"' used by '"</font>+tostring(obj)+<font color="#000099">"'."</font>);
+<a name="774" href="#774">774</a> 				}
+<a name="775" href="#775">775</a> 				Constant c = cp.getConstant(index);
+<a name="776" href="#776">776</a> 
+<a name="777" href="#777">777</a> 				<b>if</b> (CONST_Long.isInstance(c) && field_type.equals(Type.LONG)){
+<a name="778" href="#778">778</a> 					<b>return</b>;
+<a name="779" href="#779">779</a> 				}
+<a name="780" href="#780">780</a> 				<b>if</b> (CONST_Float.isInstance(c) && field_type.equals(Type.FLOAT)){
+<a name="781" href="#781">781</a> 					<b>return</b>;
+<a name="782" href="#782">782</a> 				}
+<a name="783" href="#783">783</a> 				<b>if</b> (CONST_Double.isInstance(c) && field_type.equals(Type.DOUBLE)){
+<a name="784" href="#784">784</a> 					<b>return</b>;
+<a name="785" href="#785">785</a> 				}
+<a name="786" href="#786">786</a> 				<b>if</b> (CONST_Integer.isInstance(c) && (field_type.equals(Type.INT) || field_type.equals(Type.SHORT) || field_type.equals(Type.CHAR) || field_type.equals(Type.BYTE) || field_type.equals(Type.BOOLEAN))){
+<a name="787" href="#787">787</a> 					<b>return</b>;
+<a name="788" href="#788">788</a> 				}
+<a name="789" href="#789">789</a> 				<b>if</b> (CONST_String.isInstance(c) && field_type.equals(Type.STRING)){
+<a name="790" href="#790">790</a> 					<b>return</b>;
+<a name="791" href="#791">791</a> 				}
+<a name="792" href="#792">792</a> 
+<a name="793" href="#793">793</a> 				<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Illegal type of ConstantValue '"</font>+obj+<font color="#000099">"' embedding Constant '"</font>+c+<font color="#000099">"'. It is referenced by field '"</font>+tostring(f)+<font color="#000099">"' expecting a different type: '"</font>+field_type+<font color="#000099">"'."</font>);
+<a name="794" href="#794">794</a> 			}
+<a name="795" href="#795">795</a> 		}
+<a name="796" href="#796">796</a> 		<font color="#329900"><i>// SYNTHETIC: see above</font></i>
+<a name="797" href="#797">797</a> 		<font color="#329900"><i>// DEPRECATED: see above</font></i>
+<a name="798" href="#798">798</a> 		<font color="#329900"><i>/////////////////////////////////////////////////////////</font></i>
+<a name="799" href="#799">799</a> 		<font color="#329900"><i>// method_info-structure-ATTRIBUTES (vmspec2 4.6, 4.7) //</font></i>
+<a name="800" href="#800">800</a> 		<font color="#329900"><i>/////////////////////////////////////////////////////////</font></i>
+<a name="801" href="#801">801</a> 		<b>public</b> <b>void</b> visitCode(<a href="../../../../../org/apache/bcel/classfile/Code.html">Code</a> obj){<font color="#329900"><i>//vmspec2 4.7.3</font></i>
+<a name="802" href="#802">802</a> 			<font color="#329900"><i>// No code attribute allowed for native or abstract methods: see visitMethod(Method).</font></i>
+<a name="803" href="#803">803</a> 			<font color="#329900"><i>// Code array constraints are checked in Pass3 (3a and 3b).</font></i>
+<a name="804" href="#804">804</a> 
+<a name="805" href="#805">805</a> 			checkIndex(obj, obj.getNameIndex(), CONST_Utf8);
+<a name="806" href="#806">806</a> 
+<a name="807" href="#807">807</a> 			String name = ((ConstantUtf8) cp.getConstant(obj.getNameIndex())).getBytes();
+<a name="808" href="#808">808</a> 			<b>if</b> (! name.equals(<font color="#000099">"Code"</font>)){
+<a name="809" href="#809">809</a> 				<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"The Code attribute '"</font>+tostring(obj)+<font color="#000099">"' is not correctly named 'Code' but '"</font>+name+<font color="#000099">"'."</font>);
+<a name="810" href="#810">810</a> 			}
+<a name="811" href="#811">811</a> 
+<a name="812" href="#812">812</a> 			Method m = <b>null</b>; <font color="#329900"><i>// satisfy compiler</font></i>
+<a name="813" href="#813">813</a> 			<b>if</b> (!(carrier.predecessor() instanceof Method)){
+<a name="814" href="#814">814</a> 				addMessage(<font color="#000099">"Code attribute '"</font>+tostring(obj)+<font color="#000099">"' is not declared in a method_info structure but in '"</font>+carrier.predecessor()+<font color="#000099">"'. Ignored."</font>);
+<a name="815" href="#815">815</a> 				<b>return</b>;
+<a name="816" href="#816">816</a> 			}
+<a name="817" href="#817">817</a> 			<b>else</b>{
+<a name="818" href="#818">818</a> 				m = (Method) carrier.predecessor();	<font color="#329900"><i>// we can assume this method was visited before;</font></i>
+<a name="819" href="#819">819</a> 																						<font color="#329900"><i>// i.e. the data consistency was verified.</font></i>
+<a name="820" href="#820">820</a> 			}
+<a name="821" href="#821">821</a> 
+<a name="822" href="#822">822</a> 			<b>if</b> (obj.getCode().length == 0){
+<a name="823" href="#823">823</a> 				<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Code array of Code attribute '"</font>+tostring(obj)+<font color="#000099">"' (method '"</font>+m+<font color="#000099">"') must not be empty."</font>);
+<a name="824" href="#824">824</a> 			}
+<a name="825" href="#825">825</a> 
+<a name="826" href="#826">826</a> 			<font color="#329900"><i>//In JustIce, the check for correct offsets into the code array is delayed to Pass 3a.</font></i>
+<a name="827" href="#827">827</a> 			CodeException[] exc_table = obj.getExceptionTable();
+<a name="828" href="#828">828</a> 			<b>for</b> (<b>int</b> i=0; i&lt;exc_table.length; i++){
+<a name="829" href="#829">829</a> 				<b>int</b> exc_index = exc_table[i].getCatchType();
+<a name="830" href="#830">830</a> 				<b>if</b> (exc_index != 0){ <font color="#329900"><i>// if 0, it catches all Throwables</font></i>
+<a name="831" href="#831">831</a> 					checkIndex(obj, exc_index, CONST_Class);
+<a name="832" href="#832">832</a> 					ConstantClass cc = (ConstantClass) (cp.getConstant(exc_index));
+<a name="833" href="#833">833</a> 					checkIndex(cc, cc.getNameIndex(), CONST_Utf8); <font color="#329900"><i>// cannot be sure this ConstantClass has already been visited (checked)!</font></i>
+<a name="834" href="#834">834</a> 					String cname = ((ConstantUtf8) cp.getConstant(cc.getNameIndex())).getBytes().replace('/','.');
+<a name="835" href="#835">835</a> 
+<a name="836" href="#836">836</a> 					Verifier v = VerifierFactory.getVerifier(cname);
+<a name="837" href="#837">837</a> 					VerificationResult vr = v.doPass1();
+<a name="838" href="#838">838</a> 
+<a name="839" href="#839">839</a> 					<b>if</b> (vr != Ver<b>if</b>icationResult.VR_OK){
+<a name="840" href="#840">840</a> 						<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Code attribute '"</font>+tostring(obj)+<font color="#000099">"' (method '"</font>+m+<font color="#000099">"') has an exception_table entry '"</font>+tostring(exc_table[i])+<font color="#000099">"' that references '"</font>+cname+<font color="#000099">"' as an Exception but it does not pass verification pass 1: "</font>+vr);
+<a name="841" href="#841">841</a> 					}
+<a name="842" href="#842">842</a> 					<b>else</b>{
+<a name="843" href="#843">843</a> 						<font color="#329900"><i>// We cannot safely trust any other "instanceof" mechanism. We need to transitively verify</font></i>
+<a name="844" href="#844">844</a> 						<font color="#329900"><i>// the ancestor hierarchy.</font></i>
+<a name="845" href="#845">845</a> 						JavaClass e = Repository.lookupClass(cname);
+<a name="846" href="#846">846</a> 						JavaClass t = Repository.lookupClass(Type.THROWABLE.getClassName());
+<a name="847" href="#847">847</a> 						JavaClass o = Repository.lookupClass(Type.OBJECT.getClassName());
+<a name="848" href="#848">848</a> 						<b>while</b> (e != o){
+<a name="849" href="#849">849</a> 							<b>if</b> (e == t) <b>break</b>; <font color="#329900"><i>// It's a subclass of Throwable, OKAY, leave.</font></i>
+<a name="850" href="#850">850</a> 
+<a name="851" href="#851">851</a> 							v = VerifierFactory.getVerifier(e.getSuperclassName());
+<a name="852" href="#852">852</a> 							vr = v.doPass1();
+<a name="853" href="#853">853</a> 							<b>if</b> (vr != Ver<b>if</b>icationResult.VR_OK){
+<a name="854" href="#854">854</a> 								<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Code attribute '"</font>+tostring(obj)+<font color="#000099">"' (method '"</font>+m+<font color="#000099">"') has an exception_table entry '"</font>+tostring(exc_table[i])+<font color="#000099">"' that references '"</font>+cname+<font color="#000099">"' as an Exception but '"</font>+e.getSuperclassName()+<font color="#000099">"' in the ancestor hierachy does not pass verification pass 1: "</font>+vr);
+<a name="855" href="#855">855</a> 							}
+<a name="856" href="#856">856</a> 							<b>else</b>{
+<a name="857" href="#857">857</a> 								e = Repository.lookupClass(e.getSuperclassName());
+<a name="858" href="#858">858</a> 							}
+<a name="859" href="#859">859</a> 						}
+<a name="860" href="#860">860</a> 						<b>if</b> (e != t) <b>throw</b> <b>new</b> ClassConstraintException(<font color="#000099">"Code attribute '"</font>+tostring(obj)+<font color="#000099">"' (method '"</font>+m+<font color="#000099">"') has an exception_table entry '"</font>+tostring(exc_table[i])+<font color="#000099">"' that references '"</font>+cname+<font color="#000099">"' as an Exception but it is not a subclass of '"</font>+t.getClassName()+<font color="#000099">"'."</font>);
+<a name="861" href="#861">861</a> 					}
+<a name="862" href="#862">862</a> 				}
+<a name="863" href="#863">863</a> 			}
+<a name="864" href="#864">864</a> 
+<a name="865" href="#865">865</a> 			<font color="#329900"><i>// Create object for local variables information</font></i>
+<a name="866" href="#866">866</a> 			<font color="#329900"><i>// This is highly unelegant due to usage of the Visitor pattern.</font></i>
+<a name="867" href="#867">867</a> 			<font color="#329900"><i>// TODO: rework it.</font></i>
+<a name="868" href="#868">868</a> 			<b>int</b> method_number = -1;
+<a name="869" href="#869">869</a> 			Method[] ms = Repository.lookupClass(myOwner.getClassName()).getMethods();
+<a name="870" href="#870">870</a> 			<b>for</b> (<b>int</b> mn=0; mn&lt;ms.length; mn++){
+<a name="871" href="#871">871</a> 				<b>if</b> (m == ms[mn]){
+<a name="872" href="#872">872</a> 					method_number = mn;
+<a name="873" href="#873">873</a> 					<b>break</b>;
+<a name="874" href="#874">874</a> 				}
+<a name="875" href="#875">875</a> 			}
+<a name="876" href="#876">876</a> 			<b>if</b> (method_number &lt; 0){ <font color="#329900"><i>// Mmmmh. Can we be sure BCEL does not sometimes instantiate new objects?</font></i>
+<a name="877" href="#877">877</a> 				<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/AssertionViolatedException.html">AssertionViolatedException</a>(<font color="#000099">"Could not find a known BCEL Method object in the corresponding BCEL JavaClass object."</font>);
+<a name="878" href="#878">878</a> 			}
+<a name="879" href="#879">879</a> 			localVariablesInfos[method_number] = <b>new</b> <a href="../../../../../org/apache/bcel/verifier/statics/LocalVariablesInfo.html">LocalVariablesInfo</a>(obj.getMaxLocals());
+<a name="880" href="#880">880</a> 
+<a name="881" href="#881">881</a> 			<b>int</b> num_of_lvt_attribs = 0;
+<a name="882" href="#882">882</a> 			<font color="#329900"><i>// Now iterate through the attributes the Code attribute has.</font></i>
+<a name="883" href="#883">883</a> 			Attribute[] atts = obj.getAttributes();
+<a name="884" href="#884">884</a> 			<b>for</b> (<b>int</b> a=0; a&lt;atts.length; a++){
+<a name="885" href="#885">885</a> 				<b>if</b> ((! (atts[a] instanceof LineNumberTable)) &&
+<a name="886" href="#886">886</a> 				    (! (atts[a] instanceof LocalVariableTable))){
+<a name="887" href="#887">887</a> 					addMessage(<font color="#000099">"Attribute '"</font>+tostring(atts[a])+<font color="#000099">"' as an attribute of Code attribute '"</font>+tostring(obj)+<font color="#000099">"' (method '"</font>+m+<font color="#000099">"') is unknown and will therefore be ignored."</font>);
+<a name="888" href="#888">888</a> 				}
+<a name="889" href="#889">889</a> 				<b>else</b>{<font color="#329900"><i>// LineNumberTable or LocalVariableTable</font></i>
+<a name="890" href="#890">890</a> 					addMessage(<font color="#000099">"Attribute '"</font>+tostring(atts[a])+<font color="#000099">"' as an attribute of Code attribute '"</font>+tostring(obj)+<font color="#000099">"' (method '"</font>+m+<font color="#000099">"') will effectively be ignored and is only useful for debuggers and such."</font>);
+<a name="891" href="#891">891</a> 				}
+<a name="892" href="#892">892</a> 
+<a name="893" href="#893">893</a> 				<font color="#329900"><i>//LocalVariableTable check (partially delayed to Pass3a).</font></i>
+<a name="894" href="#894">894</a> 				<font color="#329900"><i>//Here because its easier to collect the information of the</font></i>
+<a name="895" href="#895">895</a> 				<font color="#329900"><i>//(possibly more than one) LocalVariableTables belonging to</font></i>
+<a name="896" href="#896">896</a> 				<font color="#329900"><i>//one certain Code attribute.</font></i>
+<a name="897" href="#897">897</a> 				<b>if</b> (atts[a] instanceof LocalVariableTable){ <font color="#329900"><i>// checks conforming to vmspec2 4.7.9</font></i>
+<a name="898" href="#898">898</a> 
+<a name="899" href="#899">899</a> 					LocalVariableTable lvt = (LocalVariableTable) atts[a];
+<a name="900" href="#900">900</a> 
+<a name="901" href="#901">901</a> 					checkIndex(lvt, lvt.getNameIndex(), CONST_Utf8);
+<a name="902" href="#902">902</a> 
+<a name="903" href="#903">903</a> 					String lvtname = ((ConstantUtf8) cp.getConstant(lvt.getNameIndex())).getBytes();
+<a name="904" href="#904">904</a> 					<b>if</b> (! lvtname.equals(<font color="#000099">"LocalVariableTable"</font>)){
+<a name="905" href="#905">905</a> 						<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"The LocalVariableTable attribute '"</font>+tostring(lvt)+<font color="#000099">"' is not correctly named 'LocalVariableTable' but '"</font>+lvtname+<font color="#000099">"'."</font>);
+<a name="906" href="#906">906</a> 					}
+<a name="907" href="#907">907</a> 
+<a name="908" href="#908">908</a> 					Code code = obj;
+<a name="909" href="#909">909</a> 
+<a name="910" href="#910">910</a> 					<font color="#329900"><i>//In JustIce, the check for correct offsets into the code array is delayed to Pass 3a.</font></i>
+<a name="911" href="#911">911</a> 					LocalVariable[] localvariables = lvt.getLocalVariableTable();
+<a name="912" href="#912">912</a> 
+<a name="913" href="#913">913</a> 					<b>for</b> (<b>int</b> i=0; i&lt;localvariables.length; i++){
+<a name="914" href="#914">914</a> 						checkIndex(lvt, localvariables[i].getNameIndex(), CONST_Utf8);
+<a name="915" href="#915">915</a> 						String localname = ((ConstantUtf8) cp.getConstant(localvariables[i].getNameIndex())).getBytes();
+<a name="916" href="#916">916</a> 						<b>if</b> (!validJavaIdent<b>if</b>ier(localname)){
+<a name="917" href="#917">917</a> 							<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"LocalVariableTable '"</font>+tostring(lvt)+<font color="#000099">"' references a local variable by the name '"</font>+localname+<font color="#000099">"' which is not a legal Java simple name."</font>);
+<a name="918" href="#918">918</a> 						}
+<a name="919" href="#919">919</a> 
+<a name="920" href="#920">920</a> 						checkIndex(lvt, localvariables[i].getSignatureIndex(), CONST_Utf8);
+<a name="921" href="#921">921</a> 						String localsig  = ((ConstantUtf8) (cp.getConstant(localvariables[i].getSignatureIndex()))).getBytes(); <font color="#329900"><i>// Local signature(=descriptor)</font></i>
+<a name="922" href="#922">922</a> 						Type t;
+<a name="923" href="#923">923</a> 						<b>try</b>{
+<a name="924" href="#924">924</a> 							t = Type.getType(localsig);
+<a name="925" href="#925">925</a> 						}
+<a name="926" href="#926">926</a> 						<b>catch</b> (ClassFormatError cfe){ <font color="#329900"><i>// sometimes BCEL is a little harsh describing exceptional situations.</font></i>
+<a name="927" href="#927">927</a> 							<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Illegal descriptor (==signature) '"</font>+localsig+<font color="#000099">"' used by LocalVariable '"</font>+tostring(localvariables[i])+<font color="#000099">"' referenced by '"</font>+tostring(lvt)+<font color="#000099">"'."</font>);
+<a name="928" href="#928">928</a> 						}
+<a name="929" href="#929">929</a> 						<b>int</b> localindex = localvariables[i].getIndex();
+<a name="930" href="#930">930</a> 						<b>if</b> ( ( (t==Type.LONG || t==Type.DOUBLE)? localindex+1:localindex) &gt;= code.getMaxLocals()){
+<a name="931" href="#931">931</a> 							<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"LocalVariableTable attribute '"</font>+tostring(lvt)+<font color="#000099">"' references a LocalVariable '"</font>+tostring(localvariables[i])+<font color="#000099">"' with an index that exceeds the surrounding Code attribute's max_locals value of '"</font>+code.getMaxLocals()+<font color="#000099">"'."</font>);
+<a name="932" href="#932">932</a> 						}
+<a name="933" href="#933">933</a> 
+<a name="934" href="#934">934</a> 						<b>try</b>{
+<a name="935" href="#935">935</a> 							localVariablesInfos[method_number].add(localindex, localname, localvariables[i].getStartPC(), localvariables[i].getLength(), t);
+<a name="936" href="#936">936</a> 						}
+<a name="937" href="#937">937</a> 						<b>catch</b>(<a href="../../../../../org/apache/bcel/verifier/exc/LocalVariableInfoInconsistentException.html">LocalVariableInfoInconsistentException</a> lviie){
+<a name="938" href="#938">938</a> 							<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Conflicting information in LocalVariableTable '"</font>+tostring(lvt)+<font color="#000099">"' found in Code attribute '"</font>+tostring(obj)+<font color="#000099">"' (method '"</font>+tostring(m)+<font color="#000099">"'). "</font>+lviie.getMessage());
+<a name="939" href="#939">939</a> 						}
+<a name="940" href="#940">940</a> 					}<font color="#329900"><i>// for all local variables localvariables[i] in the LocalVariableTable attribute atts[a] END</font></i>
+<a name="941" href="#941">941</a> 
+<a name="942" href="#942">942</a> 					num_of_lvt_attribs++;
+<a name="943" href="#943">943</a> 					<b>if</b> (num_of_lvt_attribs &gt; obj.getMaxLocals()){
+<a name="944" href="#944">944</a> 						<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Number of LocalVariableTable attributes of Code attribute '"</font>+tostring(obj)+<font color="#000099">"' (method '"</font>+tostring(m)+<font color="#000099">"') exceeds number of local variable slots '"</font>+obj.getMaxLocals()+<font color="#000099">"' ('There may be no more than one LocalVariableTable attribute per local variable in the Code attribute.')."</font>);
+<a name="945" href="#945">945</a> 					}
+<a name="946" href="#946">946</a> 				}<font color="#329900"><i>// if atts[a] instanceof LocalVariableTable END</font></i>
+<a name="947" href="#947">947</a> 			}<font color="#329900"><i>// for all attributes atts[a] END</font></i>
+<a name="948" href="#948">948</a> 		}<font color="#329900"><i>// visitCode(Code) END</font></i>
+<a name="949" href="#949">949</a> 
+<a name="950" href="#950">950</a> 		<b>public</b> <b>void</b> visitExceptionTable(<a href="../../../../../org/apache/bcel/classfile/ExceptionTable.html">ExceptionTable</a> obj){<font color="#329900"><i>//vmspec2 4.7.4</font></i>
+<a name="951" href="#951">951</a> 			<font color="#329900"><i>// incorrectly named, it's the Exceptions attribute (vmspec2 4.7.4)</font></i>
+<a name="952" href="#952">952</a> 			checkIndex(obj, obj.getNameIndex(), CONST_Utf8);
+<a name="953" href="#953">953</a> 
+<a name="954" href="#954">954</a> 			String name = ((ConstantUtf8) cp.getConstant(obj.getNameIndex())).getBytes();
+<a name="955" href="#955">955</a> 			<b>if</b> (! name.equals(<font color="#000099">"Exceptions"</font>)){
+<a name="956" href="#956">956</a> 				<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"The Exceptions attribute '"</font>+tostring(obj)+<font color="#000099">"' is not correctly named 'Exceptions' but '"</font>+name+<font color="#000099">"'."</font>);
+<a name="957" href="#957">957</a> 			}
+<a name="958" href="#958">958</a> 
+<a name="959" href="#959">959</a> 			<b>int</b>[] exc_indices = obj.getExceptionIndexTable();
+<a name="960" href="#960">960</a> 
+<a name="961" href="#961">961</a> 			<b>for</b> (<b>int</b> i=0; i&lt;exc_indices.length; i++){
+<a name="962" href="#962">962</a> 				checkIndex(obj, exc_indices[i], CONST_Class);
+<a name="963" href="#963">963</a> 
+<a name="964" href="#964">964</a> 				ConstantClass cc = (ConstantClass) (cp.getConstant(exc_indices[i]));
+<a name="965" href="#965">965</a> 				checkIndex(cc, cc.getNameIndex(), CONST_Utf8); <font color="#329900"><i>// cannot be sure this ConstantClass has already been visited (checked)!</font></i>
+<a name="966" href="#966">966</a> 				String cname = ((ConstantUtf8) cp.getConstant(cc.getNameIndex())).getBytes().replace('/','.'); <font color="#329900"><i>//convert internal notation on-the-fly to external notation</font></i>
+<a name="967" href="#967">967</a> 
+<a name="968" href="#968">968</a> 				Verifier v = VerifierFactory.getVerifier(cname);
+<a name="969" href="#969">969</a> 				VerificationResult vr = v.doPass1();
+<a name="970" href="#970">970</a> 
+<a name="971" href="#971">971</a> 				<b>if</b> (vr != Ver<b>if</b>icationResult.VR_OK){
+<a name="972" href="#972">972</a> 					<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Exceptions attribute '"</font>+tostring(obj)+<font color="#000099">"' references '"</font>+cname+<font color="#000099">"' as an Exception but it does not pass verification pass 1: "</font>+vr);
+<a name="973" href="#973">973</a> 				}
+<a name="974" href="#974">974</a> 				<b>else</b>{
+<a name="975" href="#975">975</a> 					<font color="#329900"><i>// We cannot safely trust any other "instanceof" mechanism. We need to transitively verify</font></i>
+<a name="976" href="#976">976</a> 					<font color="#329900"><i>// the ancestor hierarchy.</font></i>
+<a name="977" href="#977">977</a> 					JavaClass e = Repository.lookupClass(cname);
+<a name="978" href="#978">978</a> 					JavaClass t = Repository.lookupClass(Type.THROWABLE.getClassName());
+<a name="979" href="#979">979</a> 					JavaClass o = Repository.lookupClass(Type.OBJECT.getClassName());
+<a name="980" href="#980">980</a> 					<b>while</b> (e != o){
+<a name="981" href="#981">981</a> 						<b>if</b> (e == t) <b>break</b>; <font color="#329900"><i>// It's a subclass of Throwable, OKAY, leave.</font></i>
+<a name="982" href="#982">982</a> 
+<a name="983" href="#983">983</a> 						v = VerifierFactory.getVerifier(e.getSuperclassName());
+<a name="984" href="#984">984</a> 						vr = v.doPass1();
+<a name="985" href="#985">985</a> 						<b>if</b> (vr != Ver<b>if</b>icationResult.VR_OK){
+<a name="986" href="#986">986</a> 							<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Exceptions attribute '"</font>+tostring(obj)+<font color="#000099">"' references '"</font>+cname+<font color="#000099">"' as an Exception but '"</font>+e.getSuperclassName()+<font color="#000099">"' in the ancestor hierachy does not pass verification pass 1: "</font>+vr);
+<a name="987" href="#987">987</a> 						}
+<a name="988" href="#988">988</a> 						<b>else</b>{
+<a name="989" href="#989">989</a> 							e = Repository.lookupClass(e.getSuperclassName());
+<a name="990" href="#990">990</a> 						}
+<a name="991" href="#991">991</a> 					}
+<a name="992" href="#992">992</a> 					<b>if</b> (e != t) <b>throw</b> <b>new</b> ClassConstraintException(<font color="#000099">"Exceptions attribute '"</font>+tostring(obj)+<font color="#000099">"' references '"</font>+cname+<font color="#000099">"' as an Exception but it is not a subclass of '"</font>+t.getClassName()+<font color="#000099">"'."</font>);
+<a name="993" href="#993">993</a> 				}
+<a name="994" href="#994">994</a> 			}
+<a name="995" href="#995">995</a> 		}
+<a name="996" href="#996">996</a> 		<font color="#329900"><i>// SYNTHETIC: see above</font></i>
+<a name="997" href="#997">997</a> 		<font color="#329900"><i>// DEPRECATED: see above</font></i>
+<a name="998" href="#998">998</a> 		<font color="#329900"><i>//////////////////////////////////////////////////////////////</font></i>
+<a name="999" href="#999">999</a> 		<font color="#329900"><i>// code_attribute-structure-ATTRIBUTES (vmspec2 4.7.3, 4.7) //</font></i>
+<a name="1000" href="#1000">1000</a> 		<font color="#329900"><i>//////////////////////////////////////////////////////////////</font></i>
+<a name="1001" href="#1001">1001</a> 		<b>public</b> <b>void</b> visitLineNumberTable(<a href="../../../../../org/apache/bcel/classfile/LineNumberTable.html">LineNumberTable</a> obj){<font color="#329900"><i>//vmspec2 4.7.8</font></i>
+<a name="1002" href="#1002">1002</a> 			checkIndex(obj, obj.getNameIndex(), CONST_Utf8);
+<a name="1003" href="#1003">1003</a> 
+<a name="1004" href="#1004">1004</a> 			String name = ((ConstantUtf8) cp.getConstant(obj.getNameIndex())).getBytes();
+<a name="1005" href="#1005">1005</a> 			<b>if</b> (! name.equals(<font color="#000099">"LineNumberTable"</font>)){
+<a name="1006" href="#1006">1006</a> 				<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"The LineNumberTable attribute '"</font>+tostring(obj)+<font color="#000099">"' is not correctly named 'LineNumberTable' but '"</font>+name+<font color="#000099">"'."</font>);
+<a name="1007" href="#1007">1007</a> 			}
+<a name="1008" href="#1008">1008</a> 
+<a name="1009" href="#1009">1009</a> 			<font color="#329900"><i>//In JustIce,this check is delayed to Pass 3a.</font></i>
+<a name="1010" href="#1010">1010</a> 			<font color="#329900"><i>//LineNumber[] linenumbers = obj.getLineNumberTable();</font></i>
+<a name="1011" href="#1011">1011</a> 			<font color="#329900"><i>// ...validity check...</font></i>
+<a name="1012" href="#1012">1012</a> 
+<a name="1013" href="#1013">1013</a> 		}
+<a name="1014" href="#1014">1014</a> 		<b>public</b> <b>void</b> visitLocalVariableTable(<a href="../../../../../org/apache/bcel/classfile/LocalVariableTable.html">LocalVariableTable</a> obj){<font color="#329900"><i>//vmspec2 4.7.9</font></i>
+<a name="1015" href="#1015">1015</a> 			<font color="#329900"><i>//In JustIce,this check is partially delayed to Pass 3a.</font></i>
+<a name="1016" href="#1016">1016</a> 			<font color="#329900"><i>//The other part can be found in the visitCode(Code) method.</font></i>
+<a name="1017" href="#1017">1017</a> 		}
+<a name="1018" href="#1018">1018</a> 		<font color="#329900"><i>////////////////////////////////////////////////////</font></i>
+<a name="1019" href="#1019">1019</a> 		<font color="#329900"><i>// MISC-structure-ATTRIBUTES (vmspec2 4.7.1, 4.7) //</font></i>
+<a name="1020" href="#1020">1020</a> 		<font color="#329900"><i>////////////////////////////////////////////////////</font></i>
+<a name="1021" href="#1021">1021</a> 		<b>public</b> <b>void</b> visitUnknown(<a href="../../../../../org/apache/bcel/classfile/Unknown.html">Unknown</a> obj){<font color="#329900"><i>//vmspec2 4.7.1</font></i>
+<a name="1022" href="#1022">1022</a> 			<font color="#329900"><i>// Represents an unknown attribute.</font></i>
+<a name="1023" href="#1023">1023</a> 			checkIndex(obj, obj.getNameIndex(), CONST_Utf8);
+<a name="1024" href="#1024">1024</a> 
+<a name="1025" href="#1025">1025</a> 			<font color="#329900"><i>// Maybe only misnamed? Give a (warning) message.</font></i>
+<a name="1026" href="#1026">1026</a> 			addMessage(<font color="#000099">"Unknown attribute '"</font>+tostring(obj)+<font color="#000099">"'. This attribute is not known in any context!"</font>);
+<a name="1027" href="#1027">1027</a> 		}
+<a name="1028" href="#1028">1028</a> 		<font color="#329900"><i>//////////</font></i>
+<a name="1029" href="#1029">1029</a> 		<font color="#329900"><i>// BCEL //</font></i>
+<a name="1030" href="#1030">1030</a> 		<font color="#329900"><i>//////////</font></i>
+<a name="1031" href="#1031">1031</a> 		<b>public</b> <b>void</b> visitLocalVariable(<a href="../../../../../org/apache/bcel/classfile/LocalVariable.html">LocalVariable</a> obj){
+<a name="1032" href="#1032">1032</a> 			<font color="#329900"><i>// This does not represent an Attribute but is only</font></i>
+<a name="1033" href="#1033">1033</a> 			<font color="#329900"><i>// related to internal BCEL data representation.</font></i>
+<a name="1034" href="#1034">1034</a> 
+<a name="1035" href="#1035">1035</a> 			<font color="#329900"><i>// see visitLocalVariableTable(LocalVariableTable)</font></i>
+<a name="1036" href="#1036">1036</a> 		}
+<a name="1037" href="#1037">1037</a> 		<b>public</b> <b>void</b> visitCodeException(<a href="../../../../../org/apache/bcel/classfile/CodeException.html">CodeException</a> obj){
+<a name="1038" href="#1038">1038</a> 			<font color="#329900"><i>// Code constraints are checked in Pass3 (3a and 3b).</font></i>
+<a name="1039" href="#1039">1039</a> 			<font color="#329900"><i>// This does not represent an Attribute but is only</font></i>
+<a name="1040" href="#1040">1040</a> 			<font color="#329900"><i>// related to internal BCEL data representation.</font></i>
+<a name="1041" href="#1041">1041</a> 
+<a name="1042" href="#1042">1042</a> 			<font color="#329900"><i>// see visitCode(Code)</font></i>
+<a name="1043" href="#1043">1043</a> 		}
+<a name="1044" href="#1044">1044</a> 		<b>public</b> <b>void</b> visitConstantPool(<a href="../../../../../org/apache/bcel/classfile/ConstantPool.html">ConstantPool</a> obj){
+<a name="1045" href="#1045">1045</a> 			<font color="#329900"><i>// No need to. We're piggybacked by the DescendingVisitor.</font></i>
+<a name="1046" href="#1046">1046</a> 			<font color="#329900"><i>// This does not represent an Attribute but is only</font></i>
+<a name="1047" href="#1047">1047</a> 			<font color="#329900"><i>// related to internal BCEL data representation.</font></i>
+<a name="1048" href="#1048">1048</a> 		}
+<a name="1049" href="#1049">1049</a> 		<b>public</b> <b>void</b> visitInnerClass(<a href="../../../../../org/apache/bcel/classfile/InnerClass.html">InnerClass</a> obj){
+<a name="1050" href="#1050">1050</a> 			<font color="#329900"><i>// This does not represent an Attribute but is only</font></i>
+<a name="1051" href="#1051">1051</a> 			<font color="#329900"><i>// related to internal BCEL data representation.</font></i>
+<a name="1052" href="#1052">1052</a> 		}
+<a name="1053" href="#1053">1053</a> 		<b>public</b> <b>void</b> visitLineNumber(<a href="../../../../../org/apache/bcel/classfile/LineNumber.html">LineNumber</a> obj){
+<a name="1054" href="#1054">1054</a> 			<font color="#329900"><i>// This does not represent an Attribute but is only</font></i>
+<a name="1055" href="#1055">1055</a> 			<font color="#329900"><i>// related to internal BCEL data representation.</font></i>
+<a name="1056" href="#1056">1056</a> 
+<a name="1057" href="#1057">1057</a> 			<font color="#329900"><i>// see visitLineNumberTable(LineNumberTable)</font></i>
+<a name="1058" href="#1058">1058</a> 		}
+<a name="1059" href="#1059">1059</a> 	}
+<a name="1060" href="#1060">1060</a> 
+<a name="1061" href="#1061">1061</a> 	<font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="1062" href="#1062">1062</a> <font color="#AA0000"><i>	 * Ensures that the ConstantCP-subclassed entries of the constant</font></i>
+<a name="1063" href="#1063">1063</a> <font color="#AA0000"><i>	 * pool are valid. According to "Yellin: Low Level Security in Java",</font></i>
+<a name="1064" href="#1064">1064</a> <font color="#AA0000"><i>	 * this method does not verify the existence of referenced entities</font></i>
+<a name="1065" href="#1065">1065</a> <font color="#AA0000"><i>	 * (such as classes) but only the formal correctness (such as well-formed</font></i>
+<a name="1066" href="#1066">1066</a> <font color="#AA0000"><i>	 * signatures).</font></i>
+<a name="1067" href="#1067">1067</a> <font color="#AA0000"><i>   * The visitXXX() methods throw ClassConstraintException instances otherwise.</font></i>
+<a name="1068" href="#1068">1068</a> <font color="#AA0000"><i>	 * &lt;B&gt;Precondition: index-style cross referencing in the constant</font></i>
+<a name="1069" href="#1069">1069</a> <font color="#AA0000"><i>	 * pool must be valid. Simply invoke constant_pool_entries_satisfy_static_constraints()</font></i>
+<a name="1070" href="#1070">1070</a> <font color="#AA0000"><i>	 * before.&lt;/B&gt;</font></i>
+<a name="1071" href="#1071">1071</a> <font color="#AA0000"><i>	 *</font></i>
+<a name="1072" href="#1072">1072</a> <font color="#AA0000"><i>	 * @throws ClassConstraintException otherwise.</font></i>
+<a name="1073" href="#1073">1073</a> <font color="#AA0000"><i>	 * @see #constant_pool_entries_satisfy_static_constraints()</font></i>
+<a name="1074" href="#1074">1074</a> <font color="#AA0000"><i>	 */</font></i>
+<a name="1075" href="#1075">1075</a> 	<b>private</b> <b>void</b> field_and_method_refs_are_valid(){
+<a name="1076" href="#1076">1076</a> 		JavaClass jc = Repository.lookupClass(myOwner.getClassName());
+<a name="1077" href="#1077">1077</a> 		DescendingVisitor v = <b>new</b> <a href="../../../../../org/apache/bcel/classfile/DescendingVisitor.html">DescendingVisitor</a>(jc, <b>new</b> FAMRAV_Visitor(jc));
+<a name="1078" href="#1078">1078</a> 		v.visit();
+<a name="1079" href="#1079">1079</a> 	}
+<a name="1080" href="#1080">1080</a> 
+<a name="1081" href="#1081">1081</a> 	<font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="1082" href="#1082">1082</a> <font color="#AA0000"><i>	 * A Visitor class that ensures the ConstantCP-subclassed entries</font></i>
+<a name="1083" href="#1083">1083</a> <font color="#AA0000"><i>	 * of the constant pool are valid.</font></i>
+<a name="1084" href="#1084">1084</a> <font color="#AA0000"><i>   * &lt;B&gt;Precondition: index-style cross referencing in the constant</font></i>
+<a name="1085" href="#1085">1085</a> <font color="#AA0000"><i>   * pool must be valid.&lt;/B&gt;</font></i>
+<a name="1086" href="#1086">1086</a> <font color="#AA0000"><i>	 *</font></i>
+<a name="1087" href="#1087">1087</a> <font color="#AA0000"><i>   * @see #constant_pool_entries_satisfy_static_constraints()</font></i>
+<a name="1088" href="#1088">1088</a> <font color="#AA0000"><i>	 * @see org.apache.bcel.classfile.ConstantCP</font></i>
+<a name="1089" href="#1089">1089</a> <font color="#AA0000"><i>	 */</font></i>
+<a name="1090" href="#1090">1090</a> 	<b>private</b> <b>class</b> FAMRAV_Visitor <b>extends</b> <a href="../../../../../org/apache/bcel/classfile/EmptyVisitor.html">EmptyVisitor</a> implements <a href="../../../../../org/apache/bcel/classfile/Visitor.html">Visitor</a>{
+<a name="1091" href="#1091">1091</a> 		<b>private</b> <b>final</b> <a href="../../../../../org/apache/bcel/classfile/ConstantPool.html">ConstantPool</a> cp; <font color="#329900"><i>// ==jc.getConstantPool() -- only here to save typing work.</font></i>
+<a name="1092" href="#1092">1092</a> 		<b>private</b> FAMRAV_Visitor(<a href="../../../../../org/apache/bcel/classfile/JavaClass.html">JavaClass</a> _jc){
+<a name="1093" href="#1093">1093</a> 			cp = _jc.getConstantPool();
+<a name="1094" href="#1094">1094</a> 		}
+<a name="1095" href="#1095">1095</a> 		
+<a name="1096" href="#1096">1096</a> 		<b>public</b> <b>void</b> visitConstantFieldref(<a href="../../../../../org/apache/bcel/classfile/ConstantFieldref.html">ConstantFieldref</a> obj){
+<a name="1097" href="#1097">1097</a> 			<b>if</b> (obj.getTag() != Constants.CONSTANT_Fieldref){
+<a name="1098" href="#1098">1098</a> 				<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"ConstantFieldref '"</font>+tostring(obj)+<font color="#000099">"' has wrong tag!"</font>);
+<a name="1099" href="#1099">1099</a> 			}
+<a name="1100" href="#1100">1100</a> 			<b>int</b> name_and_type_index = obj.getNameAndTypeIndex();
+<a name="1101" href="#1101">1101</a> 			ConstantNameAndType cnat = (ConstantNameAndType) (cp.getConstant(name_and_type_index));
+<a name="1102" href="#1102">1102</a> 			String name = ((ConstantUtf8) (cp.getConstant(cnat.getNameIndex()))).getBytes(); <font color="#329900"><i>// Field or Method name</font></i>
+<a name="1103" href="#1103">1103</a> 			<b>if</b> (!validFieldName(name)){
+<a name="1104" href="#1104">1104</a> 				<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Invalid field name '"</font>+name+<font color="#000099">"' referenced by '"</font>+tostring(obj)+<font color="#000099">"'."</font>);
+<a name="1105" href="#1105">1105</a> 			}
+<a name="1106" href="#1106">1106</a> 			
+<a name="1107" href="#1107">1107</a> 			<b>int</b> <b>class</b>_index = obj.getClassIndex();
+<a name="1108" href="#1108">1108</a> 			ConstantClass cc = (ConstantClass) (cp.getConstant(<b>class</b>_index));
+<a name="1109" href="#1109">1109</a> 			String className = ((ConstantUtf8) (cp.getConstant(cc.getNameIndex()))).getBytes(); <font color="#329900"><i>// Class Name in internal form</font></i>
+<a name="1110" href="#1110">1110</a> 			<b>if</b> (! validClassName(className)){
+<a name="1111" href="#1111">1111</a> 				<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Illegal class name '"</font>+className+<font color="#000099">"' used by '"</font>+tostring(obj)+<font color="#000099">"'."</font>);
+<a name="1112" href="#1112">1112</a> 			}
+<a name="1113" href="#1113">1113</a> 
+<a name="1114" href="#1114">1114</a> 			String sig  = ((ConstantUtf8) (cp.getConstant(cnat.getSignatureIndex()))).getBytes(); <font color="#329900"><i>// Field or Method signature(=descriptor)</font></i>
+<a name="1115" href="#1115">1115</a> 						
+<a name="1116" href="#1116">1116</a> 			<b>try</b>{
+<a name="1117" href="#1117">1117</a> 				Type.getType(sig); <font color="#329900"><i>/*<font color="#329900"><i> Don't need the return value */</font></i></font></i>
+<a name="1118" href="#1118">1118</a> 			}
+<a name="1119" href="#1119">1119</a> 			<b>catch</b> (ClassFormatError cfe){
+<a name="1120" href="#1120">1120</a> 				<font color="#329900"><i>// Well, BCEL sometimes is a little harsh describing exceptional situations.</font></i>
+<a name="1121" href="#1121">1121</a> 				<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Illegal descriptor (==signature) '"</font>+sig+<font color="#000099">"' used by '"</font>+tostring(obj)+<font color="#000099">"'."</font>);
+<a name="1122" href="#1122">1122</a> 			}
+<a name="1123" href="#1123">1123</a> 		}
+<a name="1124" href="#1124">1124</a> 
+<a name="1125" href="#1125">1125</a> 		<b>public</b> <b>void</b> visitConstantMethodref(<a href="../../../../../org/apache/bcel/classfile/ConstantMethodref.html">ConstantMethodref</a> obj){
+<a name="1126" href="#1126">1126</a> 			<b>if</b> (obj.getTag() != Constants.CONSTANT_Methodref){
+<a name="1127" href="#1127">1127</a> 				<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"ConstantMethodref '"</font>+tostring(obj)+<font color="#000099">"' has wrong tag!"</font>);
+<a name="1128" href="#1128">1128</a> 			}
+<a name="1129" href="#1129">1129</a> 			<b>int</b> name_and_type_index = obj.getNameAndTypeIndex();
+<a name="1130" href="#1130">1130</a> 			ConstantNameAndType cnat = (ConstantNameAndType) (cp.getConstant(name_and_type_index));
+<a name="1131" href="#1131">1131</a> 			String name = ((ConstantUtf8) (cp.getConstant(cnat.getNameIndex()))).getBytes(); <font color="#329900"><i>// Field or Method name</font></i>
+<a name="1132" href="#1132">1132</a> 			<b>if</b> (!validClassMethodName(name)){
+<a name="1133" href="#1133">1133</a> 				<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Invalid (non-interface) method name '"</font>+name+<font color="#000099">"' referenced by '"</font>+tostring(obj)+<font color="#000099">"'."</font>);
+<a name="1134" href="#1134">1134</a> 			}
+<a name="1135" href="#1135">1135</a> 
+<a name="1136" href="#1136">1136</a> 			<b>int</b> <b>class</b>_index = obj.getClassIndex();
+<a name="1137" href="#1137">1137</a> 			ConstantClass cc = (ConstantClass) (cp.getConstant(<b>class</b>_index));
+<a name="1138" href="#1138">1138</a> 			String className = ((ConstantUtf8) (cp.getConstant(cc.getNameIndex()))).getBytes(); <font color="#329900"><i>// Class Name in internal form</font></i>
+<a name="1139" href="#1139">1139</a> 			<b>if</b> (! validClassName(className)){
+<a name="1140" href="#1140">1140</a> 				<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Illegal class name '"</font>+className+<font color="#000099">"' used by '"</font>+tostring(obj)+<font color="#000099">"'."</font>);
+<a name="1141" href="#1141">1141</a> 			}
+<a name="1142" href="#1142">1142</a> 
+<a name="1143" href="#1143">1143</a> 			String sig  = ((ConstantUtf8) (cp.getConstant(cnat.getSignatureIndex()))).getBytes(); <font color="#329900"><i>// Field or Method signature(=descriptor)</font></i>
+<a name="1144" href="#1144">1144</a> 						
+<a name="1145" href="#1145">1145</a> 			<b>try</b>{
+<a name="1146" href="#1146">1146</a> 				Type   t  = Type.getReturnType(sig);
+<a name="1147" href="#1147">1147</a> 				<b>if</b> ( name.equals(CONSTRUCTOR_NAME) && (t != Type.VOID) ){
+<a name="1148" href="#1148">1148</a> 					<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Instance initialization method must have VOID return type."</font>);
+<a name="1149" href="#1149">1149</a> 				}
+<a name="1150" href="#1150">1150</a> 			}
+<a name="1151" href="#1151">1151</a> 			<b>catch</b> (ClassFormatError cfe){
+<a name="1152" href="#1152">1152</a> 				<font color="#329900"><i>// Well, BCEL sometimes is a little harsh describing exceptional situations.</font></i>
+<a name="1153" href="#1153">1153</a> 				<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Illegal descriptor (==signature) '"</font>+sig+<font color="#000099">"' used by '"</font>+tostring(obj)+<font color="#000099">"'."</font>);
+<a name="1154" href="#1154">1154</a> 			}
+<a name="1155" href="#1155">1155</a> 		}
+<a name="1156" href="#1156">1156</a> 
+<a name="1157" href="#1157">1157</a> 		<b>public</b> <b>void</b> visitConstantInterfaceMethodref(<a href="../../../../../org/apache/bcel/classfile/ConstantInterfaceMethodref.html">ConstantInterfaceMethodref</a> obj){
+<a name="1158" href="#1158">1158</a> 			<b>if</b> (obj.getTag() != Constants.CONSTANT_InterfaceMethodref){
+<a name="1159" href="#1159">1159</a> 				<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"ConstantInterfaceMethodref '"</font>+tostring(obj)+<font color="#000099">"' has wrong tag!"</font>);
+<a name="1160" href="#1160">1160</a> 			}
+<a name="1161" href="#1161">1161</a> 			<b>int</b> name_and_type_index = obj.getNameAndTypeIndex();
+<a name="1162" href="#1162">1162</a> 			ConstantNameAndType cnat = (ConstantNameAndType) (cp.getConstant(name_and_type_index));
+<a name="1163" href="#1163">1163</a> 			String name = ((ConstantUtf8) (cp.getConstant(cnat.getNameIndex()))).getBytes(); <font color="#329900"><i>// Field or Method name</font></i>
+<a name="1164" href="#1164">1164</a> 			<b>if</b> (!validInterfaceMethodName(name)){
+<a name="1165" href="#1165">1165</a> 				<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Invalid (interface) method name '"</font>+name+<font color="#000099">"' referenced by '"</font>+tostring(obj)+<font color="#000099">"'."</font>);
+<a name="1166" href="#1166">1166</a> 			}
+<a name="1167" href="#1167">1167</a> 
+<a name="1168" href="#1168">1168</a> 			<b>int</b> <b>class</b>_index = obj.getClassIndex();
+<a name="1169" href="#1169">1169</a> 			ConstantClass cc = (ConstantClass) (cp.getConstant(<b>class</b>_index));
+<a name="1170" href="#1170">1170</a> 			String className = ((ConstantUtf8) (cp.getConstant(cc.getNameIndex()))).getBytes(); <font color="#329900"><i>// Class Name in internal form</font></i>
+<a name="1171" href="#1171">1171</a> 			<b>if</b> (! validClassName(className)){
+<a name="1172" href="#1172">1172</a> 				<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Illegal class name '"</font>+className+<font color="#000099">"' used by '"</font>+tostring(obj)+<font color="#000099">"'."</font>);
+<a name="1173" href="#1173">1173</a> 			}
+<a name="1174" href="#1174">1174</a> 
+<a name="1175" href="#1175">1175</a> 			String sig  = ((ConstantUtf8) (cp.getConstant(cnat.getSignatureIndex()))).getBytes(); <font color="#329900"><i>// Field or Method signature(=descriptor)</font></i>
+<a name="1176" href="#1176">1176</a> 						
+<a name="1177" href="#1177">1177</a> 			<b>try</b>{
+<a name="1178" href="#1178">1178</a> 				Type   t  = Type.getReturnType(sig);
+<a name="1179" href="#1179">1179</a> 				<b>if</b> ( name.equals(STATIC_INITIALIZER_NAME) && (t != Type.VOID) ){
+<a name="1180" href="#1180">1180</a> 					addMessage(<font color="#000099">"Class or interface initialization method '"</font>+STATIC_INITIALIZER_NAME+<font color="#000099">"' usually has VOID return type instead of '"</font>+t+<font color="#000099">"'. Note this is really not a requirement of The Java Virtual Machine Specification, Second Edition."</font>);
+<a name="1181" href="#1181">1181</a> 				}
+<a name="1182" href="#1182">1182</a> 			}
+<a name="1183" href="#1183">1183</a> 			<b>catch</b> (ClassFormatError cfe){
+<a name="1184" href="#1184">1184</a> 				<font color="#329900"><i>// Well, BCEL sometimes is a little harsh describing exceptional situations.</font></i>
+<a name="1185" href="#1185">1185</a> 				<b>throw</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/exc/ClassConstraintException.html">ClassConstraintException</a>(<font color="#000099">"Illegal descriptor (==signature) '"</font>+sig+<font color="#000099">"' used by '"</font>+tostring(obj)+<font color="#000099">"'."</font>);
+<a name="1186" href="#1186">1186</a> 			}
+<a name="1187" href="#1187">1187</a> 
+<a name="1188" href="#1188">1188</a> 		}
+<a name="1189" href="#1189">1189</a> 		
+<a name="1190" href="#1190">1190</a> 	}
+<a name="1191" href="#1191">1191</a> 
+<a name="1192" href="#1192">1192</a> 	<font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="1193" href="#1193">1193</a> <font color="#AA0000"><i>	 * This method returns true if and only if the supplied String</font></i>
+<a name="1194" href="#1194">1194</a> <font color="#AA0000"><i>	 * represents a valid Java class name.</font></i>
+<a name="1195" href="#1195">1195</a> <font color="#AA0000"><i>	 */</font></i>
+<a name="1196" href="#1196">1196</a> 	<b>private</b> <b>static</b> <b>final</b> <b>boolean</b> validClassName(String name){
+<a name="1197" href="#1197">1197</a>         <font color="#329900"><i>/*</font></i>
+<a name="1198" href="#1198">1198</a> <font color="#329900"><i>         * TODO: implement.</font></i>
+<a name="1199" href="#1199">1199</a> <font color="#329900"><i>		 * Are there any restrictions?</font></i>
+<a name="1200" href="#1200">1200</a> <font color="#329900"><i>         */</font></i>
+<a name="1201" href="#1201">1201</a> 		<b>return</b> <b>true</b>;
+<a name="1202" href="#1202">1202</a> 	}
+<a name="1203" href="#1203">1203</a> 	<font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="1204" href="#1204">1204</a> <font color="#AA0000"><i>	 * This method returns true if and only if the supplied String</font></i>
+<a name="1205" href="#1205">1205</a> <font color="#AA0000"><i>	 * represents a valid method name.</font></i>
+<a name="1206" href="#1206">1206</a> <font color="#AA0000"><i>	 * This is basically the same as a valid identifier name in the</font></i>
+<a name="1207" href="#1207">1207</a> <font color="#AA0000"><i>	 * Java programming language, but the special name for</font></i>
+<a name="1208" href="#1208">1208</a> <font color="#AA0000"><i>	 * the instance initialization method is allowed and the special name</font></i>
+<a name="1209" href="#1209">1209</a> <font color="#AA0000"><i>	 * for the class/interface initialization method may be allowed.</font></i>
+<a name="1210" href="#1210">1210</a> <font color="#AA0000"><i>	 */</font></i>
+<a name="1211" href="#1211">1211</a> 	<b>private</b> <b>static</b> <b>boolean</b> validMethodName(String name, <b>boolean</b> allowStaticInit){
+<a name="1212" href="#1212">1212</a> 		<b>if</b> (validJavaLangMethodName(name)) <b>return</b> <b>true</b>;
+<a name="1213" href="#1213">1213</a> 		
+<a name="1214" href="#1214">1214</a> 		<b>if</b> (allowStaticInit){
+<a name="1215" href="#1215">1215</a> 			<b>return</b> (name.equals(CONSTRUCTOR_NAME) || name.equals(STATIC_INITIALIZER_NAME));
+<a name="1216" href="#1216">1216</a> 		}
+<a name="1217" href="#1217">1217</a> 		<b>else</b>{
+<a name="1218" href="#1218">1218</a> 			<b>return</b> name.equals(CONSTRUCTOR_NAME);
+<a name="1219" href="#1219">1219</a> 		}
+<a name="1220" href="#1220">1220</a> 	}
+<a name="1221" href="#1221">1221</a> 
+<a name="1222" href="#1222">1222</a> 	<font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="1223" href="#1223">1223</a> <font color="#AA0000"><i>	 * This method returns true if and only if the supplied String</font></i>
+<a name="1224" href="#1224">1224</a> <font color="#AA0000"><i>	 * represents a valid method name that may be referenced by</font></i>
+<a name="1225" href="#1225">1225</a> <font color="#AA0000"><i>	 * ConstantMethodref objects.</font></i>
+<a name="1226" href="#1226">1226</a> <font color="#AA0000"><i>	 */</font></i>
+<a name="1227" href="#1227">1227</a> 	<b>private</b> <b>static</b> <b>boolean</b> validClassMethodName(String name){
+<a name="1228" href="#1228">1228</a> 		<b>return</b> validMethodName(name, false);
+<a name="1229" href="#1229">1229</a> 	}
+<a name="1230" href="#1230">1230</a> 
+<a name="1231" href="#1231">1231</a> 	<font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="1232" href="#1232">1232</a> <font color="#AA0000"><i>	 * This method returns true if and only if the supplied String</font></i>
+<a name="1233" href="#1233">1233</a> <font color="#AA0000"><i>	 * represents a valid Java programming language method name stored as a simple</font></i>
+<a name="1234" href="#1234">1234</a> <font color="#AA0000"><i>	 * (non-qualified) name.</font></i>
+<a name="1235" href="#1235">1235</a> <font color="#AA0000"><i>	 * Conforming to: The Java Virtual Machine Specification, Second Edition, §2.7, §2.7.1, §2.2.</font></i>
+<a name="1236" href="#1236">1236</a> <font color="#AA0000"><i>	 */</font></i>
+<a name="1237" href="#1237">1237</a> 	<b>private</b> <b>static</b> <b>boolean</b> validJavaLangMethodName(String name){
+<a name="1238" href="#1238">1238</a> 		<b>if</b> (!Character.isJavaIdent<b>if</b>ierStart(name.charAt(0))) <b>return</b> false;
+<a name="1239" href="#1239">1239</a> 		
+<a name="1240" href="#1240">1240</a> 		<b>for</b> (<b>int</b> i=1; i&lt;name.length(); i++){
+<a name="1241" href="#1241">1241</a> 			<b>if</b> (!Character.isJavaIdent<b>if</b>ierPart(name.charAt(i))) <b>return</b> false;
+<a name="1242" href="#1242">1242</a> 		}
+<a name="1243" href="#1243">1243</a> 		<b>return</b> <b>true</b>;
+<a name="1244" href="#1244">1244</a> 	}
+<a name="1245" href="#1245">1245</a> 
+<a name="1246" href="#1246">1246</a> 	<font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="1247" href="#1247">1247</a> <font color="#AA0000"><i>	 * This method returns true if and only if the supplied String</font></i>
+<a name="1248" href="#1248">1248</a> <font color="#AA0000"><i>	 * represents a valid Java interface method name that may be</font></i>
+<a name="1249" href="#1249">1249</a> <font color="#AA0000"><i>	 * referenced by ConstantInterfaceMethodref objects.</font></i>
+<a name="1250" href="#1250">1250</a> <font color="#AA0000"><i>	 */</font></i>
+<a name="1251" href="#1251">1251</a> 	<b>private</b> <b>static</b> <b>boolean</b> validInterfaceMethodName(String name){
+<a name="1252" href="#1252">1252</a> 		<font color="#329900"><i>// I guess we should assume special names forbidden here.</font></i>
+<a name="1253" href="#1253">1253</a> 		<b>if</b> (name.startsWith(<font color="#000099">"&lt;"</font>)) <b>return</b> false;
+<a name="1254" href="#1254">1254</a> 		<b>return</b> validJavaLangMethodName(name);
+<a name="1255" href="#1255">1255</a> 	}
+<a name="1256" href="#1256">1256</a> 
+<a name="1257" href="#1257">1257</a> 	<font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="1258" href="#1258">1258</a> <font color="#AA0000"><i>	 * This method returns true if and only if the supplied String</font></i>
+<a name="1259" href="#1259">1259</a> <font color="#AA0000"><i>	 * represents a valid Java identifier (so-called simple name).</font></i>
+<a name="1260" href="#1260">1260</a> <font color="#AA0000"><i>	 */</font></i>
+<a name="1261" href="#1261">1261</a> 	<b>private</b> <b>static</b> <b>boolean</b> validJavaIdentifier(String name){
+<a name="1262" href="#1262">1262</a> 		<font color="#329900"><i>// vmspec2 2.7, vmspec2 2.2</font></i>
+<a name="1263" href="#1263">1263</a> 		<b>if</b> (!Character.isJavaIdent<b>if</b>ierStart(name.charAt(0))) <b>return</b> false;
+<a name="1264" href="#1264">1264</a> 		
+<a name="1265" href="#1265">1265</a> 		<b>for</b> (<b>int</b> i=1; i&lt;name.length(); i++){
+<a name="1266" href="#1266">1266</a> 			<b>if</b> (!Character.isJavaIdent<b>if</b>ierPart(name.charAt(i))) <b>return</b> false;
+<a name="1267" href="#1267">1267</a> 		}
+<a name="1268" href="#1268">1268</a> 		<b>return</b> <b>true</b>;
+<a name="1269" href="#1269">1269</a> 	}
+<a name="1270" href="#1270">1270</a> 
+<a name="1271" href="#1271">1271</a> 	<font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="1272" href="#1272">1272</a> <font color="#AA0000"><i>	 * This method returns true if and only if the supplied String</font></i>
+<a name="1273" href="#1273">1273</a> <font color="#AA0000"><i>	 * represents a valid Java field name.</font></i>
+<a name="1274" href="#1274">1274</a> <font color="#AA0000"><i>	 */</font></i>
+<a name="1275" href="#1275">1275</a> 	<b>private</b> <b>static</b> <b>boolean</b> validFieldName(String name){
+<a name="1276" href="#1276">1276</a> 		<font color="#329900"><i>// vmspec2 2.7, vmspec2 2.2</font></i>
+<a name="1277" href="#1277">1277</a> 		<b>return</b> validJavaIdentifier(name);
+<a name="1278" href="#1278">1278</a> 	}
+<a name="1279" href="#1279">1279</a> 
+<a name="1280" href="#1280">1280</a> 	<font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="1281" href="#1281">1281</a> <font color="#AA0000"><i>	 * This class serves for finding out if a given JavaClass' ConstantPool</font></i>
+<a name="1282" href="#1282">1282</a> <font color="#AA0000"><i>	 * references an Inner Class.</font></i>
+<a name="1283" href="#1283">1283</a> <font color="#AA0000"><i>	 * The Java Virtual Machine Specification, Second Edition is not very precise</font></i>
+<a name="1284" href="#1284">1284</a> <font color="#AA0000"><i>	 * about when an "InnerClasses" attribute has to appear. However, it states that</font></i>
+<a name="1285" href="#1285">1285</a> <font color="#AA0000"><i>	 * there has to be exactly one InnerClasses attribute in the ClassFile structure</font></i>
+<a name="1286" href="#1286">1286</a> <font color="#AA0000"><i>	 * if the constant pool of a class or interface refers to any class or interface</font></i>
+<a name="1287" href="#1287">1287</a> <font color="#AA0000"><i>	 * "that is not a member of a package". Sun does not mean "member of the default</font></i>
+<a name="1288" href="#1288">1288</a> <font color="#AA0000"><i>	 * package". In "Inner Classes Specification" they point out how a "bytecode name"</font></i>
+<a name="1289" href="#1289">1289</a> <font color="#AA0000"><i>	 * is derived so one has to deduce what a class name of a class "that is not a</font></i>
+<a name="1290" href="#1290">1290</a> <font color="#AA0000"><i>	 * member of a package" looks like: there is at least one character in the byte-</font></i>
+<a name="1291" href="#1291">1291</a> <font color="#AA0000"><i>	 * code name that cannot be part of a legal Java Language Class name (and not equal</font></i>
+<a name="1292" href="#1292">1292</a> <font color="#AA0000"><i>	 * to '/'). This assumption is wrong as the delimiter is '$' for which</font></i>
+<a name="1293" href="#1293">1293</a> <font color="#AA0000"><i>	 * Character.isJavaIdentifierPart() == true.</font></i>
+<a name="1294" href="#1294">1294</a> <font color="#AA0000"><i>	 * Hence, you really run into trouble if you have a toplevel class called</font></i>
+<a name="1295" href="#1295">1295</a> <font color="#AA0000"><i>	 * "A$XXX" and another toplevel class called "A" with in inner class called "XXX".</font></i>
+<a name="1296" href="#1296">1296</a> <font color="#AA0000"><i>	 * JustIce cannot repair this; please note that existing verifiers at this</font></i>
+<a name="1297" href="#1297">1297</a> <font color="#AA0000"><i>	 * time even fail to detect missing InnerClasses attributes in pass 2.</font></i>
+<a name="1298" href="#1298">1298</a> <font color="#AA0000"><i>	 */</font></i>
+<a name="1299" href="#1299">1299</a> 	<b>private</b> <b>class</b> InnerClassDetector <b>extends</b> <a href="../../../../../org/apache/bcel/classfile/EmptyVisitor.html">EmptyVisitor</a>{
+<a name="1300" href="#1300">1300</a> 		<b>private</b> <b>boolean</b> hasInnerClass = false;
+<a name="1301" href="#1301">1301</a> 		<b>private</b> <a href="../../../../../org/apache/bcel/classfile/JavaClass.html">JavaClass</a> jc;
+<a name="1302" href="#1302">1302</a> 		<b>private</b> <a href="../../../../../org/apache/bcel/classfile/ConstantPool.html">ConstantPool</a> cp;
+<a name="1303" href="#1303">1303</a> 		<b>private</b> InnerClassDetector(){} <font color="#329900"><i>// Don't use.</font></i>
+<a name="1304" href="#1304">1304</a> 		<font color="#AA0000"><i>/**<font color="#AA0000"><i>* Constructs an InnerClassDetector working on the <a href="../../../../../org/apache/bcel/classfile/JavaClass.html">JavaClass</a> _jc. */</font></i></font></i>
+<a name="1305" href="#1305">1305</a> 		<b>public</b> InnerClassDetector(<a href="../../../../../org/apache/bcel/classfile/JavaClass.html">JavaClass</a> _jc){
+<a name="1306" href="#1306">1306</a> 			jc = _jc;
+<a name="1307" href="#1307">1307</a> 			cp = jc.getConstantPool();
+<a name="1308" href="#1308">1308</a> 			(<b>new</b> <a href="../../../../../org/apache/bcel/classfile/DescendingVisitor.html">DescendingVisitor</a>(jc, <b>this</b>)).visit();
+<a name="1309" href="#1309">1309</a> 		}
+<a name="1310" href="#1310">1310</a> 		<font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="1311" href="#1311">1311</a> <font color="#AA0000"><i>		 * Returns if the JavaClass this InnerClassDetector is working on</font></i>
+<a name="1312" href="#1312">1312</a> <font color="#AA0000"><i>		 * has an Inner Class reference in its constant pool.</font></i>
+<a name="1313" href="#1313">1313</a> <font color="#AA0000"><i>		 */</font></i>
+<a name="1314" href="#1314">1314</a> 		<b>public</b> <b>boolean</b> innerClassReferenced(){
+<a name="1315" href="#1315">1315</a> 			<b>return</b> hasInnerClass;
+<a name="1316" href="#1316">1316</a> 		}
+<a name="1317" href="#1317">1317</a> 		<font color="#AA0000"><i>/**<font color="#AA0000"><i>* This method casually visits <a href="../../../../../org/apache/bcel/classfile/ConstantClass.html">ConstantClass</a> references. */</font></i></font></i>
+<a name="1318" href="#1318">1318</a> 		<b>public</b> <b>void</b> visitConstantClass(<a href="../../../../../org/apache/bcel/classfile/ConstantClass.html">ConstantClass</a> obj){
+<a name="1319" href="#1319">1319</a> 			Constant c = cp.getConstant(obj.getNameIndex());
+<a name="1320" href="#1320">1320</a> 			<b>if</b> (c instanceof ConstantUtf8){ <font color="#329900"><i>//Ignore the case where it's not a ConstantUtf8 here, we'll find out later.</font></i>
+<a name="1321" href="#1321">1321</a> 				String classname = ((ConstantUtf8) c).getBytes();
+<a name="1322" href="#1322">1322</a> 				<b>if</b> (classname.startsWith(jc.getClassName().replace('.','/')+<font color="#000099">"$"</font>)){
+<a name="1323" href="#1323">1323</a> 					hasInnerClass = <b>true</b>;
+<a name="1324" href="#1324">1324</a> 				}
+<a name="1325" href="#1325">1325</a> 			}
+<a name="1326" href="#1326">1326</a> 		}
+<a name="1327" href="#1327">1327</a> 	}
+<a name="1328" href="#1328">1328</a> 	
+<a name="1329" href="#1329">1329</a> 	<font color="#AA0000"><i>/**<font color="#AA0000"><i>*</font></i></font></i>
+<a name="1330" href="#1330">1330</a> <font color="#AA0000"><i>	 * This method is here to save typing work and improve code readability.</font></i>
+<a name="1331" href="#1331">1331</a> <font color="#AA0000"><i>	 */</font></i>
+<a name="1332" href="#1332">1332</a> 	<b>private</b> <b>static</b> String tostring(<a href="../../../../../org/apache/bcel/classfile/Node.html">Node</a> n){
+<a name="1333" href="#1333">1333</a> 		<b>return</b> <b>new</b> <a href="../../../../../org/apache/bcel/verifier/statics/StringRepresentation.html">StringRepresentation</a>(n).toString();
+<a name="1334" href="#1334">1334</a> 	}
+<a name="1335" href="#1335">1335</a> }
+</pre>
+<hr><center>This page was automatically generated by <a href="http://jakarta.apache.org/turbine/maven">Maven</a></center></body>
+</html>
+

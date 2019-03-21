@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<document>
+  
+  <properties>
+    <author email="turbine-maven-dev@jakarta.apache.org">Maven</author>
+    <title>Issue Tracking</title>
+  </properties>
+
+  <body>
+    <section name="Issue Tracking">
+      <p>
+                <a href="$url">$url</a>
+      </p>
+    </section>
+  </body>
+</document>
+

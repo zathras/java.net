@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="ShowTop sample" default="default" basedir=".">
+
+    <property file="build.properties"/>
+    <import file="../../GrinDriverXlet/build.xml"/>
+    <import file="../../GrinDriverXlet/generate-bdjo-desc.xml"/>
+    
+    <target name="default" depends="copy-xlet, all"/>
+    
+</project>

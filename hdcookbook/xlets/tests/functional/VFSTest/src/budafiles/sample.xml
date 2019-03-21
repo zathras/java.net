@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<bumf:manifest xmlns:bumf="urn:BDA:bdmv;manifest"
+	ID="0x00000001"
+	orgID="0x56789abc"
+	discID="0x00000000000000000000000000000000" >
+
+<Assets>
+   <Asset VPFilename="BDMV/JAR/00000.jar">
+      <BUDAFile name="56789abc/0/00000.jar"></BUDAFile>
+   </Asset>
+</Assets>
+
+</bumf:manifest>

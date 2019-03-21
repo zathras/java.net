@@ -1,0 +1,32 @@
+2003-04-25 08:54:53,663 INFO  org.apache.maven.plugin.PluginManager - Initializing Plugins!
+2003-04-25 08:54:53,963 INFO  org.apache.maven.plugin.PluginManager - Finished initializing Plugins!
+2003-04-25 08:54:55,355 ERROR org.apache.commons.jelly.tags.ant.AntTag - Class com.werken.werkz.jelly.ProjectTag doesn't support the nested "path" element.
+2003-04-25 08:54:55,766 ERROR org.apache.commons.jelly.tags.ant.AntTag - Class com.werken.werkz.jelly.ProjectTag doesn't support the nested "path" element.
+2003-04-25 08:54:56,126 ERROR org.apache.commons.jelly.tags.ant.AntTag - Class com.werken.werkz.jelly.ProjectTag doesn't support the nested "path" element.
+2003-04-25 08:54:56,507 ERROR org.apache.commons.jelly.tags.ant.AntTag - Class com.werken.werkz.jelly.ProjectTag doesn't support the nested "path" element.
+2003-04-25 08:54:56,787 ERROR org.apache.commons.jelly.tags.ant.AntTag - Class com.werken.werkz.jelly.ProjectTag doesn't support the nested "path" element.
+2003-04-25 08:54:56,857 ERROR org.apache.commons.jelly.tags.ant.AntTag - Class org.apache.commons.jelly.tags.core.ScopeTag doesn't support the nested "property" element.
+2003-04-25 08:54:57,038 ERROR org.apache.commons.jelly.tags.ant.AntTag - Class com.werken.werkz.jelly.ProjectTag doesn't support the nested "path" element.
+2003-04-25 08:54:57,158 ERROR org.apache.commons.jelly.tags.ant.AntTag - Class com.werken.werkz.jelly.ProjectTag doesn't support the nested "path" element.
+2003-04-25 08:54:57,328 ERROR org.apache.commons.jelly.tags.ant.AntTag - Class com.werken.werkz.jelly.ProjectTag doesn't support the nested "path" element.
+2003-04-25 08:54:57,468 ERROR org.apache.commons.jelly.tags.ant.AntTag - Class com.werken.werkz.jelly.ProjectTag doesn't support the nested "path" element.
+2003-04-25 08:54:57,518 ERROR org.apache.commons.jelly.tags.ant.AntTag - Class com.werken.werkz.jelly.GoalTag doesn't support the nested "mkdir" element.
+2003-04-25 08:54:57,528 ERROR org.apache.commons.jelly.tags.ant.AntTag - Class com.werken.werkz.jelly.GoalTag doesn't support the nested "mkdir" element.
+2003-04-25 08:54:57,679 ERROR org.apache.commons.jelly.tags.ant.AntTag - Class com.werken.werkz.jelly.ProjectTag doesn't support the nested "path" element.
+2003-04-25 08:54:57,959 ERROR org.apache.commons.jelly.tags.ant.AntTag - Class com.werken.werkz.jelly.ProjectTag doesn't support the nested "path" element.
+2003-04-25 08:54:58,069 ERROR org.apache.commons.jelly.tags.ant.AntTag - Class com.werken.werkz.jelly.ProjectTag doesn't support the nested "path" element.
+2003-04-25 08:54:58,099 ERROR org.apache.commons.jelly.tags.ant.AntTag - Class com.werken.werkz.jelly.ProjectTag doesn't support the nested "property" element.
+2003-04-25 08:54:58,099 ERROR org.apache.commons.jelly.tags.ant.AntTag - Class com.werken.werkz.jelly.ProjectTag doesn't support the nested "property" element.
+2003-04-25 08:54:58,139 ERROR org.apache.commons.jelly.tags.ant.AntTag - Class com.werken.werkz.jelly.GoalTag doesn't support the nested "echo" element.
+2003-04-25 08:54:58,149 ERROR org.apache.commons.jelly.tags.ant.AntTag - Class com.werken.werkz.jelly.GoalTag doesn't support the nested "copy" element.
+2003-04-25 08:54:58,279 ERROR org.apache.commons.jelly.tags.ant.AntTag - Class com.werken.werkz.jelly.ProjectTag doesn't support the nested "path" element.
+2003-04-25 08:54:58,380 ERROR org.apache.commons.jelly.tags.ant.AntTag - Class com.werken.werkz.jelly.ProjectTag doesn't support the nested "path" element.
+2003-04-25 08:54:58,410 ERROR org.apache.commons.jelly.tags.ant.AntTag - Class com.werken.werkz.jelly.GoalTag doesn't support the nested "mkdir" element.
+2003-04-25 08:54:58,410 ERROR org.apache.commons.jelly.tags.ant.AntTag - Class com.werken.werkz.jelly.GoalTag doesn't support the nested "mkdir" element.
+2003-04-25 08:54:58,490 ERROR org.apache.commons.jelly.tags.ant.AntTag - Class com.werken.werkz.jelly.ProjectTag doesn't support the nested "path" element.
+2003-04-25 08:54:58,550 ERROR org.apache.commons.jelly.tags.ant.AntTag - Class com.werken.werkz.jelly.GoalTag doesn't support the nested "mkdir" element.
+2003-04-25 08:54:58,550 ERROR org.apache.commons.jelly.tags.ant.AntTag - Class com.werken.werkz.jelly.GoalTag doesn't support the nested "mkdir" element.
+2003-04-25 08:54:58,580 ERROR org.apache.commons.jelly.tags.ant.AntTag - Class com.werken.werkz.jelly.GoalTag doesn't support the nested "echo" element.
+2003-04-25 08:54:59,351 ERROR org.apache.commons.jelly.tags.ant.AntTag - Class com.werken.werkz.jelly.GoalTag doesn't support the nested "mkdir" element.
+2003-04-25 08:54:59,351 ERROR org.apache.commons.jelly.tags.ant.AntTag - Class com.werken.werkz.jelly.GoalTag doesn't support the nested "mkdir" element.
+2003-04-25 08:54:59,351 ERROR org.apache.commons.jelly.tags.ant.AntTag - Class com.werken.werkz.jelly.GoalTag doesn't support the nested "echo" element.

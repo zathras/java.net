@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<!--
+Copyright  1990-2006 Sun Microsystems, Inc. All Rights Reserved.
+DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version
+2 only, as published by the Free Software Foundation.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+General Public License version 2 for more details (a copy is
+included at /legal/license.txt).
+
+You should have received a copy of the GNU General Public License
+version 2 along with this work; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+02110-1301 USA
+
+Please contact Sun Microsystems, Inc., 4150 Network Circle, Santa
+Clara, CA 95054 or visit www.sun.com if you need additional
+information or have any questions.
+-->
+
+<project name="Run GRIN tools used on Java SE" basedir="." default="run-grinview-menu">
+    
+    <import file="build.xml"/>
+    
+    <target name="prepare-all" depends="init-preset-defs, 
+    copy-menu-assets, generate-binary-script,  
+    init-grinview-java"/>
+    
+    <target name="init-grinview-java">
+        
+        <path id="grinview_menuxlet_path">
+            <pathelement path="${MENU_GENERATED}/grinview"/>
+            <pathelement path="${MENUTOOLS_DEST}"/>                
+            <pathelement path="${grinviewer.jar}"/>
+        </path>
+        
+        <presetdef name="menuxlet.grinview.jdktools.java">      
+            <grinview.jdktools.java 
+               classname="com.hdcookbook.grin.test.bigjdk.GrinView" 
+               classpath.ref="grinview_menuxlet_path">
+                <arg value="-asset_dir"/>
+                <arg value="${MENUASSETS_DEST}"/>
+                <arg value="-asset_dir"/>
+                <arg value="bookmenu/src/com/hdcookbook/bookmenu/assets"/>
+                <arg value="-background"/>
+                <arg value="bookmenu/src/com/hdcookbook/bookmenu/menu/test_assets/MenuScreenBG_gray.png"/>
+                <arg value="-fps"/>
+                <arg value="24"/>
+            </grinview.jdktools.java>
+        </presetdef>    
+    </target>
+    
+    <target name="run-grinview-menu" depends="prepare-all">  
+    <!-- Need to generate binary script for the ShowCommands compilation -->       
+       <menuxlet.grinview.jdktools.java> 
+                <arg value="-extension_parser"/>
+                <arg value="com.hdcookbook.bookmenu.menu.MenuExtensionParser"/>
+                <arg value="menu.txt"/>
+        </menuxlet.grinview.jdktools.java>	
+    </target>
+    
+    <target name="run-grin-viewer-binary" depends="prepare-all">
+        <menuxlet.grinview.jdktools.java> 
+            <arg value="menu.grin"/>   
+        </menuxlet.grinview.jdktools.java>	
+    </target>
+    
+    <target name="autotest-grinview" depends="prepare-all">
+        <menuxlet.grinview.jdktools.java> 
+            <arg value="-automate"/>
+            <arg value="-binary"/>
+            <arg value="menu.grin"/>  
+        </menuxlet.grinview.jdktools.java>
+    </target>
+    
+</project>

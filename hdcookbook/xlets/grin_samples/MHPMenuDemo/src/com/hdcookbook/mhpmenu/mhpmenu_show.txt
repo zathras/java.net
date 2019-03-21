@@ -1,0 +1,1751 @@
+
+#  
+# Copyright (c) 2011, Oracle
+# 
+# All rights reserved.
+# 
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+# 
+#  * Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#  * Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in the
+#    documentation and/or other materials provided with the distribution.
+#  * Neither the name of Sun Microsystems nor the names of its contributors
+#    may be used to endorse or promote products derived from this software
+#    without specific prior written permission.
+# 
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+# PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+# LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+# NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+# 
+#  Note:  In order to comply with the binary form redistribution 
+#         requirement in the above license, the licensee may include 
+#         a URL reference to a copy of the required copyright notice, 
+#         the list of conditions and the disclaimer in a human readable 
+#         file with the binary form of the code that is subject to the
+#         above license.  For example, such file could be put on a 
+#         Blu-ray disc containing the binary form of the code or could 
+#         be put in a JAR file that is broadcast via a digital television 
+#         broadcast medium.  In any event, you must include in any end 
+#         user licenses governing any code that includes the code subject 
+#         to the above license (in source and/or binary form) a disclaimer 
+#         that is at least as protective of Sun as the disclaimers in the 
+#         above license.
+# 
+#         A copy of the required copyright notice, the list of conditions and
+#         the disclaimer will be maintained at 
+#         https://hdcookbook.dev.java.net/misc/license.html .
+#         Thus, licensees may comply with the binary form redistribution
+#         requirement with a text file that contains the following text:
+# 
+#             A copy of the license(s) governing this code is located
+#             at https://hdcookbook.dev.java.net/misc/license.html
+# 
+
+
+#
+# This is the show file for the mhp menu demo
+#
+
+show
+
+exports
+    segments {
+	   sg.*
+    } features {
+       as.*
+	   tr.*
+	   tn.*
+    } handlers {
+	   vi.*
+    }
+;
+
+#
+# boilerplate show command definition
+# allow access in this grin show to its specific director
+#
+
+java_generated_class com.hdcookbook.mhpmenu.MHPMenuShowCommands [[
+
+    package com.hdcookbook.mhpmenu;
+
+    import com.hdcookbook.grin.Show;
+    import com.hdcookbook.grin.GrinXHelper;
+    import com.hdcookbook.grin.util.Debug;
+
+    public class MHPMenuShowCommands extends GrinXHelper {
+
+        public MHPMenuShowCommands(Show show) {
+            super(show);
+        }
+
+        public MHPMenuDirector getDirector() {
+            return (MHPMenuDirector) show.getDirector();
+        }
+
+        JAVA_COMMAND_BODY
+    
+    }
+
+
+]]
+
+#
+# preload features
+#
+feature group gr.empty {
+        # a group with nothing in it.  (useful to make invisible assembly parts)
+} ;
+
+feature translator tr.duke tn.duke {
+        tn.duke
+        so.fi.interpolation.duke         
+} ;
+feature translator_model tn.duke {
+        0       0 0     linear-relative         # Controlled by director
+} ;
+feature src_over so.fi.interpolation.duke fi.interpolation.duke ;
+feature fixed_image fi.interpolation.duke
+    ( left 1182 top 716 )
+    "images/duke.png" ;
+
+feature fixed_image fi.main.btns.Message_show_btn_text
+    ( left 415 top 575 )
+    "images/message_show_btn_text.png" ;
+feature src_over so.fi.main.btns.Message_show_btn_text fi.main.btns.Message_show_btn_text ;
+feature fixed_image fi.main.btns.simple_counter_btn_text
+    ( left 395 top 473 )
+    "images/simple_counter_btn_text.png" ;
+feature src_over so.fi.main.btns.simple_counter_btn_text fi.main.btns.simple_counter_btn_text ;
+feature fixed_image fi.main.btns.interpolation_demo_btn_text
+    ( left 1179 top 473 )
+    "images/interpolation_demo_btn_text.png" ;
+feature src_over so.fi.main.btns.interpolation_demo_btn_text fi.main.btns.interpolation_demo_btn_text ;
+feature fixed_image fi.main.btns.check_box_menu_btn_text
+    ( left 1180 top 379 )
+    "images/check_box_menu_btn_text.png" ;
+feature src_over so.fi.main.btns.check_box_menu_btn_text fi.main.btns.check_box_menu_btn_text ;
+feature fixed_image fi.main.btns.chapter_menu_btn_text
+    ( left 428 top 374 )
+    "images/chapter_menu_btn_text.png" ;
+feature src_over so.fi.main.btns.chapter_menu_btn_text fi.main.btns.chapter_menu_btn_text ;
+
+feature menu_assembly as.main 
+    template {
+        gr.main.btns.a1_button.arrow_l_s_normal       { gr.empty }
+        gr.main.btns.a8_button.arrow_r_s_normal       { gr.empty }
+        gr.main.btns.a7_button.arrow_r_s_normal       { gr.empty }
+        gr.main.btns.a6_button.arrow_r_s_normal       { gr.empty }
+        gr.main.btns.a5_button.arrow_r_s_normal       { gr.empty }
+        gr.main.btns.a4_button.arrow_l_s_normal       { gr.empty }
+        gr.main.btns.a3_button.arrow_l_s_normal       { gr.empty }
+        gr.main.btns.a2_button.arrow_l_s_normal       { gr.empty }
+    } parts {
+        pa.main.btns.a1_button.arrow_l_s      { gr.main.btns.a1_button.arrow_l_s_normal       { fi.main.btns.a1_button.arrow_l_s } }
+        pa.is.main.btns.a1_button.arrow_l_a     { gr.main.btns.a1_button.arrow_l_s_normal       { is.main.btns.a1_button.arrow_l_a } }
+        pa.main.btns.a8_button.arrow_r_s      { gr.main.btns.a8_button.arrow_r_s_normal       { fi.main.btns.a8_button.arrow_r_s } }
+        pa.is.main.btns.a8_button.arrow_r_a     { gr.main.btns.a8_button.arrow_r_s_normal       { is.main.btns.a8_button.arrow_r_a } }
+        pa.main.btns.a7_button.arrow_r_s      { gr.main.btns.a7_button.arrow_r_s_normal       { fi.main.btns.a7_button.arrow_r_s } }
+        pa.is.main.btns.a7_button.arrow_r_a     { gr.main.btns.a7_button.arrow_r_s_normal       { is.main.btns.a7_button.arrow_r_a } }
+        pa.main.btns.a6_button.arrow_r_s      { gr.main.btns.a6_button.arrow_r_s_normal       { fi.main.btns.a6_button.arrow_r_s } }
+        pa.is.main.btns.a6_button.arrow_r_a     { gr.main.btns.a6_button.arrow_r_s_normal       { is.main.btns.a6_button.arrow_r_a } }
+        pa.main.btns.a5_button.arrow_r_s      { gr.main.btns.a5_button.arrow_r_s_normal       { fi.main.btns.a5_button.arrow_r_s } }
+        pa.is.main.btns.a5_button.arrow_r_a     { gr.main.btns.a5_button.arrow_r_s_normal       { is.main.btns.a5_button.arrow_r_a } }
+        pa.main.btns.a4_button.arrow_l_s      { gr.main.btns.a4_button.arrow_l_s_normal       { fi.main.btns.a4_button.arrow_l_s } }
+        pa.is.main.btns.a4_button.arrow_l_a     { gr.main.btns.a4_button.arrow_l_s_normal       { is.main.btns.a4_button.arrow_l_a } }
+        pa.main.btns.a3_button.arrow_l_s      { gr.main.btns.a3_button.arrow_l_s_normal       { fi.main.btns.a3_button.arrow_l_s } }
+        pa.is.main.btns.a3_button.arrow_l_a     { gr.main.btns.a3_button.arrow_l_s_normal       { is.main.btns.a3_button.arrow_l_a } }
+        pa.main.btns.a2_button.arrow_l_s      { gr.main.btns.a2_button.arrow_l_s_normal       { fi.main.btns.a2_button.arrow_l_s } }
+        pa.is.main.btns.a2_button.arrow_l_a     { gr.main.btns.a2_button.arrow_l_s_normal       { is.main.btns.a2_button.arrow_l_a } }
+    }
+;
+
+feature src_over so.as.main as.main ;
+feature fixed_image fi.main.main_menu_text
+    ( left 782 top 153 )
+    "images/main_menu_text.png" ;
+feature src_over so.fi.main.main_menu_text fi.main.main_menu_text ;
+
+feature fixed_image fi.common.logo_back.logo_back
+    ( left 0 top 0 )
+    "images/logo_back.png" ;
+feature src_over so.fi.common.logo_back.logo_back fi.common.logo_back.logo_back ;
+feature image_sequence is.main.btns.a8_button.arrow_r_a ( left 1060 top 663 )
+	    "images/arrow_r_" {
+		  a + + + + + + + + + + + + 
+	    } ".png" 
+	    end_commands { activate_part as.main pa.main.btns.a8_button.arrow_r_s ; }  ;
+	    
+feature fixed_image fi.main.btns.a8_button.arrow_r_s
+    ( left 1060 top 663 )
+    "images/arrow_r_s.png" ;
+feature image_sequence is.main.btns.a7_button.arrow_r_a ( left 1061 top 563 )
+	    "images/arrow_r_" {
+		  a + + + + + + + + + + + + 
+	    } ".png" 
+	    end_commands { activate_part as.main pa.main.btns.a7_button.arrow_r_s ; }  ;
+feature fixed_image fi.main.btns.a7_button.arrow_r_s
+    ( left 1061 top 563 )
+    "images/arrow_r_s.png" ;
+feature image_sequence is.main.btns.a6_button.arrow_r_a ( left 1061 top 463 )
+	    "images/arrow_r_" {
+		  a + + + + + + + + + + + + 
+	    } ".png" 
+	    end_commands { 
+	       activate_part as.main pa.main.btns.a6_button.arrow_r_s ;
+	       activate_segment sg.interpolation ;
+	    }  ;
+feature fixed_image fi.main.btns.a6_button.arrow_r_s
+    ( left 1061 top 463 )
+    "images/arrow_r_s.png" ;
+feature image_sequence is.main.btns.a5_button.arrow_r_a ( left 1060 top 363 )
+	    "images/arrow_r_" {
+		  a + + + + + + + + + + + + 
+	    } ".png" 
+	    end_commands { 
+	       activate_part as.main pa.main.btns.a5_button.arrow_r_s ; 
+	       activate_segment sg.checkbox ; 
+	    }  ;
+feature fixed_image fi.main.btns.a5_button.arrow_r_s
+    ( left 1060 top 363 )
+    "images/arrow_r_s.png" ;
+feature image_sequence is.main.btns.a4_button.arrow_l_a ( left 778 top 663 )
+	    "images/arrow_l_" {
+		  a + + + + + + + + + + + + 
+	    } ".png" 
+	    end_commands { activate_part as.main pa.main.btns.a4_button.arrow_l_s ; }  ;
+feature fixed_image fi.main.btns.a4_button.arrow_l_s
+    ( left 778 top 663 )
+    "images/arrow_l_s.png" ;
+feature image_sequence is.main.btns.a3_button.arrow_l_a ( left 778 top 563 )
+	    "images/arrow_l_" {
+		  a + + + + + + + + + + + + 
+	    } ".png" 
+	    end_commands { 
+	       activate_part as.main pa.main.btns.a3_button.arrow_l_s ; 
+	       #TODO: <xshow:playSegment name="$MESSAGE_SHOW" segment="sg.message 
+	    }  ;
+feature fixed_image fi.main.btns.a3_button.arrow_l_s
+    ( left 778 top 563 )
+    "images/arrow_l_s.png" ;
+feature image_sequence is.main.btns.a2_button.arrow_l_a ( left 778 top 463 )
+	    "images/arrow_l_" {
+		  a + + + + + + + + + + + + 
+	    } ".png" 
+	    end_commands { 
+	       activate_part as.main pa.main.btns.a2_button.arrow_l_s ; 
+           activate_segment sg.counter ;
+	    }  ;
+feature fixed_image fi.main.btns.a2_button.arrow_l_s
+    ( left 778 top 463 )
+    "images/arrow_l_s.png" ;
+feature image_sequence is.main.btns.a1_button.arrow_l_a ( left 778 top 363 )
+	    "images/arrow_l_" {
+		  a + + + + + + + + + + + + 
+	    } ".png" 
+	    end_commands { 
+	       activate_part as.main pa.main.btns.a1_button.arrow_l_s ; 
+	       activate_segment sg.chapters ;
+	    }  ;
+feature fixed_image fi.main.btns.a1_button.arrow_l_s
+    ( left 778 top 363 )
+    "images/arrow_l_s.png" ;
+feature fixed_image fi.chapters.chapter_group.ch6_assembly.chapter_g_bg
+    ( left 2248 top 604 )
+    "images/chapter_g_bg.png" ;
+feature src_over so.fi.chapters.chapter_group.ch6_assembly.chapter_g_bg fi.chapters.chapter_group.ch6_assembly.chapter_g_bg ;
+feature fixed_image fi.chapters.chapter_group.ch6_assembly.chapter_y_bg
+    ( left 2248 top 604 )
+    "images/chapter_y_bg.png" ;
+feature fixed_image fi.chapters.chapter_group.chapt_6
+    ( left 2356 top 688 )
+    "images/chapt_6.png" ;
+feature src_over so.fi.chapters.chapter_group.chapt_6 fi.chapters.chapter_group.chapt_6 ;
+feature fixed_image fi.chapters.chapter_group.ch5_assembly.chapter_g_bg
+    ( left 1967 top 604 )
+    "images/chapter_g_bg.png" ;
+feature src_over so.fi.chapters.chapter_group.ch5_assembly.chapter_g_bg fi.chapters.chapter_group.ch5_assembly.chapter_g_bg ;
+feature fixed_image fi.chapters.chapter_group.ch5_assembly.chapter_y_bg
+    ( left 1967 top 604 )
+    "images/chapter_y_bg.png" ;
+feature src_over so.fi.chapters.chapter_group.ch5_assembly.chapter_y_bg fi.chapters.chapter_group.ch5_assembly.chapter_y_bg ;
+feature fixed_image fi.chapters.chapter_group.chapt_5
+    ( left 2075 top 688 )
+    "images/chapt_5.png" ;
+feature src_over so.fi.chapters.chapter_group.chapt_5 fi.chapters.chapter_group.chapt_5 ;
+feature fixed_image fi.chapters.chapter_group.ch4_assembly.chapter_g_bg
+    ( left 1687 top 604 )
+    "images/chapter_g_bg.png" ;
+feature src_over so.fi.chapters.chapter_group.ch4_assembly.chapter_g_bg fi.chapters.chapter_group.ch4_assembly.chapter_g_bg ;
+feature fixed_image fi.chapters.chapter_group.ch4_assembly.chapter_y_bg
+    ( left 1687 top 604 )
+    "images/chapter_y_bg.png" ;
+feature src_over so.fi.chapters.chapter_group.ch4_assembly.chapter_y_bg fi.chapters.chapter_group.ch4_assembly.chapter_y_bg ;
+feature fixed_image fi.chapters.chapter_group.chapt_4
+    ( left 1794 top 688 )
+    "images/chapt_4.png" ;
+feature src_over so.fi.chapters.chapter_group.chapt_4 fi.chapters.chapter_group.chapt_4 ;
+feature fixed_image fi.chapters.chapter_group.ch3_assembly.chapter_g_bg
+    ( left 1402 top 604 )
+    "images/chapter_g_bg.png" ;
+feature src_over so.fi.chapters.chapter_group.ch3_assembly.chapter_g_bg fi.chapters.chapter_group.ch3_assembly.chapter_g_bg ;
+feature fixed_image fi.chapters.chapter_group.ch3_assembly.chapter_y_bg
+    ( left 1402 top 604 )
+    "images/chapter_y_bg.png" ;
+feature src_over so.fi.chapters.chapter_group.ch3_assembly.chapter_y_bg fi.chapters.chapter_group.ch3_assembly.chapter_y_bg ;
+feature fixed_image fi.chapters.chapter_group.chapt_3
+    ( left 1510 top 688 )
+    "images/chapt_3.png" ;
+feature src_over so.fi.chapters.chapter_group.chapt_3 fi.chapters.chapter_group.chapt_3 ;
+feature fixed_image fi.chapters.chapter_group.ch2_assembly.chapter_g_bg
+    ( left 1122 top 604 )
+    "images/chapter_g_bg.png" ;
+feature src_over so.fi.chapters.chapter_group.ch2_assembly.chapter_g_bg fi.chapters.chapter_group.ch2_assembly.chapter_g_bg ;
+feature fixed_image fi.chapters.chapter_group.ch2_assembly.chapter_y_bg
+    ( left 1122 top 604 )
+    "images/chapter_y_bg.png" ;
+feature src_over so.fi.chapters.chapter_group.ch2_assembly.chapter_y_bg fi.chapters.chapter_group.ch2_assembly.chapter_y_bg ;
+feature fixed_image fi.chapters.chapter_group.chapt_2
+    ( left 1229 top 688 )
+    "images/chapt_2.png" ;
+feature src_over so.fi.chapters.chapter_group.chapt_2 fi.chapters.chapter_group.chapt_2 ;
+feature fixed_image fi.chapters.chapter_group.ch1_assembly.chapter_g_bg
+    ( left 843 top 604 )
+    "images/chapter_g_bg.png" ;
+feature src_over so.fi.chapters.chapter_group.ch1_assembly.chapter_g_bg fi.chapters.chapter_group.ch1_assembly.chapter_g_bg ;
+feature fixed_image fi.chapters.chapter_group.ch1_assembly.chapter_y_bg
+    ( left 843 top 604 )
+    "images/chapter_y_bg.png" ;
+feature src_over so.fi.chapters.chapter_group.ch1_assembly.chapter_y_bg fi.chapters.chapter_group.ch1_assembly.chapter_y_bg ;
+feature fixed_image fi.chapters.chapter_group.chapt_1
+    ( left 953 top 688 )
+    "images/chapt_1.png" ;
+feature src_over so.fi.chapters.chapter_group.chapt_1 fi.chapters.chapter_group.chapt_1 ;
+feature image_sequence is.chapters.btns.back_button.arrow_l_a ( left 1496 top 898 )
+	    "images/arrow_l_" {
+		  a + + + + + + + + + + + + 
+	    } ".png" 
+	    end_commands { 
+	       activate_part as.chapters pa.chapters.btns.back_button.arrow_l_s ; 
+	       activate_segment sg.main ;
+	    }  ;
+feature fixed_image fi.chapters.btns.back_button.arrow_l_s
+    ( left 1496 top 898 )
+    "images/arrow_l_s.png" ;
+feature image_sequence is.chapters.btns.prev_button.arrow_l_a ( left 860 top 463 )
+	    "images/arrow_l_" {
+		  a + + + + + + + + + + + + 
+	    } ".png" 
+	    end_commands { 
+	       activate_part as.chapters pa.chapters.btns.prev_button.arrow_l_s ; 
+	       java_command [[ getDirector().chPrev();  ]]
+	    }  ;
+feature fixed_image fi.chapters.btns.prev_button.arrow_l_s
+    ( left 860 top 463 )
+    "images/arrow_l_s.png" ;
+feature image_sequence is.chapters.btns.next_button.arrow_r_a ( left 980 top 463 )
+	    "images/arrow_r_" {
+		  a + + + + + + + + + + + + 
+	    } ".png" 
+	    end_commands { 
+	       activate_part as.chapters pa.chapters.btns.next_button.arrow_r_s ; 
+	       java_command [[ getDirector().chNext();  ]]
+	    }  ;
+feature fixed_image fi.chapters.btns.next_button.arrow_r_s
+    ( left 980 top 463 )
+    "images/arrow_r_s.png" ;
+feature image_sequence is.checkbox.btns.back_button.arrow_l_a ( left 1496 top 898 )
+	    "images/arrow_l_" {
+		  a + + + + + + + + + + + + 
+	    } ".png" 
+	    end_commands { 
+	       activate_part as.checkbox pa.checkbox.btns.back_button.arrow_l_s ; 
+	       activate_segment sg.main ;
+	    }  ;
+feature fixed_image fi.checkbox.btns.back_button.arrow_l_s
+    ( left 1496 top 898 )
+    "images/arrow_l_s.png" ;
+feature image_sequence is.checkbox.btns.a4_button.arrow_r_a ( left 582 top 664 )
+	    "images/arrow_r_" {
+		  a + + + + + + + + + + + + 
+	    } ".png" 
+	    end_commands { 
+	       activate_part as.checkbox pa.checkbox.btns.a4_button.arrow_r_s ;
+	       java_command [[ getDirector().check(3);  ]]
+	    }  ;
+feature fixed_image fi.checkbox.btns.a4_button.arrow_r_s
+    ( left 582 top 664 )
+    "images/arrow_r_s.png" ;
+feature image_sequence is.checkbox.btns.a3_button.arrow_r_a ( left 582 top 564 )
+	    "images/arrow_r_" {
+		  a + + + + + + + + + + + + 
+	    } ".png" 
+	    end_commands { 
+	       activate_part as.checkbox pa.checkbox.btns.a3_button.arrow_r_s ;
+	       java_command [[ getDirector().check(2);  ]]
+	    }  ;
+feature fixed_image fi.checkbox.btns.a3_button.arrow_r_s
+    ( left 582 top 564 )
+    "images/arrow_r_s.png" ;
+feature image_sequence is.checkbox.btns.a2_button.arrow_r_a ( left 582 top 464 )
+	    "images/arrow_r_" {
+		  a + + + + + + + + + + + + 
+	    } ".png" 
+	    end_commands { 
+	       activate_part as.checkbox pa.checkbox.btns.a2_button.arrow_r_s ; 
+	       java_command [[ getDirector().check(1);  ]]
+	    }  ;
+feature fixed_image fi.checkbox.btns.a2_button.arrow_r_s
+    ( left 582 top 464 )
+    "images/arrow_r_s.png" ;
+feature image_sequence is.checkbox.btns.a1_button.arrow_r_a ( left 582 top 364 )
+	    "images/arrow_r_" {
+		  a + + + + + + + + + + + + 
+	    } ".png" 
+	    end_commands { 
+	       activate_part as.checkbox pa.checkbox.btns.a1_button.arrow_r_s ; 
+	       java_command [[ getDirector().check(0);  ]]
+	    }  ;
+feature fixed_image fi.checkbox.btns.a1_button.arrow_r_s
+    ( left 582 top 364 )
+    "images/arrow_r_s.png" ;
+feature fixed_image fi.checkbox.checkbox4_assembly.box
+    ( left 692 top 657 )
+    "images/box.png" ;
+feature src_over so.fi.checkbox.checkbox4_assembly.box fi.checkbox.checkbox4_assembly.box ;
+feature fixed_image fi.checkbox.checkbox4_assembly.check_box_group.box
+    ( left 692 top 657 )
+    "images/box.png" ;
+feature src_over so.fi.checkbox.checkbox4_assembly.check_box_group.box fi.checkbox.checkbox4_assembly.check_box_group.box ;
+feature fixed_image fi.checkbox.checkbox4_assembly.check_box_group.check
+    ( left 703 top 658 )
+    "images/check.png" ;
+feature src_over so.fi.checkbox.checkbox4_assembly.check_box_group.check fi.checkbox.checkbox4_assembly.check_box_group.check ;
+feature fixed_image fi.checkbox.checkbox3_assembly.box
+    ( left 692 top 557 )
+    "images/box.png" ;
+feature src_over so.fi.checkbox.checkbox3_assembly.box fi.checkbox.checkbox3_assembly.box ;
+feature fixed_image fi.checkbox.checkbox3_assembly.check_box_group.box
+    ( left 692 top 557 )
+    "images/box.png" ;
+feature src_over so.fi.checkbox.checkbox3_assembly.check_box_group.box fi.checkbox.checkbox3_assembly.check_box_group.box ;
+feature fixed_image fi.checkbox.checkbox3_assembly.check_box_group.check
+    ( left 703 top 558 )
+    "images/check.png" ;
+feature src_over so.fi.checkbox.checkbox3_assembly.check_box_group.check fi.checkbox.checkbox3_assembly.check_box_group.check ;
+feature fixed_image fi.checkbox.checkbox2_assembly.box
+    ( left 692 top 457 )
+    "images/box.png" ;
+feature src_over so.fi.checkbox.checkbox2_assembly.box fi.checkbox.checkbox2_assembly.box ;
+feature fixed_image fi.checkbox.checkbox2_assembly.check_box_group.box
+    ( left 692 top 457 )
+    "images/box.png" ;
+feature src_over so.fi.checkbox.checkbox2_assembly.check_box_group.box fi.checkbox.checkbox2_assembly.check_box_group.box ;
+feature fixed_image fi.checkbox.checkbox2_assembly.check_box_group.check
+    ( left 703 top 458 )
+    "images/check.png" ;
+feature src_over so.fi.checkbox.checkbox2_assembly.check_box_group.check fi.checkbox.checkbox2_assembly.check_box_group.check ;
+feature fixed_image fi.checkbox.checkbox1_assembly.box
+    ( left 692 top 357 )
+    "images/box.png" ;
+feature src_over so.fi.checkbox.checkbox1_assembly.box fi.checkbox.checkbox1_assembly.box ;
+feature fixed_image fi.checkbox.checkbox1_assembly.check_box_group.box
+    ( left 692 top 357 )
+    "images/box.png" ;
+feature src_over so.fi.checkbox.checkbox1_assembly.check_box_group.box fi.checkbox.checkbox1_assembly.check_box_group.box ;
+feature fixed_image fi.checkbox.checkbox1_assembly.check_box_group.check
+    ( left 703 top 358 )
+    "images/check.png" ;
+feature src_over so.fi.checkbox.checkbox1_assembly.check_box_group.check fi.checkbox.checkbox1_assembly.check_box_group.check ;
+feature fixed_image fi.counter.num_0_assembly.0
+    ( left 1003 top 485 )
+    "images/0.png" ;
+feature src_over so.fi.counter.num_0_assembly.0 fi.counter.num_0_assembly.0 ;
+feature fixed_image fi.counter.num_0_assembly.1
+    ( left 1011 top 487 )
+    "images/1.png" ;
+feature src_over so.fi.counter.num_0_assembly.1 fi.counter.num_0_assembly.1 ;
+feature fixed_image fi.counter.num_0_assembly.2
+    ( left 1009 top 486 )
+    "images/2.png" ;
+feature src_over so.fi.counter.num_0_assembly.2 fi.counter.num_0_assembly.2 ;
+feature fixed_image fi.counter.num_0_assembly.3
+    ( left 1009 top 486 )
+    "images/3.png" ;
+feature src_over so.fi.counter.num_0_assembly.3 fi.counter.num_0_assembly.3 ;
+feature fixed_image fi.counter.num_0_assembly.4
+    ( left 1005 top 487 )
+    "images/4.png" ;
+feature src_over so.fi.counter.num_0_assembly.4 fi.counter.num_0_assembly.4 ;
+feature fixed_image fi.counter.num_0_assembly.5
+    ( left 1008 top 486 )
+    "images/5.png" ;
+feature src_over so.fi.counter.num_0_assembly.5 fi.counter.num_0_assembly.5 ;
+feature fixed_image fi.counter.num_0_assembly.6
+    ( left 1004 top 485 )
+    "images/6.png" ;
+feature src_over so.fi.counter.num_0_assembly.6 fi.counter.num_0_assembly.6 ;
+feature fixed_image fi.counter.num_0_assembly.7
+    ( left 1009 top 486 )
+    "images/7.png" ;
+feature src_over so.fi.counter.num_0_assembly.7 fi.counter.num_0_assembly.7 ;
+feature fixed_image fi.counter.num_0_assembly.8
+    ( left 1008 top 485 )
+    "images/8.png" ;
+feature src_over so.fi.counter.num_0_assembly.8 fi.counter.num_0_assembly.8 ;
+feature fixed_image fi.counter.num_0_assembly.9
+    ( left 1010 top 486 )
+    "images/9.png" ;
+feature src_over so.fi.counter.num_0_assembly.9 fi.counter.num_0_assembly.9 ;
+feature fixed_image fi.counter.num_00_assembly.0
+    ( left 963 top 485 )
+    "images/0.png" ;
+feature src_over so.fi.counter.num_00_assembly.0 fi.counter.num_00_assembly.0 ;
+feature fixed_image fi.counter.num_00_assembly.1
+    ( left 971 top 487 )
+    "images/1.png" ;
+feature src_over so.fi.counter.num_00_assembly.1 fi.counter.num_00_assembly.1 ;
+feature fixed_image fi.counter.num_00_assembly.2
+    ( left 969 top 486 )
+    "images/2.png" ;
+feature src_over so.fi.counter.num_00_assembly.2 fi.counter.num_00_assembly.2 ;
+feature fixed_image fi.counter.num_00_assembly.3
+    ( left 969 top 486 )
+    "images/3.png" ;
+feature src_over so.fi.counter.num_00_assembly.3 fi.counter.num_00_assembly.3 ;
+feature fixed_image fi.counter.num_00_assembly.4
+    ( left 965 top 487 )
+    "images/4.png" ;
+feature src_over so.fi.counter.num_00_assembly.4 fi.counter.num_00_assembly.4 ;
+feature fixed_image fi.counter.num_00_assembly.5
+    ( left 968 top 486 )
+    "images/5.png" ;
+feature src_over so.fi.counter.num_00_assembly.5 fi.counter.num_00_assembly.5 ;
+feature fixed_image fi.counter.num_00_assembly.6
+    ( left 964 top 485 )
+    "images/6.png" ;
+feature src_over so.fi.counter.num_00_assembly.6 fi.counter.num_00_assembly.6 ;
+feature fixed_image fi.counter.num_00_assembly.7
+    ( left 969 top 486 )
+    "images/7.png" ;
+feature src_over so.fi.counter.num_00_assembly.7 fi.counter.num_00_assembly.7 ;
+feature fixed_image fi.counter.num_00_assembly.8
+    ( left 968 top 485 )
+    "images/8.png" ;
+feature src_over so.fi.counter.num_00_assembly.8 fi.counter.num_00_assembly.8 ;
+feature fixed_image fi.counter.num_00_assembly.9
+    ( left 970 top 486 )
+    "images/9.png" ;
+feature src_over so.fi.counter.num_00_assembly.9 fi.counter.num_00_assembly.9 ;
+feature fixed_image fi.counter.num_000_assembly.0
+    ( left 923 top 485 )
+    "images/0.png" ;
+feature src_over so.fi.counter.num_000_assembly.0 fi.counter.num_000_assembly.0 ;
+feature fixed_image fi.counter.num_000_assembly.1
+    ( left 931 top 487 )
+    "images/1.png" ;
+feature src_over so.fi.counter.num_000_assembly.1 fi.counter.num_000_assembly.1 ;
+feature fixed_image fi.counter.num_000_assembly.2
+    ( left 929 top 486 )
+    "images/2.png" ;
+feature src_over so.fi.counter.num_000_assembly.2 fi.counter.num_000_assembly.2 ;
+feature fixed_image fi.counter.num_000_assembly.3
+    ( left 929 top 486 )
+    "images/3.png" ;
+feature src_over so.fi.counter.num_000_assembly.3 fi.counter.num_000_assembly.3 ;
+feature fixed_image fi.counter.num_000_assembly.4
+    ( left 925 top 487 )
+    "images/4.png" ;
+feature src_over so.fi.counter.num_000_assembly.4 fi.counter.num_000_assembly.4 ;
+feature fixed_image fi.counter.num_000_assembly.5
+    ( left 928 top 486 )
+    "images/5.png" ;
+feature src_over so.fi.counter.num_000_assembly.5 fi.counter.num_000_assembly.5 ;
+feature fixed_image fi.counter.num_000_assembly.6
+    ( left 924 top 485 )
+    "images/6.png" ;
+feature src_over so.fi.counter.num_000_assembly.6 fi.counter.num_000_assembly.6 ;
+feature fixed_image fi.counter.num_000_assembly.7
+    ( left 929 top 486 )
+    "images/7.png" ;
+feature src_over so.fi.counter.num_000_assembly.7 fi.counter.num_000_assembly.7 ;
+feature fixed_image fi.counter.num_000_assembly.8
+    ( left 928 top 485 )
+    "images/8.png" ;
+feature src_over so.fi.counter.num_000_assembly.8 fi.counter.num_000_assembly.8 ;
+feature fixed_image fi.counter.num_000_assembly.9
+    ( left 930 top 486 )
+    "images/9.png" ;
+feature src_over so.fi.counter.num_000_assembly.9 fi.counter.num_000_assembly.9 ;
+feature fixed_image fi.counter.num_0000_assembly.0
+    ( left 883 top 485 )
+    "images/0.png" ;
+feature src_over so.fi.counter.num_0000_assembly.0 fi.counter.num_0000_assembly.0 ;
+feature fixed_image fi.counter.num_0000_assembly.1
+    ( left 891 top 487 )
+    "images/1.png" ;
+feature src_over so.fi.counter.num_0000_assembly.1 fi.counter.num_0000_assembly.1 ;
+feature fixed_image fi.counter.num_0000_assembly.2
+    ( left 889 top 486 )
+    "images/2.png" ;
+feature src_over so.fi.counter.num_0000_assembly.2 fi.counter.num_0000_assembly.2 ;
+feature fixed_image fi.counter.num_0000_assembly.3
+    ( left 889 top 486 )
+    "images/3.png" ;
+feature src_over so.fi.counter.num_0000_assembly.3 fi.counter.num_0000_assembly.3 ;
+feature fixed_image fi.counter.num_0000_assembly.4
+    ( left 885 top 487 )
+    "images/4.png" ;
+feature src_over so.fi.counter.num_0000_assembly.4 fi.counter.num_0000_assembly.4 ;
+feature fixed_image fi.counter.num_0000_assembly.5
+    ( left 888 top 486 )
+    "images/5.png" ;
+feature src_over so.fi.counter.num_0000_assembly.5 fi.counter.num_0000_assembly.5 ;
+feature fixed_image fi.counter.num_0000_assembly.6
+    ( left 884 top 485 )
+    "images/6.png" ;
+feature src_over so.fi.counter.num_0000_assembly.6 fi.counter.num_0000_assembly.6 ;
+feature fixed_image fi.counter.num_0000_assembly.7
+    ( left 889 top 486 )
+    "images/7.png" ;
+feature src_over so.fi.counter.num_0000_assembly.7 fi.counter.num_0000_assembly.7 ;
+feature fixed_image fi.counter.num_0000_assembly.8
+    ( left 888 top 485 )
+    "images/8.png" ;
+feature src_over so.fi.counter.num_0000_assembly.8 fi.counter.num_0000_assembly.8 ;
+feature fixed_image fi.counter.num_0000_assembly.9
+    ( left 890 top 486 )
+    "images/9.png" ;
+feature src_over so.fi.counter.num_0000_assembly.9 fi.counter.num_0000_assembly.9 ;
+feature image_sequence is.counter.btns.back_button.arrow_l_a ( left 1496 top 898 )
+	    "images/arrow_l_" {
+		  a + + + + + + + + + + + + 
+	    } ".png" 
+	    end_commands { 
+	       activate_part as.counter pa.counter.btns.back_button.arrow_l_s ; 
+	       activate_segment sg.main ; 
+	    }  ;
+feature fixed_image fi.counter.btns.back_button.arrow_l_s
+    ( left 1496 top 898 )
+    "images/arrow_l_s.png" ;
+feature image_sequence is.counter.btns.stop_button.arrow_r_a ( left 1180 top 523 )
+	    "images/arrow_r_" {
+		  a + + + + + + + + + + + + 
+	    } ".png" 
+	    end_commands { 
+	       activate_part as.counter pa.counter.btns.stop_button.arrow_r_s ; 
+	       java_command [[ getDirector().stop();  ]]
+	    }  ;
+feature fixed_image fi.counter.btns.stop_button.arrow_r_s
+    ( left 1180 top 523 )
+    "images/arrow_r_s.png" ;
+feature image_sequence is.counter.btns.start_button.arrow_r_a ( left 1180 top 422 )
+	    "images/arrow_r_" {
+		  a + + + + + + + + + + + + 
+	    } ".png" 
+	    end_commands { 
+	       activate_part as.counter pa.counter.btns.start_button.arrow_r_s ; 
+	       java_command [[ getDirector().start();  ]]
+	    }  ;
+feature fixed_image fi.counter.btns.start_button.arrow_r_s
+    ( left 1180 top 422 )
+    "images/arrow_r_s.png" ;
+feature image_sequence is.interpolation.btns.back_button.arrow_l_a ( left 1496 top 898 )
+	    "images/arrow_l_" {
+		  a + + + + + + + + + + + + 
+	    } ".png" 
+	    end_commands { 
+	       activate_part as.interpolation pa.interpolation.btns.back_button.arrow_l_s ; 
+	       activate_segment sg.main ;
+	    }  ;
+feature fixed_image fi.interpolation.btns.back_button.arrow_l_s
+    ( left 1496 top 898 )
+    "images/arrow_l_s.png" ;
+feature image_sequence is.interpolation.btns.a6_button.arrow_l_a ( left 43 top 723 )
+	    "images/arrow_l_" {
+		  a + + + + + + + + + + + + 
+	    } ".png" 
+	    end_commands { activate_part as.interpolation pa.interpolation.btns.a6_button.arrow_l_s ; }  ;
+feature fixed_image fi.interpolation.btns.a6_button.arrow_l_s
+    ( left 43 top 723 )
+    "images/arrow_l_s.png" ;
+feature image_sequence is.interpolation.btns.a5_button.arrow_r_a ( left 136 top 723 )
+	    "images/arrow_r_" {
+		  a + + + + + + + + + + + + 
+	    } ".png" 
+	    end_commands { activate_part as.interpolation pa.interpolation.btns.a5_button.arrow_r_s ; }  ;
+feature fixed_image fi.interpolation.btns.a5_button.arrow_r_s
+    ( left 136 top 723 )
+    "images/arrow_r_s.png" ;
+feature image_sequence is.interpolation.btns.a4_button.arrow_r_a ( left 136 top 622 )
+	    "images/arrow_r_" {
+		  a + + + + + + + + + + + + 
+	    } ".png" 
+	    end_commands { activate_part as.interpolation pa.interpolation.btns.a4_button.arrow_r_s ; }  ;
+feature fixed_image fi.interpolation.btns.a4_button.arrow_r_s
+    ( left 136 top 622 )
+    "images/arrow_r_s.png" ;
+feature image_sequence is.interpolation.btns.a3_button.arrow_r_a ( left 137 top 522 )
+	    "images/arrow_r_" {
+		  a + + + + + + + + + + + + 
+	    } ".png" 
+	    end_commands { activate_part as.interpolation pa.interpolation.btns.a3_button.arrow_r_s ; }  ;
+feature fixed_image fi.interpolation.btns.a3_button.arrow_r_s
+    ( left 137 top 522 )
+    "images/arrow_r_s.png" ;
+feature image_sequence is.interpolation.btns.a2_button.arrow_r_a ( left 137 top 423 )
+	    "images/arrow_r_" {
+		  a + + + + + + + + + + + + 
+	    } ".png" 
+	    end_commands { activate_part as.interpolation pa.interpolation.btns.a2_button.arrow_r_s ; }  ;
+feature fixed_image fi.interpolation.btns.a2_button.arrow_r_s
+    ( left 137 top 423 )
+    "images/arrow_r_s.png" ;
+feature image_sequence is.interpolation.btns.a1_button.arrow_r_a ( left 137 top 323 )
+	    "images/arrow_r_" {
+		  a + + + + + + + + + + + + 
+	    } ".png" 
+	    end_commands { activate_part as.interpolation pa.interpolation.btns.a1_button.arrow_r_s ; }  ;
+feature fixed_image fi.interpolation.btns.a1_button.arrow_r_s
+    ( left 137 top 323 )
+    "images/arrow_r_s.png" ;
+feature group gr.chapters.chapter {
+    as.chapters.chapter_group.ch6
+    so.fi.chapters.chapter_group.chapt_6
+    as.chapters.chapter_group.ch5
+    so.fi.chapters.chapter_group.chapt_5
+    as.chapters.chapter_group.ch4
+    so.fi.chapters.chapter_group.chapt_4
+    as.chapters.chapter_group.ch3
+    so.fi.chapters.chapter_group.chapt_3
+    as.chapters.chapter_group.ch2
+    so.fi.chapters.chapter_group.chapt_2
+    as.chapters.chapter_group.ch1
+    so.fi.chapters.chapter_group.chapt_1
+} ;
+               
+feature assembly as.chapters.chapter_group.ch6 {
+    pa.chapters.as.chapters.chapter_group.ch6.chapter_g_bg so.fi.chapters.chapter_group.ch6_assembly.chapter_g_bg 
+    pa.chapters.as.chapters.chapter_group.ch6.chapter_y_bg fi.chapters.chapter_group.ch6_assembly.chapter_y_bg 
+} ;
+feature assembly as.chapters.chapter_group.ch5 {
+    pa.chapters.as.chapters.chapter_group.ch5.chapter_g_bg so.fi.chapters.chapter_group.ch5_assembly.chapter_g_bg 
+    pa.chapters.as.chapters.chapter_group.ch5.chapter_y_bg so.fi.chapters.chapter_group.ch5_assembly.chapter_y_bg 
+} ;
+feature assembly as.chapters.chapter_group.ch4 {
+    pa.chapters.as.chapters.chapter_group.ch4.chapter_g_bg so.fi.chapters.chapter_group.ch4_assembly.chapter_g_bg 
+    pa.chapters.as.chapters.chapter_group.ch4.chapter_y_bg so.fi.chapters.chapter_group.ch4_assembly.chapter_y_bg 
+} ;
+feature assembly as.chapters.chapter_group.ch3 {
+    pa.chapters.as.chapters.chapter_group.ch3.chapter_g_bg so.fi.chapters.chapter_group.ch3_assembly.chapter_g_bg 
+    pa.chapters.as.chapters.chapter_group.ch3.chapter_y_bg so.fi.chapters.chapter_group.ch3_assembly.chapter_y_bg 
+} ;
+feature assembly as.chapters.chapter_group.ch2 {
+    pa.chapters.as.chapters.chapter_group.ch2.chapter_g_bg so.fi.chapters.chapter_group.ch2_assembly.chapter_g_bg 
+    pa.chapters.as.chapters.chapter_group.ch2.chapter_y_bg so.fi.chapters.chapter_group.ch2_assembly.chapter_y_bg 
+} ;
+feature assembly as.chapters.chapter_group.ch1 {
+    pa.chapters.as.chapters.chapter_group.ch1.chapter_g_bg so.fi.chapters.chapter_group.ch1_assembly.chapter_g_bg 
+    pa.chapters.as.chapters.chapter_group.ch1.chapter_y_bg so.fi.chapters.chapter_group.ch1_assembly.chapter_y_bg 
+} ;
+feature fixed_image fi.chapters.btns.back_btn_text
+    ( left 1600 top 902 )
+    "images/back_btn_text.png" ;
+feature src_over so.fi.chapters.btns.back_btn_text fi.chapters.btns.back_btn_text ;
+feature menu_assembly as.chapters 
+    template {
+        gr.chapters.btns.next_button.arrow_r_s_normal       { gr.empty }
+        gr.chapters.btns.prev_button.arrow_l_s_normal       { gr.empty }
+        gr.chapters.btns.back_button.arrow_l_s_normal       { gr.empty }
+    } parts {
+        pa.chapters.btns.next_button.arrow_r_s     { gr.chapters.btns.next_button.arrow_r_s_normal       { fi.chapters.btns.next_button.arrow_r_s } }
+        pa.is.chapters.btns.next_button.arrow_r_a     { gr.chapters.btns.next_button.arrow_r_s_normal       { is.chapters.btns.next_button.arrow_r_a } }
+        pa.chapters.btns.prev_button.arrow_l_s     { gr.chapters.btns.prev_button.arrow_l_s_normal       { fi.chapters.btns.prev_button.arrow_l_s } }
+        pa.is.chapters.btns.prev_button.arrow_l_a     { gr.chapters.btns.prev_button.arrow_l_s_normal       { is.chapters.btns.prev_button.arrow_l_a } }
+        pa.chapters.btns.back_button.arrow_l_s     { gr.chapters.btns.back_button.arrow_l_s_normal       { fi.chapters.btns.back_button.arrow_l_s } }
+        pa.is.chapters.btns.back_button.arrow_l_a     { gr.chapters.btns.back_button.arrow_l_s_normal       { is.chapters.btns.back_button.arrow_l_a } }
+    }
+;
+feature src_over so.as.chapters as.chapters ;
+feature fixed_image fi.chapters.chapters_menu_text
+    ( left 710 top 149 )
+    "images/chapters_menu_text.png" ;
+feature src_over so.fi.chapters.chapters_menu_text fi.chapters.chapters_menu_text ;
+                
+feature box rectangle.menu_show.chapters_segment.btns.left_right_000000_rect ( 850 453 1069 551 ) 
+    fill { 41 41 41 48 }
+;
+feature src_over so.rectangle.menu_show.chapters_segment.btns.left_right_000000_rect rectangle.menu_show.chapters_segment.btns.left_right_000000_rect ;
+                
+feature assembly as.chapter.slide {
+    pa.chapter.slide.0 tr.chapter.slide.0 
+    pa.chapter.slide.1to2 tr.chapter.slide.1to2 
+    pa.chapter.slide.2to1 tr.chapter.slide.2to1 
+    pa.chapter.slide.2to3 tr.chapter.slide.2to3 
+    pa.chapter.slide.3to2 tr.chapter.slide.3to2 
+    pa.chapter.slide.3to4 tr.chapter.slide.3to4 
+    pa.chapter.slide.4to3 tr.chapter.slide.4to3 
+    pa.chapter.slide.4to5 tr.chapter.slide.4to5 
+    pa.chapter.slide.5to4 tr.chapter.slide.5to4 
+    pa.chapter.slide.5to6 tr.chapter.slide.5to6 
+    pa.chapter.slide.6to5 tr.chapter.slide.6to5 
+} ;
+                
+                
+feature translator_model tn.chapter.slide.0 {
+        0       0 0     linear-relative
+        1       0 0     linear-relative   
+} ;
+feature translator tr.chapter.slide.0 tn.chapter.slide.0 {
+        tn.chapter.slide.0
+        gr.chapters.chapter 
+} ;
+                
+feature translator_model tn.chapter.slide.1to2 {
+        0       0 0     linear-relative
+        24       -278 0     ease-out-back        
+} ;
+feature translator tr.chapter.slide.1to2 tn.chapter.slide.1to2 {
+        tn.chapter.slide.1to2
+        gr.chapters.chapter 
+} ;
+ 
+                
+feature translator_model tn.chapter.slide.2to1 {
+        0       -278 0     linear-relative
+        24       0 0     ease-out-back        
+} ;
+feature translator tr.chapter.slide.2to1 tn.chapter.slide.2to1 {
+        tn.chapter.slide.2to1
+        gr.chapters.chapter 
+} ;
+ 
+                
+feature translator_model tn.chapter.slide.2to3 {
+        0       -278 0     linear-relative
+        24       -556 0     ease-out-back        
+} ;
+feature translator tr.chapter.slide.2to3 tn.chapter.slide.2to3 {
+        tn.chapter.slide.2to3
+        gr.chapters.chapter 
+} ;
+ 
+                
+feature translator_model tn.chapter.slide.3to2 {
+        0       -556 0     linear-relative
+        24       -278 0     ease-out-back        
+} ;
+feature translator tr.chapter.slide.3to2 tn.chapter.slide.3to2 {
+        tn.chapter.slide.3to2
+        gr.chapters.chapter 
+} ;
+ 
+                
+feature translator_model tn.chapter.slide.3to4 {
+        0       -556 0     linear-relative
+        24       -834 0     ease-out-back        
+} ;
+feature translator tr.chapter.slide.3to4 tn.chapter.slide.3to4 {
+        tn.chapter.slide.3to4
+        gr.chapters.chapter 
+} ;
+ 
+                
+feature translator_model tn.chapter.slide.4to3 {
+        0       -834 0     linear-relative
+        24       -556 0     ease-out-back        
+} ;
+feature translator tr.chapter.slide.4to3 tn.chapter.slide.4to3 {
+        tn.chapter.slide.4to3
+        gr.chapters.chapter 
+} ;
+ 
+                
+feature translator_model tn.chapter.slide.4to5 {
+        0       -834 0     linear-relative
+        24       -1112 0     ease-out-back        
+} ;
+feature translator tr.chapter.slide.4to5 tn.chapter.slide.4to5 {
+        tn.chapter.slide.4to5
+        gr.chapters.chapter 
+} ;
+ 
+                
+feature translator_model tn.chapter.slide.5to4 {
+        0       -1112 0     linear-relative
+        24       -834 0     ease-out-back        
+} ;
+feature translator tr.chapter.slide.5to4 tn.chapter.slide.5to4 {
+        tn.chapter.slide.5to4
+        gr.chapters.chapter 
+} ;
+ 
+                
+feature translator_model tn.chapter.slide.5to6 {
+        0       -1112 0     linear-relative
+        24       -1390 0     ease-out-back        
+} ;
+feature translator tr.chapter.slide.5to6 tn.chapter.slide.5to6 {
+        tn.chapter.slide.5to6
+        gr.chapters.chapter 
+} ;
+ 
+                
+feature translator_model tn.chapter.slide.6to5 {
+        0       -1390 0     linear-relative
+        24       -1112 0     ease-out-back        
+} ;
+feature translator tr.chapter.slide.6to5 tn.chapter.slide.6to5 {
+        tn.chapter.slide.6to5
+        gr.chapters.chapter 
+} ;
+ 
+feature clipped cl.chapter.window
+        as.chapter.slide
+        ( 843 604 1080 810 )
+;
+
+feature fixed_image fi.checkbox.btns.back_btn_text
+    ( left 1600 top 902 )
+    "images/back_btn_text.png" ;
+feature src_over so.fi.checkbox.btns.back_btn_text fi.checkbox.btns.back_btn_text ;
+feature fixed_image fi.checkbox.btns.gelato_btn_text
+    ( left 821 top 666 )
+    "images/gelato_btn_text.png" ;
+feature src_over so.fi.checkbox.btns.gelato_btn_text fi.checkbox.btns.gelato_btn_text ;
+feature fixed_image fi.checkbox.btns.cannoli_btn_text
+    ( left 821 top 565 )
+    "images/cannoli_btn_text.png" ;
+feature src_over so.fi.checkbox.btns.cannoli_btn_text fi.checkbox.btns.cannoli_btn_text ;
+feature fixed_image fi.checkbox.btns.gaufres_btn_text
+    ( left 821 top 464 )
+    "images/gaufres_btn_text.png" ;
+feature src_over so.fi.checkbox.btns.gaufres_btn_text fi.checkbox.btns.gaufres_btn_text ;
+feature fixed_image fi.checkbox.btns.apple_pie_btn_text
+    ( left 821 top 370 )
+    "images/apple_pie_btn_text.png" ;
+feature src_over so.fi.checkbox.btns.apple_pie_btn_text fi.checkbox.btns.apple_pie_btn_text ;
+feature menu_assembly as.checkbox 
+    template {
+        gr.checkbox.btns.a1_button.arrow_r_s_normal       { gr.empty }
+        gr.checkbox.btns.back_button.arrow_l_s_normal     { gr.empty }
+        gr.checkbox.btns.a4_button.arrow_r_s_normal       { gr.empty }
+        gr.checkbox.btns.a3_button.arrow_r_s_normal       { gr.empty }
+        gr.checkbox.btns.a2_button.arrow_r_s_normal       { gr.empty }
+        
+    } parts {
+        pa.checkbox.btns.a1_button.arrow_r_s     { gr.checkbox.btns.a1_button.arrow_r_s_normal       { fi.checkbox.btns.a1_button.arrow_r_s } }
+        pa.is.checkbox.btns.a1_button.arrow_r_a     { gr.checkbox.btns.a1_button.arrow_r_s_normal       { is.checkbox.btns.a1_button.arrow_r_a } }
+        pa.checkbox.btns.back_button.arrow_l_s     { gr.checkbox.btns.back_button.arrow_l_s_normal       { fi.checkbox.btns.back_button.arrow_l_s } }
+        pa.is.checkbox.btns.back_button.arrow_l_a     { gr.checkbox.btns.back_button.arrow_l_s_normal       { is.checkbox.btns.back_button.arrow_l_a } }
+        pa.checkbox.btns.a4_button.arrow_r_s     { gr.checkbox.btns.a4_button.arrow_r_s_normal       { fi.checkbox.btns.a4_button.arrow_r_s } }
+        pa.is.checkbox.btns.a4_button.arrow_r_a     { gr.checkbox.btns.a4_button.arrow_r_s_normal       { is.checkbox.btns.a4_button.arrow_r_a } }
+        pa.checkbox.btns.a3_button.arrow_r_s     { gr.checkbox.btns.a3_button.arrow_r_s_normal       { fi.checkbox.btns.a3_button.arrow_r_s } }
+        pa.is.checkbox.btns.a3_button.arrow_r_a     { gr.checkbox.btns.a3_button.arrow_r_s_normal       { is.checkbox.btns.a3_button.arrow_r_a } }
+        pa.checkbox.btns.a2_button.arrow_r_s     { gr.checkbox.btns.a2_button.arrow_r_s_normal       { fi.checkbox.btns.a2_button.arrow_r_s } }
+        pa.is.checkbox.btns.a2_button.arrow_r_a     { gr.checkbox.btns.a2_button.arrow_r_s_normal       { is.checkbox.btns.a2_button.arrow_r_a } }
+    }
+;
+feature src_over so.as.checkbox as.checkbox ;
+feature assembly as.checkbox.checkbox4 {
+    pa.checkbox.as.checkbox.checkbox4.box so.fi.checkbox.checkbox4_assembly.box 
+    pa.checkbox.as.checkbox.checkbox4.001 gr.checkbox.checkbox4_assembly.check_box 
+} ;
+feature group gr.checkbox.checkbox4_assembly.check_box {
+    so.fi.checkbox.checkbox4_assembly.check_box_group.box
+    so.fi.checkbox.checkbox4_assembly.check_box_group.check
+} ;
+feature assembly as.checkbox.checkbox3 {
+    pa.checkbox.as.checkbox.checkbox3.box so.fi.checkbox.checkbox3_assembly.box 
+    pa.checkbox.as.checkbox.checkbox3.001 gr.checkbox.checkbox3_assembly.check_box 
+} ;
+feature group gr.checkbox.checkbox3_assembly.check_box {
+    so.fi.checkbox.checkbox3_assembly.check_box_group.box
+    so.fi.checkbox.checkbox3_assembly.check_box_group.check
+} ;
+feature assembly as.checkbox.checkbox2 {
+    pa.checkbox.as.checkbox.checkbox2.box so.fi.checkbox.checkbox2_assembly.box 
+    pa.checkbox.as.checkbox.checkbox2.001 gr.checkbox.checkbox2_assembly.check_box 
+} ;
+feature group gr.checkbox.checkbox2_assembly.check_box {
+    so.fi.checkbox.checkbox2_assembly.check_box_group.box
+    so.fi.checkbox.checkbox2_assembly.check_box_group.check
+} ;
+feature assembly as.checkbox.checkbox1 {
+    pa.checkbox.as.checkbox.checkbox1.box so.fi.checkbox.checkbox1_assembly.box 
+    pa.checkbox.as.checkbox.checkbox1.001 gr.checkbox.checkbox1_assembly.check_box 
+} ;
+feature group gr.checkbox.checkbox1_assembly.check_box {
+    so.fi.checkbox.checkbox1_assembly.check_box_group.box
+    so.fi.checkbox.checkbox1_assembly.check_box_group.check
+} ;
+feature fixed_image fi.checkbox.question_1_text
+    ( left 467 top 149 )
+    "images/question_1_text.png" ;
+feature src_over so.fi.checkbox.question_1_text fi.checkbox.question_1_text ;
+
+feature fixed_image fi.counter.clock_bg
+    ( left 774 top 331 )
+    "images/clock_bg.png" ;
+feature src_over so.fi.counter.clock_bg fi.counter.clock_bg ;
+feature assembly as.counter.num_0 {
+    pa.counter.as.counter.num_0.0 so.fi.counter.num_0_assembly.0 
+    pa.counter.as.counter.num_0.1 so.fi.counter.num_0_assembly.1 
+    pa.counter.as.counter.num_0.2 so.fi.counter.num_0_assembly.2 
+    pa.counter.as.counter.num_0.3 so.fi.counter.num_0_assembly.3 
+    pa.counter.as.counter.num_0.4 so.fi.counter.num_0_assembly.4 
+    pa.counter.as.counter.num_0.5 so.fi.counter.num_0_assembly.5 
+    pa.counter.as.counter.num_0.6 so.fi.counter.num_0_assembly.6 
+    pa.counter.as.counter.num_0.7 so.fi.counter.num_0_assembly.7 
+    pa.counter.as.counter.num_0.8 so.fi.counter.num_0_assembly.8 
+    pa.counter.as.counter.num_0.9 so.fi.counter.num_0_assembly.9 
+} ;
+feature assembly as.counter.num_00 {
+    pa.counter.as.counter.num_00.0 so.fi.counter.num_00_assembly.0 
+    pa.counter.as.counter.num_00.1 so.fi.counter.num_00_assembly.1 
+    pa.counter.as.counter.num_00.2 so.fi.counter.num_00_assembly.2 
+    pa.counter.as.counter.num_00.3 so.fi.counter.num_00_assembly.3 
+    pa.counter.as.counter.num_00.4 so.fi.counter.num_00_assembly.4 
+    pa.counter.as.counter.num_00.5 so.fi.counter.num_00_assembly.5 
+    pa.counter.as.counter.num_00.6 so.fi.counter.num_00_assembly.6 
+    pa.counter.as.counter.num_00.7 so.fi.counter.num_00_assembly.7 
+    pa.counter.as.counter.num_00.8 so.fi.counter.num_00_assembly.8 
+    pa.counter.as.counter.num_00.9 so.fi.counter.num_00_assembly.9 
+} ;
+feature assembly as.counter.num_000 {
+    pa.counter.as.counter.num_000.0 so.fi.counter.num_000_assembly.0 
+    pa.counter.as.counter.num_000.1 so.fi.counter.num_000_assembly.1 
+    pa.counter.as.counter.num_000.2 so.fi.counter.num_000_assembly.2 
+    pa.counter.as.counter.num_000.3 so.fi.counter.num_000_assembly.3 
+    pa.counter.as.counter.num_000.4 so.fi.counter.num_000_assembly.4 
+    pa.counter.as.counter.num_000.5 so.fi.counter.num_000_assembly.5 
+    pa.counter.as.counter.num_000.6 so.fi.counter.num_000_assembly.6 
+    pa.counter.as.counter.num_000.7 so.fi.counter.num_000_assembly.7 
+    pa.counter.as.counter.num_000.8 so.fi.counter.num_000_assembly.8 
+    pa.counter.as.counter.num_000.9 so.fi.counter.num_000_assembly.9 
+} ;
+feature assembly as.counter.num_0000 {
+    pa.counter.as.counter.num_0000.0 so.fi.counter.num_0000_assembly.0 
+    pa.counter.as.counter.num_0000.1 so.fi.counter.num_0000_assembly.1 
+    pa.counter.as.counter.num_0000.2 so.fi.counter.num_0000_assembly.2 
+    pa.counter.as.counter.num_0000.3 so.fi.counter.num_0000_assembly.3 
+    pa.counter.as.counter.num_0000.4 so.fi.counter.num_0000_assembly.4 
+    pa.counter.as.counter.num_0000.5 so.fi.counter.num_0000_assembly.5 
+    pa.counter.as.counter.num_0000.6 so.fi.counter.num_0000_assembly.6 
+    pa.counter.as.counter.num_0000.7 so.fi.counter.num_0000_assembly.7 
+    pa.counter.as.counter.num_0000.8 so.fi.counter.num_0000_assembly.8 
+    pa.counter.as.counter.num_0000.9 so.fi.counter.num_0000_assembly.9 
+} ;
+feature fixed_image fi.counter.btns.back_btn_text
+    ( left 1600 top 902 )
+    "images/back_btn_text.png" ;
+feature src_over so.fi.counter.btns.back_btn_text fi.counter.btns.back_btn_text ;
+feature fixed_image fi.counter.btns.stop_btn_text
+    ( left 1274 top 534 )
+    "images/stop_btn_text.png" ;
+feature src_over so.fi.counter.btns.stop_btn_text fi.counter.btns.stop_btn_text ;
+feature fixed_image fi.counter.btns.start_btn_text
+    ( left 1274 top 431 )
+    "images/start_btn_text.png" ;
+feature src_over so.fi.counter.btns.start_btn_text fi.counter.btns.start_btn_text ;
+feature menu_assembly as.counter 
+    template {
+        gr.counter.btns.start_button.arrow_r_s_normal       { gr.empty }
+        gr.counter.btns.back_button.arrow_l_s_normal       { gr.empty }
+        gr.counter.btns.stop_button.arrow_r_s_normal       { gr.empty }
+        
+    } parts {
+        pa.counter.btns.start_button.arrow_r_s     { gr.counter.btns.start_button.arrow_r_s_normal       { fi.counter.btns.start_button.arrow_r_s } }
+        pa.is.counter.btns.start_button.arrow_r_a     { gr.counter.btns.start_button.arrow_r_s_normal       { is.counter.btns.start_button.arrow_r_a } }
+        pa.counter.btns.back_button.arrow_l_s     { gr.counter.btns.back_button.arrow_l_s_normal       { fi.counter.btns.back_button.arrow_l_s } }
+        pa.is.counter.btns.back_button.arrow_l_a     { gr.counter.btns.back_button.arrow_l_s_normal       { is.counter.btns.back_button.arrow_l_a } }
+        pa.counter.btns.stop_button.arrow_r_s     { gr.counter.btns.stop_button.arrow_r_s_normal       { fi.counter.btns.stop_button.arrow_r_s } }
+        pa.is.counter.btns.stop_button.arrow_r_a     { gr.counter.btns.stop_button.arrow_r_s_normal       { is.counter.btns.stop_button.arrow_r_a } }
+    }
+;
+feature src_over so.as.counter as.counter ;
+feature fixed_image fi.counter.simple_counter_text
+    ( left 703 top 148 )
+    "images/simple_counter_text.png" ;
+feature src_over so.fi.counter.simple_counter_text fi.counter.simple_counter_text ;
+                
+#this clock increments every 12 frames (1/2 second)
+feature timer tmr.count 12 repeat {
+	java_command [[ getDirector().count();  ]]
+} ;
+
+feature fixed_image fi.interpolation.duke1
+    ( left 738 top 616 )
+    "images/duke.png" ;
+                
+feature assembly as.duke1 {
+    pa.duke1.1 so.fi.interpolation.duke1 
+    pa.duke1.2 tr.duke1 
+} ;
+feature translator_model tn.duke1 {
+        0       0 0       linear-relative
+        48       600 0     ease-out-elastic       
+        100       600 0    linear-relative   
+        148       0 0     ease-out-elastic       
+        200       0 0       linear-relative
+        248       600 0     ease-out-elastic        
+} ;
+feature translator tr.duke1 tn.duke1 {
+        tn.duke1
+        so.fi.interpolation.duke1 
+} ;
+ 
+                
+feature src_over so.fi.interpolation.duke1 fi.interpolation.duke1 ;
+feature fixed_image fi.interpolation.duke2
+    ( left 738 top 515 )
+    "images/duke.png" ;
+                
+feature assembly as.duke2 {
+    pa.duke2.1 so.fi.interpolation.duke2 
+    pa.duke2.2 tr.duke2 
+} ;
+feature translator_model tn.duke2 {
+        0       0 0       linear-relative
+        48       600 0     ease-in-bounce       
+        100       600 0    linear-relative   
+        148       0 0     ease-in-bounce       
+        200       0 0      linear-relative 
+        248       600 0     ease-in-bounce        
+} ;
+feature translator tr.duke2 tn.duke2 {
+        tn.duke2
+        so.fi.interpolation.duke2 
+} ;
+ 
+                
+feature src_over so.fi.interpolation.duke2 fi.interpolation.duke2 ;
+feature fixed_image fi.interpolation.duke3
+    ( left 738 top 414 )
+    "images/duke.png" ;
+                
+feature assembly as.duke3 {
+    pa.duke3.1 so.fi.interpolation.duke3 
+    pa.duke3.2 tr.duke3 
+} ;
+feature translator_model tn.duke3 {
+        0       0 0       linear-relative
+        48       600 0     ease-out-back       
+        100       600 0    linear-relative   
+        148       0 0     ease-out-back       
+        200       0 0       linear-relative
+        248       600 0     ease-out-back        
+} ;
+feature translator tr.duke3 tn.duke3 {
+        tn.duke3
+        so.fi.interpolation.duke3 
+} ;
+ 
+                
+feature src_over so.fi.interpolation.duke3 fi.interpolation.duke3 ;
+feature fixed_image fi.interpolation.duke4
+    ( left 738 top 315 )
+    "images/duke.png" ;
+                
+feature assembly as.duke4 {
+    pa.duke4.1 so.fi.interpolation.duke4 
+    pa.duke4.2 tr.duke4 
+} ;
+feature translator_model tn.duke4 {
+        0       0 0       linear-relative
+        48       600 0     ease-in-back       
+        100       600 0   linear-relative    
+        148       0 0     ease-in-back       
+        200       0 0       linear-relative
+        248       600 0     ease-in-back        
+} ;
+feature translator tr.duke4 tn.duke4 {
+        tn.duke4
+        so.fi.interpolation.duke4 
+} ;
+ 
+                
+feature src_over so.fi.interpolation.duke4 fi.interpolation.duke4 ;
+feature fixed_image fi.interpolation.btns.back_btn_text
+    ( left 1600 top 902 )
+    "images/back_btn_text.png" ;
+feature src_over so.fi.interpolation.btns.back_btn_text fi.interpolation.btns.back_btn_text ;
+feature box rectangle.menu_show.interpolation_segment.btns.left_right_000000_rect ( 32 715 231 813 ) 
+    fill { 41 41 41 48 }
+;
+
+feature src_over so.rectangle.menu_show.interpolation_segment.btns.left_right_000000_rect rectangle.menu_show.interpolation_segment.btns.left_right_000000_rect ;
+feature fixed_image fi.interpolation.btns.dynamic-translation_btn_text
+    ( left 247 top 727 )
+    "images/dynamic-translation_btn_text.png" ;
+feature src_over so.fi.interpolation.btns.dynamic-translation_btn_text fi.interpolation.btns.dynamic-translation_btn_text ;
+feature fixed_image fi.interpolation.btns.ease-out-elastic_btn_text
+    ( left 247 top 627 )
+    "images/ease-out-elastic_btn_text.png" ;
+feature src_over so.fi.interpolation.btns.ease-out-elastic_btn_text fi.interpolation.btns.ease-out-elastic_btn_text ;
+feature fixed_image fi.interpolation.btns.ease-in-bounce_btn_text
+    ( left 247 top 528 )
+    "images/ease-in-bounce_btn_text.png" ;
+feature src_over so.fi.interpolation.btns.ease-in-bounce_btn_text fi.interpolation.btns.ease-in-bounce_btn_text ;
+feature fixed_image fi.interpolation.btns.ease-out-back_btn_text
+    ( left 245 top 428 )
+    "images/ease-out-back_btn_text.png" ;
+feature src_over so.fi.interpolation.btns.ease-out-back_btn_text fi.interpolation.btns.ease-out-back_btn_text ;
+feature fixed_image fi.interpolation.btns.ease-in-back_btn_text
+    ( left 245 top 329 )
+    "images/ease-in-back_btn_text.png" ;
+feature src_over so.fi.interpolation.btns.ease-in-back_btn_text fi.interpolation.btns.ease-in-back_btn_text ;
+feature menu_assembly as.interpolation 
+    template {
+        gr.interpolation.btns.a1_button.arrow_r_s_normal       { gr.empty }
+        gr.interpolation.btns.back_button.arrow_l_s_normal       { gr.empty }
+        gr.interpolation.btns.a6_button.arrow_l_s_normal       { gr.empty }
+        gr.interpolation.btns.a5_button.arrow_r_s_normal       { gr.empty }
+        gr.interpolation.btns.a4_button.arrow_r_s_normal       { gr.empty }
+        gr.interpolation.btns.a3_button.arrow_r_s_normal       { gr.empty }
+        gr.interpolation.btns.a2_button.arrow_r_s_normal       { gr.empty }
+        
+    } parts {
+        pa.interpolation.btns.a1_button.arrow_r_s     { gr.interpolation.btns.a1_button.arrow_r_s_normal       { fi.interpolation.btns.a1_button.arrow_r_s } }
+        pa.is.interpolation.btns.a1_button.arrow_r_a     { gr.interpolation.btns.a1_button.arrow_r_s_normal       { is.interpolation.btns.a1_button.arrow_r_a } }
+        pa.interpolation.btns.back_button.arrow_l_s     { gr.interpolation.btns.back_button.arrow_l_s_normal       { fi.interpolation.btns.back_button.arrow_l_s } }
+        pa.is.interpolation.btns.back_button.arrow_l_a     { gr.interpolation.btns.back_button.arrow_l_s_normal       { is.interpolation.btns.back_button.arrow_l_a } }
+        pa.interpolation.btns.a6_button.arrow_l_s     { gr.interpolation.btns.a6_button.arrow_l_s_normal       { fi.interpolation.btns.a6_button.arrow_l_s } }
+        pa.is.interpolation.btns.a6_button.arrow_l_a     { gr.interpolation.btns.a6_button.arrow_l_s_normal       { is.interpolation.btns.a6_button.arrow_l_a } }
+        pa.interpolation.btns.a5_button.arrow_r_s     { gr.interpolation.btns.a5_button.arrow_r_s_normal       { fi.interpolation.btns.a5_button.arrow_r_s } }
+        pa.is.interpolation.btns.a5_button.arrow_r_a     { gr.interpolation.btns.a5_button.arrow_r_s_normal       { is.interpolation.btns.a5_button.arrow_r_a } }
+        pa.interpolation.btns.a4_button.arrow_r_s     { gr.interpolation.btns.a4_button.arrow_r_s_normal       { fi.interpolation.btns.a4_button.arrow_r_s } }
+        pa.is.interpolation.btns.a4_button.arrow_r_a     { gr.interpolation.btns.a4_button.arrow_r_s_normal       { is.interpolation.btns.a4_button.arrow_r_a } }
+        pa.interpolation.btns.a3_button.arrow_r_s     { gr.interpolation.btns.a3_button.arrow_r_s_normal       { fi.interpolation.btns.a3_button.arrow_r_s } }
+        pa.is.interpolation.btns.a3_button.arrow_r_a     { gr.interpolation.btns.a3_button.arrow_r_s_normal       { is.interpolation.btns.a3_button.arrow_r_a } }
+        pa.interpolation.btns.a2_button.arrow_r_s     { gr.interpolation.btns.a2_button.arrow_r_s_normal       { fi.interpolation.btns.a2_button.arrow_r_s } }
+        pa.is.interpolation.btns.a2_button.arrow_r_a     { gr.interpolation.btns.a2_button.arrow_r_s_normal       { is.interpolation.btns.a2_button.arrow_r_a } }
+    }
+;
+feature src_over so.as.interpolation as.interpolation ;
+feature fixed_image fi.interpolation.interpolation_demo_text
+    ( left 678 top 149 )
+    "images/interpolation_demo_text.png" ;
+feature src_over so.fi.interpolation.interpolation_demo_text fi.interpolation.interpolation_demo_text ;
+feature timer tmr.interpolate 1 repeat {
+	java_command [[ getDirector().interpolateHeartbeat();  ]]
+} ;
+
+#
+# preload group
+#
+
+feature group gr.global.preload {
+	gr.empty
+	tr.duke 
+	as.duke1 
+	as.duke2 
+	as.duke3 
+	as.duke4 
+	so.fi.main.btns.Message_show_btn_text 
+	so.fi.main.btns.simple_counter_btn_text 
+	so.fi.main.btns.interpolation_demo_btn_text 
+	so.fi.main.btns.check_box_menu_btn_text 
+	so.fi.main.btns.chapter_menu_btn_text 
+	so.as.main 
+	so.fi.main.main_menu_text 
+	gr.chapters.chapter 
+	so.fi.common.logo_back.logo_back 
+	as.chapters.chapter_group.ch6 
+	as.chapters.chapter_group.ch5 
+	as.chapters.chapter_group.ch4 
+	as.chapters.chapter_group.ch3 
+	as.chapters.chapter_group.ch2 
+	as.chapters.chapter_group.ch1 
+	so.fi.chapters.btns.back_btn_text 
+	so.as.chapters 
+	so.fi.chapters.chapters_menu_text 
+	so.fi.checkbox.btns.back_btn_text 
+	so.fi.checkbox.btns.gelato_btn_text 
+	so.fi.checkbox.btns.cannoli_btn_text 
+	so.fi.checkbox.btns.gaufres_btn_text 
+	so.fi.checkbox.btns.apple_pie_btn_text 
+	so.as.checkbox 
+	as.checkbox.checkbox4 
+	as.checkbox.checkbox3 
+	as.checkbox.checkbox2 
+	as.checkbox.checkbox1 
+	so.fi.checkbox.question_1_text 
+	so.fi.counter.clock_bg 
+	as.counter.num_0 
+	as.counter.num_00 
+	as.counter.num_000 
+	as.counter.num_0000 
+	so.fi.counter.btns.back_btn_text 
+	so.fi.counter.btns.stop_btn_text 
+	so.fi.counter.btns.start_btn_text 
+	so.as.counter 
+	so.fi.counter.simple_counter_text 
+	so.fi.interpolation.btns.back_btn_text 
+	so.rectangle.menu_show.interpolation_segment.btns.left_right_000000_rect 
+	so.fi.interpolation.btns.dynamic-translation_btn_text 
+	so.fi.interpolation.btns.ease-out-elastic_btn_text 
+	so.fi.interpolation.btns.ease-in-bounce_btn_text 
+	so.fi.interpolation.btns.ease-out-back_btn_text 
+	so.fi.interpolation.btns.ease-in-back_btn_text 
+	so.as.interpolation 
+	so.fi.interpolation.interpolation_demo_text 
+	so.fi.common.logo_back.logo_back 
+	is.main.btns.a8_button.arrow_r_a 
+	fi.main.btns.a8_button.arrow_r_s 
+	is.main.btns.a7_button.arrow_r_a 
+	fi.main.btns.a7_button.arrow_r_s 
+	is.main.btns.a6_button.arrow_r_a 
+	fi.main.btns.a6_button.arrow_r_s 
+	is.main.btns.a5_button.arrow_r_a 
+	fi.main.btns.a5_button.arrow_r_s 
+	is.main.btns.a4_button.arrow_l_a 
+	fi.main.btns.a4_button.arrow_l_s 
+	is.main.btns.a3_button.arrow_l_a 
+	fi.main.btns.a3_button.arrow_l_s 
+	is.main.btns.a2_button.arrow_l_a 
+	fi.main.btns.a2_button.arrow_l_s 
+	is.main.btns.a1_button.arrow_l_a 
+	fi.main.btns.a1_button.arrow_l_s 
+	so.fi.chapters.chapter_group.ch6_assembly.chapter_g_bg 
+	fi.chapters.chapter_group.ch6_assembly.chapter_y_bg 
+	so.fi.chapters.chapter_group.chapt_6 
+	so.fi.chapters.chapter_group.ch5_assembly.chapter_g_bg 
+	so.fi.chapters.chapter_group.ch5_assembly.chapter_y_bg 
+	so.fi.chapters.chapter_group.chapt_5 
+	so.fi.chapters.chapter_group.ch4_assembly.chapter_g_bg 
+	so.fi.chapters.chapter_group.ch4_assembly.chapter_y_bg 
+	so.fi.chapters.chapter_group.chapt_4 
+	so.fi.chapters.chapter_group.ch3_assembly.chapter_g_bg 
+	so.fi.chapters.chapter_group.ch3_assembly.chapter_y_bg 
+	so.fi.chapters.chapter_group.chapt_3 
+	so.fi.chapters.chapter_group.ch2_assembly.chapter_g_bg 
+	so.fi.chapters.chapter_group.ch2_assembly.chapter_y_bg 
+	so.fi.chapters.chapter_group.chapt_2 
+	so.fi.chapters.chapter_group.ch1_assembly.chapter_g_bg 
+	so.fi.chapters.chapter_group.ch1_assembly.chapter_y_bg 
+	so.fi.chapters.chapter_group.chapt_1 
+	is.chapters.btns.back_button.arrow_l_a 
+	fi.chapters.btns.back_button.arrow_l_s 
+	is.chapters.btns.prev_button.arrow_l_a 
+	fi.chapters.btns.prev_button.arrow_l_s 
+	is.chapters.btns.next_button.arrow_r_a 
+	fi.chapters.btns.next_button.arrow_r_s 
+	is.checkbox.btns.back_button.arrow_l_a 
+	fi.checkbox.btns.back_button.arrow_l_s 
+	is.checkbox.btns.a4_button.arrow_r_a 
+	fi.checkbox.btns.a4_button.arrow_r_s 
+	is.checkbox.btns.a3_button.arrow_r_a 
+	fi.checkbox.btns.a3_button.arrow_r_s 
+	is.checkbox.btns.a2_button.arrow_r_a 
+	fi.checkbox.btns.a2_button.arrow_r_s 
+	is.checkbox.btns.a1_button.arrow_r_a 
+	fi.checkbox.btns.a1_button.arrow_r_s 
+	so.fi.checkbox.checkbox4_assembly.box 
+	so.fi.checkbox.checkbox4_assembly.check_box_group.box 
+	so.fi.checkbox.checkbox4_assembly.check_box_group.check 
+	so.fi.checkbox.checkbox3_assembly.box 
+	so.fi.checkbox.checkbox3_assembly.check_box_group.box 
+	so.fi.checkbox.checkbox3_assembly.check_box_group.check 
+	so.fi.checkbox.checkbox2_assembly.box 
+	so.fi.checkbox.checkbox2_assembly.check_box_group.box 
+	so.fi.checkbox.checkbox2_assembly.check_box_group.check 
+	so.fi.checkbox.checkbox1_assembly.box 
+	so.fi.checkbox.checkbox1_assembly.check_box_group.box 
+	so.fi.checkbox.checkbox1_assembly.check_box_group.check 
+	so.fi.counter.num_0_assembly.0 
+	so.fi.counter.num_0_assembly.1 
+	so.fi.counter.num_0_assembly.2 
+	so.fi.counter.num_0_assembly.3 
+	so.fi.counter.num_0_assembly.4 
+	so.fi.counter.num_0_assembly.5 
+	so.fi.counter.num_0_assembly.6 
+	so.fi.counter.num_0_assembly.7 
+	so.fi.counter.num_0_assembly.8 
+	so.fi.counter.num_0_assembly.9 
+	so.fi.counter.num_00_assembly.0 
+	so.fi.counter.num_00_assembly.1 
+	so.fi.counter.num_00_assembly.2 
+	so.fi.counter.num_00_assembly.3 
+	so.fi.counter.num_00_assembly.4 
+	so.fi.counter.num_00_assembly.5 
+	so.fi.counter.num_00_assembly.6 
+	so.fi.counter.num_00_assembly.7 
+	so.fi.counter.num_00_assembly.8 
+	so.fi.counter.num_00_assembly.9 
+	so.fi.counter.num_000_assembly.0 
+	so.fi.counter.num_000_assembly.1 
+	so.fi.counter.num_000_assembly.2 
+	so.fi.counter.num_000_assembly.3 
+	so.fi.counter.num_000_assembly.4 
+	so.fi.counter.num_000_assembly.5 
+	so.fi.counter.num_000_assembly.6 
+	so.fi.counter.num_000_assembly.7 
+	so.fi.counter.num_000_assembly.8 
+	so.fi.counter.num_000_assembly.9 
+	so.fi.counter.num_0000_assembly.0 
+	so.fi.counter.num_0000_assembly.1 
+	so.fi.counter.num_0000_assembly.2 
+	so.fi.counter.num_0000_assembly.3 
+	so.fi.counter.num_0000_assembly.4 
+	so.fi.counter.num_0000_assembly.5 
+	so.fi.counter.num_0000_assembly.6 
+	so.fi.counter.num_0000_assembly.7 
+	so.fi.counter.num_0000_assembly.8 
+	so.fi.counter.num_0000_assembly.9 
+	is.counter.btns.back_button.arrow_l_a 
+	fi.counter.btns.back_button.arrow_l_s 
+	is.counter.btns.stop_button.arrow_r_a 
+	fi.counter.btns.stop_button.arrow_r_s 
+	is.counter.btns.start_button.arrow_r_a 
+	fi.counter.btns.start_button.arrow_r_s 
+	is.interpolation.btns.back_button.arrow_l_a 
+	fi.interpolation.btns.back_button.arrow_l_s 
+	is.interpolation.btns.a6_button.arrow_l_a 
+	fi.interpolation.btns.a6_button.arrow_l_s 
+	is.interpolation.btns.a5_button.arrow_r_a 
+	fi.interpolation.btns.a5_button.arrow_r_s 
+	is.interpolation.btns.a4_button.arrow_r_a 
+	fi.interpolation.btns.a4_button.arrow_r_s 
+	is.interpolation.btns.a3_button.arrow_r_a 
+	fi.interpolation.btns.a3_button.arrow_r_s 
+	is.interpolation.btns.a2_button.arrow_r_a 
+	fi.interpolation.btns.a2_button.arrow_r_s 
+	is.interpolation.btns.a1_button.arrow_r_a 
+	fi.interpolation.btns.a1_button.arrow_r_s 
+} ;
+
+
+
+#
+#
+#  Segments
+#
+
+segment sg.waiting
+    setup { 
+        gr.global.preload
+    } setup_done {
+    }
+;
+
+
+segment sg.initialize
+    setup { 
+        gr.global.preload
+    } setup_done {
+        activate_segment sg.main ;
+    }
+;
+
+segment sg.main
+    active {
+        so.fi.common.logo_back.logo_back
+        so.fi.main.btns.Message_show_btn_text
+        so.fi.main.btns.simple_counter_btn_text
+        so.fi.main.btns.interpolation_demo_btn_text
+        so.fi.main.btns.check_box_menu_btn_text
+        so.fi.main.btns.chapter_menu_btn_text
+        so.as.main
+        so.fi.main.main_menu_text
+    } setup {
+        gr.global.preload
+    } rc_handlers {
+        vi.main 
+    } on_entry {
+        
+    } setup_done {
+        
+    } 
+;
+
+segment sg.checkbox
+    active {
+        so.fi.common.logo_back.logo_back 
+        so.fi.checkbox.btns.back_btn_text 
+        so.fi.checkbox.btns.gelato_btn_text 
+        so.fi.checkbox.btns.cannoli_btn_text 
+        so.fi.checkbox.btns.gaufres_btn_text 
+        so.fi.checkbox.btns.apple_pie_btn_text 
+        so.as.checkbox 
+        as.checkbox.checkbox4 
+        as.checkbox.checkbox3 
+        as.checkbox.checkbox2 
+        as.checkbox.checkbox1 
+        so.fi.checkbox.question_1_text 
+    } setup {
+        gr.global.preload
+    } rc_handlers {
+        vi.checkbox 
+    } on_entry {
+    } setup_done {
+        
+    }
+;
+
+segment sg.counter
+    active {
+        tmr.count 
+        so.fi.common.logo_back.logo_back 
+        so.fi.counter.clock_bg 
+        as.counter.num_0 
+        as.counter.num_00 
+        as.counter.num_000 
+        as.counter.num_0000 
+        so.fi.counter.btns.back_btn_text 
+        so.fi.counter.btns.stop_btn_text 
+        so.fi.counter.btns.start_btn_text 
+        so.as.counter 
+        so.fi.counter.simple_counter_text 
+    } setup {
+        gr.global.preload
+    } rc_handlers {
+        vi.counter 
+    } on_entry {
+         activate_part as.counter pa.counter.btns.start_button.arrow_r_s ;
+         set_visual_rc vi.counter state en.counter.start_button selected ;
+    } setup_done {
+        
+    }
+;
+
+segment sg.chapters
+    active {
+        so.fi.common.logo_back.logo_back 
+        so.rectangle.menu_show.chapters_segment.btns.left_right_000000_rect 
+        cl.chapter.window 
+        so.fi.chapters.btns.back_btn_text 
+        so.as.chapters 
+        so.fi.chapters.chapters_menu_text 
+    } setup {
+        gr.global.preload
+    } rc_handlers {
+        vi.chapters 
+    } on_entry {
+        activate_part as.chapters pa.chapters.btns.next_button.arrow_r_s ;
+        set_visual_rc vi.chapters state en.chapters.next_button selected ;
+    } setup_done {
+        
+    }
+;
+
+segment sg.interpolation
+    active {
+        tmr.interpolate 
+        so.fi.common.logo_back.logo_back 
+        so.fi.interpolation.btns.back_btn_text 
+        so.rectangle.menu_show.interpolation_segment.btns.left_right_000000_rect 
+        so.fi.interpolation.btns.dynamic-translation_btn_text 
+        so.fi.interpolation.btns.ease-out-elastic_btn_text 
+        so.fi.interpolation.btns.ease-in-bounce_btn_text 
+        so.fi.interpolation.btns.ease-out-back_btn_text 
+        so.fi.interpolation.btns.ease-in-back_btn_text 
+        so.as.interpolation 
+        so.fi.interpolation.interpolation_demo_text 
+        tr.duke 
+        as.duke1 
+        as.duke2 
+        as.duke3 
+        as.duke4 
+    } setup {
+        gr.global.preload
+    } rc_handlers {
+        vi.interpolation 
+    } on_entry {
+    } setup_done {
+        
+    }
+;
+
+#
+#
+#  Remote control handlers
+#
+#
+
+rc_handler visual vi.main
+
+    grid { { en.main.a1_button   en.main.a5_button }
+           { en.main.a2_button   en.main.a6_button }
+           { en.main.a3_button   en.main.a7_button }
+           { en.main.a4_button   en.main.a8_button } }
+     
+    assembly as.main 
+        start_selected true
+        
+    select {
+        en.main.a1_button       pa.main.btns.a1_button.arrow_l_s
+        en.main.a2_button       pa.main.btns.a2_button.arrow_l_s
+        en.main.a3_button       pa.main.btns.a3_button.arrow_l_s
+        en.main.a4_button       pa.main.btns.a4_button.arrow_l_s
+        en.main.a5_button       pa.main.btns.a5_button.arrow_r_s
+        en.main.a6_button       pa.main.btns.a6_button.arrow_r_s
+        en.main.a7_button       pa.main.btns.a7_button.arrow_r_s
+        en.main.a8_button       pa.main.btns.a8_button.arrow_r_s
+    } 
+    activate {
+        en.main.a1_button       pa.is.main.btns.a1_button.arrow_l_a
+        en.main.a2_button       pa.is.main.btns.a2_button.arrow_l_a
+        en.main.a3_button       pa.is.main.btns.a3_button.arrow_l_a
+        en.main.a4_button       pa.is.main.btns.a4_button.arrow_l_a
+        en.main.a5_button       pa.is.main.btns.a5_button.arrow_r_a
+        en.main.a6_button       pa.is.main.btns.a6_button.arrow_r_a
+        en.main.a7_button       pa.is.main.btns.a7_button.arrow_r_a
+        en.main.a8_button       pa.is.main.btns.a8_button.arrow_r_a
+    }
+;
+
+rc_handler visual vi.checkbox
+
+    grid { { en.checkbox.a1_button }
+           { en.checkbox.a2_button }
+           { en.checkbox.a3_button }
+           { en.checkbox.a4_button }
+           { en.checkbox.back_button } }
+     
+    assembly as.checkbox 
+        start_selected true
+        
+    select {
+        en.checkbox.a1_button       pa.checkbox.btns.a1_button.arrow_r_s
+        en.checkbox.a2_button       pa.checkbox.btns.a2_button.arrow_r_s
+        en.checkbox.a3_button       pa.checkbox.btns.a3_button.arrow_r_s
+        en.checkbox.a4_button       pa.checkbox.btns.a4_button.arrow_r_s
+        en.checkbox.back_button     pa.checkbox.btns.back_button.arrow_l_s
+    } 
+    activate {
+        en.checkbox.a1_button       pa.is.checkbox.btns.a1_button.arrow_r_a
+        en.checkbox.a2_button       pa.is.checkbox.btns.a2_button.arrow_r_a
+        en.checkbox.a3_button       pa.is.checkbox.btns.a3_button.arrow_r_a
+        en.checkbox.a4_button       pa.is.checkbox.btns.a4_button.arrow_r_a
+        en.checkbox.back_button     pa.is.checkbox.btns.back_button.arrow_l_a
+    }
+;
+
+rc_handler visual vi.chapters
+
+    grid { { en.chapters.prev_button    en.chapters.next_button }
+           { ( 1 1 )                    en.chapters.back_button } }
+     
+    assembly as.chapters
+        start_selected true
+        
+    select {
+        en.chapters.prev_button      pa.chapters.btns.prev_button.arrow_l_s
+        en.chapters.next_button      pa.chapters.btns.next_button.arrow_r_s
+        en.chapters.back_button      pa.chapters.btns.back_button.arrow_l_s
+    } 
+    activate {
+        en.chapters.prev_button      pa.is.chapters.btns.prev_button.arrow_l_a
+        en.chapters.next_button      pa.is.chapters.btns.next_button.arrow_r_a
+        en.chapters.back_button      pa.is.chapters.btns.back_button.arrow_l_a
+    }
+;
+
+rc_handler visual vi.counter
+
+    grid { { en.counter.start_button }
+           { en.counter.stop_button }
+           { en.counter.back_button } }
+     
+    assembly as.counter
+        start_selected true
+        
+    select {
+        en.counter.start_button     pa.counter.btns.start_button.arrow_r_s
+        en.counter.stop_button      pa.counter.btns.stop_button.arrow_r_s
+        en.counter.back_button      pa.counter.btns.back_button.arrow_l_s
+    } 
+    activate {
+        en.counter.start_button     pa.is.counter.btns.start_button.arrow_r_a
+        en.counter.stop_button      pa.is.counter.btns.stop_button.arrow_r_a
+        en.counter.back_button      pa.is.counter.btns.back_button.arrow_l_a
+    }
+;
+
+rc_handler visual vi.interpolation
+
+    grid { { ( 1 0 )                    en.interpolation.a1_button }
+           { ( 1 1 )                    en.interpolation.a2_button }
+           { ( 1 2 )                    en.interpolation.a3_button }
+           { ( 1 3 )                    en.interpolation.a4_button }
+           { en.interpolation.a6_button en.interpolation.a5_button }
+           { ( 1 5 )                    en.interpolation.back_button } }
+     
+    assembly as.interpolation
+        start_selected true
+        
+    select {
+        en.interpolation.a1_button      pa.interpolation.btns.a1_button.arrow_r_s {
+                                            activate_part as.duke1 pa.duke1.1 ;
+                                            activate_part as.duke2 pa.duke2.1 ;
+                                            activate_part as.duke3 pa.duke3.1 ;
+                                            activate_part as.duke4 pa.duke4.1 ;
+                                        }
+        en.interpolation.a2_button      pa.interpolation.btns.a2_button.arrow_r_s {
+                                            activate_part as.duke1 pa.duke1.1 ;
+                                            activate_part as.duke2 pa.duke2.1 ;
+                                            activate_part as.duke3 pa.duke3.1 ;
+                                            activate_part as.duke4 pa.duke4.1 ;
+                                        }
+        en.interpolation.a3_button      pa.interpolation.btns.a3_button.arrow_r_s {
+                                            activate_part as.duke1 pa.duke1.1 ;
+                                            activate_part as.duke2 pa.duke2.1 ;
+                                            activate_part as.duke3 pa.duke3.1 ;
+                                            activate_part as.duke4 pa.duke4.1 ;
+                                        }
+        en.interpolation.a4_button      pa.interpolation.btns.a4_button.arrow_r_s {
+                                            java_command [[ getDirector().stopAnimation(); ]]
+                                            activate_part as.duke1 pa.duke1.1 ;
+                                            activate_part as.duke2 pa.duke2.1 ;
+                                            activate_part as.duke3 pa.duke3.1 ;
+                                            activate_part as.duke4 pa.duke4.1 ;
+                                        }
+        en.interpolation.a5_button      pa.interpolation.btns.a5_button.arrow_r_s {
+                                            java_command [[ getDirector().startAnimation(); ]]
+                                            java_command [[ getDirector().setGoRight(); ]]
+                                            activate_part as.duke1 pa.duke1.1 ;
+                                            activate_part as.duke2 pa.duke2.1 ;
+                                            activate_part as.duke3 pa.duke3.1 ;
+                                            activate_part as.duke4 pa.duke4.1 ;
+                                        }
+        en.interpolation.a6_button      pa.interpolation.btns.a6_button.arrow_l_s {
+                                            java_command [[ getDirector().startAnimation(); ]]
+                                            java_command [[ getDirector().setGoLeft(); ]]
+                                        }
+        en.interpolation.back_button    pa.interpolation.btns.back_button.arrow_l_s {
+                                            java_command [[ getDirector().stopAnimation(); ]]
+                                        }
+    } 
+    activate {
+        en.interpolation.a1_button      pa.is.interpolation.btns.a1_button.arrow_r_a {
+                                            activate_part as.duke4 pa.duke4.2 ;
+                                        }
+        en.interpolation.a2_button      pa.is.interpolation.btns.a2_button.arrow_r_a {
+                                            activate_part as.duke3 pa.duke3.2 ;
+                                        }
+        en.interpolation.a3_button      pa.is.interpolation.btns.a3_button.arrow_r_a {
+                                            activate_part as.duke2 pa.duke2.2 ;
+                                        }
+        en.interpolation.a4_button      pa.is.interpolation.btns.a4_button.arrow_r_a {
+                                            activate_part as.duke1 pa.duke1.2 ;
+                                        }
+        en.interpolation.a5_button      pa.is.interpolation.btns.a5_button.arrow_r_a
+        en.interpolation.a6_button      pa.is.interpolation.btns.a6_button.arrow_l_a
+        en.interpolation.back_button    pa.is.interpolation.btns.back_button.arrow_l_a
+    }
+;
+
+end_show

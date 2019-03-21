@@ -1,0 +1,70 @@
+# This is a visual RC handler example.
+# Uses the same resource as HelloGrinWorld's tumblingduke.
+# On GrinView, moving the mouse vertically changes state, and on
+# the xlet, up/down arrow keys change state.
+
+show 
+
+segment S:Initialize  
+   setup  {
+        F:Everything
+   } setup_done {
+      # triggerred when F:Everything is done loading
+      activate_segment S:Duke ;  
+   }  
+;
+
+segment S:Duke
+   active {
+        F:Duke.Assembly
+   } setup  {
+        F:Everything
+   } rc_handlers {
+        R:VisualHandler
+   }
+;
+
+feature group F:Everything {
+    F:NoDuke
+    F:StandingDuke
+    F:TumblingDuke
+} ;
+
+
+feature box F:End ( 0 0 1920 1080 ) fill { 0 0 0 0 }  ;
+feature box F:NoDuke ( 100 100 400 320 ) fill { 250 250 250 250 }  ;
+feature fixed_image F:StandingDuke 100 100 "images/T1.gif" ;
+feature image_sequence F:TumblingDuke 100 100
+        "images/T" {
+                1 1 1 2 2 2 3 3 3 4 4 4 5 5 5 6 6 6 7 7 7 8 8 8 9 9 9 10 10 10 11 11 11 12 12 12 13 13 13 14 14 14 15 15 15 16 16 16 17 17 17
+        } ".gif" end_commands { segment_done ; }
+;
+
+rc_handler visual R:VisualHandler
+    grid { 
+           { noduke }
+           { standingduke }
+           { tumblingduke }
+         }
+    assembly F:Duke.Assembly
+    select {
+        noduke          noduke
+        standingduke    standingduke
+        tumblingduke    tumblingduke
+    } 
+    activate {  
+    }
+    mouse {
+        noduke                  ( 0 0 1980 360 )
+        standingduke            ( 0 0 1920 770 )
+        tumblingduke            ( 0 0 1959 1080 )
+    }
+;
+
+feature assembly F:Duke.Assembly {
+    noduke                      F:NoDuke
+    standingduke                F:StandingDuke
+    tumblingduke                F:TumblingDuke
+} ;
+
+end_show

@@ -1,0 +1,385 @@
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+  
+  
+      
+  
+
+      
+      
+      
+      
+      
+      
+        
+         
+      
+      
+
+      
+      
+      
+      
+
+      
+      
+      
+
+      
+
+
+  
+  
+
+   
+   
+
+
+
+    <!DOCTYPE html PUBLIC "-//CollabNet//DTD XHTML 1.0 Transitional//EN" "http://www.collabnet.com/dtds/collabnet_transitional_10.dtd">
+
+    <html>
+      <head>
+        
+        
+          <title>
+            BCEL - 
+          
+        
+          </title>
+        
+        
+        
+        
+        <style type="text/css">
+          @import url("./style/tigris.css");
+          @import url("./style/maven.css");
+        </style>
+        
+        <link rel="stylesheet" href="./style/print.css" type="text/css" media="print"></link>
+        
+          <meta name="author" value="Jason van Zyl"></meta>
+          <meta name="email" value="jvanzyl@zenplex.com"></meta>
+        
+      </head>
+
+      <body marginwidth="0" class="composite" marginheight="0">
+        <div id="banner">
+          <table border="0" width="100%" cellpadding="8" cellspacing="0">
+            <tr>
+              
+              <td>
+                
+                
+              </td>
+
+              
+              <td>
+                <div id="login" align="right">
+                  
+                  
+                    
+                    
+                    
+                      
+                    
+
+                    <a href="http://jakarta.apache.org/bcel/">
+                      <img border="0" alt="jakarta-bcel" src="./images/bcel-logo.gif" align="right"></img>
+                    </a>
+                  
+                </div>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div id="breadcrumbs">
+          <table border="0" width="100%" cellpadding="4" cellspacing="0">
+            <tr>
+              
+              
+              
+              <td>
+                <div align="right">
+                  
+                  
+                  
+                  
+                    
+                  
+                </div>
+              </td>
+            </tr>
+          </table>
+        </div>
+        
+        <table border="0" width="100%" cellpadding="8" cellspacing="0"> 
+          <tr valign="top">
+            <td width="20%" id="leftcol">
+              <div id="navcolumn">
+                
+
+                
+                  
+    <div>
+      <strong>BCEL</strong>
+      
+    <div>
+      
+      
+      <small><a href="./index.html">Front Page</a></small>
+      
+    </div>
+  
+    <div>
+      
+      
+      <small><a href="./news.html">News and Status</a></small>
+      
+    </div>
+  
+    <div>
+      
+      
+      <small><a href="http://jakarta.apache.org/builds/jakarta-bcel/release/">Distributions</a></small>
+      
+    </div>
+  
+    </div>
+  
+    <div>
+      <strong>Documentation</strong>
+      
+    <div>
+      
+      
+      <small><a href="./manual.html">Manual</a></small>
+      
+    </div>
+  
+    <div>
+      
+      
+      <small><a href="./faq.html">FAQ</a></small>
+      
+    </div>
+  
+    </div>
+  
+    <div>
+      <strong>Get Involved</strong>
+      
+    <div>
+      
+      
+      <small><a href="./projects.html">Projects</a></small>
+      
+    </div>
+  
+    </div>
+  
+                
+
+                
+                
+
+                
+                
+                <div>
+                  <strong>Project Documentation</strong>
+                  <div>
+                    <small>
+                      <a href="./index.html">Front Page</a>
+                    </small>
+                  </div>
+                  <div>
+                    <small>
+                      <a href="./project-info.html">Project Info</a>
+                    </small>
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                  </div>
+                  <div>
+                    <small>
+                      <a href="./maven-reports.html">Project Reports</a>
+                    </small>
+                    
+                      
+                      
+                        
+                        
+                        
+                          
+                        
+                          
+                        
+                          
+                        
+                          
+                        
+                          
+                        
+                          
+                        
+                          
+                        
+                          
+                        
+                          
+                        
+                          
+                        
+                          
+                        
+                          
+                        
+                      
+                    
+                  </div>
+                  
+                    
+                      <div>
+                        <small>
+                          <a href="./apidocs/index.html">JavaDocs</a>
+                        </small>
+                      </div>
+                      <div>
+                        <small>
+                          <a href="./xref/index.html">Source XReference</a>
+                        </small>
+                      </div>
+                      
+                    
+                  
+                  
+                  
+                  
+                  
+                    <div>
+                      <small>
+                        
+                        <a href="http://jakarta.apache.org/turbine/maven/development-process.html">Development Process</a>
+                      </small>
+                    </div>
+                  
+                </div>
+              
+                
+              </div>
+            </td>
+            <td>
+              <div id="bodycol">
+                
+                <div class="app">
+                  
+                  
+    <div class="h3">
+      
+      
+        <h3>
+          <a name="BCEL">BCEL</a>
+        </h3>
+      
+      
+    <p>
+      
+    The Byte Code Engineering Library is intended to give users a
+    convenient possibility to analyze, create, and manipulate (binary)
+    Java class files (those ending with .class). Classes are
+    represented by objects which contain all the symbolic information
+    of the given class: methods, fields and byte code instructions, in
+    particular.
+  
+    </p>
+   
+    <p>
+      
+    Such objects can be read from an existing file, be transformed
+    by a program (e.g. a class loader at run-time) and dumped to a file again. 
+    An even more interesting application is the creation of classes from scratch 
+    at run-time. The Byte Code Engineering Library (BCEL) may be also useful 
+    if you want to learn about the Java Virtual Machine (JVM) and the format of 
+    Java .class files. 
+  
+    </p>
+   
+    <p>
+      
+    BCEL is already being used successfully in several projects such
+    as compilers, optimizers, obsfuscators, code generators
+    and analysis tools.
+  
+    </p>
+   
+    </div>
+  
+                  
+                  
+                  
+                  
+                  
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+        <div id="footer">
+          <table border="0" cellpadding="4" cellspacing="0">
+            <tr>
+              <td>
+                
+                  
+                    
+                    
+                       2002-2003, Apache Software Foundation
+                    
+                  
+                  
+                
+
+                
+              </td>
+              
+            </tr>
+          </table>
+        </div>
+      </body>
+    </html>
+  

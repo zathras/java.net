@@ -1,0 +1,1134 @@
+<html>
+<head>
+<title>GRIN Scene Graph</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+<link href="pal.css" rel="stylesheet" type="text/css"></head>
+</head>
+<body>
+<p>&nbsp;</p>
+<div style="text-align: center">
+<img width="271" height="200" border="0" src="images/grin_bear.jpg" />
+</div>
+<div class="pal">
+<h1>HD Cookbook - GRIN Scene Graph</h1>
+<p>
+The GRIN scene graph provides the BD-J runtime support needed for
+organizing and displaying visual assets, and for processing input
+from a remote control or an optional mouse.  Using GRIN, you can organize
+visual assets using a GRIN "show" file.  We provide a simple text file
+format that demonstrates the concept; 
+<a href="http://javelindvd.com/"><u>Javelin</u></a> has built on this with an
+XML file format more suitable to a professional workflow.  
+For now, the show files are written by hand.
+</p><p>
+Scene graph implementations are common - you can think of an
+HTML renderer or a Flash engine as a scene graph implementation, but
+there are plenty of others out there.  You can even think of a widget
+set as being a sort of scene graph, though the term "scene graph" is
+usually applied to an API used for highly dynamic, visually-oriented
+"post widget" screen design.  Given the many scene graph APIs out there,
+why GRIN?  To answer that, here are some of the GRIN scene graph's 
+unique features:
+</p>
+<ul>
+   <li>It is built for the graphics primitives available in Blu-ray
+       Java, and other TV platforms such as OCAP and MHP.  That means it's
+       optimized around the graphics APIs present in Personal Basis
+       Profile.
+   <li>It's ruthlessly efficient.  Great care has been taken to achieve
+       small code size (on the order of 80K obfuscated), quick loading
+       time, avoidance of floating point operations, minimal generation
+       of heap objects that would trigger garbage collection, and very
+       efficient screen redraw optimization.
+    <li>It's highly extensible.  It's designed to let the xlet developer
+        create their own visual "feature" objects, and integrate them
+	into the show file, which is compiled into an efficient
+	binary format.  The Java programmer can also place a GRIN
+	show above or below any other drawing they do from Java, and
+	a GRIN show can trigger commands that are written using the
+	Java language, right in the show file.
+    <li>It's <i>compiled</i>.  Whenever possible, work is done
+        at authoring time, so that disc startup time is minimal.  For
+	example, the show file is always compiled into an efficient
+	binary representation during authoring, and individual image files
+	are compiled together into a mosaic.
+    <li>It's designed to allow automatically transforming a show into 
+        different versions, to be run on different player performance
+	levels.  For example, a show can be automatically translated into
+	QHD (960x540) resolution for slow players.
+    <li>It's freely available, and carries no royalties.
+</ul>
+<p>
+More details about the internal design and the full GRIN show file syntax
+are available in this
+<a href="javadocs/grin/javame/com/hdcookbook/grin/doc-files/index.html"><u>GRIN design
+document</u></a>.  GRIN consists of a show compiler that runs on the
+desktop, and a runtime library that's included on a BD disc.  Click
+the links for the javadocs of the
+<a href="javadocs/grin/javase/overview-summary.html"><u>
+Java SE libraries for the show compiler,</u></a> or the separate
+javadocs of the
+<a href="javadocs/grin/javame/overview-summary.html"><u>
+CDC libraries for the GRIN show graph.</u></a>
+GRIN is built on top of our <a href="animator.html"><u>animation 
+framework</u></a>.
+</p>
+<p></p>
+<p align="center"><font size="+0">Click here for
+<a href="javadocs/grin/javame/com/hdcookbook/grin/doc-files/index.html"><u>
+the full GRIN show file syntax</u></a>.
+</p>
+
+<h2>Threading Model, Show, and Segments</h2>
+
+<p>
+A GRIN Scene graph has a 
+<a href="javadocs/grin/javame/com/hdcookbook/grin/Show.html">Show</a>
+node at its root.  A show can be created by writing a text file using the
+<a href="javadocs/grin/javame/com/hdcookbook/grin/doc-files/index.html">show
+file syntax</a> (search for "show ::=").  A show can be viewed on the
+desktop using the <code>grinview</code> program, or it can be compiled
+to a binary file and run on a player inside a BD-J or OCAP xlet (or on
+any other GEM-compliant device).  
+</p>
+<p>
+A Show is a client of the animation 
+framework, and
+implements the
+<a href="javadocs/grin/javame/com/hdcookbook/grin/animator/AnimationClient.html">AnimationClient</a>
+interface of the <a href="animator.html">animation framework</a>.  The
+animation framework gives us a single-threaded model, with a single animation
+thread.  The main animation loop looks like this:
+<pre>
+	for frame = 1 to infinity
+	    advance model:
+	        Update features
+		call director's notifyNextFrame
+		    run queued commands
+	    if we're not behind
+	        calculate screen areas that need to be updated
+		draw changed areas to an offscreen buffer
+		copy changed parts of buffer to framebuffer
+</pre>
+<p>
+In addition to the animation loop, the GRIN system creates a lower
+priority setup thread that's used for time-consuming initialization, like
+image loading.  Animation can proceed while initialization is happening,
+though of course you should try not to do very demanding animation during
+initialization, lest the CPU be kept so busy that initialization takes
+longer than it should.
+</p><p>
+A show is divided into a set of mutually-exclusive segments, exactly
+one of which is active at any given time.  A segment specifies what's
+visible on the screen, what is to be initialized (or kept in the initialized
+state), and how remote control keypresses are handled.  A segment can be
+thought of as a span of time along a show's timeline, or as a first-level
+state machine.  Typically, one "screen" might be spread across several
+segments, representing different states of the screen.
+</p><p>
+As you can see from the 
+<a href="javadocs/grin/javame/com/hdcookbook/grin/doc-files/index.html">show
+file syntax</a> (search for "segment ::="), a segment specifies a number of
+"active" features, and a number of "setup" features.  The "setup" features
+are kept in the "setup" state, that is, images are loaded if they need to
+be.  At the same time, the "active" features of the show are displayed.
+Commonly, a show will start with a segment that has no active features,
+and a number of features being set up.  For example, the GrinBunny game
+(in <code>xlets/grin_samples/GrinBunny</code>) has a show that starts
+with this:
+<pre>
+    segment S:Initialize
+	setup {
+	    F:TitleScreen
+	} setup_done {
+	    activate_segment S:Loading ;
+	}
+    ;
+
+    segment S:Loading
+	active {
+	    F:TitleScreen
+	} setup {
+	    F:Everything
+	} setup_done {
+	    java_command [[ getDirector().initializeGame(); ]]
+	    activate_segment S:ReadyToPlay ;
+	}
+    ;
+</pre>
+<p>
+the first segment shows nothing on the screen (because it has no active
+clause), but starts loading the assets needed for the feature called
+F:TitleScreen.  When all of the assets needed for the features in the setup
+clause finish loading, the commands listed in the setup_done clause
+are triggered.  In this case, it causes the show to move on to the segment
+called S:Loading, which displays the title screen and starts loading the
+feature called F:Everything.  F:Everything is a "group" feature that this
+show declares to contain all other features, so this causes the other features
+to load.  When that's done, other commands are triggered to start game play.
+</p><p>
+A visualization of the threads and what they are executing can be created
+with the <a href="profiler.html">GRIN profiler</a>.  In the linked page,
+you can see the animation thread executing through a typical GRIN show
+run.  The setup thread isn't pictured in the samples shown there, but
+if it were it would only be executing a the beginning of the show's run.
+</p>
+
+<h4>Threads and Networking</h4>
+
+<p>
+Networking is an activity that usually requires at least one
+more thread.  A network connection can take a relatively long
+time, on the order of seconds or tens of seconds, so it would be
+inappropriate to do networking directly in the animation thread.
+Fortunately, GRIN helps provide support for safe multi-threaded
+programming.
+</p><p>
+As of this writing, two good examples of programming for the
+network existed, both in <code>xlets/demos</code>:  twitterGRIN
+and weatherWidget.  Both use a <code>NetworkManager</code> class
+to create and manage a networking thread.  Thus, these xlets have
+three main threads running:  The setup thread, the animation thread,
+and the networking thread.
+</p><p>
+The networking activity is loosely coupled to the animation in these
+examples.  When the show wants to request new data from the network
+(e.g. when twitterGRIN wants to refresh the screen with new tweets),
+it queues a request to do this on a queue managed by the networking
+thread.  When that thread is ready, it opens a socket to the twitter
+server, reads data, and reads and loads the images that are needed
+to display those tweets.  When the networking activity is complete,
+and all images are loaded and decoded, it queues a command object to
+the show.  This command object is executed in the animation thread,
+and it updates the UI with the new text and images at a point in the
+animation loop when it's safe to do so.
+</p>
+
+<h2>Visual Features</h2>
+
+Of the features that can be listed in a segments setup or active clauses,
+the easiest ones to understand are the ones that have a visual representation.
+These are listed below.  For each, we give the name of the feature in the 
+<a href="javadocs/grin/javame/com/hdcookbook/grin/doc-files/index.html">show
+file syntax</a>, and the classes that implement that feature (usually an SE
+compile time class and a companion run time class).
+
+<p>
+Fixed Image (<code><strong>fixed_image</strong></code>,
+<a href="javadocs/grin/javase/com/hdcookbook/grin/features/SEFixedImage.html">SEFixedImage</a>,
+<a href="./javadocs/grin/javame/com/hdcookbook/grin/features/FixedImage.html">FixedImage</a>):
+</p>
+<table>
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<p>
+A fixed image feature displays a single, fixed image.  The source image
+can be .png or .jpg.  It's placed at an absolute location on the screen,
+but like any other node it can be moved around the screen by a parent 
+"translate" node.
+</td></tr></table>
+
+
+<p>
+Image Sequence (<code><strong>image_sequence</strong></code>,
+<a href="javadocs/grin/javase/com/hdcookbook/grin/features/SEImageSequence.html">SEImageSequence</a>,
+<a href="./javadocs/grin/javame/com/hdcookbook/grin/features/ImageSequence.html">ImageSequence</a>):
+</p>
+<table>
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<p>
+An image sequence is like an image node, except that it has a sequence of
+images that are shown, one per frame.  This allows one to produce a cel
+animation.  An image sequence can repeat, starting with any frame of the
+animation.  
+<p>
+Two or more image sequences can be linked together so that
+they share the same frame count.  That frame count keeps updating so long
+as any one of the image sequences are active.  This can be used, for
+example,  for two image sequences representing a count down that can be
+in one of two states.  An example of this can be found in this snippet
+from the "Ryan's Life" show, in
+<code>AuthoringTools/grin/jdktools/grinviewer/src/com/hdcookbook/grin/test/assets/ryan_show.txt</code>:
+<pre>
+    feature assembly F_commentary_menu_count_up {
+	    off  F_commentary_menu_count_up_off
+	    on   F_commentary_menu_count_up_on
+    } ;
+
+    feature image_sequence F_commentary_menu_count_up_off
+	    600 0
+	    "Menus/CountUp/CountUp_OFF/CountUp_OFF_" {
+		ZZ + + + + + + + + + + + + + + + + + + + + + + + +
+		00 + + + + + + + + + + + + + + + + + + + + + + + +
+		01 + + + + + + + + + + + + + + + + + + + + + + + +
+		02 + + + + + + + + + + + + + + + + + + + + + + + +
+		03 + + + + + + + + + + + + + + + + + + + + + + + +
+		04 + + + + + + + + + + + + + + + + + + + + + + + +
+		05 + + + + + + + + + + + + + + + + + + + + + + + +
+		06 + + + + + + + + + + + + + + + + + + + + + + + +
+		07 + + + + + + + + + + + + + + + + + + + + + + + +
+		08 + + + + + + + + + + + + + + + + + + + + + + + +
+		09 + + + + + + + + + + + + + + + + + + + + + + + +
+	    } ".png" repeat
+	    end_commands { segment_done ; }  ;
+
+    feature image_sequence F_commentary_menu_count_up_on
+	    600 0
+	    "Menus/CountUp/CountUp_ON/CountUp_ON_" {
+		ZZ + + + + + + + + + + + + + + + + + + + + + + + +
+		00 + + + + + + + + + + + + + + + + + + + + + + + +
+		01 + + + + + + + + + + + + + + + + + + + + + + + +
+		02 + + + + + + + + + + + + + + + + + + + + + + + +
+		03 + + + + + + + + + + + + + + + + + + + + + + + +
+		04 + + + + + + + + + + + + + + + + + + + + + + + +
+		05 + + + + + + + + + + + + + + + + + + + + + + + +
+		06 + + + + + + + + + + + + + + + + + + + + + + + +
+		07 + + + + + + + + + + + + + + + + + + + + + + + +
+		08 + + + + + + + + + + + + + + + + + + + + + + + +
+		09 + + + + + + + + + + + + + + + + + + + + + + + +
+	    } ".png" repeat
+	    linked_to F_commentary_menu_count_up_off ;
+</pre>
+<p>Note the <code>linked_to</code> at the end - this keeps the two
+image sequences locked on the same frame together, regardless of
+which one is visible at the time.
+</td></tr></table>
+
+<p>
+Box (<code><strong>box</strong></code>,
+<a href="javadocs/grin/javase/com/hdcookbook/grin/features/SEBox.html">SEBox</a>,
+<a href="./javadocs/grin/javame/com/hdcookbook/grin/features/Box.html">Box</a>):
+</p>
+<table>
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<p>
+A box displays a rectangular box on the screen, with an outline that has
+rounded corners.  It's useful for drawing a highlight around something.
+</td></tr></table>
+
+<p>
+Text (<code><strong>text</strong></code>,
+<a href="javadocs/grin/javase/com/hdcookbook/grin/features/SEText.html">SEText</a>,
+<a href="./javadocs/grin/javame/com/hdcookbook/grin/features/Text.html">Text</a>):
+</p>
+<table>
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<p>
+A text feature lets you display text using a font that's either built
+into the player, or packaged with your xlet.  Text can span multiple
+lines, and the color and alpha level can change over time.  You can't
+mix text styles (e.g. regular, bold or italic) within one text
+feature, however.
+</td></tr></table>
+
+<h2>Modifiers</h2>
+
+A modifier feature is a feature that has a child feature (which can
+be a group of features).  A modifier will modify the display of its
+child features in some way.
+
+<p>
+Fade (<code><strong>fade</strong></code>,
+<a href="javadocs/grin/javase/com/hdcookbook/grin/features/SEFade.html">SEFade</a>,
+<a href="./javadocs/grin/javame/com/hdcookbook/grin/features/Fade.html">Fade</a>):
+</p>
+<table>
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<p>
+A fade feature will set the alpha level for the drawing of its children.
+The fade level can vary over time, and a smooth animation effect can be
+achieved with one of the "tween" functions.
+<p>
+When using the fade feature, you have to understand a little bit about
+how Personal Basis Profile's <code>java.awt.Grpahics2D</code> class works.
+The fade feature sets an <code>AlphaComposite</code> on the PBP graphics,
+then calls its children to draw.  After the children are done, it restores
+the <code>Graphics2D</code> to its former state.  This works great, but what
+happens if one of the children also sets the <code>AlphaComposite</code>?
+Some other node types do, like src_over and font strip text features.
+<p>
+The answer is that a child node that sets its own AlphaComposite might ignore
+any AlphaComposite set for it by a parent.  This is a consequence of how the
+PBP graphics API is structured - it would be complex and inefficient to try
+to compose together a number of graphics effects, and this would be at odds
+with the GRIN design philosophy of speed and simplicity.  So, the rule with
+Fade is to be careful if you're fading something that includes features that
+themselves set the AlphaComposite.
+</td></tr></table>
+
+<p>
+Translate (<code><strong>translator</strong></code> and 
+<code><strong>translator_model</strong></code>,
+<a href="javadocs/grin/javase/com/hdcookbook/grin/features/SETranslator.html">SETranslator</a>,
+<a href="javadocs/grin/javase/com/hdcookbook/grin/features/SETranslatorModel.html">SETranslatorModel</a>,
+<a href="./javadocs/grin/javame/com/hdcookbook/grin/features/Translator.html">Translator</a>,
+<a href="./javadocs/grin/javame/com/hdcookbook/grin/features/InterpolatedModel.html">InterpolatedModel</a>):
+</p>
+<table>
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<p>
+A translator moves the position of its children on the screen by a relative
+delta-x and delta-y.  The delta values can be animated over time, and
+smooth animations can be had with various tweening functions.  One interesting
+application of a translator can be seen in an orbit simulator, built into
+the "Playground" test xlet (do <code>cd xlets/tests/functional/Playground</code>
+then <code>ant grinview</code>, then click on <code>S:Initialize</code> and
+pick number 6).  Translators
+work on pre-computed values linked into a path by linear interpolation, so
+arbitrary functions can be evauated during authoring and efficiently run
+on a player&nbsp;-- even Kepler's orbital equations!
+</p></p>
+A translator is split into two pieces:  the actual translator, and the
+translator_model that holds the points, and maintains the frame count.  This
+is done so that a number of transators can share the same sets of points,
+and so that different parts of the scene graph (perhaps only some of which
+are currently visible) can be translated together.
+</td></tr></table>
+
+<p>
+Clipped (<code><strong>clipped</strong></code>,
+<a href="javadocs/grin/javase/com/hdcookbook/grin/features/SEClipped.html">SEClipped</a>,
+<a href="./javadocs/grin/javame/com/hdcookbook/grin/features/Clipped.html">Clipped</a>):
+</p>
+<table>
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<p>
+A clipped feature clips its children within a clipping rectangle.  This can
+be useful in conjunction with a translator, to make a set of child nodes
+slide out, for example.
+</td></tr></table>
+
+<p>
+Source Over Drawing (<code><strong>src_over</strong></code>,
+<a href="javadocs/grin/javase/com/hdcookbook/grin/features/SESrcOver.html">SESrcOver</a>,
+<a href="./javadocs/grin/javame/com/hdcookbook/grin/features/SrcOver.html">SrcOver</a>):
+</p>
+<table>
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<p>
+A src_over feature makes its children draw in SRC_OVER drawing mode.
+Normally, GRIN draws in the more efficient SRC mode, but this doesn't
+support alpha blending within the Java graphics plane.  SRC_OVER mode
+does, at the cost of some speed.  SRC_OVER drawing might be about 33%
+slower than SRC mode drawing.
+</td></tr></table>
+
+<p>
+Scaled Drawing (<code><strong>scaling_model</strong></code>,
+<a href="javadocs/grin/javase/com/hdcookbook/grin/features/SEScalingModel.html">SEScalingModel</a>,
+<a href="./javadocs/grin/javame/com/hdcookbook/grin/features/InterpolatedModel.html">InterpolatedModel</a>):
+</p>
+<table>
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<p>
+Some GRIN node types can support runtime scaling.  Images can
+be scaled, and so can boxes, but text cannot.  For this reason, the
+<code>scaling_model</code> node is not a normal modifier node&nbsp;-- it does
+not have children whose appearance it modifies, because this can't be
+supported using PBP's <code>Graphics2D</code>.  Rather, the scaling model
+node type just maintains an x and y scale factor, and an anchor point.  The
+fixed image, image sequence and box features can refer to a scaling model
+to modify their size and position.
+<p>
+Both the scaling factors and the anchor point can be animated, that is,
+they can change over time.  As with other animated parameters, they can
+be animated smoothly using tweening functions that are computed at
+compile time, and represented as a series of linear interpolations at
+runtime.  A nice sample of scaling can be seen in
+<code>xlets/grin_samples/BouncingReddy</code>.  Another good example is
+in the bookmenu project, when the keyboard used to access bonus content seems
+to spin around twice, and then expand and fade out.
+</td></tr></table>
+
+<h2>Structural Features</h2>
+
+GRIN structural features don't show anything themselves, but they allow the
+nodes of a scene graph to be put together in useful ways.
+
+<p>
+Group (<code><strong>group</strong></code>,
+<a href="javadocs/grin/javase/com/hdcookbook/grin/features/SEGroup.html">SEGroup</a>,
+<a href="./javadocs/grin/javame/com/hdcookbook/grin/features/Group.html">Group</a>):
+</p>
+<table>
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<p>
+A group is just a list of child nodes.  When a group is made visible, all of
+its child nodes will be visible.
+</td></tr></table>
+
+<p>
+Assembly (<code><strong>assembly</strong></code>,
+<a href="javadocs/grin/javase/com/hdcookbook/grin/features/SEAssembly.html">SEAssembly</a>,
+<a href="./javadocs/grin/javame/com/hdcookbook/grin/features/Assembly.html">Assembly</a>):
+</p>
+<table>
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<p>
+An assembly is a little bit like a visual "switch" statement.  An assembly
+has a number of child nodes, but only one of the children is active at any
+one time.  Using an assembly, you can switch out what is visible on the screen.
+Often, the child node that makes up one such assembly part will be a group
+node.  A typical
+assembly that has three states, called "s1", "s2" and "s3" would look like this:
+<pre>
+    feature assembly F:MyAssembly {
+	s1	F:GroupOne
+	s2	F:GroupTwo
+	s3	F:GroupThree
+    } ;
+</pre>
+Each of the three groups can share a number of sub-features in common.  For
+example, if the three states represent buttons, where s1 has button 1
+active, s2 has button 2 active and so on, then F:GroupOne and F:GroupTwo
+would both contain an image showing button three in the normal state.
+<p>
+Assemblies might seem unfamiliar if you're coming from a background of
+UI widgets, but they are one of the most commonly used idioms in GRIN.
+Assemblies let you manage the state of the user interface in a purely
+declarative way.
+</td></tr></table>
+
+<p>
+Menu Assembly (<code><strong>menu_assembly</strong></code>,
+<a href="javadocs/grin/javase/com/hdcookbook/grin/features/SEAssembly.html">SEAssembly</a>,
+<a href="./javadocs/grin/javame/com/hdcookbook/grin/features/Assembly.html">Assembly</a>):
+</p>
+<table>
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<p>
+As you can see from the runtime class name, a menu assembly is really just
+syntactic sugar for a normal assembly.  We noticed that a normal assembly
+could get verbose for normal menus.  For example, consider a three-button
+menu, where a button can be normal, selected, or activated.  This turns into
+a six-part assembly that looks something like this:
+<pre>
+    feature assembly F:MyMenu {
+	b1_sel		... a group with button 1 showing selected ...
+	b1_act		... a group with button 1 showing activated ...
+	b2_sel		... a group with button 2 showing selected ...
+	b2_act		... a group with button 2 showing activated ...
+	b3_sel		... a group with button 3 showing selected ...
+	b3_act		... a group with button 4 showing activated ...
+    }
+</pre>
+In this example, each of those groups would have images for two of the buttons
+in the normal state, and one in either the selected or activated states.  That's
+a lot of repitition of the buttons in the normal state!
+<p>
+With a menu assembly, you first declare a "template" group that has all
+of the buttons in the normal state.  Then, for each real state of the
+assembly (e.g. the six states above), you specify which parts of the template
+get overridden, and what they get overridden with.  When the show file is read
+in (by the compiler or by grinview), the menu_assembly is turned into the
+equivalent normal assembly.
+<p>
+Please refer to the 
+<a href="javadocs/grin/javame/com/hdcookbook/grin/doc-files/index.html">show
+file syntax</a> (search for "menu_assembly ::=") for the syntax used to specify
+this.  You can also find an example in
+<code>xlets/hdcookbook_discimage/bookmenu/src/com/hdcookbook/bookmenu/assets/menu.txt</code>.
+</td></tr></table>
+
+<p>
+Timer (<code><strong>timer</strong></code>,
+<a href="javadocs/grin/javase/com/hdcookbook/grin/features/SETimer.html">SETimer</a>,
+<a href="./javadocs/grin/javame/com/hdcookbook/grin/features/InterpolatedModel.html">InterpolatedModel</a>):
+</p>
+<table>
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<p>
+A timer isn't quite a structural feature, but it doesn't really belong
+anywhere else in the taxonomy, so we put it here.  A timer is a 
+feature that counts how many
+frames happen while it's active, and after a certain number of frames has
+gone by, it triggers a command.  Many other features can trigger commands,
+too - most of the features described above that do some animation can trigger
+a command when the animation is done.  Commands are discussed further down
+in this document.
+</td></tr></table>
+
+<h2>Remote Control Handling</h2>
+<p>
+GRIN contains some simple remote control handling, and even support
+for receiving mouse events.
+<p>
+Command RC Handler (<code><strong>command_rc_handler</strong></code>,
+<a href="javadocs/grin/javase/com/hdcookbook/grin/input/SECommandRCHandler.html">SECommandRCHandler</a>,
+<a href="javadocs/grin/javame/com/hdcookbook/grin/input/CommandRCHandler.html">CommandRCHandler</a>):
+</p>
+<table>
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<p>
+A "command" RC handler just triggers a command when a certain remote control
+key press (or key release) is detected.  In it's simplest form, it can be 
+used for a screen that says "Press OK to continue" - for this, you'd have
+a command RC handler that, when OK is pressed, would do something like move
+to another segment.
+</td></tr></table>
+
+<p>
+Visual RC Handler (<code><strong>visual_rc_handler</strong></code>,
+<a href="javadocs/grin/javase/com/hdcookbook/grin/input/SEVisualRCHandler.html">SEVisualRCHandler</a>,
+<a href="javadocs/grin/javame/com/hdcookbook/grin/input/VisualRCHandler.html">VisualRCHandler</a>):
+</p>
+<table>
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<p>
+A "visual" remote control handler is really quite sophisticated.  It's usually
+used in conjunction with an assembly.  In a visual RC handler, you specify a
+rectangular grid of state names.  By default, the arrow keys move you within
+this state grid, though you can also modify what any given key does from any
+given state.  Having a grid like this lets you set up many navigation schemes
+simply, by just organizing the state names correctly.  A positon on the grid
+can be a state, or it can be a "forwarding reference" to a state somewhere
+else on the grid.
+</p><p>
+Usually, you'll link a visual RC handler to an assembly.  Each state on the
+state grid will map to two states in the assembly, one for selected (when you
+navigate to that state), and one for activated (when you press OK).
+You can also trigger commands
+on the various state transitions.  Finally, you can declare rectagular areas
+on the screen, where mouse entry goes to a "select" state, and mouse click
+goes to an "activated" state.
+Please refer to the 
+<a href="javadocs/grin/javame/com/hdcookbook/grin/doc-files/index.html">show
+file syntax</a> (search for "visual_rc_handler") for the syntax used to 
+specify this.  You can also find several examples of the use of visual RC
+handlers in
+<code>xlets/hdcookbook_discimage/bookmenu/src/com/hdcookbook/bookmenu/assets/menu.txt</code>.
+</td></tr></table>
+
+<h2>Commands</h2>
+
+<p>
+Commands can be triggered in many places in a GRIN show.  Many features
+have one or more command lists associated with them.  For example,
+features that animate, like image sequences and translations, have
+a place you can put a command list when the animation is done.  Commands
+are executed in the animation loop, just after features update their state
+(which makes sense, because features updating their internal model's state
+is what often causes commands to be queued).  Commands are used to change 
+the state of the show, or perform other actions.
+The built-in commands are listed below.
+<p>
+Activate Segment (<code><strong>activate_segment</strong></code>,
+<a href="javadocs/grin/javase/com/hdcookbook/grin/commands/SEActivateSegmentCommand.html">SEActivateSegmentCommand</a>,
+<a href="javadocs/grin/javame/com/hdcookbook/grin/commands/ActivateSegmentCommand.html">ActivateSegmentCommand</a>):
+</p>
+<table>
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<p>
+An activate segment command moves the show from one segment to another.
+</td></tr></table>
+
+<p>
+Activate Part (<code><strong>activate_part</strong></code>,
+<a href="javadocs/grin/javase/com/hdcookbook/grin/commands/SEActivatePartCommand.html">SEActivatePartCommand</a>,
+<a href="javadocs/grin/javame/com/hdcookbook/grin/commands/ActivatePartCommand.html">ActivatePartCommand</a>):
+</p>
+<table>
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<p>
+An activate part command is used to change the state of an assembly.
+Remember, assemblies have exactly one active part at any given time.
+This command can change which part is active.
+</td></tr></table>
+
+<p>
+Segment Done (<code><strong>segment_done</strong></code>,
+<a href="javadocs/grin/javase/com/hdcookbook/grin/commands/SESegmentDoneCommand.html">SESegmentDoneCommand</a>,
+<a href="javadocs/grin/javame/com/hdcookbook/grin/GrinXHelper.html">GrinXHelper</a>):
+</p>
+<table>
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<p>
+A segment done command causes a segment to queue the commands in
+its <code>segment_done</code> clause.  They'll go to the end of the command
+queue, and be executed before the next frame of animation displays.  Segement
+done commands are a convenient way of structuring a show, by putting
+activate segment commands in a segment's <code>segment_done</code> clause
+to chain a number of segments together.
+</td></tr></table>
+
+<p>
+Set Visual RC State (<code><strong>set_visual_rc_state</strong></code>,
+<a href="javadocs/grin/javase/com/hdcookbook/grin/commands/SESetVisualRCStateCommand.html">SESetVisualRCStateCommand</a>,
+<a href="javadocs/grin/javame/com/hdcookbook/grin/commands/SetVisualRCStateCommand.html">SetVisualRCStateCommand</a>):
+</p>
+<table>
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<p>
+This command sets the state of a visual RC handler.  It's often used to
+initialize a visual RC hanlder to a known state.  It will often appear
+in the <code>on_entry</code> clause of a segment that contains a visual
+RC handler, in order to initialize the hander.
+<p>
+Note, however, that a visual RC handler also initializes its internal state
+from the assembly it's linked to, if it's lined to an assembly.  For such
+RC handlers, if you want to initialize the UI's state on entry to a segment,
+you will most likely want to use an <code>activate_part</code> command to
+initialize the assembly.
+</td></tr></table>
+
+<p>
+Reset Feature (<code><strong>reset_feature</strong></code>,
+<a href="javadocs/grin/javase/com/hdcookbook/grin/commands/SEResetFeatureCommand.html">SEResetFeatureCommand</a>,
+<a href="javadocs/grin/javame/com/hdcookbook/grin/commands/ResetFeatureCommand.html">ResetFeatureCommand</a>):
+</p>
+<table>
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<p>
+A reset feature command will reset a feature.  It has the same effect on
+that feature as would happen if the feature were de-activated and then
+activated again.  For example, an image sequence resets to the first image
+in the sequence, and other animating nodes reset back to their first frame,
+too.
+</td></tr></table>
+
+<p>
+Sync Display (<code><strong>sync_display</strong></code>,
+<a href="javadocs/grin/javase/com/hdcookbook/grin/commands/SESyncDisplayCommand.html">SESyncDisplayCommand</a>,
+<a href="javadocs/grin/javame/com/hdcookbook/grin/GrinXHelper.html">GrinXHelper</a>):
+</p>
+<table>
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<p>
+A sync display command suspends processing of the command queue until at
+least one frame of animation has been displayed to the screen.  This can
+be useful to do just before launching a CPU-intensive operation, like
+selecting a playlist.  Without a sync display command, the screen might
+"stick" on an intermediate point of the animation (e.g. before a button
+is shown as activated), and it might stay there for a second or two
+as the playlist is selected.
+</td></tr></table>
+
+<p>
+Named Commands (<code><strong>run_named_commands</strong></code>,
+<a href="javadocs/grin/javase/com/hdcookbook/grin/commands/SERunNamedCommand.html">SERunNamedCommand</a>,
+<a href="javadocs/grin/javame/com/hdcookbook/grin/GrinXHelper.html">GrinXHelper</a>):
+</p>
+<table>
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<p>
+The GRIN file syntax lets you give a name to a list of commands.  Within
+the show, you can run that named list.  This can be useful for repetitive
+stirngs of commands.  It can also be useful for scripting from Java, because
+Java can look up the command list object by name, and then trigger those
+commands from code by calling <code>Show.runCommand(Command)</code>.
+</td></tr></table>
+
+<h2>Scripting and Directors</h2>
+
+GRIN was built to allow you to use the Java language for scripting.
+A lot of people think that Java is too complicated to be a good
+scripting language, but experience teaches that this is really just
+a misunderstanding.  Java is often used for complex tasks, like multithreaded
+programming, but the Java language itself is a delightful languge to use
+for simple, single-threaded tasks as well.  The GRIN framework and the
+single-threaded animation model offer a simple, single-threaded programming
+model for scripting in Java.
+</p><p>
+To support scripting, a GRIN Show can be bossed around by a Director.
+As a scripting programmer, you declare a class that extends the
+built-in class 
+<a href="javadocs/grin/javame/com/hdcookbook/grin/Director.html">com.hdcookbook.grin.Director</a>.
+An instance of your class is then attached to the show; instance variables of
+that class are a convenient place to store any show-related information you
+need to.
+</p><p>
+The Director superclass defines a number of methods that are called at 
+strategic points in the program execution.  In addition, you can sprinkle
+Java code in your show file, using the <code>java_command</code> structure.
+A <code>java_command</code> is like any other GRIN command, only it runs
+the code you specify in the text file.  That code is copied by the GRIN
+compiler into an automatically-generated class that arranges for that code
+to be executed during command processing.  Frequently, the body of a
+<code>java_command</code> just calls a method in your director.
+</p><p>
+This technique is used extensively in the GrinBunny xlet, in
+<code>xlets/grin_samples/GrinBunny</code>.  You can find several
+examples in the show file, 
+<code>src/com/hdcookbook/grinbunny/grinbunny_show.txt</code>.  Here's one:
+<pre>
+    feature timer F:PlayHeartbeat 1 repeat {
+	java_command [[
+	    getDirector().heartbeat();
+	]]
+    } ;
+</pre>
+<p>
+This calls the method <code>heartbeat()</code> once per frame, but
+only while the game is actually playing.  The 
+method <code>GrinBunnyDirector.heartbeat()</code> is a normal Java method.
+It does most of its work by modifying parameters in the scene graph.
+</p><p>
+A director can look up named features within a show (provided that the
+show exports those features).  A number of features have methods that
+are designed to be called from a director's scripting code.  For example,
+a translator's delta-x and delta-y values can be modified (providing that
+the feaure itself isn't trying to animate them).  Any comand can be triggered,
+so segments can be activated, and assemblies can change state&nbsp;-- in GrinBunny,
+this is used to show turtles blowing up, for example.  You can even swap
+in a new image in a fixed image feature, so you can dynamically download
+images (e.g. from the Internet), and display them. 
+<p>
+ Note that replacing
+images is a little involved, because you have to correctly manage
+image load and unload, and get the reference counting at the heart
+of the 
+<a href="javadocs/grin/javame/com/hdcookbook/grin/util/ManagedImage.html">ManagedImage</a>
+contact right.  
+<a href="javadocs/grin/javame/com/hdcookbook/grin/util/ManagedImage.html">ManagedImage</a>
+needs to be reference-counted,
+both for the count of entities that reference an instance, and for the
+number of entities that are interested in the image being loaded.
+This is because images are large, slow to load, and they need to
+be flushed manually (as per the MHP, GEM, and BD-J specifications).
+The reference counting allows ManagedImage instances referring to the
+same underlying image to be shared efficiently, and to be loaded
+and unloaded in a controlled way.
+<p>
+As a general rule, for scripting you can just peruse the javadocs of 
+the runtime class of the
+feaure you want to modify.  Usually you'll find methods that are designed
+to be called from scripting code to modify the parameters of interest.
+</p>
+
+<h2>The GRIN Show Compiler</h2>
+<p>
+The GRIN package includes a compiler that parses a show file, and
+turns it into various more efficient forms for use on a player at
+runtime.  Different parts of the GRIN compiler are discussed below.
+</p><p>
+The sample projects that use GRIN in the cookbook
+repository all have build files that run the compiler automatically&nbsp;-- look
+at the GrinXlet framework to get started.  Setting up a build file the
+first time can take some work.
+<p>
+<strong>GRIN binary show file</strong>
+</p>
+<table>
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<p>
+The GRIN compiler that parses a show file, and
+turns it into a compact and efficient binary file.  Parsing is much
+slower than reading a binary file, so this produces a valuable speed-up
+in xlet initialization.  The GRIN binary file usually has an extension
+of .grin, or .grn if you need to store it in an 8.3 filesystem (like
+the BD-J BUDA).
+</td></tr></table>
+
+<p>
+<strong>Double Use Checker</strong>
+</p>
+<table>
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<p>
+In a GRIN show, any feature can only be displayed once at a given
+time.  That is, a feature like a fixed_image can't appear in two
+different places on the screen simultaneously, so for that reason it's
+illegal for the same feature to appear twice in a group.  This constraint
+is needed due to the way optimized drawing works&nbsp;-- it allows an efficient
+implementation that doesn't require dynamic memory allocation during
+the animation loop.
+</p><p>
+Note, however, that the same feature can appear in two different segments,
+or in two different parts of an assembly.  Indeed, the GRIN scene graph
+of features is not a tree, it's a directed acyclic graph.  Even so, the
+constraint that the same feature can't be active through two different
+paths at any given time must be respected.
+</p><p>
+This is done automatically by the GRIN compiler, so if you make a show
+that has this structural problem, it will be reported as an error.
+If you'd like to see how it's done, look to the class
+<code>com.hdcookbook.grin.SEDoubleUseChecker</code>.
+</td></tr></table>
+
+<p>
+<strong>Image Matrixes</strong>
+</p>
+<table>
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<p>
+As described in the HD cookbook, the GRIN compiler can also assemble
+a number of small images into a matrix of images contained in one
+large image.  Doing this makes the images load much more quickly.
+Measurements indicate that there's no noticable degredation in
+display speed whe this technique is used.
+</p><p>
+Which images are grouped together can be important, particularly when
+you're optimizing startup and image load time, and when you're managing
+pixmap memory.  The preferred syntax for managing image mosaics in GRIN
+is to have a single mosaics file for the xlet.  This can combine images
+from several GRIN shows - you just compile all of the shows along with
+the mosaics file in one invocation of the GRIN compiler, and it generates
+the .grin binary files, the mosaics, and the data files that say which
+image was put where.
+</p><p>
+For the syntax of the mosaics file, search for "mosaics ::=" in the
+<a href="javadocs/grin/javame/com/hdcookbook/grin/doc-files/index.html">show
+file syntax</a>.
+</td></tr></table>
+
+<p>
+<strong>Compile-time scaling</strong>
+</p>
+<table>
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<p>
+The GRIN compiler accepts x and y scale arguments (-scaleX <i>double</i>
+and -scaleY <i>double</i>).  When a show is scaled, all of its features
+are reduced or expanded by the scale factor.  Because there's a different
+X and Y scale factor, you can even change a show at a resolution with square
+pixels (e.g. full HD, 720p or QHD) to one with non-square pixels
+(e.g. NTSC SD at 16x9).  A sample xlet that does this can be found
+at <code>xlets/tests/functional/ScaleBunny</code>, which is the
+GrinBunny game re-written to run at different screen resolutions.
+</p><p>
+When the features are scaled, the image assets aren't necessarily scaled.
+Images are only scaled down to the size of the largest size within a
+fixed image or image sequence feature.  Thus, if a normal full HD show
+contains a 200x200 image that it statically scales up to 400x400 (using
+the <code>scale</code> option of the <code>image_placement</code>), then
+when that show is scaled down to QHD, the image will be left at 200x200.
+Of course, this only applies to static image scaling - the grin
+compiler doesn't try to figure out what your <code>scale_model</code>
+might do.
+
+</td></tr></table>
+
+<h2>Grin Extensions</h2>
+
+<p>
+GRIN was designed to be extensible.  In addition to the scripting and
+composition of features described above, you can also introduce new
+feature types.  In fact, the cookbook repository contains a number of
+"standard extensions" that are meant to be brought into a project on an
+as-needed basis.
+</p><p>
+In order to add an extension feature, you need three elements:
+<ul>
+<li>A runtime class for the feature (including code to read
+    the feature's binary representation)
+<li>An SE version of that feature (including code to write out
+    the feature's binary representation)
+<li>A parser to parse the show file syntax for your feature
+</ul>
+<p>
+Several examples of extension parsers exist in different demo
+projects.  One of the better ones to look at is the one from
+the GrinBunny game (<code>xlets/grin_samples/GrinBunny</code>),
+in <code>se_src/com/hdcookbook/grinbunny/BunnyExtensionParser.java</code>.
+It combines three extension parsers:  One for an extension GrinBunny
+adds to display an arc, one for the standard font strip extension,
+and one for the standard media player extension.
+</p><p>
+A GRIN binary file needs to somehow identify the class names of the
+extensions that it uses.  It has two mechanisms for doing this.
+One is to record the fully-qualified class name of the runtime class
+of the extension, and use reflection to instantiate it.  This works fine,
+but has the disadvantage that any Java obfuscator you use needs to be
+told not to change the names of these classes.  GRIN has a second technique
+that doesn't have this problem with obfuscators:  It can generate a
+Java source file of a class that has a switch statement to instantiate the
+extension types.  In essence, the translation from fully qualified class
+name is done by the GRIN compiler, by producing source code that's fed to
+<code>javac</code>.  This mechanism requires that you specify a
+<code>java_generated_class</code> in the show file, and it requires a
+slightly more sophisticated build process.
+</p><p>
+The standard extensions are introduced below.
+<p>
+Font Strips 
+(<a href="javadocs/grin/javame/com/hdcookbook/grin/fontstrip/package-summary.html">runtime com.hdcookbook.grin.fontstrip</a>,
+<a href="javadocs/grin/javase/com/hdcookbook/grin/fontstrip/package-summary.html">compiler com.hdcookbook.grin.fontstrip</a>):
+</p>
+<table>
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<p>
+Font strips allow you to pre-render the characters you want into
+a single .png file, and then display strings using those images.
+This feature is described in some detail in the file
+<code>AuthoringTools/grin/extensions/fontstrip/README.txt</code>.
+Note that the font strip text feature sets SRC_OVER drawing mode.
+If you're using a font strip text feature that's under a fade node,
+be sure to read "A word about alpha blending" in the fontstrip README.
+</td></tr></table>
+
+<p>
+Media Player
+(<a href="javadocs/grin/javame/com/hdcookbook/grin/media/package-summary.html">runtime com.hdcookbook.grin.media</a>,
+<a href="javadocs/grin/javase/com/hdcookbook/grin/media/package-summary.html">compiler com.hdcookbook.grin.media</a>):
+</p>
+<table>
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<p>
+The <code>com.hdcookbook.grin.media</code> standard extension package
+includes a simple media player to play a playlist.  As of this writing,
+it's not very extensive&nbsp;-- it lets you start and stop playback of a
+playlist, but it doesn't address more advanced media features, like
+triggers tied to the media timeline, video scaling, or trick play.
+The media player does demonstrate a good model for linking media to
+a show, using GRIN commands for callbacks when media events happen.
+</p><p>
+The media extension is used in GrinBunny to show the starfield
+video in the background.
+</td></tr></table>
+
+<h2>Advanced Features</h2>
+
+GRIN has some more complex features that can be considered to be advanced.
+These are introduced here.
+<p>
+Set Target (<code><strong>set_target</strong></code>,
+<a href="javadocs/grin/javase/com/hdcookbook/grin/features/SESetTarget.html">SESetTarget</a>,
+<a href="./javadocs/grin/javame/com/hdcookbook/grin/features/SetTarget.html">SetTarget</a>):
+</p>
+<table>
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<p>
+The <code>set_target</code> feature is a modifier - it causes the drawing
+of its child nodes to be directed to a different "drawing target".  Within
+the child nodes there can be another <code>set_target</code> node, which
+overrides the draw target setting for that sub-node's children.
+</p><p>
+A drawing target is used to group drawing operations that are expected
+to be in the same area of the screen.  The animation framework makes
+a bounding rectangle around all of the changed areas withing each drawing
+target, and then it optimally combines the rectangles from each drawing
+target.  This makes it possible to minimize the area in the screen that
+is painted to.  As a rule of thumb, one probably shouldn't have more than
+four or five different draw targets.
+</p><p>
+For more information about optimized drawing, see the
+<a href="javadocs/grin/javame/com/hdcookbook/grin/animator/doc-files/index.html">description of the
+animation framework</a>, particularly the "Optimized Drawing" section.
+
+</td></tr></table>
+
+<p>
+Guarantee Fill (<code><strong>guarantee_fill</strong></code>,
+<a href="javadocs/grin/javase/com/hdcookbook/grin/features/SEGuaranteeFill.html">SEGuaranteeFill</a>,
+<a href="./javadocs/grin/javame/com/hdcookbook/grin/features/GuaranteeFill.html">GuaranteeFill</a>):
+</p>
+<table>
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<p>
+A guarantee fill node supplies a small optimization to the animation
+process.  It relies on the following insight:  If a rectangular area
+is filled with SRC mode drawing, then there is no need to erase any
+pixels within that rectangular area.  A <code>guarantee_fill</code>
+node can be put in the scene graph to tell the animation framework that
+erasing the given area in the off-screen buffer is not needed, presumably
+because some other visible feature or set of features completely fills
+all of the pixels within the designated area.
+</td></tr></table>
+
+<p>
+Sticky images (<code><strong>sticky_image_setting</strong></code>),
+<table>
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<p>
+A show can have a list of images declared as "sticky."  This means that
+the show registers interest in having the images be loaded (via the
+<code>ManagedImage</code> refernce counting mechanism).  As a consequence,
+as long as the show is active (i.e. as long as it hasn't been destroyed),
+the sticky images will not be unloaded.  To be clear, declaring an image
+"sticky" doesn't cause it to be loaded any sooner, it just makes it so
+that once loaded, the image stays loaded for as long as the show
+exists.
+</td></tr></table>
+
+<p>
+Feature cloning
+(<a href="javadocs/grin/javame/com/hdcookbook/grin/Feature.html#cloneSubgraph(java.util.HashMap)">Feaure.cloneSubgraph()</a>)
+<table>
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<p>
+From scripting code, you can clone a subgraph of the GRIN scene graph,
+producing a copy.  For exaple, in GrinBunny there is only one 
+turtle trooper defined; the GrinBunny director makes seven clones of it
+to make up the eight troopers along the top of the screen.
+</td></tr></table>
+
+<p>
+Show Top (<code><strong>show_top</strong></code> and
+<code><strong>showtop_group</strong></code>)
+<table>
+<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td>
+<p>
+The <code>show_top</code> construct can be used to designate a set of
+nodes that is always at the top of the scene graph.  The
+<code>showtop_group</code> node must occur exactly once within the
+show top's children, and designates where the currently active segment's
+nodes are put in the scene graph.
+<p>
+In other words, you can force some nodes to the top of the display
+tree.  This can be useful, for example, to translate and clip an
+entire show, and maybe put an outline around it, thus achieving an
+effect somewhat like a window manager.
+<p>
+An example of the use of <code>show_top</code> can be found
+in the <code>xlets/tests/functional/Playground</code> xlet,
+in <code>src/main_show.txt</code>.
+</td></tr></table>
+
+<h1>Summary and Closing Thoughts</h1>
+
+<p>
+The GRIN scene graph provides a quite comprehensive framework
+for doing demanding animation on Personal Basis Profile class
+devices, such as Blu-ray players, OCAP terminals, and other GEM
+and MHP devices (including GEM-IPTV).  They provide a solid foundation
+for the development of a toolchain that supports an advanced workflow,
+running from graphic designers and interaction designers, through
+to script programmers and authors, all the way to an efficient,
+deployed entertainment experience.
+</p><p>
+Offered under the liberal BSD license, this framework was put in
+the public domain, initially in order to help bootstrap the BD-J
+ecosystem, and set a high bar for what Java interactivity can do.
+From the perspective of 2009, it has succeeded at these goals.  It is
+a mature, stable system that has been used in many production titles
+from several major studios.
+</p><p>
+We hope that it will continue to be useful, and that it will continue
+to spur innovation in the field of video entertainment devices based
+on PBP-class Java runtimes.
+
+</div>
+</body></html>

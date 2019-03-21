@@ -1,0 +1,43 @@
+
+
+mosaics
+
+# disable mosaic generation
+
+mosaic mosaic.png 
+    take_all_images true
+    skip_image_files {
+        images/book0.png
+        images/book1.jpg
+        images/book10.png
+        images/book11.jpg
+        images/book12.png
+        images/book13.jpg
+        images/book14.png
+        images/book15.jpg
+        images/book16.png
+        images/book17.jpg
+        images/book18.png
+        images/book19.jpg
+        images/book2.png
+        images/book20.png
+        images/book21.jpg
+        images/book22.png
+        images/book23.jpg
+        images/book24.png
+        images/book25.jpg
+        images/book26.png
+        images/book27.jpg
+        images/book28.png
+        images/book29.jpg
+        images/book3.jpg
+        images/book4.png
+        images/book5.jpg
+        images/book6.png
+        images/book7.jpg
+        images/book8.png
+        images/book9.jpg
+    }
+;
+
+end_mosaics

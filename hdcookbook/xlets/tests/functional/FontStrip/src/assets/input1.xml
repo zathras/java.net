@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<inputData>
+    
+    <fontDescription name="Lisa">
+        <fontFileName>lisa.otf</fontFileName>
+        <fontSize>60</fontSize>
+        <margin>5</margin>
+        <backgroundColorValue>0xffffff</backgroundColorValue>
+        <charactorColorValue>0x000000</charactorColorValue>
+        <boundingRectColorValue>0x004455</boundingRectColorValue>
+        <pixelRectColorValue>0xff0000</pixelRectColorValue>
+    </fontDescription>
+
+    <fontImageFile>
+        <fontName>Lisa</fontName> <!-- Points to fontDescription -->
+        <maxImageWidth>1000</maxImageWidth>
+        <maxImageHeight>4000</maxImageHeight>
+        <designImage>LisaEdit.png</designImage>
+        <finalImage>Lisa.png</finalImage>
+        <charList>abcdefghijklmnopqrstuvwxyz TRWFHEBGINS!,1234567890</charList>
+    </fontImageFile>
+    
+</inputData>

@@ -1,0 +1,101 @@
+# For testing fontstrip, lisa font with text and fontstrip text, side by side.
+
+show 
+
+feature extension fontstrip:text 
+    F:LisaFontStrip1 
+       "Lisa.png" 
+       left 400 top 200 
+       { "Hit ENTER to switch" "FontStrip, top left" }
+       background { 0 0 100 255 } ; 
+
+feature extension fontstrip:text 
+    F:LisaFontStrip2 
+       "Lisa.png" 
+       middle 1000 baseline 500 
+       { "Hit ENTER to switch" "FontStrip, middle baseline" }
+       background { 0 0 100 255 } ; 
+
+feature extension fontstrip:text 
+    F:LisaFontStrip3 
+       "Lisa.png" 
+       right 1600 bottom 800 
+       { "Hit ENTER to switch" "FontStrip, right bottom" }
+       background { 0 0 100 255 } ; 
+
+
+feature text 
+    F:LisaText1 
+       left 400 top 200 
+       { "Hit ENTER to switch" "Text, top left" }
+       lisa plain 60 { { 255 255 255 255 } }
+       background { 0 0 100 255 } ; 
+
+feature text 
+    F:LisaText2 
+       middle 1000 baseline 500 
+       { "Hit ENTER to switch" "Text, middle baseline" }
+       lisa plain 60 { { 255 255 255 255 } }
+       background { 0 0 100 255 } ; 
+
+feature text 
+    F:LisaText3 
+       right 1600 bottom 800 
+       { "Hit ENTER to switch" "Text, right bottom" }
+       lisa plain 60 { { 255 255 255 255 } }
+       background { 0 0 100 255 } ; 
+
+feature group 
+    F:FontStrips {
+       F:LisaFontStrip1 
+       F:LisaFontStrip2 
+       F:LisaFontStrip3 
+    } ;
+
+feature group 
+    F:Texts {
+       F:LisaText1 
+       F:LisaText2 
+       F:LisaText3 
+    } ;
+
+rc_handler key_pressed H:Switch1
+    { enter }
+    execute {
+       activate_segment S:Texts ;
+    }
+;
+
+rc_handler key_pressed H:Switch2
+    { enter }
+    execute {
+       activate_segment S:FontStrips ;
+    }
+;
+
+segment S:Initialize  
+   setup  {
+        F:FontStrips
+        F:Texts
+   } setup_done {
+        activate_segment S:FontStrips ;  
+   }  
+;
+
+segment S:FontStrips
+   active {
+        F:FontStrips
+   } rc_handlers {
+        H:Switch1
+   }
+; 
+
+segment S:Texts
+   active {
+        F:Texts
+   } rc_handlers {
+        H:Switch2
+   }
+; 
+
+end_show
