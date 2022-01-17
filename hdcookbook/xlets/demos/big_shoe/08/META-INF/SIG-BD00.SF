@@ -1,224 +1,224 @@
 Signature-Version: 1.0
-Created-By: 1.6.0_24 (Apple Inc.)
+SHA1-Digest-Manifest: LKahbKiXCeW/miiUjHbuMk3afA8=
+Created-By: 1.8.0_302 (Azul Systems, Inc.)
 BDJ-Signature-Version: 1.0
-SHA1-Digest-Manifest: TwRQ0v+zYEN//oBwu8NPYG3x0uU=
-
-Name: com/hdcookbook/grin/util/BitStreamIO.class
-SHA1-Digest: Sxn/i0lx4PzfPSJ5+wRRAJ8VKmE=
-
-Name: com/hdcookbook/grin/animator/AnimationClient.class
-SHA1-Digest: LO2kRsWPya347CzKj90SqCGb3VI=
-
-Name: com/hdcookbook/grin/features/Translator$ChildContext.class
-SHA1-Digest: QeE9iZ1+X/eIj6J/C8k9vCzEaKk=
 
 Name: com/hdcookbook/grin/util/NetworkManager$1.class
-SHA1-Digest: qTckTcAIrhyUzaKP/LT6fFCnqXk=
-
-Name: com/hdcookbook/grin/util/ImageManager.class
-SHA1-Digest: F6F0SceJLitArW71/tBqWEgpvvY=
-
-Name: com/hdcookbook/grinxlet/DebugDirectDrawEngine.class
-SHA1-Digest: lLtBchZvt3X7Kgzf3KaPsKM1Q9A=
-
-Name: com/hdcookbook/grinxlet/GrinXlet.class
-SHA1-Digest: 9nTvYkrqkkOwFgNs1rs162LPEfU=
-
-Name: com/hdcookbook/grin/input/CommandRCHandler.class
-SHA1-Digest: naBDMa6KXohcqCuJ8Oh1OjjFhUs=
-
-Name: com/hdcookbook/grinxlet/XletDirector.class
-SHA1-Digest: m5XsfMyvl/xHJSK4fJAEvphZlns=
-
-Name: com/hdcookbook/grin/commands/ActivateSegmentCommand.class
-SHA1-Digest: 4qPt0OeUisPA77xV47SpYIcmzhs=
-
-Name: com/hdcookbook/grin/features/Modifier.class
-SHA1-Digest: qpST8WgULOfdRDhX2Kqp2viyPjs=
-
-Name: com/hdcookbook/grin/features/ImageSequence.class
-SHA1-Digest: p68nUDOSfTpOo30y/EDqzHIFWYM=
-
-Name: com/hdcookbook/grin/features/SrcOver$ChildContext.class
-SHA1-Digest: JJRl0RZDLZlUEONctxFY/N28jX0=
-
-Name: com/hdcookbook/grin/animator/RepaintDrawEngine.class
-SHA1-Digest: xdNfKhKI59xClL1jqEpy6gf4lEo=
-
-Name: com/hdcookbook/grin/io/binary/GrinDataInputStream.class
-SHA1-Digest: jAtqrnMA/5HAgcEzrNkUbS5Ek1c=
-
-Name: com/hdcookbook/grin/util/ManagedSubImage.class
-SHA1-Digest: xkjXcX65TSylHCiYTOrQum6kPyU=
-
-Name: ShoeCommands.class
-SHA1-Digest: Lcx+b/elUvHIwkiO9cCW37jkJ6g=
-
-Name: com/hdcookbook/grinxlet/GrinXlet$1.class
-SHA1-Digest: hTV/YL/5d8Qm+4JSsRrzi79TXnY=
-
-Name: com/hdcookbook/grin/animator/RenderContextBase.class
-SHA1-Digest: m07qiNm8MKpevWifjrB9M5ZRA9U=
+SHA1-Digest: LdWPowhqIjuKAkZZ6KuhcOwE8Tk=
 
 Name: com/hdcookbook/grin/input/RCKeyEvent.class
-SHA1-Digest: HuSBFkKbRDL3joXtqDrWY8TY87k=
-
-Name: com/hdcookbook/grin/util/Debug.class
-SHA1-Digest: owGhKDsEaHHR/VTXBsfSCMeHbFk=
-
-Name: com/hdcookbook/grin/util/ManagedFullImage.class
-SHA1-Digest: Zz1Jtl5328fA4op1pJWiYastUTU=
-
-Name: com/hdcookbook/grin/Director.class
-SHA1-Digest: A3wDrGI/RvI4C6EyhYD+TrbuvxI=
-
-Name: com/hdcookbook/grinxlet/bluray.GrinXlet.perm
-SHA1-Digest: EXjNS/BjoLJPXd+NPUbUVnYHxTY=
-
-Name: com/hdcookbook/grin/util/SetupClient.class
-SHA1-Digest: Fx82rV16O/4N0491GAaT6j0jQCA=
-
-Name: com/hdcookbook/grin/util/JsonIO.class
-SHA1-Digest: ftK9iQZl8l5a5QHlE1t8jB1ZTqE=
-
-Name: com/hdcookbook/grin/features/Fade$ChildContext.class
-SHA1-Digest: 1Fj02VMViidA8x0U40KQ0oemE3Y=
-
-Name: com/hdcookbook/grin/animator/DrawRecord.class
-SHA1-Digest: vgTOFXk9KQZvRUFrTc3BjvcBA8Q=
-
-Name: com/hdcookbook/grin/features/Clipped.class
-SHA1-Digest: qDoWTRu3ncXuoa65tq7nrT0eUhM=
-
-Name: com/hdcookbook/grin/features/Assembly.class
-SHA1-Digest: SSenY7SFqAJinrEMvxFMzof7aoE=
-
-Name: com/hdcookbook/grin/features/Fade.class
-SHA1-Digest: UDoAg4JZlsmXxk7+zFVwg/gc62c=
-
-Name: com/hdcookbook/grin/features/SrcOver.class
-SHA1-Digest: k4tbEhBXAchEVJ9OZJneSp+LXk4=
-
-Name: com/hdcookbook/grin/Segment.class
-SHA1-Digest: rugNbWVGSnsuoP8anYMNHsA+/aM=
-
-Name: com/hdcookbook/grin/features/Text.class
-SHA1-Digest: rIptAOyZ3ACNcF84x0McSdG4IyA=
-
-Name: com/hdcookbook/grin/features/FixedImage.class
-SHA1-Digest: F4CjBot7Fsd27j+cr7Ib5Zi16bs=
-
-Name: com/hdcookbook/grin/util/Profile.class
-SHA1-Digest: E0nXXCvQRcu2obdrhPLTdyApyl0=
-
-Name: com/hdcookbook/grin/animator/ClockBasedEngine.class
-SHA1-Digest: 4dEe731Wpsr8rDklLu8u/yFCcSo=
-
-Name: com/hdcookbook/grin/util/AssetFinder.class
-SHA1-Digest: dmgTVFpFou8bIIPTNjiHeKv9Kns=
-
-Name: com/hdcookbook/grin/animator/RenderContext.class
-SHA1-Digest: VjtgK8baCfRG0J3CkLd5dpsVjlo=
-
-Name: com/hdcookbook/grin/Node.class
-SHA1-Digest: IU4x+WuwYOWKBAlaToNLDjvqQ6c=
-
-Name: com/hdcookbook/grin/io/binary/GrinBinaryReader.class
-SHA1-Digest: Q+dn/EmTyDS3wm6E3ybPKtESEuI=
-
-Name: com/hdcookbook/grin/Feature.class
-SHA1-Digest: 3Hi8a5Ub1Eo6qmAYjO8gjE8mj90=
-
-Name: com/hdcookbook/grin/input/RCHandler.class
-SHA1-Digest: KUkvEuENo11nybYGu2AW0TSN540=
-
-Name: com/hdcookbook/grinxlet/XletShowCommands.class
-SHA1-Digest: CtOoomJMU0tQYNV7JVEhR5Bz3Xo=
-
-Name: com/hdcookbook/grin/util/ManagedImage.class
-SHA1-Digest: 4RWCa9m6eG8CRay0CItfvi2XvWY=
-
-Name: com/hdcookbook/grin/features/Clipped$ChildContext.class
-SHA1-Digest: qYLtW8CHAI+zizQ/rKhLfh0wNtg=
-
-Name: com/hdcookbook/grin/animator/RepaintDrawEngine$1.class
-SHA1-Digest: 1XjLs4Hz1FbsE83+N6Ei6ohWgtg=
-
-Name: com/hdcookbook/grin/animator/DirectDrawEngine.class
-SHA1-Digest: mgZzWuxqbtCh/29ZmQWYs+xp914=
-
-Name: com/hdcookbook/grin/util/SetupManager.class
-SHA1-Digest: PP7rNBikmJ+kY637OUR7FZbTtko=
-
-Name: com/hdcookbook/grin/input/VisualRCHandler.class
-SHA1-Digest: JkngDNHz7Q/zx5jpJARBEmbKDZk=
-
-Name: com/hdcookbook/grin/features/Box.class
-SHA1-Digest: +VXGlld7CAualnnK9w8UPSblLkQ=
-
-Name: com/hdcookbook/grin/animator/AnimationEngine.class
-SHA1-Digest: Dej/S5fiinCgAOm97uXR1g1riUg=
-
-Name: com/hdcookbook/grin/animator/AnimationContext.class
-SHA1-Digest: r5jzim6gNyiSEkooSQcl95PoKwk=
-
-Name: com/hdcookbook/grin/GrinXHelper.class
-SHA1-Digest: A9TuToexa9q7tko6bmH8IQscJK8=
-
-Name: com/hdcookbook/grin/features/SetTarget.class
-SHA1-Digest: 2zNtVWzcL+qhaMv6aGvQShI2ouA=
-
-Name: com/hdcookbook/grin/util/Queue.class
-SHA1-Digest: GrEnf01GreUMIWW9ZQ1+Hquy7Mg=
-
-Name: com/hdcookbook/grin/features/GuaranteeFill.class
-SHA1-Digest: F0mhHShNxH6WImyqVrEsBJ+UciM=
-
-Name: com/hdcookbook/grin/features/Group.class
-SHA1-Digest: 6uXZWfpw8A70pvyff2GjiSoGias=
-
-Name: EdSullivan.class
-SHA1-Digest: E0ifm2AwZRIfgtGvlB76AtH8pUs=
-
-Name: com/hdcookbook/grinxlet/DebugLog.class
-SHA1-Digest: o/104RXnlE0AW89w2KA8UpbPLfM=
-
-Name: com/hdcookbook/grin/util/NetworkManager.class
-SHA1-Digest: IUC4Xg/kRtruX1aagtKfboaclEc=
-
-Name: com/hdcookbook/grin/features/InterpolatedModel.class
-SHA1-Digest: 4hVaXR0ENaQSrL2EzTwGvtr9HSw=
-
-Name: com/hdcookbook/grin/Show.class
-SHA1-Digest: 8M2usz285JQelOzJJcnOyKn/p3k=
-
-Name: com/hdcookbook/grin/io/binary/DebugInputStream.class
-SHA1-Digest: C2nzYqpGay0xQ3HfRROU30Ayw0w=
-
-Name: com/hdcookbook/grin/features/Translator.class
-SHA1-Digest: gBX3/g4S6c8p4pyyOhWM4Obob40=
-
-Name: com/hdcookbook/grin/commands/ActivatePartCommand.class
-SHA1-Digest: QjKrq0k4JZ9lkmgeH9QNyRxcEkM=
-
-Name: com/hdcookbook/grin/animator/DirectDrawEngine$1.class
-SHA1-Digest: y6yJ3VqrjY0lH4micd6mDWWfnY8=
-
-Name: com/hdcookbook/grin/commands/Command.class
-SHA1-Digest: zu1UwBRpZatJnZy31DJg3oRKDg8=
+SHA1-Digest: 7pke4fS7br546rKKlH23oOYvMHs=
 
 Name: com/hdcookbook/grin/ShowInitializer.class
 SHA1-Digest: 3k/p6D9FfI/4YM6ljOBkT1zW/wY=
 
-Name: com/hdcookbook/grin/commands/SetVisualRCStateCommand.class
-SHA1-Digest: 5A6t5lqLPNnMg6skf+RmU6KfnY0=
+Name: com/hdcookbook/grin/animator/DirectDrawEngine.class
+SHA1-Digest: Ay6SgVT9wmP578aFGaqEh6592lk=
+
+Name: com/hdcookbook/grin/util/MosaicTile.class
+SHA1-Digest: 7FQ8b/omabso0j6dfnUwkd3bHHM=
+
+Name: com/hdcookbook/grin/features/Fade.class
+SHA1-Digest: IkvVDRDLVNGv7/aCFNX8/jDro0k=
+
+Name: com/hdcookbook/grin/features/Translator.class
+SHA1-Digest: QY596J0oP/NQZ8H36woclXQeYCw=
+
+Name: com/hdcookbook/grin/util/JsonIO.class
+SHA1-Digest: 4cH6xRel2fhoZOPLm634HpTWFqQ=
+
+Name: com/hdcookbook/grin/Segment.class
+SHA1-Digest: x56y/LOgHzcvBR4UVLTzefCtro4=
+
+Name: com/hdcookbook/grin/io/binary/DebugInputStream.class
+SHA1-Digest: vI7kf3WRF4tsAuKpabe1je47tDA=
+
+Name: com/hdcookbook/grin/animator/DirectDrawEngine$1.class
+SHA1-Digest: K4sB9wLxgbUVDgJMJaU2+Z1Jd6Q=
+
+Name: com/hdcookbook/grin/util/ManagedImage.class
+SHA1-Digest: AoeJ7Yls/4RoiZElaYM33oO4JcU=
+
+Name: com/hdcookbook/grinxlet/DebugDirectDrawEngine.class
+SHA1-Digest: lLtBchZvt3X7Kgzf3KaPsKM1Q9A=
+
+Name: com/hdcookbook/grin/commands/ActivatePartCommand.class
+SHA1-Digest: QjKrq0k4JZ9lkmgeH9QNyRxcEkM=
+
+Name: com/hdcookbook/grin/util/AssetFinder.class
+SHA1-Digest: Q2/tyJrHStrwsQkMT1accigf4mA=
+
+Name: com/hdcookbook/grin/animator/AnimationClient.class
+SHA1-Digest: LO2kRsWPya347CzKj90SqCGb3VI=
+
+Name: com/hdcookbook/grin/animator/RenderContext.class
+SHA1-Digest: VjtgK8baCfRG0J3CkLd5dpsVjlo=
+
+Name: com/hdcookbook/grin/animator/AnimationEngine.class
+SHA1-Digest: WucNkGJ2mWpUi3shU8kxZrT6NTE=
+
+Name: com/hdcookbook/grin/animator/DrawRecord.class
+SHA1-Digest: reDQzrAW4hqrB9V9IC7gH5+6a8Q=
+
+Name: com/hdcookbook/grin/io/binary/GrinBinaryReader.class
+SHA1-Digest: leVNnQI4v6v7V9bCdAeIrnxKGYI=
+
+Name: com/hdcookbook/grin/features/Assembly.class
+SHA1-Digest: xJKZMT32Q25wGXQBi4Fvvf7UYeQ=
+
+Name: com/hdcookbook/grin/animator/ClockBasedEngine.class
+SHA1-Digest: 6Uw0HfcU/CgjXegC/zz07Ts7yUU=
+
+Name: com/hdcookbook/grin/features/InterpolatedModel.class
+SHA1-Digest: xemnY7EKuqKtACpETzF+yM6Z8/A=
+
+Name: com/hdcookbook/grin/util/ManagedSubImage.class
+SHA1-Digest: xkjXcX65TSylHCiYTOrQum6kPyU=
+
+Name: com/hdcookbook/grin/Show.class
+SHA1-Digest: kOvJlZcypQJdrldtXBAP4mki7LI=
+
+Name: com/hdcookbook/grin/input/VisualRCHandler.class
+SHA1-Digest: /eUKeCb2V4qH5PlHhF6xRm7Mw3w=
+
+Name: com/hdcookbook/grin/util/Debug.class
+SHA1-Digest: F0NWgTtBnpw1i0p1z/LrY6+Nar8=
+
+Name: com/hdcookbook/grinxlet/XletShowCommands.class
+SHA1-Digest: CtOoomJMU0tQYNV7JVEhR5Bz3Xo=
+
+Name: com/hdcookbook/grin/Director.class
+SHA1-Digest: liSl7ZN8/2l9Vwj2cLeDi03+bJA=
+
+Name: com/hdcookbook/grin/features/Fade$ChildContext.class
+SHA1-Digest: +E2JUnXBn4mzej8dSgYXIlZQKPU=
+
+Name: com/hdcookbook/grin/util/ManagedFullImage.class
+SHA1-Digest: J3lU2g4Txkdy4XuGAHbjVuDWdhM=
+
+Name: com/hdcookbook/grin/io/binary/GrinDataInputStream.class
+SHA1-Digest: yzPpeGK3ILZsKjMWsIYtc0tXC+0=
+
+Name: com/hdcookbook/grin/animator/RepaintDrawEngine.class
+SHA1-Digest: fGgO8gBeMvncJk1zguwlvGZQO4E=
+
+Name: com/hdcookbook/grin/features/Text.class
+SHA1-Digest: txsto4t2KFIP/a7G8ZfqinbxPvA=
+
+Name: com/hdcookbook/grinxlet/DebugLog.class
+SHA1-Digest: GnGVaWgJTwKldsWBzVzTGSVcmQw=
+
+Name: com/hdcookbook/grin/features/Box.class
+SHA1-Digest: lGAvQU/bKVW99uYOHVsJOAueZWk=
+
+Name: com/hdcookbook/grin/commands/ActivateSegmentCommand.class
+SHA1-Digest: 4qPt0OeUisPA77xV47SpYIcmzhs=
+
+Name: com/hdcookbook/grin/util/Profile.class
+SHA1-Digest: 2XG8Y4dZ3XuBC7LP22r0EDe6Brc=
+
+Name: com/hdcookbook/grin/features/SetTarget.class
+SHA1-Digest: 2zNtVWzcL+qhaMv6aGvQShI2ouA=
+
+Name: com/hdcookbook/grin/features/GuaranteeFill.class
+SHA1-Digest: F0mhHShNxH6WImyqVrEsBJ+UciM=
+
+Name: ShoeCommands.class
+SHA1-Digest: Lcx+b/elUvHIwkiO9cCW37jkJ6g=
+
+Name: com/hdcookbook/grin/util/BitStreamIO.class
+SHA1-Digest: CLKb+5PEzOVTCK0bDlSBFkv4TFE=
+
+Name: com/hdcookbook/grin/util/NetworkManager.class
+SHA1-Digest: 19Q1Sj4U6RgGaA+egf5hOxFMfBg=
+
+Name: com/hdcookbook/grin/Feature.class
+SHA1-Digest: M1+zedLJ+mC+73XHrmoDr6ksna0=
 
 Name: com/hdcookbook/grin/io/binary/Constants.class
 SHA1-Digest: F4KUz8am9qzFENW88a82Ef8vtWM=
 
+Name: com/hdcookbook/grin/commands/SetVisualRCStateCommand.class
+SHA1-Digest: aJfwKFk8K489S0dsx5XIgvxWx2o=
+
+Name: com/hdcookbook/grin/input/CommandRCHandler.class
+SHA1-Digest: TU30YYmTcUhCDsEzUjlAkmQUmVA=
+
+Name: com/hdcookbook/grin/util/Queue.class
+SHA1-Digest: GrEnf01GreUMIWW9ZQ1+Hquy7Mg=
+
+Name: com/hdcookbook/grinxlet/XletDirector.class
+SHA1-Digest: Y3FQlKXhBp39Qs1om4JDov8GW1Q=
+
+Name: com/hdcookbook/grin/GrinXHelper.class
+SHA1-Digest: AXtjk8LTWkOMQIuHf/V8vtLr5Zg=
+
+Name: com/hdcookbook/grin/features/Group.class
+SHA1-Digest: LhQ9Mpa4UbgaBHMzFWtx9jnotx0=
+
+Name: com/hdcookbook/grinxlet/GrinXlet.class
+SHA1-Digest: 3oPH+G0hoho1cuT+MohHI+zPDWU=
+
 Name: com/hdcookbook/grin/commands/ResetFeatureCommand.class
 SHA1-Digest: SbZlzdQr/zzfxTp/ls8yzfSFZSg=
 
-Name: com/hdcookbook/grin/util/MosaicTile.class
-SHA1-Digest: 7FQ8b/omabso0j6dfnUwkd3bHHM=
+Name: com/hdcookbook/grin/util/ImageManager.class
+SHA1-Digest: vaesp5NjzPxUDve1CZRYvz3l5mw=
+
+Name: com/hdcookbook/grin/features/FixedImage.class
+SHA1-Digest: D5Gaje0ywhXSCE8cp0Gwr+StzLQ=
+
+Name: com/hdcookbook/grin/animator/RenderContextBase.class
+SHA1-Digest: 1XVltHb2aATpUReJjl+4cbdWqgQ=
+
+Name: com/hdcookbook/grinxlet/GrinXlet$1.class
+SHA1-Digest: KeY4RmXBS1uuyZ+e4B0fWdZqSyY=
+
+Name: com/hdcookbook/grin/Node.class
+SHA1-Digest: IU4x+WuwYOWKBAlaToNLDjvqQ6c=
+
+Name: com/hdcookbook/grin/util/SetupClient.class
+SHA1-Digest: Fx82rV16O/4N0491GAaT6j0jQCA=
+
+Name: com/hdcookbook/grin/features/Translator$ChildContext.class
+SHA1-Digest: mPrAXAuTaksUcKcPHyBwkK67xJQ=
+
+Name: com/hdcookbook/grin/input/RCHandler.class
+SHA1-Digest: bnjE62d0HJaf8mIsKenM/uBSeP8=
+
+Name: com/hdcookbook/grinxlet/bluray.GrinXlet.perm
+SHA1-Digest: EXjNS/BjoLJPXd+NPUbUVnYHxTY=
+
+Name: com/hdcookbook/grin/features/Modifier.class
+SHA1-Digest: qpST8WgULOfdRDhX2Kqp2viyPjs=
+
+Name: com/hdcookbook/grin/features/SrcOver.class
+SHA1-Digest: k4tbEhBXAchEVJ9OZJneSp+LXk4=
+
+Name: EdSullivan.class
+SHA1-Digest: Ofh9RgKco1VelrHc9NbwrxSPJ0U=
+
+Name: com/hdcookbook/grin/features/ImageSequence.class
+SHA1-Digest: n1Cpl5US0tObdivx6Cz04dfxb2c=
+
+Name: com/hdcookbook/grin/features/SrcOver$ChildContext.class
+SHA1-Digest: YUeyFPvLUyJpeWdW4OZgNy9/dHc=
+
+Name: com/hdcookbook/grin/features/Clipped$ChildContext.class
+SHA1-Digest: BedhMtrK/h3KTMtWw3PwqwKOLVg=
+
+Name: com/hdcookbook/grin/util/SetupManager.class
+SHA1-Digest: mgW6zLogmKJn07+fCHXXANsB3zE=
+
+Name: com/hdcookbook/grin/animator/AnimationContext.class
+SHA1-Digest: r5jzim6gNyiSEkooSQcl95PoKwk=
+
+Name: com/hdcookbook/grin/features/Clipped.class
+SHA1-Digest: CMnIqai932SVOZzY/971YdyavAo=
+
+Name: com/hdcookbook/grin/animator/RepaintDrawEngine$1.class
+SHA1-Digest: +AYMCrPvp0hkpb4N2rsm0yEmf7A=
+
+Name: com/hdcookbook/grin/commands/Command.class
+SHA1-Digest: zu1UwBRpZatJnZy31DJg3oRKDg8=
 

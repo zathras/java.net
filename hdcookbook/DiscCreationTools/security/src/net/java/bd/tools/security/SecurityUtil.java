@@ -95,8 +95,6 @@ import javax.naming.ldap.Rdn;
 import javax.naming.InvalidNameException;
 
 
-import sun.security.tools.KeyTool;
-import sun.security.tools.JarSigner;
 import sun.security.util.DerInputStream;
 import sun.security.util.DerOutputStream;
 import sun.security.pkcs.ContentInfo;
@@ -646,7 +644,7 @@ public class SecurityUtil {
             "-keypass", newKeyPassword, "-keystore", keystoreFile, "-storepass",
             keystorePassword, "-v", "-file", APPCSRFILE};
 
-        KeyTool.main(appCSRRequestArgs);
+        sun.security.tools.keytool.Main.main(appCSRRequestArgs);
     }
 
     private void generateCSRResponse() throws Exception {
@@ -657,16 +655,17 @@ public class SecurityUtil {
         String[] responseImportArgs = {"-import", "-v", "-alias", newCertAlias,
             "-keypass", newKeyPassword, "-keystore", keystoreFile,
             "-storepass", keystorePassword, "-v", "-file", APPCERTFILE};
-        KeyTool.main(responseImportArgs);
+        sun.security.tools.keytool.Main.main(responseImportArgs);
     }
 
     private void signJarFile(String jfile) throws Exception {
         String[] jarSigningArgs = {"-sigFile", "SIG-BD00",
+            "-digestalg", "SHA1",
             "-keypass", contentSignerPassword,
             "-keystore", keystoreFile,
             "-storepass", keystorePassword,
             "-verbose", jfile, contentSignerAlias};
-        JarSigner.main(jarSigningArgs);
+        sun.security.tools.jarsigner.Main.main(jarSigningArgs);
         signWithBDJHeader(jfile);
     }
 
@@ -1000,8 +999,16 @@ public class SecurityUtil {
                 signBlock.getCertificates(),
                 signerInfos);
         if (debug) {
+            /*
             System.out.println("Signer Info Verified:" + (newSignBlock.verify(
                     newSignerInfo, newContent)).toString());
+                Jan. 2022:  This causes a failure with
+                "ObjectIdentifier mismatch: 1.3.14.3.2.26".  Judging from
+                https://stackoverflow.com/questions/29941362/exception-while-trying-to-verify-a-digital-signature
+                it looks like signing is done with SHA-1, and probably
+                verification is done with something more modern on a
+                current JDK 1.8.
+            */
         }
 
         // Write down the files and re-bundle the jar with the updated signature
@@ -1038,7 +1045,7 @@ public class SecurityUtil {
             "-export", "-alias", certSignerAlias, "-keypass", certSignerPassword,
             "-keystore", keystoreFile, "-storepass", keystorePassword,
             "-v", "-file", exportFileName};
-        KeyTool.main(exportRootCertificateArgs);
+        sun.security.tools.keytool.Main.main(exportRootCertificateArgs);
         if (debug && verify) {
             verifyCertificate(type, exportFileName);
         }

@@ -1,14 +1,16 @@
 Signature-Version: 1.0
-Created-By: 1.6.0_24 (Apple Inc.)
+SHA-256-Digest-Manifest-Main-Attributes: upaLltN6yl1T054zt/P8Ga0TuJlDq
+ fkX90PK0zXC7A0=
+SHA-256-Digest-Manifest: xX2TPDyCejSudfe+dxQYpZ+BgGkawQn2Mm64nMkoIt4=
+Created-By: 1.8.0_302 (Azul Systems, Inc.)
 BDJ-Signature-Version: 1.0
-SHA1-Digest-Manifest: nfUAW8s10Aq/DLyQ+ZtMWzonnm4=
-
-Name: helloworld/HelloTVXlet.class
-SHA1-Digest: jXjBJss4LZZuP2lwj+JxsDFip0A=
-
-Name: helloworld/HelloTVXlet$1.class
-SHA1-Digest: u954xxKd81w+uPdjalVd8PUXJSg=
 
 Name: helloworld/bluray.HelloTVXlet.perm
-SHA1-Digest: F0M2yh5gDbcxXhaTnPIuzIHL8l0=
+SHA-256-Digest: B8zUofZmwlp38zGNGn2alb1WSGh6bD77Y33rCfaBZJQ=
+
+Name: helloworld/HelloTVXlet.class
+SHA-256-Digest: SplTddoo32pzHOvzQ0aq4LBOVB32vphbsJ4ADPvJe7Y=
+
+Name: helloworld/HelloTVXlet$1.class
+SHA-256-Digest: An3ZFHm/p/QqfK3REEe5XwJaW2Xi1RaFwvF/8Enja70=
 

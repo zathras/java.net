@@ -19,6 +19,7 @@
         <javac srcdir="${src.dir}"
            destdir="${classes.dir}"
            debug="on" deprecation="on">
+            <compilerarg value="-XDignore.symbol.file" />
             <classpath>
                 <pathelement location="${bouncycastle.classes}"/>
             </classpath>
