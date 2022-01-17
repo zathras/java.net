@@ -59,7 +59,11 @@ information or have any questions.
     
     <target name="bundle">
           <zip basedir="${HDC_DISC_BDMV}/.." 
-               destfile="HDCookbookDiscImage.zip"/>
+              destfile="HDCookbookDiscImage.zip"/>
+              <echo message="" />
+              <echo message="IMPORTANT:  To make a working disc image, unzip HDCookbookDiscImage.zip" />
+              <echo message="    over a directory with the contents of" />
+              <echo message="    https://github.com/zathras/java.net/releases/download/1.0.1/hdcookbook_disc_image_without_java.zip" />
     </target>
     
     <target name="init" depends="check-tools, init-preset-defs, init-xlet-dirs"/>
