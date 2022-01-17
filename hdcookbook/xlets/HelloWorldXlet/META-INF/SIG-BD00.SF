@@ -1,16 +1,14 @@
 Signature-Version: 1.0
-SHA-256-Digest-Manifest-Main-Attributes: upaLltN6yl1T054zt/P8Ga0TuJlDq
- fkX90PK0zXC7A0=
-SHA-256-Digest-Manifest: xX2TPDyCejSudfe+dxQYpZ+BgGkawQn2Mm64nMkoIt4=
+SHA1-Digest-Manifest: MQWTz+9wWFiFozE45zyDDyb/H74=
 Created-By: 1.8.0_302 (Azul Systems, Inc.)
 BDJ-Signature-Version: 1.0
 
 Name: helloworld/bluray.HelloTVXlet.perm
-SHA-256-Digest: B8zUofZmwlp38zGNGn2alb1WSGh6bD77Y33rCfaBZJQ=
+SHA1-Digest: AjTLUJgFcazH3Ku2KesiOL+rCFU=
 
 Name: helloworld/HelloTVXlet.class
-SHA-256-Digest: SplTddoo32pzHOvzQ0aq4LBOVB32vphbsJ4ADPvJe7Y=
+SHA1-Digest: C0tlbH1mOgJyedKFISGS3j8IXtk=
 
 Name: helloworld/HelloTVXlet$1.class
-SHA-256-Digest: An3ZFHm/p/QqfK3REEe5XwJaW2Xi1RaFwvF/8Enja70=
+SHA1-Digest: 8P1wOS+pIjcAgwOl7LJx5UcUGBk=
 
