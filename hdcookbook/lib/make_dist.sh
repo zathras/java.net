@@ -1,3 +1,3 @@
 zip -r hdcookbook_binaries.zip bin xlets/hdcookbook_discimage/HDCookbookDiscImage.zip xlets/HelloWorldXlet/HelloTVXlet.zip xlets/demos/big_shoe/08/Shoe-grinview.jar xlets/demos/big_shoe/08/Shoe-discimage.zip AuthoringTools/grin/extensions/fontstrip/dist DiscCreationTools/bdview/dist DiscCreationTools/soundgen/dist DiscCreationTools/playlist/dist DiscCreationTools/logger/dist DiscCreationTools/soundsplit/dist DiscCreationTools/security/examples/writefile.jar DiscCreationTools/bumf/dist DiscCreationTools/bdjo/dist DiscCreationTools/index/dist DiscCreationTools/id/dist DiscCreationTools/cpistrip/dist DiscCreationTools/movieobject/dist
 
-echo "Make hdcookbook_binaries.zip."
+echo "Made hdcookbook_binaries.zip."

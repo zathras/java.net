@@ -1,1 +1,7 @@
-binaries
+AuthoringTools/grin/build
+**/user.vars.properties
+**/.DS_Store
+**/META-INF
+**/keystore.store
+**/appcert.cer
+**/appcert.csr
