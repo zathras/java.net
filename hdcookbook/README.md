@@ -1,4 +1,4 @@
-# HDCOOKBOOK java.net project
+# HDCOOKBOOK java.net project, version 1.2
 
 This directory is an archive of the old hdcookbook open-source project
 from java.net.  It has been updated to run on JDK 1.8, and was tested
