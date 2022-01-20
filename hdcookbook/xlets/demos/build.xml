@@ -14,12 +14,12 @@
     </target>
         
 	<target name="clean">      
-            <ant dir="twitterGrin" target="clean"/>
+            <ant dir="twitterGRIN" target="clean"/>
             <ant dir="weatherWidget" target="clean"/>
 	</target>
 
 	<target name="spotless" depends="clean">
-	    <ant dir="twitterGrin" target="spotless"/>
+	    <ant dir="twitterGRIN" target="spotless"/>
 	    <ant dir="weatherWidget" target="spotless"/>
 	</target>
 </project>
