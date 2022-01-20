@@ -48,3 +48,9 @@ OpenJDK 64-Bit Server VM (Zulu 8.56.0.23-CA-macos-aarch64) (build 25.302-b08, mi
 billf@londo:~/github/java.net/hdcookbook$ ant -version
 Apache Ant(TM) version 1.10.12 compiled on October 13 2021
 ```
+## -XDignore.symbol.file
+
+Note that `DiscCreationTools/security/make/build.xml` passes
+`-XDignore.symbol.file` to `javac`.  This is necessary; it appears
+some of the tools used for signing are hidden in JDK 1.8, unless
+this option is passed.
