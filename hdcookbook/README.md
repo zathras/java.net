@@ -26,4 +26,25 @@ OpenJDK 64-Bit Server VM (build 25.312-b07, mixed mode)
 billf@Zathras:~/github/java.net/hdcookbook$ ant -version
 Apache Ant(TM) version 1.10.12 compiled on October 13 2021
 ```
+And, similarly on MacOS 11.6.2 (Big Sur, M1 silicon):
+```
+billf@londo:~/github/java.net/hdcookbook$ ant
+Buildfile: /Users/billf/github/java.net/hdcookbook/build.xml
 
+   ...  many lines of build output  ...
+
+build-hdcookbook-xlets:
+
+BUILD SUCCESSFUL
+Total time: 8 seconds
+```
+```
+billf@londo:~/github/java.net/hdcookbook$ java -version
+openjdk version "1.8.0_302"
+OpenJDK Runtime Environment (Zulu 8.56.0.23-CA-macos-aarch64) (build 1.8.0_302-b08)
+OpenJDK 64-Bit Server VM (Zulu 8.56.0.23-CA-macos-aarch64) (build 25.302-b08, mixed mode)
+```
+```
+billf@londo:~/github/java.net/hdcookbook$ ant -version
+Apache Ant(TM) version 1.10.12 compiled on October 13 2021
+```
