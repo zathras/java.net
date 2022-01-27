@@ -3,7 +3,9 @@
 This directory is an archive of the old hdcookbook open-source project
 from java.net.  It has been updated to run on JDK 1.8, and was tested
 and known to work in January 2022.  See README.pdf for a description
-of the contents.
+of the contents, and see
+<a href="https://hdcookbook.jovial.com/">https://hdcookbook.jovial.com/</a>
+for an archive of the companion web site.
 
 The following worked on Ubuntu Linux 20.x, with the standard JDK 1.8
 installation selected:
