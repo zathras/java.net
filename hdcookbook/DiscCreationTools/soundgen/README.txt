@@ -33,7 +33,7 @@ These support a PCM-to-PCM codec that handles different sample rates and sample 
 
 There is a backup copy of the above mentioned Tritonous jar files at
 
-    http://hdcookbook.com/archives/tritonous_sound_lib/
+    http://hdcookbook.jovial.com/archives/tritonous_sound_lib/
 
 
 How to use Tritonous PCM codec?
