@@ -511,11 +511,11 @@ Here's BNF describing the syntax of a show file:
     visual_grid_row ::= "{" visual_grid_entry * "}"
 
     visual_grid_entry ::= state_name | "[" state_name "]" 
-    			  | "(" x y ")" | "<activate>"
-			  | "<wall>" | "<null>"
-	    # <activate> means "make the assembly activated"
-	    # <wall> means "if cell navigated to, stay in current state"
-	    # <null> means "it's an error if this cell can be navigated to"
+    			  | "(" x y ")" | "&ltactivate>"
+			  | "&ltwall>" | "&ltnull>"
+	    # &ltactivate> means "make the assembly activated"
+	    # &ltwall> means "if cell navigated to, stay in current state"
+	    # &ltnull> means "it's an error if this cell can be navigated to"
 	    # The "( x y )" syntax is deprecated.  When such a cell is
 	    #   navigated to, it goes to the state that is located at
 	    #   the cell x,y (counting from 0).  The same effect can be
